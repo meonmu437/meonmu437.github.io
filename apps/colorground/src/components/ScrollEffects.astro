@@ -67,8 +67,9 @@
 		window.addEventListener('load', settleThenInit);
 	}
 
-	// 사이드바 스크롤스파이: 현재 보이는 섹션에 해당하는 사이드바 링크를 강조
-	const sections = document.querySelectorAll<HTMLElement>('.cg-section[id]');
+	// 사이드바 스크롤스파이: 현재 보이는 섹션에 해당하는 사이드바 링크를 강조하고,
+	// 모바일 목차 바("목차 › 현재 위치")의 텍스트도 함께 갱신한다.
+	const sections = document.querySelectorAll<HTMLElement>('.cg-section[id], .cg-hero-zone[id]');
 	const sidebarLinks = new Map<string, HTMLElement[]>();
 	document.querySelectorAll<HTMLAnchorElement>('nav a[href*="#"]').forEach((a) => {
 		const hash = a.href.split('#')[1];
@@ -78,11 +79,17 @@
 		sidebarLinks.set(hash, list);
 	});
 
+	const currentLabelEl = document.getElementById('cg-toggle-current');
+
 	if (sections.length && sidebarLinks.size) {
 		const setActive = (id: string) => {
 			sidebarLinks.forEach((links, hash) => {
 				links.forEach((link) => link.classList.toggle('cg-sidebar-active', hash === id));
 			});
+			if (currentLabelEl) {
+				const label = sidebarLinks.get(id)?.[0]?.textContent?.trim();
+				if (label) currentLabelEl.textContent = label;
+			}
 		};
 
 		const observer = new IntersectionObserver(

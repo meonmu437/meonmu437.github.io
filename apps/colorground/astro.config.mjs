@@ -39,6 +39,7 @@ export default defineConfig({
 				},
 			],
 			sidebar: [
+				{ label: '컬러그라운드', link: '/' },
 				{
 					label: '세계관',
 					items: [
@@ -59,7 +60,15 @@ export default defineConfig({
 				{
 					label: '세력',
 					items: [
-						{ label: '컬러 히어로', link: '/#sec-heroes' },
+						{
+							label: '컬러 히어로',
+							items: [
+								{ label: '개요', link: '/#sec-heroes' },
+								{ label: '윤하람', link: '/#hero-haram' },
+								{ label: '서노을', link: '/#hero-noeul' },
+								{ label: '남바다', link: '/#hero-bada' },
+							],
+						},
 						{ label: '컬러 링크', link: '/#sec-link' },
 						{ label: '자율 로봇', link: '/#sec-robots' },
 					],

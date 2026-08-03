@@ -235,12 +235,25 @@ html {
 }
 
 /*
-  햄버거 메뉴/모바일 바 목차를 없애고, 좌측 사이드바(세계관/설정/세력)
-  하나만 내비게이션으로 쓴다. 햄버거 버튼이 사라졌으니 헤더가 그 자리를
-  더 이상 예약할 필요가 없고, 모바일 목차 바가 없으니 그 높이도 0으로 둔다.
+  기존 헤딩 목차(바/우측 리스트)는 없애고, 좌측 사이드바(세계관/설정/세력)
+  하나만 내비게이션으로 쓴다. 이 사이드바는 모바일에서는 "현재 위치"를 보여주는
+  상단 바(MobileMenuToggle 오버라이드)를 눌러 접고 펼 수 있다. 햄버거 버튼이
+  차지하던 자리는 더 이상 예약하지 않는다.
+
+  기본값은 미디어쿼리만으로 정해진다(JS 없이도 올바른 모습):
+  - 모바일(<50rem): 기본은 접힘. .cg-sidebar-expanded가 있을 때만 펼쳐진다.
+  - 데스크톱(>=50rem): 기본은 펼침(기존 동작 유지). .cg-sidebar-collapsed가
+    있을 때만 접힌다.
 */
 :root {
 	--sl-mobile-toc-height: 0rem;
+	--cg-sidebar-toggle-height: 2.75rem;
+}
+
+@media (max-width: 49.9375rem) {
+	:root {
+		--sl-mobile-toc-height: var(--cg-sidebar-toggle-height);
+	}
 }
 
 [data-has-sidebar] .header {
@@ -249,20 +262,39 @@ html {
 
 @media (max-width: 49.9375rem) {
 	.sidebar-pane {
+		display: none;
 		position: static;
-		visibility: visible;
 		inset: auto;
 		width: 100%;
 		height: auto;
 		min-height: 0;
-		margin-top: var(--sl-nav-height);
+		margin-top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height));
 		background: var(--sl-color-bg-sidebar);
 		border-bottom: 1px solid var(--sl-color-hairline-shade);
+	}
+
+	html.cg-sidebar-expanded .sidebar-pane {
+		display: block;
 	}
 
 	.sidebar-content {
 		height: auto;
 		min-height: 0;
+	}
+}
+
+@media (min-width: 50rem) {
+	html.cg-sidebar-collapsed .sidebar-pane {
+		display: none;
+	}
+
+	html.cg-sidebar-collapsed {
+		--sl-content-inline-start: 0rem !important;
+	}
+
+	/* 접기/펼치기 버튼이 사이드바 상단과 겹치지 않도록 여유 공간 확보 */
+	.sidebar-content {
+		padding-top: 3.25rem;
 	}
 }
 
