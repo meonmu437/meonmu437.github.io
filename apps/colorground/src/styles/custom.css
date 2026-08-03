@@ -1,0 +1,414 @@
+/*
+  컬러그라운드 위키 커스텀 테마
+  - accent: 남바다(블루) 기준, 보조색은 하람(옐로우그린)·서노을(레드오렌지)에 맞춰 조정
+  - 본문/헤딩: Noto Sans KR (가독성 우선). 페이지 타이틀(h1)에만 Jua + 그라디언트 사용
+  - 위키 전체가 하나의 스크롤 페이지: .cg-section/.cg-hero-zone은 풀블리드 "애플 스타일" 밴드,
+    .cg-reveal은 ScrollEffects.astro가 페이드인 제어
+*/
+
+html {
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+:root {
+	--cg-font-display: 'Jua', var(--sl-font-system);
+	--cg-rainbow: linear-gradient(90deg, #ff5a5f, #ffb238, #ffe066, #3ddc84, #38b6ff, #7c5cff);
+
+	--sl-font: 'Noto Sans KR', var(--sl-font-system);
+
+	/* accent = 남바다 블루 (dark mode) */
+	--sl-color-accent-low: hsl(213, 60%, 22%);
+	--sl-color-accent: hsl(213, 100%, 62%);
+	--sl-color-accent-high: hsl(213, 100%, 86%);
+
+	/* 보조 색상: 서노을 레드/오렌지, 하람 옐로우그린 */
+	--sl-hue-red: 355;
+	--sl-hue-orange: 32;
+	--sl-hue-green: 92;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-high: hsl(213, 85%, 32%);
+	--sl-color-accent: hsl(213, 95%, 56%);
+	--sl-color-accent-low: hsl(213, 90%, 93%);
+}
+
+/* 사이트 타이틀: 레인보우 그라디언트 텍스트 */
+.site-title span {
+	font-weight: 800;
+	letter-spacing: -0.01em;
+	color: var(--sl-color-accent);
+	background: var(--cg-rainbow);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* 페이지 타이틀(h1): 페이지당 한 번만 나오므로 브랜드 모먼트로 사용 */
+.sl-markdown-content h1:not(:where(.not-content *)) {
+	font-family: var(--cg-font-display);
+	letter-spacing: 0.01em;
+	color: var(--sl-color-accent);
+	background: var(--cg-rainbow);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* 본문 헤딩: 가독성 좋은 본문 폰트 굵기로 위계 표현 */
+.sl-markdown-content :is(h2, h3, h4):not(:where(.not-content *)) {
+	font-weight: 800;
+	letter-spacing: -0.01em;
+}
+
+/* 헤딩 호버 앵커(⛓) 아이콘 제거 */
+.sl-anchor-link {
+	display: none !important;
+}
+.sl-heading-wrapper > :first-child {
+	padding-inline-end: 0 !important;
+}
+
+/* 인용구를 "설정 카드"처럼 */
+.sl-markdown-content blockquote:not(:where(.not-content *)) {
+	border-inline-start: none;
+	border: 1px solid color-mix(in srgb, var(--sl-color-accent) 35%, transparent);
+	background: color-mix(in srgb, var(--sl-color-accent) 8%, transparent);
+	border-radius: 0.75rem;
+	padding: 0.7rem 1.1rem;
+	font-style: normal;
+}
+
+.sl-markdown-content blockquote strong {
+	color: var(--sl-color-text-accent);
+}
+
+/*
+  표: 둥근 카드 + 헤더 강조.
+  주의: 여기서 overflow:hidden을 쓰면 Starlight 기본 table { display:block;
+  overflow:auto }(넓은 표를 가로 스크롤시키는 규칙)을 덮어써서, 표가 칸을 다
+  못 채우고 가로로 잘려 보이는 문제가 생긴다. 대신 모서리 셀에만 radius를 줘서
+  스크롤은 그대로 살려둔다.
+*/
+.sl-markdown-content table:not(:where(.not-content *)) {
+	width: 100%;
+	border: 1px solid var(--sl-color-hairline);
+	border-radius: 0.75rem;
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+.sl-markdown-content thead:not(:where(.not-content *)) {
+	background: color-mix(in srgb, var(--sl-color-accent) 14%, transparent);
+}
+
+.sl-markdown-content tbody tr:nth-child(even):not(:where(.not-content *)) {
+	background: color-mix(in srgb, var(--sl-color-gray-6) 35%, transparent);
+}
+
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+	padding-inline: 1rem;
+}
+
+.sl-markdown-content thead tr:first-child th:first-child:not(:where(.not-content *)) {
+	border-top-left-radius: 0.75rem;
+}
+.sl-markdown-content thead tr:first-child th:last-child:not(:where(.not-content *)) {
+	border-top-right-radius: 0.75rem;
+}
+.sl-markdown-content tbody tr:last-child td:first-child:not(:where(.not-content *)) {
+	border-bottom-left-radius: 0.75rem;
+}
+.sl-markdown-content tbody tr:last-child td:last-child:not(:where(.not-content *)) {
+	border-bottom-right-radius: 0.75rem;
+}
+
+/* 두억시니 분류: 표 대신 색상 카드 그리드로 표현 */
+.cg-classification-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+	gap: 1rem;
+	margin: 1.5rem 0;
+}
+
+.cg-classification-card {
+	position: relative;
+	margin: 0;
+	padding: 1.1rem 1.25rem 1.1rem 1.6rem;
+	border-radius: 1rem;
+	border: 1px solid color-mix(in srgb, hsl(var(--cg-class-hue, 213), 70%, 55%) 35%, transparent);
+	background: color-mix(in srgb, hsl(var(--cg-class-hue, 213), 70%, 45%) 10%, transparent);
+}
+
+.cg-classification-card::before {
+	content: '';
+	position: absolute;
+	inset-block: 0.9rem;
+	inset-inline-start: 0.55rem;
+	width: 4px;
+	border-radius: 999px;
+	background: hsl(var(--cg-class-hue, 213), 80%, 60%);
+}
+
+.cg-classification-mixed::before {
+	background: var(--cg-rainbow);
+}
+
+.cg-classification-emotion {
+	margin: 0 0 0.35rem;
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-2);
+}
+
+.cg-classification-title {
+	margin: 0 0 0.4rem;
+	font-size: var(--sl-text-lg);
+	font-weight: 800;
+	color: hsl(var(--cg-class-hue, 213), 85%, 74%);
+}
+
+:root[data-theme='light'] .cg-classification-title {
+	color: hsl(var(--cg-class-hue, 213), 70%, 38%);
+}
+
+.cg-classification-desc {
+	margin: 0;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-1);
+}
+
+/* 본문 이미지: 둥근 모서리 + 은은한 그림자 (배너 등 전체 노출 이미지는 .cg-banner-img로 예외) */
+.sl-markdown-content img:not(:where(.not-content *)) {
+	border-radius: 1rem;
+	box-shadow: var(--sl-shadow-md);
+	cursor: zoom-in;
+}
+
+/* 배너: 원본 비율 그대로, 크롭 없이 전체 노출 */
+.cg-banner-img {
+	width: 100%;
+	height: auto;
+}
+
+/*
+  위키 최상위 섹션: 넉넉한 여백을 주는 "애플 스타일" 밴드.
+  배경은 콘텐츠 칼럼 기준으로 풀블리드(이 페이지엔 항상 왼쪽 사이드바가 있어
+  50vw 기준 트릭을 쓰면 뷰포트 중앙과 콘텐츠 칼럼 중앙이 달라 배경/텍스트가 밀린다).
+*/
+.cg-section,
+.cg-hero-zone {
+	margin-inline: calc(-1 * var(--sl-content-pad-x));
+	padding-inline: var(--sl-content-pad-x);
+	padding-block: clamp(4rem, 9vw, 7rem);
+	border-top: 1px solid var(--sl-color-hairline);
+	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
+}
+
+/*
+  Starlight는 각 헤딩을 .sl-heading-wrapper(블록)로 감싸고 실제 헤딩 엘리먼트는
+  앵커 아이콘과 한 줄에 놓이도록 display:inline으로 만든다. 따라서 정렬/크기는
+  h2 자체가 아니라 이 래퍼에 적용해야 한다.
+*/
+.cg-section .sl-heading-wrapper.level-h2 {
+	text-align: center;
+	font-size: clamp(var(--sl-text-3xl), 5vw, var(--sl-text-5xl));
+	margin-bottom: 0.75rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 3px solid transparent;
+	border-image: var(--cg-rainbow) 1;
+}
+
+/* 모바일에서도 테마 토글을 헤더에 바로 노출(기본은 모바일 메뉴 안에만 존재) */
+.header .right-group {
+	display: flex !important;
+	gap: 0.5rem;
+}
+.header .social-icons {
+	display: none !important;
+}
+
+/* 사이드바 스크롤스파이 강조 */
+.cg-sidebar-active {
+	color: var(--sl-color-text-accent) !important;
+	font-weight: 600;
+}
+
+/* 히어로 존: 캐릭터별 테마 컬러를 입힌 하나의 구역 */
+.cg-hero-zone {
+	background: color-mix(in srgb, hsl(var(--cg-hero-hue), 70%, 45%) 10%, transparent);
+	border-top: 1px solid color-mix(in srgb, hsl(var(--cg-hero-hue), 70%, 55%) 45%, transparent);
+}
+
+/* 히어로 존들끼리는 사이를 붙여서 하나의 색 흐름처럼 보이게(경계선/이중 패딩 제거) */
+.cg-hero-zone + .cg-hero-zone {
+	border-top: none;
+	padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.cg-hero-zone:has(+ .cg-hero-zone) {
+	padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.cg-hero-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.75rem;
+	text-align: center;
+}
+
+.cg-hero-header :first-child {
+	margin-top: 0 !important;
+}
+
+.cg-hero-header h3 {
+	margin: 0.25rem 0 0;
+	font-size: clamp(var(--sl-text-2xl), 4vw, var(--sl-text-4xl));
+	color: hsl(var(--cg-hero-hue), 85%, 74%);
+}
+
+:root[data-theme='light'] .cg-hero-header h3 {
+	color: hsl(var(--cg-hero-hue), 70%, 38%);
+}
+
+.cg-hero-photos {
+	display: flex;
+	gap: 1rem;
+	margin: 0;
+}
+
+.cg-hero-photos figure {
+	margin: 0;
+	text-align: center;
+}
+
+.cg-hero-photos img {
+	width: clamp(10rem, 46vw, 17rem);
+	height: clamp(10rem, 46vw, 17rem);
+	object-fit: cover;
+	object-position: top center;
+	border-radius: 1rem;
+	box-shadow: var(--sl-shadow-md);
+}
+
+.cg-hero-photos figcaption {
+	margin-top: 0.35rem;
+	font-size: var(--sl-text-2xs);
+	color: var(--sl-color-gray-3);
+}
+
+/* 전투복 / 무기 / 컬러 코어 / 각성 동공 등 보충 이미지 */
+.cg-hero-figures {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1.25rem;
+	margin: 1rem 0 !important;
+}
+
+.cg-hero-figures figure {
+	margin: 0;
+	text-align: center;
+}
+
+.cg-hero-figures img {
+	width: clamp(8rem, 32vw, 9rem);
+	height: clamp(8rem, 32vw, 9rem);
+	object-fit: contain;
+	border-radius: 1rem;
+	box-shadow: var(--sl-shadow-md);
+	background: color-mix(in srgb, hsl(var(--cg-hero-hue, 210), 70%, 50%) 10%, transparent);
+}
+
+.cg-hero-figures figcaption {
+	margin-top: 0.35rem;
+	font-size: var(--sl-text-2xs);
+	color: var(--sl-color-gray-3);
+}
+
+.cg-hero-tagline {
+	margin: 0;
+	font-style: italic;
+	color: var(--sl-color-gray-2);
+}
+
+.cg-hero-facts {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem;
+	margin: 0.25rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cg-hero-facts li {
+	padding: 0.3rem 0.85rem;
+	border-radius: 999px;
+	font-size: var(--sl-text-sm);
+	background: color-mix(in srgb, hsl(var(--cg-hero-hue), 70%, 50%) 16%, transparent);
+	border: 1px solid color-mix(in srgb, hsl(var(--cg-hero-hue), 70%, 55%) 30%, transparent);
+}
+
+.cg-hero-facts li strong {
+	color: hsl(var(--cg-hero-hue), 85%, 74%);
+}
+
+:root[data-theme='light'] .cg-hero-facts li strong {
+	color: hsl(var(--cg-hero-hue), 70%, 38%);
+}
+
+.cg-hero-zone h4 {
+	color: hsl(var(--cg-hero-hue), 85%, 74%);
+}
+
+:root[data-theme='light'] .cg-hero-zone h4 {
+	color: hsl(var(--cg-hero-hue), 70%, 38%);
+}
+
+/* 히어로 존 footer: 좋아하는 것과 확실히 떨어뜨려 별도 영역처럼 보이게 함 */
+.cg-hero-footer {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 0.75rem;
+	margin-top: 3.5rem !important;
+}
+
+.cg-hero-footer a,
+.cg-hero-footer .cg-link-disabled {
+	padding: 0.5rem 1.5rem;
+	border-radius: 999px;
+	font-weight: 600;
+	font-size: var(--sl-text-sm);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.cg-link-univers {
+	background: hsl(330, 80%, 60%);
+	color: white;
+}
+
+.cg-link-elyn {
+	background: hsl(258, 70%, 62%);
+	color: white;
+}
+
+.cg-hero-footer a:hover {
+	filter: brightness(1.1);
+}
+
+.cg-link-disabled {
+	background: color-mix(in srgb, var(--sl-color-gray-4) 35%, transparent);
+	color: var(--sl-color-gray-3);
+}
+

@@ -1,0 +1,8 @@
+{
+	"name": "meonmu437-worlds",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "node scripts/build.mjs"
+	}
+}

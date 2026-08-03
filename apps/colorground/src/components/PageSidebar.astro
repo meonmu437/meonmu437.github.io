@@ -1,0 +1,9 @@
+---
+// 상세 목차(넓은 화면에서만 보이던 우측 목차 리스트)는 제거하고,
+// 바 형태의 모바일 목차(MobileTableOfContents)를 모든 화면 크기에서 유지한다.
+import MobileTableOfContents from 'virtual:starlight/components/MobileTableOfContents';
+
+const { toc } = Astro.locals.starlightRoute;
+---
+
+{toc && <MobileTableOfContents />}
