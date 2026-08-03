@@ -18,6 +18,8 @@ export default defineConfig({
 				ThemeSelect: './src/components/ThemeToggle.astro',
 				PageSidebar: './src/components/PageSidebar.astro',
 				TwoColumnContent: './src/components/TwoColumnContent.astro',
+				MobileMenuToggle: './src/components/MobileMenuToggle.astro',
+				SiteTitle: './src/components/SiteTitle.astro',
 			},
 			head: [
 				{

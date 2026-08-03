@@ -234,6 +234,43 @@ html {
 	display: none !important;
 }
 
+/*
+  햄버거 메뉴/모바일 바 목차를 없애고, 좌측 사이드바(세계관/설정/세력)
+  하나만 내비게이션으로 쓴다. 햄버거 버튼이 사라졌으니 헤더가 그 자리를
+  더 이상 예약할 필요가 없고, 모바일 목차 바가 없으니 그 높이도 0으로 둔다.
+*/
+:root {
+	--sl-mobile-toc-height: 0rem;
+}
+
+[data-has-sidebar] .header {
+	padding-inline-end: var(--sl-nav-pad-x);
+}
+
+@media (max-width: 49.9375rem) {
+	.sidebar-pane {
+		position: static;
+		visibility: visible;
+		inset: auto;
+		width: 100%;
+		height: auto;
+		min-height: 0;
+		margin-top: var(--sl-nav-height);
+		background: var(--sl-color-bg-sidebar);
+		border-bottom: 1px solid var(--sl-color-hairline-shade);
+	}
+
+	.sidebar-content {
+		height: auto;
+		min-height: 0;
+	}
+}
+
+/* 헤더에 테마 토글을 이미 노출했으므로, 사이드바 하단의 중복 토글은 숨긴다 */
+.mobile-preferences {
+	display: none !important;
+}
+
 /* 사이드바 스크롤스파이 강조 */
 .cg-sidebar-active {
 	color: var(--sl-color-text-accent) !important;

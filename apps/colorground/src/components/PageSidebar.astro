@@ -1,9 +1,4 @@
 ---
-// 상세 목차(넓은 화면에서만 보이던 우측 목차 리스트)는 제거하고,
-// 바 형태의 모바일 목차(MobileTableOfContents)를 모든 화면 크기에서 유지한다.
-import MobileTableOfContents from 'virtual:starlight/components/MobileTableOfContents';
-
-const { toc } = Astro.locals.starlightRoute;
+// 목차(우측 상세 목차 + 모바일 바 형태 목차)를 모두 제거한다.
+// 좌측 사이드바(세계관/설정/세력) 하나만 내비게이션으로 사용한다.
 ---
-
-{toc && <MobileTableOfContents />}

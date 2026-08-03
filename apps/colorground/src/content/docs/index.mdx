@@ -6,6 +6,7 @@ description: 레인보우 빌리지를 지키는 컬러 히어로와 자율 로�
 import { Image } from 'astro:assets';
 import ScrollEffects from '../../components/ScrollEffects.astro';
 import Lightbox from '../../components/Lightbox.astro';
+import BackToTop from '../../components/BackToTop.astro';
 import banner from '../../assets/heroes/banner.png';
 import haramYoung from '../../assets/heroes/haram-young.png';
 import haramGrown from '../../assets/heroes/haram-grown.png';
@@ -304,12 +305,12 @@ import scienceCenterMap from '../../assets/heroes/science-center-map.png';
 		<figcaption>윤하람</figcaption>
 	</figure>
 	<figure>
-		<Image src={badaCore} alt="남바다의 컬러 코어" />
-		<figcaption>남바다</figcaption>
-	</figure>
-	<figure>
 		<Image src={noeulCore} alt="서노을의 컬러 코어" />
 		<figcaption>서노을</figcaption>
+	</figure>
+	<figure>
+		<Image src={badaCore} alt="남바다의 컬러 코어" />
+		<figcaption>남바다</figcaption>
 	</figure>
 </div>
 
@@ -341,12 +342,12 @@ import scienceCenterMap from '../../assets/heroes/science-center-map.png';
 		<figcaption>윤하람</figcaption>
 	</figure>
 	<figure>
-		<Image src={badaEye} alt="남바다 각성 시 동공" />
-		<figcaption>남바다</figcaption>
-	</figure>
-	<figure>
 		<Image src={noeulEye} alt="서노을 각성 시 동공" />
 		<figcaption>서노을</figcaption>
+	</figure>
+	<figure>
+		<Image src={badaEye} alt="남바다 각성 시 동공" />
+		<figcaption>남바다</figcaption>
 	</figure>
 </div>
 
@@ -356,7 +357,7 @@ import scienceCenterMap from '../../assets/heroes/science-center-map.png';
 
 강력한 상태인 만큼 체력과 전투 에너지를 빠르게 소모한다. 지속 시간이 길어지면 어지럼증, 시야 이상, 손 떨림, 호흡 불안과 기존 부상의 악화가 발생한다. 하나의 목표에 지나치게 집중해 주변 상황을 놓치거나 판단력이 저하될 수도 있다.
 
-각성이 해제된 뒤에는 심한 탈진, 기억 혼란이나 일시적인 의식 상실이 나타날 수 있다. 상태가 위험해지면 동료 히어로나 자율 로봇이 각성을 중단시키기도 한다.
+각성이 해제된 뒤에는 심한 탈진, 기억 혼란이나 일시적인 의식 상실이 나타날 수 있다.
 
 </div>
 
@@ -368,7 +369,7 @@ import scienceCenterMap from '../../assets/heroes/science-center-map.png';
 
 **컬러 히어로**는 고유한 색과 속성의 힘을 사용하는 레인보우 빌리지의 수호자다.
 
-각 히어로는 특정 색의 조합과 전투 역할을 지니며, 컬러 링크를 통해 무기와 능력을 사용한다. 어린 시절부터 히어로로 활동했으며 현재는 청년으로 성장했다.
+각 히어로는 특정 색의 조합과 전투 역할을 지니며, 컬러 링크를 통해 무기와 능력을 사용한다. 어린 시절부터 히어로로 활동했으며 현재는 성인으로 성장했다.
 
 </div>
 
@@ -734,7 +735,6 @@ import scienceCenterMap from '../../assets/heroes/science-center-map.png';
 #### 성격과 관계
 
 - 정의감이 강하고 원칙적이며 걱정이 많다. 바다의 수면, 식사, 부상과 지휘 부담을 확인하고 답이 불충분하면 표현을 바꿔 다시 묻는다.
-- 바다를 이름으로 부르며 반말을 쓰고, 마치 엄마처럼 잔소리를 하는 다정하고 부드러운 말투를 쓴다.
 - 어린 시절 정의와 약속을 믿던 바다를 기억하며, 현재의 비관적인 말에도 본질은 달라지지 않았다고 확신한다.
 - 둘은 표현과 판단 방식에서 자주 충돌하지만 시민 보호, 동료 귀환과 불필요한 희생을 막는 원칙에서는 거의 어긋나지 않는다.
 - 걱정이 많아 잔소리가 늘어날 때도 있지만 위기에는 누구보다 빠르게 행동한다.
@@ -777,3 +777,4 @@ import scienceCenterMap from '../../assets/heroes/science-center-map.png';
 
 <ScrollEffects />
 <Lightbox />
+<BackToTop />
