@@ -14,6 +14,7 @@ export default defineConfig({
 			},
 			customCss: ['./src/styles/custom.css'],
 			pagefind: false,
+			pagination: false,
 			components: {
 				ThemeSelect: './src/components/ThemeToggle.astro',
 				PageSidebar: './src/components/PageSidebar.astro',
