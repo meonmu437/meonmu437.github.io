@@ -236,66 +236,62 @@ html {
 
 /*
   기존 헤딩 목차(바/우측 리스트)는 없애고, 좌측 사이드바(세계관/설정/세력)
-  하나만 내비게이션으로 쓴다. 이 사이드바는 모바일에서는 "현재 위치"를 보여주는
-  상단 바(MobileMenuToggle 오버라이드)를 눌러 접고 펼 수 있다. 햄버거 버튼이
-  차지하던 자리는 더 이상 예약하지 않는다.
-
-  기본값은 미디어쿼리만으로 정해진다(JS 없이도 올바른 모습):
-  - 모바일(<50rem): 기본은 접힘. .cg-sidebar-expanded가 있을 때만 펼쳐진다.
-  - 데스크톱(>=50rem): 기본은 펼침(기존 동작 유지). .cg-sidebar-collapsed가
-    있을 때만 접힌다.
+  하나만 내비게이션으로 쓴다. 모바일/데스크톱 모두 동일하게 동작한다:
+  헤더 안의 토글(Search 오버라이드, "목차 › 현재 위치")을 누르면 사이드바가
+  헤더 바로 아래에 오버레이로 펼쳐진다. position:fixed라서 스크롤을 얼마나
+  내려도 항상 헤더 바로 아래에 나타난다(문서 흐름에 넣으면 스크롤을 내린 뒤
+  펼쳤을 때 화면 밖— 문서 맨 위 —에서 열려 버리는 문제가 있었다).
+  기본값은 항상 "접힘"이며 .cg-sidebar-expanded가 있을 때만 펼쳐진다.
+  햄버거 버튼이 차지하던 자리는 더 이상 예약하지 않는다.
 */
 :root {
 	--sl-mobile-toc-height: 0rem;
-	--cg-sidebar-toggle-height: 2.75rem;
 }
 
-@media (max-width: 49.9375rem) {
-	:root {
-		--sl-mobile-toc-height: var(--cg-sidebar-toggle-height);
-	}
+/* 사이드바가 오버레이라서 더 이상 본문 폭을 줄일 필요가 없다 */
+[data-has-sidebar] {
+	--sl-content-inline-start: 0rem !important;
 }
 
 [data-has-sidebar] .header {
 	padding-inline-end: var(--sl-nav-pad-x);
 }
 
+/*
+  목차 토글(Search 오버라이드)이 들어있는 헤더 칸이 남는 공간을 채우도록 함.
+  데스크톱(그리드 레이아웃)에서는 이미 1fr 칸이라 필요 없고, 모바일(flex
+  레이아웃)에서만 이 보정이 필요하다.
+*/
 @media (max-width: 49.9375rem) {
-	.sidebar-pane {
-		display: none;
-		position: static;
-		inset: auto;
-		width: 100%;
-		height: auto;
-		min-height: 0;
-		margin-top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height));
-		background: var(--sl-color-bg-sidebar);
-		border-bottom: 1px solid var(--sl-color-hairline-shade);
-	}
-
-	html.cg-sidebar-expanded .sidebar-pane {
-		display: block;
-	}
-
-	.sidebar-content {
-		height: auto;
-		min-height: 0;
+	.header div:has(> #cg-toc-toggle) {
+		flex: 1;
+		min-width: 0;
 	}
 }
 
-@media (min-width: 50rem) {
-	html.cg-sidebar-collapsed .sidebar-pane {
-		display: none;
-	}
+.sidebar-pane {
+	display: none;
+	visibility: visible;
+	position: fixed;
+	inset-block-start: var(--sl-nav-height);
+	inset-inline: 0;
+	width: 100%;
+	height: auto;
+	max-height: calc(100vh - var(--sl-nav-height));
+	min-height: 0;
+	overflow-y: auto;
+	background: var(--sl-color-bg-sidebar);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	box-shadow: var(--sl-shadow-md);
+}
 
-	html.cg-sidebar-collapsed {
-		--sl-content-inline-start: 0rem !important;
-	}
+html.cg-sidebar-expanded .sidebar-pane {
+	display: block;
+}
 
-	/* 접기/펼치기 버튼이 사이드바 상단과 겹치지 않도록 여유 공간 확보 */
-	.sidebar-content {
-		padding-top: 3.25rem;
-	}
+.sidebar-content {
+	height: auto;
+	min-height: 0;
 }
 
 /* 헤더에 테마 토글을 이미 노출했으므로, 사이드바 하단의 중복 토글은 숨긴다 */

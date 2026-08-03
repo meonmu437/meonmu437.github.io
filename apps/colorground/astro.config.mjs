@@ -20,6 +20,7 @@ export default defineConfig({
 				TwoColumnContent: './src/components/TwoColumnContent.astro',
 				MobileMenuToggle: './src/components/MobileMenuToggle.astro',
 				SiteTitle: './src/components/SiteTitle.astro',
+				Search: './src/components/Search.astro',
 			},
 			head: [
 				{
@@ -39,10 +40,10 @@ export default defineConfig({
 				},
 			],
 			sidebar: [
-				{ label: '컬러그라운드', link: '/' },
 				{
 					label: '세계관',
 					items: [
+						{ label: '컬러그라운드', link: '/' },
 						{ label: '세계의 특징', link: '/#sec-features' },
 						{ label: '레인보우 빌리지', link: '/#sec-village' },
 						{ label: '어린이과학관', link: '/#sec-science-center' },
