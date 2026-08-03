@@ -179,11 +179,15 @@
 		width: 0.55em;
 		background: var(--cursor);
 		margin-inline-start: 0.15em;
+	}
+
+	/* 타이핑 중에는 커서가 고정으로 켜져 있고, 명령어를 다 친 뒤에만 반짝인다 */
+	.cursor.cursor-blink {
 		animation: blink 1s step-end infinite;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.cursor {
+		.cursor.cursor-blink {
 			animation: none;
 		}
 		.listing {
@@ -221,7 +225,7 @@
 			<div class="listing" id="listing"></div>
 			<div class="line prompt" id="final-prompt" style="opacity: 0">
 				<span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds</span><span class="sep">$</span>
-				<span class="cursor"></span>
+				<span class="cursor cursor-blink"></span>
 			</div>
 		</div>
 	</div>
@@ -267,14 +271,16 @@
 			showRest();
 		} else {
 			var typed = document.getElementById('typed');
+			var typingCursor = document.getElementById('typing-cursor');
 			var i = 0;
 			var typer = setInterval(function () {
 				typed.textContent = COMMAND.slice(0, ++i);
 				if (i >= COMMAND.length) {
 					clearInterval(typer);
-					setTimeout(showRest, 300);
+					typingCursor.classList.add('cursor-blink');
+					setTimeout(showRest, 700);
 				}
-			}, 55);
+			}, 130);
 		}
 	</script>
 </body>
