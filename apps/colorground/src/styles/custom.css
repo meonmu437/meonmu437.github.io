@@ -1,7 +1,8 @@
 /*
   컬러그라운드 위키 커스텀 테마
   - accent: 남바다(블루) 기준, 보조색은 하람(옐로우그린)·서노을(레드오렌지)에 맞춰 조정
-  - 본문/헤딩: Noto Sans KR (가독성 우선). 페이지 타이틀(h1)에만 Jua + 그라디언트 사용
+  - 본문/헤딩: Noto Sans KR (가독성 우선). "컬러그라운드" 타이틀도 다른 소제목과 동일하게
+    본문 첫 ## 헤딩으로 넣고, Starlight가 자동 생성하는 페이지 타이틀(h1)은 숨긴다.
   - 위키 전체가 하나의 스크롤 페이지: .cg-section/.cg-hero-zone은 풀블리드 "애플 스타일" 밴드,
     .cg-reveal은 ScrollEffects.astro가 페이드인 제어
 */
@@ -51,15 +52,19 @@ html {
 	-webkit-text-fill-color: transparent;
 }
 
-/* 페이지 타이틀(h1): 페이지당 한 번만 나오므로 브랜드 모먼트로 사용 */
-.sl-markdown-content h1:not(:where(.not-content *)) {
-	font-family: var(--cg-font-display);
-	letter-spacing: 0.01em;
-	color: var(--sl-color-accent);
-	background: var(--cg-rainbow);
-	background-clip: text;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
+/*
+  Starlight의 자동 페이지 타이틀(h1 #_top)은 본문의 다른 소제목과 별도
+  레이아웃 경로(.sl-markdown-content 바깥의 독립 content-panel)로 렌더링되고,
+  그 뒤에 회색 구분선(.content-panel + .content-panel)까지 따라붙는다.
+  이제 "컬러그라운드"는 본문 맨 위에 다른 섹션과 똑같은 ## 소제목으로 직접
+  넣었으므로, 자동 생성되는 타이틀 패널은 통째로 숨긴다.
+*/
+.content-panel:has(#_top) {
+	display: none;
+}
+
+.content-panel + .content-panel {
+	border-top: none;
 }
 
 /* 본문 헤딩: 가독성 좋은 본문 폰트 굵기로 위계 표현 */
@@ -321,6 +326,18 @@ html.cg-sidebar-expanded .sidebar-pane {
 	padding-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
+/*
+  개요(.cg-section) 바로 다음에 오는 첫 히어로 존(컬러 히어로 개요→하람,
+  자율 로봇 개요→시리온)만 골라 그 사이 여백을 절반으로 줄인다.
+*/
+.cg-section:has(+ .cg-hero-zone) {
+	padding-bottom: clamp(2rem, 4.5vw, 3.5rem);
+}
+
+.cg-section + .cg-hero-zone {
+	padding-top: clamp(2rem, 4.5vw, 3.5rem);
+}
+
 .cg-hero-header {
 	display: flex;
 	flex-direction: column;
@@ -344,9 +361,23 @@ html.cg-sidebar-expanded .sidebar-pane {
 }
 
 .cg-hero-photos {
+	position: relative;
 	display: flex;
 	gap: 1rem;
 	margin: 0;
+}
+
+/* 인물 뒤에 은은한 스포트라이트를 깔아 카드가 밋밋한 색 배경 하나로 끝나지 않게 함 */
+.cg-hero-photos::before {
+	content: '';
+	position: absolute;
+	inset: -2rem;
+	z-index: -1;
+	background: radial-gradient(
+		ellipse 60% 55% at 50% 45%,
+		color-mix(in srgb, hsl(var(--cg-hero-hue), 85%, 60%) 35%, transparent),
+		transparent 70%
+	);
 }
 
 .cg-hero-photos figure {
@@ -359,13 +390,22 @@ html.cg-sidebar-expanded .sidebar-pane {
 	height: clamp(10rem, 46vw, 17rem);
 	object-fit: cover;
 	object-position: top center;
-	border-radius: 1rem;
-	box-shadow: var(--sl-shadow-md);
+	border-radius: 1.25rem;
+	box-shadow: 0 0.6rem 1.75rem color-mix(in srgb, hsl(var(--cg-hero-hue), 75%, 45%) 40%, transparent);
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cg-hero-photos img:hover {
+	transform: translateY(-0.25rem) scale(1.02);
+	box-shadow: 0 0.9rem 2.25rem color-mix(in srgb, hsl(var(--cg-hero-hue), 75%, 45%) 55%, transparent);
 }
 
 .cg-hero-photos figcaption {
-	margin-top: 0.35rem;
+	margin-top: 0.45rem;
 	font-size: var(--sl-text-2xs);
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
 	color: var(--sl-color-gray-3);
 }
 
@@ -387,14 +427,22 @@ html.cg-sidebar-expanded .sidebar-pane {
 	width: clamp(8rem, 32vw, 9rem);
 	height: clamp(8rem, 32vw, 9rem);
 	object-fit: contain;
-	border-radius: 1rem;
-	box-shadow: var(--sl-shadow-md);
+	border-radius: 0.85rem;
+	box-shadow: 0 0.4rem 1.1rem color-mix(in srgb, hsl(var(--cg-hero-hue, 210), 75%, 45%) 30%, transparent);
 	background: color-mix(in srgb, hsl(var(--cg-hero-hue, 210), 70%, 50%) 10%, transparent);
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cg-hero-figures img:hover {
+	transform: translateY(-0.2rem) scale(1.04);
+	box-shadow: 0 0.6rem 1.5rem color-mix(in srgb, hsl(var(--cg-hero-hue, 210), 75%, 45%) 45%, transparent);
 }
 
 .cg-hero-figures figcaption {
-	margin-top: 0.35rem;
+	margin-top: 0.4rem;
 	font-size: var(--sl-text-2xs);
+	font-weight: 600;
+	letter-spacing: 0.04em;
 	color: var(--sl-color-gray-3);
 }
 
@@ -415,14 +463,26 @@ html.cg-sidebar-expanded .sidebar-pane {
 }
 
 .cg-hero-facts li {
-	padding: 0.3rem 0.85rem;
+	margin: 0;
+	padding: 0.35rem 0.9rem;
 	border-radius: 999px;
 	font-size: var(--sl-text-sm);
-	background: color-mix(in srgb, hsl(var(--cg-hero-hue), 70%, 50%) 16%, transparent);
+	background: linear-gradient(
+		180deg,
+		color-mix(in srgb, hsl(var(--cg-hero-hue), 70%, 55%) 22%, transparent),
+		color-mix(in srgb, hsl(var(--cg-hero-hue), 70%, 50%) 12%, transparent)
+	);
 	border: 1px solid color-mix(in srgb, hsl(var(--cg-hero-hue), 70%, 55%) 30%, transparent);
+	transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.cg-hero-facts li:hover {
+	transform: translateY(-1px);
+	border-color: color-mix(in srgb, hsl(var(--cg-hero-hue), 70%, 55%) 60%, transparent);
 }
 
 .cg-hero-facts li strong {
+	margin-inline-end: 0.15rem;
 	color: hsl(var(--cg-hero-hue), 85%, 74%);
 }
 
@@ -456,20 +516,29 @@ html.cg-sidebar-expanded .sidebar-pane {
 	font-size: var(--sl-text-sm);
 	text-decoration: none;
 	white-space: nowrap;
+	transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 
 .cg-link-univers {
 	background: hsl(330, 80%, 60%);
 	color: white;
+	box-shadow: 0 0.35rem 0.9rem hsl(330, 70%, 50%, 0.35);
 }
 
 .cg-link-elyn {
 	background: hsl(258, 70%, 62%);
 	color: white;
+	box-shadow: 0 0.35rem 0.9rem hsl(258, 60%, 50%, 0.35);
 }
 
 .cg-hero-footer a:hover {
 	filter: brightness(1.1);
+	transform: translateY(-2px);
+}
+
+.cg-hero-footer a:active {
+	transform: translateY(0) scale(0.97);
+	filter: brightness(0.98);
 }
 
 .cg-link-disabled {

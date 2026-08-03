@@ -44,7 +44,7 @@ export default defineConfig({
 				{
 					label: '세계관',
 					items: [
-						{ label: '컬러그라운드', link: '/' },
+						{ label: '컬러그라운드', link: '/#sec-intro' },
 						{ label: '세계의 특징', link: '/#sec-features' },
 						{ label: '레인보우 빌리지', link: '/#sec-village' },
 						{ label: '어린이과학관', link: '/#sec-science-center' },
