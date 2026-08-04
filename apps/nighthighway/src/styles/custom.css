@@ -301,6 +301,11 @@ html {
 	box-shadow: 0 0.3rem 0.85rem rgba(0, 0, 0, 0.5);
 }
 
+/* 바이크 뱃지: 콜사인(동물) 뱃지 바로 아래, 같은 오른쪽 모서리에 세로로 쌓는다 */
+.nh-rider-icon--bike {
+	top: 4.2rem;
+}
+
 /* 라이더 카드 하단의 외부 링크(캐릭터 챗봇 등) 버튼 행 */
 .nh-rider-links {
 	display: flex;
@@ -584,16 +589,6 @@ html.nh-sidebar-expanded .sidebar-pane {
 /* 태그라인 아래 대표 대사(영문 원문 + 한국어 번역) 인용구는 본문 폭에 맞춰 좁게 */
 .nh-rider-header blockquote {
 	max-width: 32rem;
-}
-
-.nh-fact-icon {
-	display: inline-block;
-	width: 1.2em;
-	height: 1.2em;
-	margin-inline-end: 0.3em;
-	margin-block: -0.2em;
-	vertical-align: middle;
-	object-fit: contain;
 }
 
 /* 스탯: 부드러운 알약 대신, 좌측에 색 스트라이프가 붙은 각진 등록증 배지 */
