@@ -1,0 +1,93 @@
+---
+// Starlight의 검색창 자리를 목차 토글로 재활용한다. 헤더 안에서 항상 고정으로
+// 보이며, 누르면 좌측 사이드바(.sidebar-pane)가 헤더 바로 아래에 오버레이로
+// 펼쳐진다. 모바일/데스크톱 동일한 동작 — 폭에 따라 다른 레이아웃을 쓰지 않는다.
+---
+
+<button type="button" id="nh-toc-toggle" class="nh-toc-toggle" aria-expanded="false" aria-controls="starlight__sidebar">
+	<span class="nh-toc-label">목차</span>
+	<span aria-hidden="true">›</span>
+	<span id="nh-toggle-current" class="nh-toc-current">NIGHT HIGHWAY</span>
+	<svg class="nh-toc-caret" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="0.85rem" height="0.85rem">
+		<path d="M6 9l6 6 6-6" />
+	</svg>
+</button>
+
+<script>
+	const btn = document.getElementById('nh-toc-toggle');
+	const html = document.documentElement;
+
+	function setExpanded(expanded: boolean): void {
+		html.classList.toggle('nh-sidebar-expanded', expanded);
+		btn?.setAttribute('aria-expanded', String(expanded));
+	}
+
+	if (btn) {
+		btn.addEventListener('click', () => {
+			setExpanded(btn.getAttribute('aria-expanded') !== 'true');
+		});
+
+		// 패널 안의 링크를 클릭하면 (같은 페이지 앵커 이동이라 새로고침이 없을
+		// 수 있으므로) 오버레이를 닫아 다음 섹션이 바로 보이게 한다.
+		document.getElementById('starlight__sidebar')?.addEventListener('click', (e) => {
+			if ((e.target as HTMLElement | null)?.closest('a')) setExpanded(false);
+		});
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') setExpanded(false);
+		});
+	}
+</script>
+
+<style>
+	.nh-toc-toggle {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		width: 100%;
+		max-width: 22rem;
+		padding: 0.45rem 0.85rem;
+		border-radius: 0.25rem;
+		border: 1px solid var(--sl-color-hairline);
+		background: var(--sl-color-bg-nav);
+		color: var(--sl-color-gray-2);
+		font-family: var(--nh-font-mono, monospace);
+		font-size: var(--sl-text-xs);
+		letter-spacing: 0.02em;
+		text-align: start;
+		cursor: pointer;
+	}
+
+	.nh-toc-toggle:hover {
+		border-color: var(--sl-color-accent);
+	}
+
+	.nh-toc-label {
+		flex-shrink: 0;
+		color: var(--sl-color-gray-3);
+	}
+
+	.nh-toc-current {
+		color: var(--sl-color-white);
+		font-weight: 600;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.nh-toc-caret {
+		margin-inline-start: auto;
+		flex-shrink: 0;
+		transition: transform 0.2s ease;
+	}
+
+	.nh-toc-toggle[aria-expanded='true'] .nh-toc-caret {
+		transform: rotate(180deg);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.nh-toc-caret {
+			transition: none;
+		}
+	}
+</style>

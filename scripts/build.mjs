@@ -10,7 +10,10 @@ const staticApps = ['landing'];
 
 // 자체 빌드 스텝이 있는 세계관(Astro 등). 새 세계관을 추가할 때는
 // apps/ 아래 폴더를 만들고 여기 한 줄만 추가하면 된다.
-const buildApps = [{ dir: 'colorground', outPath: 'colorground' }];
+const buildApps = [
+	{ dir: 'colorground', outPath: 'colorground' },
+	{ dir: 'nighthighway', outPath: 'nighthighway' },
+];
 
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });

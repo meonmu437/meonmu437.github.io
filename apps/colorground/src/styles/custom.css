@@ -53,6 +53,18 @@ html {
 }
 
 /*
+  Starlight 기본은 뷰포트가 72rem 이상일 때만 .sl-container에 margin-inline:auto를
+  준다(TwoColumnContent.astro가 사이드바 폭을 계산해 이 변수를 채워주는 구조라서).
+  우리는 TwoColumnContent를 오버라이드해 사이드바 폭 계산 자체를 없앴기 때문에,
+  콘텐츠 폭(--sl-content-width)보다는 넓고 72rem보다는 좁은 구간에서 본문이
+  중앙정렬 없이 왼쪽으로 붙어버린다(예: 창을 줄이는 과정에서 일시적으로 발생).
+  뷰포트 크기와 무관하게 항상 중앙정렬되도록 직접 지정한다.
+*/
+.sl-container {
+	margin-inline: auto;
+}
+
+/*
   Starlight의 자동 페이지 타이틀(h1 #_top)은 본문의 다른 소제목과 별도
   레이아웃 경로(.sl-markdown-content 바깥의 독립 content-panel)로 렌더링되고,
   그 뒤에 회색 구분선(.content-panel + .content-panel)까지 따라붙는다.

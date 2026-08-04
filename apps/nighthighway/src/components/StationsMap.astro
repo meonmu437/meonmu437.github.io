@@ -1,0 +1,560 @@
+---
+// 유럽권 정거장 108개(27개 지역 × 4개)를 타일형 스키매틱 지도로 보여준다.
+// 실제 위경도가 아니라 뉴스 그래픽에서 흔한 "타일 그리드 지도"처럼 대략적인
+// 상대 위치(서/동, 북/남)만 살려 grid-column/grid-row로 배치한다. 타일을
+// 클릭하면 그 지역의 정거장 4개 카드가 아래 패널에 펼쳐진다(다시 클릭하면 접힘).
+//
+// 유럽 야간 지도 배경(europeMapSrc)은 지역을 클릭해 패널이 펼쳐져도 늘어나지
+// 않는 타일 그리드 박스(.nh-station-map-scroll)에만 고정 크기로 건다 — 섹션
+// 전체에 걸면 패널이 펼쳐질 때마다 배경이 함께 늘어나 이미지가 깨져 보인다.
+interface Props {
+	europeMapSrc: string;
+}
+
+const { europeMapSrc } = Astro.props;
+
+const regions = [
+	{
+		id: 'isl',
+		tile: 'ISL',
+		name: '아이슬란드권',
+		col: 1,
+		row: 1,
+		stations: [
+			{ sid: 'R7A-3N8', city: '레이캬비크', nick: '증기환', mood: '지열', resource: '전력과 온수', attitude: '에너지 배급 규칙과 체류 시간을 준수하는 사람만 허용' },
+			{ sid: 'A5K-2T6', city: '아쿠레이리', nick: '북부 유리원', mood: '온실', resource: '채소와 약용 식물', attitude: '종자와 의복의 병충해 검사를 통과한 방문자만 입장' },
+			{ sid: 'K9V-4B1', city: '케플라비크', nick: '검은 활주로', mood: '항공', resource: '연료 펌프와 기상 계측기', attitude: '활주로와 저장고 구역은 공인된 운송 인원에게만 개방' },
+			{ sid: 'V2M-8R7', city: '비크', nick: '재의 만', mood: '화산재', resource: '방진 필터와 남부 도로 정보', attitude: '밀폐 장비가 없는 방문자는 외곽 차광소에 격리' },
+		],
+	},
+	{
+		id: 'nor',
+		tile: 'NOR',
+		name: '노르웨이권',
+		col: 4,
+		row: 1,
+		stations: [
+			{ sid: 'N9S-2F4', city: '오슬로', nick: '북부 심층', mood: '방공호', resource: '터널 지도와 의료 장비', attitude: '신원과 오염 검사를 통과해야 지하 구역 진입 허용' },
+			{ sid: 'B3J-7R6', city: '베르겐', nick: '일곱 부두', mood: '피오르', resource: '해양 엔진과 소금', attitude: '현지 수로를 아는 소형 선박과 안내인을 우대' },
+			{ sid: 'T5H-1V8', city: '트론헤임', nick: '니델바 터빈', mood: '수력', resource: '수차 부품과 고전압 케이블', attitude: '발전 기술을 증명한 작업자에게 장기 체류 허용' },
+			{ sid: 'S4K-9M2', city: '스타방에르', nick: '검은 해안', mood: '정유', resource: '해양 연료와 저온 윤활유', attitude: '공인된 연료 계약이 없는 차량과 선박에는 배급하지 않음' },
+		],
+	},
+	{
+		id: 'swe',
+		tile: 'SWE',
+		name: '스웨덴권',
+		col: 5,
+		row: 1,
+		stations: [
+			{ sid: 'S8T-3L5', city: '스톡홀름', nick: '천개 섬', mood: '군도', resource: '수상 경로 지도와 통신 장치', attitude: '현지 안내인 없이 군도 내부로 진입하는 것을 금지' },
+			{ sid: 'G2V-6N9', city: '예테보리', nick: '서부 조선소', mood: '조선', resource: '선체 부품과 항만 크레인 부속', attitude: '화물선 승무원과 조선 기술자를 우대' },
+			{ sid: 'M7B-4Q1', city: '말뫼', nick: '남부 교각', mood: '교량', resource: '교량 보수재와 남부 노선 정보', attitude: '차량 중량과 화물 목록을 공개해야 교량 진입 허용' },
+			{ sid: 'K1R-8D6', city: '키루나', nick: '철광 심장', mood: '광산', resource: '철광석과 내한 강철', attitude: '광산 노동자와 대형 운송 차량에 개방적' },
+		],
+	},
+	{
+		id: 'fin',
+		tile: 'FIN',
+		name: '핀란드권',
+		col: 6,
+		row: 1,
+		stations: [
+			{ sid: 'H6F-2C9', city: '헬싱키', nick: '화강암 심층', mood: '방공호', resource: '공기 필터와 의약품', attitude: '신원 확인과 방사성 먼지 검사를 통과해야 입장 가능' },
+			{ sid: 'T3M-7K4', city: '탐페레', nick: '쌍호수 공장', mood: '공업', resource: '발전기 부품과 산업용 직물', attitude: '수리 작업이나 노동 계약을 수락한 방문자 우대' },
+			{ sid: 'U8R-1P5', city: '투르쿠', nick: '왕관 부두', mood: '조선', resource: '소형 선박과 항법 장치', attitude: '대규모 무장 선단보다 소수의 교역선을 선호' },
+			{ sid: 'F4L-9V2', city: '오울루', nick: '북풍 중계소', mood: '한랭', resource: '방한 장비와 무전 부품', attitude: '혹한 장비가 부족한 여행자는 출발을 제한하고 강제 대피시킴' },
+		],
+	},
+	{
+		id: 'uk',
+		tile: 'UK',
+		name: '영국권',
+		col: 1,
+		row: 2,
+		stations: [
+			{ sid: 'Q7L-2A8', city: '런던', nick: '킹스크로스', mood: '지하', resource: '의약품', attitude: '신분과 목적 확인 후 제한 허용' },
+			{ sid: 'M4R-9K1', city: '맨체스터', nick: '붉은 방직소', mood: '직물', resource: '방한복과 산업용 직물', attitude: '기술자와 숙련공 환대' },
+			{ sid: 'T8C-5N3', city: '버밍엄', nick: '검은 모루', mood: '제철', resource: '차량 부품', attitude: '거래 구역 진입 전 무장 해제' },
+			{ sid: 'H2V-7P6', city: '리버풀', nick: '웨스트독', mood: '항만', resource: '소금과 연료', attitude: '선원과 라이더 우대' },
+		],
+	},
+	{
+		id: 'dk',
+		tile: 'DK',
+		name: '덴마크권',
+		col: 4,
+		row: 2,
+		stations: [
+			{ sid: 'C7P-4M8', city: '코펜하겐', nick: '외레순드 관문', mood: '해협', resource: '해상 지도와 해협 통행 정보', attitude: '출항지와 목적지를 등록한 선박 및 차량만 통과 허용' },
+			{ sid: 'A2R-9V5', city: '오르후스', nick: '바람의 링', mood: '풍력', resource: '발전기 베어링과 터빈 부품', attitude: '전기 기술자와 발전 설비 정비사를 우대' },
+			{ sid: 'D6F-3K1', city: '오덴세', nick: '푸른 저장고', mood: '농업', resource: '종자와 보존 식량', attitude: '체류 인원과 식수 소비량을 신고한 소규모 집단만 허용' },
+			{ sid: 'L8N-5Q7', city: '올보르', nick: '백색 가마', mood: '시멘트', resource: '콘크리트 보수재와 소성로 부품', attitude: '건축 자재나 노동력을 제공하는 운송대에 개방적' },
+		],
+	},
+	{
+		id: 'nl',
+		tile: 'NL',
+		name: '네덜란드권',
+		col: 3,
+		row: 3,
+		stations: [
+			{ sid: 'L4T-7C2', city: '로테르담', nick: '델타 야드', mood: '물류', resource: '연료 저장 시설', attitude: '차량과 화물 검사 후 허용' },
+			{ sid: 'P9B-3N6', city: '암스테르담', nick: '검은 운하', mood: '침수', resource: '의약품', attitude: '대규모 집단보다 소수 방문객 선호' },
+			{ sid: 'Y2K-8R1', city: '에인트호번', nick: '필립스 홀', mood: '전자', resource: '전자 부품', attitude: '기술과 수리 경력 증명 요구' },
+			{ sid: 'C6M-5V4', city: '위트레흐트', nick: '중앙선', mood: '철도', resource: '노선 정보', attitude: '목적지와 예정 경로 공개 필수' },
+		],
+	},
+	{
+		id: 'de',
+		tile: 'DE',
+		name: '독일권',
+		col: 4,
+		row: 3,
+		stations: [
+			{ sid: 'R8K-4J1', city: '베를린', nick: '링바흐', mood: '콘크리트', resource: '기록 장치', attitude: '등록 절차 준수자만 수용' },
+			{ sid: 'D2X-7M5', city: '함부르크', nick: '엘베 게이트', mood: '수문', resource: '정제유', attitude: '화물과 운송 계약 보유자 우대' },
+			{ sid: 'P6N-3C9', city: '에센', nick: '제9용광로', mood: '공업', resource: '금속과 공구', attitude: '숙련공과 정비사 환영' },
+			{ sid: 'W1H-8Q4', city: '뮌헨', nick: '남부 시계', mood: '정밀', resource: '계측기', attitude: '예의 바르지만 철저히 감시' },
+		],
+	},
+	{
+		id: 'cz',
+		tile: 'CZ',
+		name: '체코권',
+		col: 5,
+		row: 3,
+		stations: [
+			{ sid: 'V4P-7L2', city: '프라하', nick: '백탑 지하', mood: '지하', resource: '기록 장치와 도시 지도', attitude: '보증인이 없는 방문자는 지상 교역소만 이용 가능' },
+			{ sid: 'B8M-3Q6', city: '브르노', nick: '모라바 공방', mood: '기계', resource: '정밀 기계 부품', attitude: '기술 시험을 통과한 정비사와 공학자 우대' },
+			{ sid: 'O2T-9R5', city: '오스트라바', nick: '삼중 굴뚝', mood: '제철', resource: '강판과 용접 장비', attitude: '무장 인원은 공업 구역 밖에서 대기' },
+			{ sid: 'Z5K-1D8', city: '플젠', nick: '서부 주조소', mood: '주조', resource: '펌프와 변속 기어', attitude: '부품 거래 계약이 확인되면 장기 체류 허용' },
+		],
+	},
+	{
+		id: 'pl',
+		tile: 'PL',
+		name: '폴란드권',
+		col: 6,
+		row: 3,
+		warning: '위조 기록, 중복 코드 악용',
+		stations: [
+			{ sid: 'P7W-4K2', city: '바르샤바', nick: '비슬라 관제탑', mood: '관제', resource: '경로 기록과 통행 증명', attitude: '등록된 이동 경로를 제출해야 체류 허용' },
+			{ sid: 'G3D-8N1', city: '그단스크', nick: '호박 부두', mood: '항만', resource: '선박 부품과 저장 연료', attitude: '운송 화물을 가진 방문자 우대' },
+			{ sid: 'K6R-2M9', city: '크라쿠프', nick: '소금문', mood: '석조', resource: '소금과 보존 약품', attitude: '오염 검사를 통과한 소규모 방문객만 허용' },
+			{ sid: 'S9H-5C4', city: '카토비체', nick: '검은 분지', mood: '탄광', resource: '강철과 굴착 공구', attitude: '노동이나 부품을 제공할 수 있는 사람에게 개방적' },
+		],
+	},
+	{
+		id: 'by',
+		tile: 'BY',
+		name: '벨라루스권',
+		col: 7,
+		row: 3,
+		warning: '가짜 정거장, SID 위조, 기록 조작',
+		stations: [
+			{ sid: 'M3N-8K5', city: '민스크', nick: '직선도시', mood: '통제', resource: '인증 인장과 중계 장치', attitude: '모든 방문자의 신원과 체류 시간을 기록' },
+			{ sid: 'B9R-4T1', city: '브레스트', nick: '서쪽 관문', mood: '관문', resource: '통행 증명과 차량 타이어', attitude: '동서 이동 계약이 있는 운송대 우대' },
+			{ sid: 'G6L-2V7', city: '고멜', nick: '늪등대', mood: '습지', resource: '정수 필터와 이탄 연료', attitude: '현지 안내인 없이 습지로 나가는 것을 금지' },
+			{ sid: 'V1C-9P3', city: '비쳅스크', nick: '북풍 창고', mood: '한랭', resource: '방한복과 단열재', attitude: '겨울 장비가 부족한 여행자는 강제 체류 조치' },
+		],
+	},
+	{
+		id: 'ruw',
+		tile: 'RU-W',
+		name: '서부 러시아권',
+		col: 8,
+		row: 3,
+		warning: '중복 SID 분쟁, 코드 승계',
+		stations: [
+			{ sid: 'M8K-4R1', city: '모스크바', nick: '환상선', mood: '지하', resource: '도시 지도와 무전 중계 장치', attitude: '방문 목적과 이동 경로를 등록해야 내부 이동 허용' },
+			{ sid: 'P3N-7V6', city: '상트페테르부르크', nick: '청동 운하', mood: '운하', resource: '선박 부품과 의약품', attitude: '소형 운송대는 허용하지만 대규모 무장 집단은 거부' },
+			{ sid: 'S6D-2L9', city: '스몰렌스크', nick: '서부 성문', mood: '요새', resource: '통행 증명과 서부 도로 정보', attitude: '출발지와 보증인이 확인된 여행자만 수용' },
+			{ sid: 'T1F-8Q4', city: '툴라', nick: '강철 공방', mood: '병기', resource: '탄약 부품과 정비 공구', attitude: '모든 무기를 검사하며 기술자는 우대' },
+		],
+	},
+	{
+		id: 'ruu',
+		tile: 'RU-U',
+		name: '우랄 관문권',
+		col: 9,
+		row: 3,
+		stations: [
+			{ sid: 'Y7E-3K9', city: '예카테린부르크', nick: '대륙의 문', mood: '중공업', resource: '대형 차량 부품과 우랄 횡단 지도', attitude: '차량 상태와 남은 연료를 검사한 뒤 통과 허용' },
+			{ sid: 'C2L-6R4', city: '첼랴빈스크', nick: '백열 분지', mood: '제철', resource: '장갑판과 내열 부품', attitude: '무장 차량은 외곽 검사장에서 장시간 검사를 받음' },
+			{ sid: 'P5T-1N8', city: '페름', nick: '북부 반응로', mood: '화학', resource: '윤활유와 산업용 약품', attitude: '오염 기록이 불명확한 방문자는 격리 구역에 수용' },
+			{ sid: 'U9S-4D3', city: '우파', nick: '검은 증류탑', mood: '정유', resource: '경유와 방한용 윤활유', attitude: '연료 거래 계약이 없는 외부 차량에는 배급하지 않음' },
+		],
+	},
+	{
+		id: 'fr',
+		tile: 'FR',
+		name: '프랑스권',
+		col: 1,
+		row: 4,
+		stations: [
+			{ sid: 'K9F-3D2', city: '파리', nick: '페리페리크', mood: '네온', resource: '지도와 경로 정보', attitude: '출신과 이동 경로를 반복 확인' },
+			{ sid: 'A6M-8R4', city: '리옹', nick: '두 강의 문', mood: '석조', resource: '의약품', attitude: '계약서나 보증인 없이는 냉담' },
+			{ sid: 'V3Q-1L7', city: '마르세유', nick: '푸른 부두', mood: '해양', resource: '연료', attitude: '선불 거래자에게 우호적' },
+			{ sid: 'C5T-9B6', city: '릴', nick: '회색 종탑', mood: '무전', resource: '통신 부품', attitude: '유효한 중계 코드 필수' },
+		],
+	},
+	{
+		id: 'be',
+		tile: 'BE',
+		name: '벨기에권',
+		col: 3,
+		row: 4,
+		stations: [
+			{ sid: 'B8R-2F7', city: '브뤼셀', nick: '유리 의회', mood: '외교', resource: '중개권과 거래 계약', attitude: '보증인 없는 방문자의 체류 제한' },
+			{ sid: 'A3Q-9L5', city: '앤트워프', nick: '절단항', mood: '정밀', resource: '정밀 공구', attitude: '소지품 감정 후 대우 결정' },
+			{ sid: 'G7C-1M8', city: '리에주', nick: '뜨거운 강', mood: '무장', resource: '탄약 부품', attitude: '무장 방문자는 외곽에서 대기' },
+			{ sid: 'N4V-6D2', city: '브뤼헤', nick: '종의 도시', mood: '안개', resource: '보존 식량', attitude: '조용하고 규칙적인 방문객 선호' },
+		],
+	},
+	{
+		id: 'ch',
+		tile: 'CH',
+		name: '스위스권',
+		col: 4,
+		row: 4,
+		stations: [
+			{ sid: 'Z9H-4K3', city: '취리히', nick: '금고역', mood: '금융', resource: '크레딧 기록 검증', attitude: '신원과 거래 기록 불명자는 거부' },
+			{ sid: 'G2M-7P1', city: '제네바', nick: '백색 부두', mood: '중립', resource: '의료 장비', attitude: '무기 봉인과 중립 규정 준수 시 환대' },
+			{ sid: 'B5T-8R6', city: '바젤', nick: '라인 랩', mood: '화학', resource: '약품 원료', attitude: '검역과 오염 검사 통과자만 입장' },
+			{ sid: 'L1C-3V9', city: '루체른', nick: '사자문', mood: '산악', resource: '정수 필터', attitude: '일반 방문자에게 신중하나 구조 요청에는 관대' },
+		],
+	},
+	{
+		id: 'at',
+		tile: 'AT',
+		name: '오스트리아권',
+		col: 5,
+		row: 4,
+		stations: [
+			{ sid: 'W6A-3K8', city: '빈', nick: '환상궁', mood: '제국', resource: '의료 장비와 보존 기록', attitude: '신원과 방문 목적을 등록한 사람만 중심 구역에 출입 가능' },
+			{ sid: 'L2D-9R4', city: '린츠', nick: '다뉴브 제철소', mood: '제철', resource: '강판과 교량 보수재', attitude: '금속이나 산업 부품을 거래하는 운송대 우대' },
+			{ sid: 'G7M-1V5', city: '그라츠', nick: '붉은 공방', mood: '기계', resource: '차량 구동계와 농기계 부품', attitude: '정비 기술을 증명한 방문자에게 작업장과 숙소 제공' },
+			{ sid: 'I4T-8C2', city: '인스브루크', nick: '알프스 관문', mood: '산악', resource: '터널 지도와 제동 장치', attitude: '차량과 방한 장비 검사 후 산악 노선 진입 허용' },
+		],
+	},
+	{
+		id: 'hu',
+		tile: 'HU',
+		name: '헝가리권',
+		col: 6,
+		row: 4,
+		stations: [
+			{ sid: 'H7B-4V1', city: '부다페스트', nick: '열수궁', mood: '온천', resource: '정제수와 의료용 증류수', attitude: '피부와 호흡기 오염 검사 후 입장 허용' },
+			{ sid: 'G2Y-8C6', city: '죄르', nick: '라바 벨트', mood: '자동차', resource: '차축과 구동 부품', attitude: '운행 가능한 차량을 가져온 사람 우대' },
+			{ sid: 'D9N-3K5', city: '데브레첸', nick: '동부 곡창', mood: '농업', resource: '곡물과 종자', attitude: '식량 보유량과 방문 인원을 엄격히 기록' },
+			{ sid: 'S4R-6M2', city: '세게드', nick: '붉은 수문', mood: '수로', resource: '보존 식량과 관개 부품', attitude: '수로 규칙을 위반한 집단은 영구 추방' },
+		],
+	},
+	{
+		id: 'ua',
+		tile: 'UA',
+		name: '우크라이나권',
+		col: 7,
+		row: 4,
+		warning: '유령 정거장, 코드 승계, 중복 SID',
+		stations: [
+			{ sid: 'K2Y-7M4', city: '키이우', nick: '드니프로 심층', mood: '지하', resource: '무전 중계 장치와 경로 정보', attitude: '출발지와 목적지를 모두 확인한 뒤 입장 허용' },
+			{ sid: 'L8V-3C1', city: '르비우', nick: '사자 회랑', mood: '석조', resource: '의약품과 보존 식량', attitude: '가족 단위와 소규모 운송대를 우선 수용' },
+			{ sid: 'O5D-9R6', city: '오데사', nick: '계단항', mood: '항만', resource: '곡물과 소금', attitude: '화물 목록을 공개하지 않는 거래자는 거부' },
+			{ sid: 'D7P-2H8', city: '드니프로', nick: '강철강', mood: '중공업', resource: '대형 차량 골격과 장갑판', attitude: '공업 기술자에게는 개방적이나 무장 집단은 감시' },
+		],
+	},
+	{
+		id: 'ruv',
+		tile: 'RU-V',
+		name: '볼가권',
+		col: 8,
+		row: 4,
+		stations: [
+			{ sid: 'N4V-6K2', city: '니즈니노브고로드', nick: '강철 합류점', mood: '조선', resource: '강선 부품과 수송선 엔진', attitude: '강상 운송 계약을 가진 사람에게 우호적' },
+			{ sid: 'K7Z-3M8', city: '카잔', nick: '흰 보일러', mood: '화학', resource: '연료 첨가제와 방호 필터', attitude: '검역을 통과하고 화학 물질을 신고해야 입장 가능' },
+			{ sid: 'S2A-9R5', city: '사마라', nick: '볼가 기어', mood: '기계', resource: '차량 변속기와 발전기 부품', attitude: '운행 가능한 차량이나 수리 기술을 가진 방문자 우대' },
+			{ sid: 'V5G-1D7', city: '볼고그라드', nick: '붉은 제방', mood: '제철', resource: '강판과 교량 보수재', attitude: '노동 계약 없는 장기 체류자는 받지 않음' },
+		],
+	},
+	{
+		id: 'es',
+		tile: 'ES',
+		name: '스페인권',
+		col: 1,
+		row: 5,
+		stations: [
+			{ sid: 'S7D-2V9', city: '마드리드', nick: '태양문', mood: '건조', resource: '식수', attitude: '낮에 지상에 머문 사람은 격리' },
+			{ sid: 'B4K-6A1', city: '바르셀로나', nick: '람블라', mood: '채색', resource: '배터리', attitude: '상인 환영, 무기는 봉인' },
+			{ sid: 'G9R-5T3', city: '빌바오', nick: '철강', mood: '조선', resource: '판금과 차량 차체', attitude: '노동과 수리 제공자 우대' },
+			{ sid: 'E3M-8L7', city: '세비야', nick: '오렌지 홀', mood: '농업', resource: '식량', attitude: '소문을 퍼뜨리는 사람 경계' },
+		],
+	},
+	{
+		id: 'ita',
+		tile: 'ITA',
+		name: '이탈리아권',
+		col: 4,
+		row: 5,
+		stations: [
+			{ sid: 'N5C-2P8', city: '밀라노', nick: '북부 아케이드', mood: '패션', resource: '보호복', attitude: '크레딧과 거래 기록 중시' },
+			{ sid: 'F7Q-9D1', city: '토리노', nick: '피아트 벨트', mood: '자동차', resource: '엔진 부품', attitude: '정비사와 차량 기술자 환대' },
+			{ sid: 'R3V-6K4', city: '로마', nick: '일곱 문', mood: '유적', resource: '문서와 지도', attitude: '방문 목적과 이동 이유 심문' },
+			{ sid: 'J8A-1M5', city: '제노바', nick: '사슬항', mood: '절벽', resource: '해양 연료', attitude: '선박 표식과 항만 계약 보유자 우대' },
+		],
+	},
+	{
+		id: 'hr',
+		tile: 'HR',
+		name: '크로아티아권',
+		col: 5,
+		row: 5,
+		warning: '가짜 항만, 코드 승계',
+		stations: [
+			{ sid: 'Z8G-4R2', city: '자그레브', nick: '사바 중앙', mood: '철도', resource: '철도 부품과 내륙 노선도', attitude: '예정 경로와 출발 시간을 등록해야 숙박 허용' },
+			{ sid: 'R3J-7M6', city: '리예카', nick: '제3부두', mood: '항만', resource: '연료와 해양 엔진', attitude: '항만 노동이나 선박 수리를 제공하는 사람 우대' },
+			{ sid: 'S5P-1K9', city: '스플리트', nick: '석회성채', mood: '석회', resource: '소금과 담수화 부품', attitude: '식수 배급 규정을 따르는 방문자는 환영' },
+			{ sid: 'D2B-8V4', city: '두브로브니크', nick: '붉은 성벽', mood: '성벽', resource: '해안 경로 정보와 의약품', attitude: '소수 방문객만 받아들이며 대형 운송대는 성 밖에서 대기' },
+		],
+	},
+	{
+		id: 'ro',
+		tile: 'RO',
+		name: '루마니아권',
+		col: 6,
+		row: 5,
+		warning: '코드 승계, 유령 정거장',
+		stations: [
+			{ sid: 'B5U-9L3', city: '부쿠레슈티', nick: '궁전 지하', mood: '지하', resource: '공기 필터와 행정 기록', attitude: '출입 목적에 따라 이동 가능 구역을 제한' },
+			{ sid: 'P8R-2F7', city: '플로이에슈티', nick: '검은 유정', mood: '정유', resource: '정제유와 윤활유', attitude: '빈 차량보다 연료 용기를 가진 거래자 우대' },
+			{ sid: 'C3V-6T1', city: '브라쇼브', nick: '카르파티아문', mood: '산악', resource: '산악 지도와 제동 장치', attitude: '차량 상태가 불량하면 고갯길 진입을 거부' },
+			{ sid: 'K9A-4M8', city: '콘스탄차', nick: '흑해 부두', mood: '항만', resource: '해양 연료와 소금', attitude: '선박 표식이나 항만 계약이 있는 방문자 우대' },
+		],
+	},
+	{
+		id: 'rus',
+		tile: 'RU-S',
+		name: '남부 러시아권',
+		col: 8,
+		row: 5,
+		warning: '가짜 정거장, 이동식 SID 도용',
+		stations: [
+			{ sid: 'R8D-4P2', city: '로스토프나도누', nick: '돈 관문', mood: '곡창', resource: '곡물과 운송용 사료', attitude: '화물 목록과 식량 소비량을 사전에 신고해야 함' },
+			{ sid: 'K3B-7N6', city: '크라스노다르', nick: '녹색 격납고', mood: '농업', resource: '종자와 관개 장비', attitude: '농기구나 노동력을 제공하는 사람에게 개방적' },
+			{ sid: 'S9H-2C5', city: '소치', nick: '유리 해안', mood: '온실', resource: '과일과 약용 식물', attitude: '병충해 검사를 통과한 소규모 방문객만 허용' },
+			{ sid: 'A4M-8V1', city: '아스트라한', nick: '소금 삼각주', mood: '염수', resource: '소금과 정수 장치', attitude: '현지 안내인 없이 삼각주 수로로 나가는 것을 금지' },
+		],
+	},
+	{
+		id: 'bg',
+		tile: 'BG',
+		name: '불가리아권',
+		col: 6,
+		row: 6,
+		stations: [
+			{ sid: 'S6F-3N9', city: '소피아', nick: '비토샤 셸터', mood: '방공호', resource: '무전 부품과 방호 장비', attitude: '유효한 무전 호출부호가 있어야 내부 진입 허용' },
+			{ sid: 'P2L-7C4', city: '플로브디프', nick: '일곱 언덕', mood: '농업', resource: '곡물과 과일 보존식', attitude: '농기구나 노동력을 제공하는 사람에게 우호적' },
+			{ sid: 'V8A-1R5', city: '바르나', nick: '백색 방파제', mood: '해안', resource: '소금과 어업 장비', attitude: '해상 이동 기록이 불분명한 사람은 격리' },
+			{ sid: 'R4D-9K2', city: '루세', nick: '다뉴브 사슬', mood: '교량', resource: '강변 지도와 교량 부품', attitude: '통행료를 선납한 차량만 강을 건널 수 있음' },
+		],
+	},
+	{
+		id: 'gr',
+		tile: 'GR',
+		name: '그리스권',
+		col: 6,
+		row: 7,
+		warning: '유령 정거장, 이동식 가짜 정거장',
+		stations: [
+			{ sid: 'A8E-4N1', city: '아테네', nick: '대리석 심층', mood: '유적', resource: '문서와 남부 항로 지도', attitude: '방문 목적을 심문하며 유적 지하 구역 출입을 엄격히 제한' },
+			{ sid: 'T3S-7K6', city: '테살로니키', nick: '백색 부두', mood: '항만', resource: '연료와 선박 부품', attitude: '화물 목록과 해상 이동 기록이 확인된 방문자 우대' },
+			{ sid: 'P5R-2M9', city: '파트라', nick: '서해 관문', mood: '해운', resource: '해협 정보와 차량 수송 장비', attitude: '공인된 운송 계약이 없는 대형 차량은 외곽에서 대기' },
+			{ sid: 'L9G-6V3', city: '라리사', nick: '테살리아 곡창', mood: '농업', resource: '곡물과 올리브 보존식', attitude: '물 사용량과 체류 인원을 신고한 소규모 집단만 허용' },
+		],
+	},
+];
+
+const gridCols = Math.max(...regions.map((r) => r.col));
+const gridRows = Math.max(...regions.map((r) => r.row));
+---
+
+<div class="nh-station-map-wrap">
+	<div
+		class="nh-station-map-scroll"
+		style={`background-image: linear-gradient(color-mix(in srgb, var(--sl-color-bg) 45%, transparent), color-mix(in srgb, var(--sl-color-bg) 60%, transparent)), url(${europeMapSrc})`}
+	>
+		<div class="nh-station-map" style={`grid-template-columns: repeat(${gridCols}, minmax(3.4rem, 1fr)); grid-template-rows: repeat(${gridRows}, minmax(2.4rem, auto));`}>
+			{regions.map((region) => (
+				<button
+					type="button"
+					class="nh-station-tile"
+					data-region={region.id}
+					aria-expanded="false"
+					style={`grid-column: ${region.col}; grid-row: ${region.row};`}
+				>
+					{region.tile}
+				</button>
+			))}
+		</div>
+	</div>
+
+	<p class="nh-station-hint" data-station-hint>지역을 선택하면 주요 정거장 4곳이 펼쳐집니다. 같은 지역을 다시 누르면 접힙니다.</p>
+
+	<div class="nh-station-panels">
+		{regions.map((region) => (
+			<div class="nh-station-panel" data-region-panel={region.id} hidden>
+				<div class="nh-station-panel-header">
+					<h4>{region.name}</h4>
+					{region.warning && <p class="nh-station-warning">⚠ {region.warning}</p>}
+				</div>
+				<div class="nh-card-grid">
+					{region.stations.map((station) => (
+						<div class="nh-card">
+							<p class="nh-card-title">{station.sid}</p>
+							<p class="nh-card-meta">재앙 전 {station.city} · {station.nick}</p>
+							<ul>
+								<li><strong>분위기</strong> {station.mood}</li>
+								<li><strong>대표자원</strong> {station.resource}</li>
+								<li><strong>외부인 태도</strong> {station.attitude}</li>
+							</ul>
+						</div>
+					))}
+				</div>
+			</div>
+		))}
+	</div>
+</div>
+
+<script>
+	const tiles = document.querySelectorAll<HTMLButtonElement>('.nh-station-tile');
+	const panels = document.querySelectorAll<HTMLDivElement>('[data-region-panel]');
+	const hint = document.querySelector<HTMLParagraphElement>('[data-station-hint]');
+
+	tiles.forEach((tile) => {
+		tile.addEventListener('click', () => {
+			const region = tile.dataset.region;
+			const wasActive = tile.getAttribute('aria-expanded') === 'true';
+
+			tiles.forEach((t) => t.setAttribute('aria-expanded', 'false'));
+			panels.forEach((p) => {
+				p.hidden = true;
+			});
+
+			if (wasActive) {
+				if (hint) hint.hidden = false;
+				return;
+			}
+
+			tile.setAttribute('aria-expanded', 'true');
+			const panel = document.querySelector<HTMLDivElement>(`[data-region-panel="${region}"]`);
+			if (panel) {
+				panel.hidden = false;
+				if (hint) hint.hidden = true;
+				panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+			}
+		});
+	});
+</script>
+
+<style>
+	.nh-station-map-wrap {
+		margin: 1.75rem 0;
+	}
+
+	/*
+	  유럽 야간 지도는 이 박스(타일 그리드만 담는 고정 크기 영역)에만 건다.
+	  아래 지역 패널이 펼쳐져도 이 박스 자체의 높이는 그대로라서, 배경이 늘어나며
+	  깨지는 문제 없이 항상 같은 비율로 유지된다.
+	*/
+	.nh-station-map-scroll {
+		overflow-x: auto;
+		padding: 0.5rem 0.5rem 0.9rem;
+		margin-inline: -0.5rem;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
+	.nh-station-map {
+		position: relative;
+		display: grid;
+		gap: 0.4rem;
+	}
+
+	.nh-station-tile {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 3.4rem;
+		padding: 0.5rem 0.4rem;
+		border-radius: 0.3rem;
+		border: 1px solid color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
+		background: color-mix(in srgb, var(--sl-color-accent) 6%, transparent);
+		font-family: var(--nh-font-display);
+		font-size: var(--sl-text-xs);
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		color: var(--sl-color-gray-1);
+		cursor: pointer;
+		transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+	}
+
+	.nh-station-tile:hover {
+		border-color: var(--sl-color-accent);
+		transform: translateY(-1px);
+	}
+
+	.nh-station-tile[aria-expanded='true'] {
+		background: color-mix(in srgb, var(--sl-color-accent) 32%, transparent);
+		border-color: var(--sl-color-accent);
+		color: var(--sl-color-white);
+		box-shadow: 0 0 0.6rem color-mix(in srgb, var(--sl-color-accent) 55%, transparent);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.nh-station-tile {
+			transition: none;
+		}
+	}
+
+	.nh-station-hint {
+		margin: 0.5rem 0 0;
+		text-align: center;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+
+	.nh-station-hint[hidden] {
+		display: none;
+	}
+
+	.nh-station-panel {
+		margin-top: 1.5rem;
+	}
+
+	.nh-station-panel-header {
+		text-align: center;
+		margin-bottom: 1rem;
+	}
+
+	.nh-station-panel-header h4 {
+		margin: 0;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+		font-family: var(--nh-font-display);
+		color: var(--sl-color-accent-high);
+	}
+
+	.nh-station-warning {
+		display: inline-block;
+		margin: 0.6rem auto 0;
+		padding: 0.3rem 0.75rem;
+		border-radius: 0.25rem;
+		font-family: var(--nh-font-display);
+		font-size: var(--sl-text-xs);
+		color: hsl(355, 85%, 82%);
+		background: color-mix(in srgb, hsl(355, 75%, 50%) 16%, transparent);
+		border: 1px solid color-mix(in srgb, hsl(355, 75%, 55%) 40%, transparent);
+	}
+</style>
