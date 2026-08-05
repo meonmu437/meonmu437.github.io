@@ -152,6 +152,15 @@ html {
 	color: hsl(var(--yh-card-hue, 198), 55%, 32%);
 }
 
+.yh-card-title a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.yh-card-title a:hover {
+	text-decoration: underline;
+}
+
 .yh-card ul {
 	margin: 0;
 	padding-inline-start: 1.1rem;

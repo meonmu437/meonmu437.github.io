@@ -1,0 +1,121 @@
+---
+// 대문 페이지의 `ls -la` 타이핑 연출과 같은 방식: 터미널 창에 프롬프트 라인들을
+// 한 글자씩 타이핑해서 보여준다. 타이핑이 끝나면 revealTarget으로 지정한
+// 엘리먼트의 id에 sm-show 클래스를 붙여 뒤이어 나올 콘텐츠를 페이드인한다.
+interface Props {
+	lines: string[];
+	revealTarget?: string;
+}
+
+const { lines, revealTarget } = Astro.props;
+---
+
+<div class="sm-typing" data-lines={JSON.stringify(lines)} data-reveal-target={revealTarget}>
+	<pre class="sm-typing-body"><code></code></pre>
+</div>
+
+<script>
+	const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	function fullText(lines: string[]): string {
+		return lines.map((line) => `> ${line}`).join('\n');
+	}
+
+	function typeOut(el: HTMLElement): void {
+		const lines: string[] = JSON.parse(el.dataset.lines || '[]');
+		const code = el.querySelector('code');
+		const revealId = el.dataset.revealTarget;
+		const revealEl = revealId ? document.getElementById(revealId) : null;
+
+		function finish(): void {
+			el.classList.add('sm-typing-done');
+			revealEl?.classList.add('sm-show');
+		}
+
+		if (!code || prefersReduced) {
+			if (code) code.textContent = fullText(lines);
+			finish();
+			return;
+		}
+
+		let lineIndex = 0;
+		let charIndex = 0;
+		const speed = 28;
+		const linePause = 350;
+
+		function step(): void {
+			if (lineIndex >= lines.length) {
+				finish();
+				return;
+			}
+			const donePart = lines.slice(0, lineIndex).map((line) => `> ${line}`);
+			const current = `> ${lines[lineIndex]}`.slice(0, charIndex);
+			code!.textContent = [...donePart, current].join('\n');
+
+			if (charIndex >= `> ${lines[lineIndex]}`.length) {
+				lineIndex++;
+				charIndex = 0;
+				setTimeout(step, linePause);
+			} else {
+				charIndex++;
+				setTimeout(step, speed);
+			}
+		}
+
+		step();
+	}
+
+	const elements = document.querySelectorAll<HTMLElement>('.sm-typing[data-lines]');
+	const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) return;
+				typeOut(entry.target as HTMLElement);
+				observer.unobserve(entry.target);
+			});
+		},
+		{ threshold: 0.35 }
+	);
+	elements.forEach((el) => observer.observe(el));
+</script>
+
+<style>
+	.sm-typing {
+		margin: 0 auto;
+		max-width: 34rem;
+	}
+
+	.sm-typing-body {
+		margin: 0 !important;
+		padding: 0 !important;
+		background: transparent !important;
+		border: none !important;
+		border-radius: 0 !important;
+		box-shadow: none !important;
+		min-height: 5.5rem;
+	}
+
+	.sm-typing-body code {
+		display: block;
+		font-family: var(--sm-font-display);
+		font-size: var(--sl-text-sm);
+		line-height: 1.7;
+		color: var(--sl-color-accent);
+		white-space: pre-wrap;
+		word-break: break-word;
+		background: transparent !important;
+	}
+
+	/* 타이핑이 끝난 뒤에도 마지막 글자 뒤 커서는 계속 깜빡인다 */
+	.sm-typing .sm-typing-body code::after {
+		content: '_';
+		margin-inline-start: 0.1em;
+		animation: sm-blink 1s step-end infinite;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.sm-typing .sm-typing-body code::after {
+			animation: none;
+		}
+	}
+</style>

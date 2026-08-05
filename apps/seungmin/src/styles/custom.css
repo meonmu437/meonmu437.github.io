@@ -1,0 +1,658 @@
+/*
+  유승민 위키 커스텀 테마 — "유승민.dev"
+  - Design Read: 백엔드 개발자 캐릭터. 소개글 자체가 git 커밋/배포/401 에러
+    조크로 쓰여 있어서, 그 텍스트를 실제 UI로 살린다 — README.md/VS Code
+    다크 테마 오마주. 코드블록은 macOS 터미널 창(빨/노/초 닷)으로 감싼다
+    (대문 페이지의 터미널 UI와 같은 모티프).
+  - 라이트/다크 토글 있음(컬러그라운드와 동일한 토글 UI) — 개발자 캐릭터라
+    "그 정도는 있어야" 하는 디테일. 다크 = 기본(VS Code 다크 느낌의 짙은
+    청록빛 블랙 + 터미널 그린), 라이트 = GitHub 라이트에 가까운 톤.
+  - 강조색 2가지: 터미널 그린(코드/성공 배지), 레드 코럴(연애 로직/git·버그
+    아이콘/프로필 사진 재킷 배색과 맞춤).
+  - 위키 전체가 하나의 스크롤 페이지: .sm-section은 풀블리드 밴드,
+    .sm-reveal은 ScrollEffects.astro가 페이드인 제어.
+*/
+
+html {
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+:root {
+	--sm-font-display: 'JetBrains Mono', var(--sl-font-system-mono);
+	--sl-font: 'Noto Sans KR', var(--sl-font-system);
+	--sl-font-mono: 'JetBrains Mono', var(--sl-font-system-mono);
+
+	/* accent = 터미널 그린 (dark) */
+	--sl-color-accent-low: hsl(150, 55%, 16%);
+	--sl-color-accent: hsl(150, 65%, 50%);
+	--sl-color-accent-high: hsl(150, 70%, 78%);
+
+	/* 보조 강조 = 레드 코럴(연애 로직 / git·버그 아이콘 / 프로필 사진 재킷 배색) */
+	--sm-red: hsl(354, 82%, 63%);
+
+	/* 다크 = 짙은 청록빛 블랙(IDE 느낌). NIGHT HIGHWAY의 아스팔트 네이비와는 다른 방향 */
+	--sl-color-bg: hsl(200, 20%, 8%);
+	--sl-color-bg-nav: hsl(200, 20%, 10%);
+	--sl-color-bg-sidebar: hsl(200, 18%, 9%);
+
+	/* 디렉터리 리스팅 / git 레포 표의 외곽선 — 기본 hairline보다 뚜렷하게 */
+	--sm-border: var(--sl-color-hairline);
+
+	/* 코드 부분(프로필/외형/성격 패키지/연애 로직) 전용 GitHub Dark 문법 강조 팔레트 */
+	--sm-code-fg: #c9d1d9;
+	--sm-tok-kw: #ff7b72;
+	--sm-tok-str: #a5d6ff;
+	--sm-tok-num: #79c0ff;
+	--sm-tok-com: #8b949e;
+	--sm-tok-fn: #d2a8ff;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-high: hsl(150, 55%, 24%);
+	--sl-color-accent: hsl(150, 60%, 34%);
+	--sl-color-accent-low: hsl(150, 45%, 91%);
+
+	--sm-red: hsl(354, 70%, 48%);
+
+	--sl-color-bg: hsl(200, 25%, 98%);
+	--sl-color-bg-nav: hsl(200, 22%, 95%);
+	--sl-color-bg-sidebar: hsl(200, 20%, 96%);
+
+	/* 라이트 모드에서 기본 hairline이 너무 흐려서 표/리스팅 외곽선을 또렷하게 */
+	--sm-border: hsl(210, 14%, 75%);
+
+	/* 코드 부분 전용 GitHub Light 문법 강조 팔레트 */
+	--sm-code-fg: #24292f;
+	--sm-tok-kw: #cf222e;
+	--sm-tok-str: #0a3069;
+	--sm-tok-num: #0550ae;
+	--sm-tok-com: #6e7781;
+	--sm-tok-fn: #8250df;
+}
+
+/* 사이트 타이틀: 모노스페이스 + 터미널 그린 + 깜빡이는 커서 */
+.site-title span {
+	font-family: var(--sm-font-display);
+	font-weight: 700;
+	color: var(--sl-color-accent);
+}
+
+.site-title span::after {
+	content: '_';
+	margin-inline-start: 0.1em;
+	animation: sm-blink 1.1s step-end infinite;
+}
+
+@keyframes sm-blink {
+	0%,
+	50% {
+		opacity: 1;
+	}
+	50.01%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site-title span::after {
+		animation: none;
+	}
+}
+
+.sl-container {
+	margin-inline: auto;
+}
+
+/* Starlight 자동 페이지 타이틀(h1 #_top)은 숨기고, "유승민"을 본문 첫 ## 헤딩으로 직접 넣는다 */
+.content-panel:has(#_top) {
+	display: none;
+}
+
+.content-panel + .content-panel {
+	border-top: none;
+}
+
+/* 본문 헤딩: 모노스페이스 + 마크다운 문법(##/###)을 그대로 노출하는 메타 장식 */
+.sl-markdown-content :is(h2, h3, h4):not(:where(.not-content *)) {
+	font-family: var(--sm-font-display);
+	font-weight: 700;
+}
+
+.sl-markdown-content h2:not(:where(.not-content *))::before {
+	content: '## ';
+	color: var(--sl-color-accent);
+	opacity: 0.6;
+}
+
+.sl-markdown-content h3:not(:where(.not-content *))::before {
+	content: '### ';
+	color: var(--sl-color-accent);
+	opacity: 0.55;
+}
+
+.sl-anchor-link {
+	display: none !important;
+}
+.sl-heading-wrapper > :first-child {
+	padding-inline-end: 0 !important;
+}
+
+/* 인용구를 터미널 프롬프트 라인처럼 */
+.sl-markdown-content blockquote:not(:where(.not-content *)) {
+	border-inline-start: none;
+	border: 1px solid color-mix(in srgb, var(--sl-color-accent) 35%, transparent);
+	background: color-mix(in srgb, var(--sl-color-accent) 8%, transparent);
+	border-radius: 0.6rem;
+	padding: 0.7rem 1.1rem;
+	font-style: normal;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-sm);
+}
+
+.sl-markdown-content blockquote strong {
+	color: var(--sl-color-text-accent);
+	font-family: var(--sl-font);
+}
+
+/* 본문 이미지: 둥근 모서리 + 은은한 그림자 (배너/프로필 사진은 예외 클래스로 별도 처리) */
+.sl-markdown-content img:not(:where(.not-content *, .sm-banner-img, .sm-profile-img)) {
+	border-radius: 0.85rem;
+	box-shadow: var(--sl-shadow-md);
+	cursor: zoom-in;
+}
+
+.sm-banner-img {
+	width: 100%;
+	height: auto;
+	border-radius: 0.85rem;
+	cursor: zoom-in;
+}
+
+/* 모바일에서도 테마 토글을 헤더에 바로 노출 */
+.header .right-group {
+	display: flex !important;
+	gap: 0.5rem;
+}
+.header .social-icons {
+	display: none !important;
+}
+
+:root {
+	--sl-mobile-toc-height: 0rem;
+}
+
+[data-has-sidebar] {
+	--sl-content-inline-start: 0rem !important;
+}
+
+[data-has-sidebar] .header {
+	padding-inline-end: var(--sl-nav-pad-x);
+}
+
+@media (max-width: 49.9375rem) {
+	.header div:has(> #sm-toc-toggle) {
+		flex: 1;
+		min-width: 0;
+	}
+}
+
+.sidebar-pane {
+	display: none;
+	visibility: visible;
+	position: fixed;
+	inset-block-start: var(--sl-nav-height);
+	inset-inline: 0;
+	width: 100%;
+	height: auto;
+	max-height: calc(100vh - var(--sl-nav-height));
+	min-height: 0;
+	overflow-y: auto;
+	background: var(--sl-color-bg-sidebar);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	box-shadow: var(--sl-shadow-md);
+}
+
+html.sm-sidebar-expanded .sidebar-pane {
+	display: block;
+}
+
+.sidebar-content {
+	height: auto;
+	min-height: 0;
+}
+
+.mobile-preferences {
+	display: none !important;
+}
+
+.sm-sidebar-active {
+	color: var(--sl-color-text-accent) !important;
+	font-weight: 600;
+}
+
+/* ============ 위키 전용 컴포넌트 ============ */
+
+.sm-section {
+	margin-inline: calc(-1 * var(--sl-content-pad-x));
+	padding-inline: var(--sl-content-pad-x);
+	padding-block: clamp(3.5rem, 8vw, 6rem);
+	border-top: 1px solid var(--sl-color-hairline);
+	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
+}
+
+.sm-section .sl-heading-wrapper.level-h2 {
+	text-align: center;
+	font-size: clamp(var(--sl-text-2xl), 4.5vw, var(--sl-text-4xl));
+	margin-bottom: 0.75rem;
+}
+
+/* 히어로 */
+.sm-hero-status {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem;
+	margin: 1.25rem 0 !important;
+}
+
+.sm-badge {
+	display: inline-flex;
+	align-items: stretch;
+	border-radius: 0.3rem;
+	overflow: hidden;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-xs);
+	box-shadow: var(--sl-shadow-sm);
+}
+
+.sm-badge-label {
+	padding: 0.3rem 0.6rem;
+	background: var(--sl-color-gray-6);
+	color: var(--sl-color-gray-1);
+}
+
+.sm-badge-value {
+	padding: 0.3rem 0.6rem;
+	background: var(--sl-color-accent);
+	color: hsl(150, 45%, 8%);
+	font-weight: 700;
+}
+
+.sm-badge--red .sm-badge-value {
+	background: var(--sm-red);
+	color: hsl(354, 45%, 10%);
+}
+
+.sm-hero-prompt {
+	max-width: 32rem;
+	margin: 1.5rem auto 0 !important;
+}
+
+.sm-hero-prompt p {
+	margin: 0;
+	font-family: var(--sm-font-display);
+	color: var(--sl-color-accent);
+}
+
+.sm-hero-prompt p::before {
+	content: '> ';
+	opacity: 0.6;
+}
+
+.sm-hero-rest {
+	opacity: 0;
+	transition: opacity 0.4s ease;
+}
+
+.sm-hero-rest.sm-show {
+	opacity: 1;
+}
+
+/* 프로필 섹션의 사진 */
+.sm-profile-figure {
+	display: flex;
+	justify-content: center;
+	margin: 0 0 1.5rem !important;
+}
+
+.sm-profile-figure img {
+	width: clamp(12rem, 40vw, 16rem);
+	height: clamp(12rem, 40vw, 16rem);
+	object-fit: cover;
+	object-position: top center;
+	border-radius: 1rem;
+	box-shadow: 0 0.7rem 2rem color-mix(in srgb, var(--sl-color-accent) 35%, transparent);
+	border: 2px solid color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
+}
+
+/*
+  코드블록(Expressive Code) 대신, 프로필/외형/성격/연애 로직처럼 원래
+  코드였던 데이터를 전부 직접 디자인한 컴포넌트로 보여준다 — 복사 버튼이나
+  창틀 같은 코드에디터 장식은 없지만, 실제 객체 리터럴처럼 중괄호/콜론/쉼표를
+  그대로 살려서 "코드를 읽는 느낌"은 확실히 남긴다. 줄마다 <p>로 나눠서 JSX
+  줄바꿈 정리(whitespace collapsing)에 들여쓰기가 뭉개지지 않게 하고, 들여쓰기는
+  padding으로 표현한다.
+*/
+.sm-code {
+	margin: 1.5rem 0;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-sm);
+	line-height: 1.9;
+}
+
+.sm-code-line {
+	margin: 0;
+	color: var(--sm-code-fg);
+	word-break: break-word;
+}
+
+.sm-code-indent {
+	padding-inline-start: 1.5rem;
+}
+
+.sm-code-indent2 {
+	padding-inline-start: 3rem;
+}
+
+.tok-key {
+	color: var(--sm-tok-kw);
+}
+
+.tok-fn {
+	color: var(--sm-tok-fn);
+}
+
+.tok-str {
+	color: var(--sm-tok-str);
+}
+
+.tok-num,
+.tok-bool {
+	color: var(--sm-tok-num);
+}
+
+.tok-com {
+	color: var(--sm-tok-com);
+	font-style: italic;
+}
+
+.sm-love-panel {
+	margin: 1.5rem 0;
+	padding: 1.25rem 1.5rem;
+	border-radius: 0.85rem;
+	border: 1px solid color-mix(in srgb, var(--sm-red) 45%, transparent);
+	background: color-mix(in srgb, var(--sm-red) 6%, transparent);
+	box-shadow: 0 0.5rem 1.75rem color-mix(in srgb, var(--sm-red) 22%, transparent);
+}
+
+.sm-love-condition {
+	margin: 0 0 0.75rem;
+	font-weight: 700;
+}
+
+.sm-love-quote {
+	color: var(--sm-tok-com);
+	font-style: italic;
+}
+
+/*
+  취향: 흔한 태그 칩 대신 CLI --flag 목록처럼. 이 캐릭터가 "터미널로 말하는
+  사람"이라는 설정을 그대로 살리면서, 사이트의 다른 어떤 섹션과도 겹치지
+  않는 새로운 모양(태그 클라우드도, ls 리스팅도, JS 객체도 아닌)을 쓴다.
+*/
+.sm-flags {
+	margin: 1.5rem 0;
+	padding: 1rem 1.25rem;
+	border-inline-start: 2px solid var(--sl-color-hairline);
+}
+
+.sm-flags-cmd {
+	margin: 0 0 0.9rem;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-3);
+}
+
+.sm-flag-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem 0.9rem;
+	padding: 0.5rem 0;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-sm);
+	border-top: 1px dashed var(--sl-color-hairline);
+}
+
+.sm-flag-row:first-of-type {
+	border-top: none;
+}
+
+.sm-flag-name {
+	flex-shrink: 0;
+	width: 6rem;
+	font-weight: 700;
+	color: var(--sl-color-accent);
+}
+
+.sm-flag-row--warn .sm-flag-name {
+	color: var(--sm-red);
+}
+
+.sm-flag-value {
+	flex: 1;
+	min-width: 12rem;
+	color: var(--sl-color-gray-1);
+}
+
+/*
+  냥냥펀치 개요: 줄글 대신 재무제표/명세서 스타일 label-value 리스트로
+  핵심만 한눈에. 실제 재무제표처럼 항목/값을 점선으로 나눈다.
+*/
+.sm-statement {
+	margin: 1.5rem 0;
+}
+
+.sm-statement-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 1rem;
+	padding: 0.55rem 0;
+	border-bottom: 1px dashed var(--sl-color-hairline);
+}
+
+.sm-statement-row:last-child {
+	border-bottom: none;
+}
+
+.sm-statement dt {
+	flex-shrink: 0;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-3);
+}
+
+.sm-statement dd {
+	margin: 0;
+	text-align: right;
+	font-weight: 600;
+	color: var(--sl-color-text-accent);
+}
+
+/* 코드 옆에 남기는 주석 톤의 짧은 메모 */
+.sm-code-note {
+	margin: 1rem 0 0;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-xs);
+	color: var(--sm-tok-com);
+	font-style: italic;
+}
+
+.sm-code-note p {
+	margin: 0.2rem 0;
+}
+
+.sm-code-note p::before {
+	content: '// ';
+	opacity: 0.7;
+}
+
+/* 냥냥펀치 사무실 지도 / 승민의 집 평면도 */
+.sm-map-img {
+	width: 100%;
+	height: auto;
+	margin-bottom: 1.5rem;
+}
+
+/*
+  회사 공간 / 회사 사람들 / 승민이네 집 / 가족 — `ls -la` 디렉터리 리스팅처럼.
+  대문 페이지의 터미널 리스팅과 같은 언어를 써서, 색색의 카드 그리드 대신
+  "이 사람의 실제 터미널을 보는" 느낌을 준다. 장소는 디렉터리(drwx, 이름 뒤
+  /), 사람은 실행 파일(-rwx, 슬래시 없음)로 구분한다. 색은 터미널 그린 하나로
+  통일하고 항목별 색 배지를 두지 않는다.
+*/
+.sm-listing {
+	display: flex;
+	flex-direction: column;
+	margin: 1.5rem 0;
+	border: 1px solid var(--sm-border);
+	border-radius: 0.6rem;
+	overflow: hidden;
+	background: var(--sl-color-bg-nav);
+}
+
+.sm-entry {
+	padding: 0.7rem 1rem;
+	border-bottom: 1px solid var(--sm-border);
+}
+
+.sm-entry:last-child {
+	border-bottom: none;
+}
+
+.sm-entry-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.6rem;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-sm);
+}
+
+.sm-entry-perm {
+	color: var(--sl-color-gray-3);
+}
+
+.sm-entry-name {
+	font-weight: 700;
+	color: var(--sl-color-accent);
+}
+
+.sm-entry-meta {
+	color: var(--sl-color-gray-2);
+	font-size: var(--sl-text-xs);
+}
+
+.sm-entry-desc {
+	margin: 0.3rem 0 0;
+	padding-inline-start: 1.5rem;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-1);
+}
+
+.sm-entry-desc::before {
+	content: '# ';
+	color: var(--sl-color-gray-3);
+}
+
+/* 마무리 git 플레이버 창은 조금 더 좁게 */
+.sm-closing {
+	max-width: 34rem;
+	margin-inline: auto;
+}
+
+/* git remote -v 처럼 붙이는 외부 링크(유니챗/엘린) — 타이핑되는 git 커맨드와는 구분선으로 나눈다 */
+.sm-closing-remotes {
+	opacity: 0;
+	transition: opacity 0.4s ease;
+	max-width: 34rem;
+	margin: 0 auto;
+}
+
+.sm-closing-remotes.sm-show {
+	opacity: 1;
+}
+
+.sm-remote-box {
+	border: 1px solid var(--sm-border);
+	border-radius: 0.75rem;
+	overflow: hidden;
+	background: var(--sl-color-bg-nav);
+}
+
+.sm-remote-prompt {
+	margin: 0;
+	padding: 0.6rem 1rem;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-3);
+	border-bottom: 1px solid var(--sm-border);
+}
+
+.sm-remote-row {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.6rem 1rem;
+	font-family: var(--sm-font-display);
+	font-size: var(--sl-text-xs);
+	text-decoration: none;
+	border-bottom: 1px solid var(--sm-border);
+}
+
+.sm-remote-row:last-child {
+	border-bottom: none;
+}
+
+.sm-remote-row:hover {
+	background: color-mix(in srgb, var(--sl-color-accent) 8%, transparent);
+}
+
+.sm-remote-name {
+	flex-shrink: 0;
+	font-weight: 700;
+	padding: 0.1rem 0.5rem;
+	border-radius: 0.3rem;
+}
+
+.sm-remote-row--univers .sm-remote-name {
+	background: color-mix(in srgb, hsl(330, 80%, 60%) 20%, transparent);
+	color: hsl(330, 80%, 60%);
+}
+
+.sm-remote-row--elyn .sm-remote-name {
+	background: color-mix(in srgb, hsl(258, 70%, 62%) 20%, transparent);
+	color: hsl(258, 70%, 72%);
+}
+
+.sm-remote-url {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--sl-color-gray-2);
+}
+
+.sm-remote-tag {
+	flex-shrink: 0;
+	color: var(--sl-color-gray-3);
+}
