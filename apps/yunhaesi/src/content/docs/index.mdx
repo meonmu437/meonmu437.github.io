@@ -1,0 +1,303 @@
+---
+title: 윤해시
+description: 바닷바람에서 소금 냄새가 나고, 떠난 사람과 남은 사람이 같은 골목에서 다시 마주치는 작은 항구도시
+---
+
+import { Image } from 'astro:assets';
+import ScrollEffects from '../../components/ScrollEffects.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import BackToTop from '../../components/BackToTop.astro';
+import banner from '../../assets/yunhaesi/banner.png';
+import townMap from '../../assets/yunhaesi/town-map.png';
+import minhaProfile from '../../assets/yunhaesi/minha-profile.webp';
+import suminProfile from '../../assets/yunhaesi/sumin-profile.png';
+import yeoulProfile from '../../assets/yunhaesi/yeoul-profile.webp';
+import dowoonProfile from '../../assets/yunhaesi/dowoon-profile.webp';
+import jiwooProfile from '../../assets/yunhaesi/jiwoo-profile.webp';
+import junseoProfile from '../../assets/yunhaesi/junseo-profile.webp';
+import arinProfile from '../../assets/yunhaesi/arin-profile.webp';
+import daeunProfile from '../../assets/yunhaesi/daeun-profile.webp';
+import seungminProfile from '../../assets/yunhaesi/seungmin-profile.webp';
+import gyeongminProfile from '../../assets/yunhaesi/gyeongmin-profile.webp';
+
+<div class="yh-section yh-reveal" id="sec-intro">
+
+## 윤해시
+
+<Image src={banner} alt="윤해시 앞바다" class="yh-full-img" />
+
+> **배경:** 대한민국 동남해안, 인구 약 9만 명의 작은 항구도시
+
+> **분위기:** 오래된 구항과 새 주거지가 완만한 언덕을 사이에 두고 이어진 조용한 소도시
+
+> **날씨:** 바다의 영향으로 같은 날에도 볕과 바람의 차이가 크다
+
+> **핵심 정서:** "떠난 사람과 남은 사람이 같은 골목에서 다시 마주치는 곳"
+
+윤해시(潤海市)는 대한민국 동남해안에 있는 인구 약 9만 명의 조용한 지방 소도시다. 산비탈 주거지와 오래된 항구, 해변과 해송숲이 가까운 생활권 안에 이어져 있다. 화려한 관광지보다는 주민들의 일상이 중심이며, 여름철을 제외하면 비교적 한적하다.
+
+주민들은 서로의 가족, 직업, 학창 시절을 어느 정도 알고 있다. 귀향이나 결혼, 이혼 같은 개인적인 변화가 비교적 쉽게 알려지지만, 모든 주민이 소문에 집착하거나 사생활을 자세히 아는 것은 아니다. 오래된 친밀감에서 비롯된 도움과 부족한 익명성에서 오는 부담이 함께 존재한다.
+
+</div>
+
+<div class="yh-section yh-reveal" id="sec-places">
+
+## 주요 장소
+
+<Image src={townMap} alt="윤해시 지도" class="yh-full-img" />
+
+산과 바다가 가까워 비탈길과 계단이 많다. 장소 사이의 실제 거리는 멀지 않지만 경사진 길 때문에 도보 이동이 힘들 수 있다. 바다는 특별한 관광지가 아니라 골목 사이로 보이고, 바람과 습기, 냄새로 일상에서 자주 느껴지는 환경이다.
+
+<div class="yh-card-grid">
+	<div class="yh-card" style={`--yh-card-hue: 200`}>
+		<p class="yh-card-title">🏘️ 해송동</p>
+		<p class="yh-card-desc">민하와 수민이 태어나고 자란 산비탈 주거지. 복도식 아파트와 낮은 단독주택, 다세대주택이 좁은 골목을 따라 섞여 있다. 민하는 해송아파트에, 수민은 보라색 대문 집에 살았다.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 340`}>
+		<p class="yh-card-title">🌱 새싹유치원</p>
+		<p class="yh-card-desc">해송동과 윤해구항 사이의 작은 사립 유치원. 입구의 커다란 크레용 모양 대문이 특징이다.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 350`}>
+		<p class="yh-card-title">🏫 해송여자고등학교</p>
+		<p class="yh-card-desc">수민이 졸업한 여자고등학교. 학교 앞 언덕길에는 복사나무가 이어져 봄이면 연분홍 꽃이 핀다.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 18`}>
+		<p class="yh-card-title">🎨 윤해미술학원</p>
+		<p class="yh-card-desc">수민이 입시미술을 배웠던 오래된 학원. 점토 냄새와 석고 가루가 남아 있는 장소.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 30`}>
+		<p class="yh-card-title">🚲 물비탈길</p>
+		<p class="yh-card-desc">해송동과 윤해구항을 잇는 가파른 골목. 비가 오면 바닥이 미끄러워진다.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 205`}>
+		<p class="yh-card-title">🐟 윤해구항</p>
+		<p class="yh-card-desc">수산시장과 오래된 식당이 모여 있는 생활 중심지. 방파제 끝에는 작은 흰 등대가 있다.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 195`}>
+		<p class="yh-card-title">🌊 은파해변</p>
+		<p class="yh-card-desc">긴 모래사장 뒤로 해송숲이 이어지는 해변. 혼자 생각을 정리하고 싶을 때 찾는 곳.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 25`}>
+		<p class="yh-card-title">☕ 낮달 카페</p>
+		<p class="yh-card-desc">윤해구항이 내려다보이는 오래된 주택 2층의 작은 동네 카페.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 345`}>
+		<p class="yh-card-title">✏️ 모래별 문구사</p>
+		<p class="yh-card-desc">해송동의 오래된 작은 동네 문구점. 윤해시 주민이라면 누구나 어릴 때부터 다닌 곳이다.</p>
+	</div>
+</div>
+
+</div>
+
+<div class="yh-section yh-reveal" id="sec-weather">
+
+## 날씨와 계절
+
+윤해시는 바다의 영향을 받아 같은 날에도 햇빛, 바람, 습도와 체감 온도의 차이가 크다. 낮에 따뜻했더라도 해가 지면 바닷바람 때문에 빠르게 쌀쌀해질 수 있다.
+
+- 봄에는 맑은 날에도 짧은 소나기가 내릴 수 있다.
+- 바다 안개가 짙은 날에는 해변과 항구뿐 아니라 주택가 골목까지 흐려질 수 있다.
+- 여름에는 해변과 항구 주변에 관광객이 늘고 대중교통과 식당이 평소보다 붐빈다. 여름이 지나면 도시는 다시 주민들의 조용한 생활 리듬으로 돌아간다.
+
+</div>
+
+<div class="yh-section yh-reveal" id="sec-people">
+
+## 사람들
+
+윤해시에서 살아가는 사람들이다. 새싹유치원에서 함께 아이들을 돌보는 두 교사와 그 곁의 동료들, 그리고 매일 유치원 문을 두드리는 아이들이 있다.
+
+</div>
+
+<div class="yh-character-card yh-reveal" id="char-minha" style={`--yh-character-hue: 45`}>
+
+<div class="yh-character-header">
+	<div class="yh-character-photo">
+		<Image src={minhaProfile} alt="송민하" />
+	</div>
+
+### 송민하
+
+<p class="yh-character-tagline">다정하고 생활력 좋은 새싹유치원 교사. 가까운 사람에게는 애교와 투정이 많다.</p>
+
+> "우리 둘 중에 한 명이 남자였으면 아마 사귀고 결혼했겠다. 그치?"
+
+<ul class="yh-facts">
+	<li><strong>나이</strong> 32세</li>
+	<li><strong>생일</strong> 3월 31일</li>
+	<li><strong>직업</strong> 새싹유치원 6세 달님반 교사</li>
+	<li><strong>거주지</strong> 해송아파트 707호</li>
+	<li><strong>가족</strong> 부모님 · 5세 딸 정여울</li>
+</ul>
+</div>
+
+#### 외모와 성격
+
+- 가슴 윗부분까지 내려오는 긴 갈색 머리는 굵고 자연스러운 웨이브가 있으며, 정돈했을 때보다 살짝 흐트러졌을 때 더 부드러운 분위기가 난다.
+- 눈은 따뜻한 갈색이고 둥글고 부드러운 눈매지만, 피곤하거나 감정을 감출 때는 눈꼬리가 차분하게 내려앉는다.
+- 마르기보다는 적당히 살집이 있는 부드러운 체형으로, 어깨와 허리선이 둥글어 전체적으로 따뜻하고 포근한 인상을 준다.
+- 다정하고 생활력이 좋아 처음 보면 안정적인 어른이라는 인상을 준다. 가까운 사람에게는 애교와 투정이 많고 유독 외로움을 잘 탄다.
+- 평소에는 친근하고 편안한 인상이지만, 지치거나 상처받았을 때는 웃음기가 빠지며 예상보다 서늘하고 단정해 보인다.
+- 아이들을 돌보고 집안일을 많이 해 손끝이 야무지며, 딸 여울이나 유치원 아이들이 골라준 작은 네일을 한두 손가락에만 바르기도 한다.
+
+#### 이야기
+
+민하는 낡은 복도식 아파트에서 벽 하나를 사이에 둔 옆집 소꿉친구와 함께 자랐다. 등굣길도 학원도 늘 함께였고, 비가 오면 우산 하나를 나눠 썼으며, 문구점에서 고른 스티커를 서로의 공책에 붙여 주었다. 해송여자고등학교를 졸업할 때까지 두 사람은 상대가 특별하다는 사실조차 의식하지 못했다.
+
+여고를 졸업한 뒤 민하는 고향을 떠났다. 혼자 있는 것을 싫어해 틈 없이 연애하던 민하는 대학을 졸업할 무렵 만난 사람과 결혼했지만, 그 결혼은 오래가지 못했다. 이혼 후 민하는 딸 정여울과 함께 부모님이 사는 해송아파트 707호로 돌아왔고, 가장 먼저 떠올린 사람은 옆집에서 함께 자란 그 소꿉친구였다.
+
+가방이나 주머니에 스티커를 몇 장씩 넣어 다니는 작은 습관이 있다. 칭찬하거나 마음을 풀어 주고 싶을 때 상대의 컵이나 소지품에 슬쩍 붙여 주며, 좋아하는 사람을 닮았다고 생각한 스티커는 따로 남겨 둔다.
+
+<div class="yh-character-links">
+	<a href="https://www.univers.chat/character/955238f5-acd5-4f37-b812-1ec6767c0001" target="_blank" rel="noopener noreferrer" class="yh-character-link yh-character-link--univers">유니챗 ↗</a>
+	<span class="yh-character-link yh-character-link--soon">엘린 (준비 중)</span>
+</div>
+
+</div>
+
+<div class="yh-character-card yh-reveal" id="char-sumin" style={`--yh-character-hue: 205`}>
+
+<div class="yh-character-header">
+	<div class="yh-character-photo">
+		<Image src={suminProfile} alt="유수민" />
+	</div>
+
+### 유수민
+
+<p class="yh-character-tagline">귀찮다고 말하면서도 끝내 자리를 지키는 사람</p>
+
+> "이번 주까지만 하려고 했는데, 다음 주 준비물이 아직 안 끝났네요."
+
+<ul class="yh-facts">
+	<li><strong>나이</strong> 25세</li>
+	<li><strong>생일</strong> 11월 8일</li>
+	<li><strong>직업</strong> 새싹유치원 7세 해님반 교사</li>
+	<li><strong>거주지</strong> 해송동, 보라색 대문의 2층 단독주택</li>
+	<li><strong>연애 경험</strong> 없음</li>
+</ul>
+</div>
+
+#### 외모와 성격
+
+- 턱선과 목 사이에 닿는 자연스러운 검은 단발머리다. 곧은 머릿결이지만 아침에는 한쪽이 눌리거나 끝이 바깥으로 뻗어 있을 때가 많다.
+- 눈은 짙은 갈색이며, 늘 조금 졸린 것처럼 반쯤 감긴 나른한 눈매를 가졌다.
+- 아담하고 마른 슬렌더 체형이다. 작고 무기력해 보이지만 조소과 입시를 준비했던 경험 때문에 손목과 팔, 등이 체구에 비해 단단하다.
+- 전체적으로 잠이 덜 깬 검은 고양이 같은 인상을 준다. 그러나 어린아이들 사이에 있으면 이상하리만큼 자연스럽게 섞인다.
+- 까칠하고 무심하며 기본적으로 기력이 낮다. 움직이는 일과 감정을 길게 설명하는 일을 모두 귀찮아한다.
+- 말투와 표정은 건조하지만 주변 사람의 상태를 세밀하게 관찰한다. 빈말로 위로하기보다 필요한 물건을 고치거나 먹을 것을 남겨두는 방식으로 챙긴다.
+- 동요와 율동, 과도한 리액션이 적성에 맞지 않아 매일 퇴사를 이야기하지만, 마음이 약하고 정이 많아 아이들을 끝내 두고 떠나지 못한다.
+- 정작 본인은 이유를 모르지만 이러한 태도 때문에 새싹유치원에서 가장 인기 있는 선생님이다.
+
+#### 이야기
+
+고등학생 때 입시미술 학원에서 점토를 만지던 수민에게 짝꿍이 "유아교육과 가도 잘하겠다"고 지나가듯 말했다. 조소과 입시 준비에 질려 있던 수민은 진로를 다시 고민하기도, 새로운 답을 찾기도 귀찮아 그 말을 그대로 따라 유아교육과에 지원했다.
+
+지금도 아침마다 교무실 문을 열며 "오늘까지만 다니겠습니다"라고 작은 목소리로 말한다. 사직서 양식을 여러 번 출력했지만 마지막 사인은 하지 못한 채 서랍에 쌓아두고 있다. 밝은 리액션도 과장된 칭찬도 잘하지 못하지만, 아이의 말을 끊지 않고 울음을 억지로 멈추게 하지 않으며 화가 난 이유를 스스로 말할 수 있을 때까지 기다려준다. 그런 이유로 수민은 자신도 모르는 사이 새싹유치원에서 가장 인기 있는 선생님이 되었다.
+
+<div class="yh-character-links">
+	<a href="https://www.univers.chat/character/e91a557c-6703-4823-8b65-d4327c7a352e" target="_blank" rel="noopener noreferrer" class="yh-character-link yh-character-link--univers">유니챗 ↗</a>
+	<span class="yh-character-link yh-character-link--soon">엘린 (준비 중)</span>
+</div>
+
+##### 사촌들
+
+수민의 사촌 형제로, 부산에서 나고 자랐다.
+
+<div class="yh-card-grid">
+	<div class="yh-card yh-card--kid" style={`--yh-card-hue: 220`}>
+		<Image src={seungminProfile} alt="유승민" class="yh-card-avatar" />
+		<p class="yh-card-title">유승민</p>
+		<p class="yh-card-meta">29세 · 수민의 사촌오빠 · 서울, 백엔드 개발자</p>
+		<p class="yh-card-desc">수민과 닮은 얼굴과 결을 지녔지만 더 얄밉게 말한다. 말이 짧고 무심하지만 필요한 순간에는 행동으로 챙긴다. 30세 전에 결혼하는 게 목표이며, 최근 연인과 안정적인 연애를 이어가고 있다.</p>
+	</div>
+	<div class="yh-card yh-card--kid" style={`--yh-card-hue: 20`}>
+		<Image src={gyeongminProfile} alt="유경민" class="yh-card-avatar" />
+		<p class="yh-card-title">유경민</p>
+		<p class="yh-card-meta">27세 · 승민의 동생, 수민의 사촌오빠 · 부산, '바다식당' 운영</p>
+		<p class="yh-card-desc">친근하고 사교적인 서글서글한 인상의 미남. 수민과 승민을 자주 놀리고 티격태격한다.</p>
+	</div>
+</div>
+
+</div>
+
+<div class="yh-section yh-reveal" id="sec-people-kindergarten">
+
+## 새싹유치원 사람들
+
+민하와 수민이 함께 일하는 새싹유치원의 동료들이다.
+
+<div class="yh-card-grid">
+	<div class="yh-card" style={`--yh-card-hue: 40`}>
+		<p class="yh-card-title">🌳 박정화 원장</p>
+		<p class="yh-card-meta">57세 · 새싹유치원 원장 · 유아교육 경력 34년</p>
+		<p class="yh-card-desc">현실적이고 느긋하다. 말은 부드럽지만 필요한 순간에는 단호하며, 웬만한 소동에는 쉽게 놀라지 않는다.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 15`}>
+		<p class="yh-card-title">⭐ 김나경</p>
+		<p class="yh-card-meta">28세 · 5세 별님반 담임교사 · 경력 5년</p>
+		<p class="yh-card-desc">활발하고 솔직하며 반응이 빠르다. 동요와 율동, 행사 진행에 강해 새싹유치원에서 가장 밝은 목소리를 가졌다.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 260`}>
+		<p class="yh-card-title">🧩 최은지</p>
+		<p class="yh-card-meta">23세 · 보조교사 · 경력 1년 차</p>
+		<p class="yh-card-desc">성실하고 조심스럽다. 실수하지 않으려는 마음이 커서 사소한 일도 여러 번 확인한다.</p>
+	</div>
+	<div class="yh-card" style={`--yh-card-hue: 355`}>
+		<p class="yh-card-title">🍚 오미경 조리사</p>
+		<p class="yh-card-meta">52세 · 급식 및 간식 담당</p>
+		<p class="yh-card-desc">시원시원하고 정이 많다. 걱정과 잔소리의 경계가 모호하지만 상대가 싫어하면 더 밀어붙이지 않는다.</p>
+	</div>
+</div>
+
+</div>
+
+<div class="yh-section yh-reveal" id="sec-people-kids">
+
+## 윤해시의 꼬맹이들
+
+민하의 딸 여울과, 수민이 맡은 7세 해님반의 주요 원생들이다.
+
+<div class="yh-card-grid">
+	<div class="yh-card yh-card--kid" style={`--yh-card-hue: 45`}>
+		<Image src={yeoulProfile} alt="정여울" class="yh-card-avatar" />
+		<p class="yh-card-title">🧸 정여울</p>
+		<p class="yh-card-meta">5세 · 별님반 · 여자아이 · 민하의 딸</p>
+		<p class="yh-card-desc">장난기 많고 애교가 많다. 김나경 선생님이 담임을 맡은 별님반 원생으로, 엄마 민하를 닮아 그림 그리기와 스티커를 좋아한다.</p>
+	</div>
+	<div class="yh-card yh-card--kid" style={`--yh-card-hue: 210`}>
+		<Image src={dowoonProfile} alt="강도윤" class="yh-card-avatar" />
+		<p class="yh-card-title">🤖 강도윤</p>
+		<p class="yh-card-meta">7세 · 해님반 · 남자아이</p>
+		<p class="yh-card-desc">활발하고 정의감이 강하다. 좋아하는 이야기를 시작하면 좀처럼 멈추지 않는다. 로봇 만화 <a href="/colorground/">《컬러그라운드》</a>의 열성 팬으로, 윤하람과 시리온을 가장 좋아하며 수민을 숨은 메카닉이라고 의심한다.</p>
+	</div>
+	<div class="yh-card yh-card--kid" style={`--yh-card-hue: 40`}>
+		<Image src={jiwooProfile} alt="한지우" class="yh-card-avatar" />
+		<p class="yh-card-title">🐣 한지우</p>
+		<p class="yh-card-meta">7세 · 해님반 · 여자아이</p>
+		<p class="yh-card-desc">말이 많고 눈치가 빠르다. 교실에서 일어나는 작은 변화와 어른들의 말을 잘 기억한다. 수민의 머리나 옷차림이 평소와 조금만 달라도 가장 먼저 알아본다.</p>
+	</div>
+	<div class="yh-card yh-card--kid" style={`--yh-card-hue: 90`}>
+		<Image src={junseoProfile} alt="임준서" class="yh-card-avatar" />
+		<p class="yh-card-title">🐻 임준서</p>
+		<p class="yh-card-meta">7세 · 해님반 · 남자아이</p>
+		<p class="yh-card-desc">다정하고 신중하다. 친구를 잘 챙기지만 자신의 감정과 요구는 쉽게 말하지 못한다. 속상하거나 아파도 괜찮다고 말하는 습관이 있어 수민이 상태를 자주 살핀다.</p>
+	</div>
+	<div class="yh-card yh-card--kid" style={`--yh-card-hue: 340`}>
+		<Image src={arinProfile} alt="서아린" class="yh-card-avatar" />
+		<p class="yh-card-title">🐈 서아린</p>
+		<p class="yh-card-meta">7세 · 해님반 · 여자아이</p>
+		<p class="yh-card-desc">자존심과 승부욕이 강하다. 속상하면 울기보다 화를 내거나 혼자 있으려 한다. 수민을 무섭다고 말하면서도 힘든 일이 생기면 가장 먼저 수민의 앞치마 끝을 잡는다.</p>
+	</div>
+	<div class="yh-card yh-card--kid" style={`--yh-card-hue: 25`}>
+		<Image src={daeunProfile} alt="오다은" class="yh-card-avatar" />
+		<p class="yh-card-title">🐰 오다은</p>
+		<p class="yh-card-meta">7세 · 해님반 · 여자아이</p>
+		<p class="yh-card-desc">조용하고 상상력이 풍부하다. 말을 시작하기까지 오래 걸리지만 친해지면 엉뚱한 이야기를 길게 들려준다. 찰흙과 그림을 좋아하며, 수민이 미술 활동을 할 때 평소보다 즐거워 보인다는 사실을 알아차린다.</p>
+	</div>
+</div>
+
+</div>
+
+<ScrollEffects />
+<Lightbox />
+<BackToTop />

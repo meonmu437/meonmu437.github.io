@@ -13,6 +13,7 @@ const staticApps = ['landing'];
 const buildApps = [
 	{ dir: 'colorground', outPath: 'colorground' },
 	{ dir: 'nighthighway', outPath: 'nighthighway' },
+	{ dir: 'yunhaesi', outPath: 'yunhaesi' },
 ];
 
 rmSync(dist, { recursive: true, force: true });

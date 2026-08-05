@@ -1,0 +1,40 @@
+---
+// 기본 SiteTitle(사이트 로고+제목) 앞에 대문(전체 세계관 허브)으로 가는
+// 홈 아이콘을 추가한다.
+import Default from '@astrojs/starlight/components/SiteTitle.astro';
+---
+
+<a href="/" class="yh-home-link" aria-label="대문으로 이동" title="대문으로 이동">
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		width="1.15rem"
+		height="1.15rem"
+	>
+		<path d="M3 11.5 12 4l9 7.5" />
+		<path d="M5.5 10v9.5h13V10" />
+	</svg>
+</a>
+<Default {...Astro.props} />
+
+<style>
+	.yh-home-link {
+		display: inline-flex;
+		align-items: center;
+		flex-shrink: 0;
+		color: var(--sl-color-gray-3);
+		margin-inline-end: 0.6rem;
+		padding: 0.25rem;
+		margin-inline-start: -0.25rem;
+		border-radius: 0.4rem;
+	}
+
+	.yh-home-link:hover {
+		color: var(--sl-color-text-accent);
+	}
+</style>
