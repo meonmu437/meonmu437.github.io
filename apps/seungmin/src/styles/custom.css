@@ -260,7 +260,7 @@ html.sm-sidebar-expanded .sidebar-pane {
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 0.5rem;
-	margin: 1.25rem 0 !important;
+	margin: 2.25rem 0 1.25rem !important;
 }
 
 .sm-badge {
@@ -320,7 +320,7 @@ html.sm-sidebar-expanded .sidebar-pane {
 .sm-profile-figure {
 	display: flex;
 	justify-content: center;
-	margin: 0 0 1.5rem !important;
+	margin: 0 0 2.5rem !important;
 }
 
 .sm-profile-figure img {
@@ -584,7 +584,7 @@ html.sm-sidebar-expanded .sidebar-pane {
 	opacity: 0;
 	transition: opacity 0.4s ease;
 	max-width: 34rem;
-	margin: 0 auto;
+	margin: 2rem auto 0;
 }
 
 .sm-closing-remotes.sm-show {

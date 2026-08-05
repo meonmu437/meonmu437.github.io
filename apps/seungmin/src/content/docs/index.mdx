@@ -16,7 +16,11 @@ import homeMap from '../../assets/seungmin/home-map.png';
 <div class="sm-section sm-reveal" id="sec-intro">
 
 <TypingTerminal
-	lines={['401 에러는 서버가 삐진 게 아니다.', '넌 누구냐고 묻는 것이다.', '인증부터 하자.']}
+	lines={[
+		[{ text: '401', cls: 'tok-num' }, { text: ' 에러는 서버가 삐진 게 아니다.' }],
+		[{ text: '넌 누구냐고 묻는 것이다.' }],
+		[{ text: '인증', cls: 'tok-fn' }, { text: '부터 하자.' }],
+	]}
 	revealTarget="sm-hero-rest"
 />
 
@@ -275,7 +279,7 @@ import homeMap from '../../assets/seungmin/home-map.png';
 
 승민은 서울 낙성대역에서 도보 10분 거리의 투룸 오피스텔 302호에 산다. 집은 전반적으로 깔끔하고 실용적이다. 불필요한 물건은 많지 않지만, 컴퓨터 방에는 장비와 케이블이 많아 개발자 방 느낌이 강하다.
 
-집 분위기는 전체적으로 깔끔하고 조용하다. 향은 강한 향수보다 깨끗한 세탁물 냄새, 식은 드립 커피 향에 가깝다. 낮에는 담백하고 실용적인 공간이지만, 밤에는 모니터 빛과 작은 생활 소음이 도드라지는 공간이 된다.
+집 분위기는 전체적으로 깔끔하고 조용하다. 낮에는 담백하고 실용적인 공간이지만, 밤에는 모니터 빛과 작은 생활 소음이 도드라지는 공간이 된다.
 
 <Image src={homeMap} alt="승민의 집 평면도" class="sm-map-img" />
 
@@ -285,7 +289,7 @@ import homeMap from '../../assets/seungmin/home-map.png';
 			<span class="sm-entry-perm">drwxr-xr-x</span>
 			<span class="sm-entry-name">침실/</span>
 		</div>
-		<p class="sm-entry-desc">슈퍼 싱글 침대가 있는 군더더기 없이 정돈된 공간. 늦잠을 자거나, 감정을 삭히려고 이불 속에 들어가는 장면에 자주 쓰인다.</p>
+		<p class="sm-entry-desc">슈퍼 싱글 침대가 있는 군더더기 없이 정돈된 공간. 늦잠을 자거나, 감정을 삭히려고 이불 속에 들어가있곤 한다.</p>
 	</div>
 	<div class="sm-entry">
 		<div class="sm-entry-row">
@@ -320,7 +324,7 @@ import homeMap from '../../assets/seungmin/home-map.png';
 			<span class="sm-entry-perm">drwxr-xr-x</span>
 			<span class="sm-entry-name">베란다/</span>
 		</div>
-		<p class="sm-entry-desc">빨래 건조대가 있는 작은 베란다. 밤공기, 비 오는 소리, 조용한 대화 장면에 쓰기 좋다.</p>
+		<p class="sm-entry-desc">빨래 건조대가 있는 작은 베란다. 조용한 대화를 나누기에 좋다.</p>
 	</div>
 </div>
 
@@ -330,11 +334,11 @@ import homeMap from '../../assets/seungmin/home-map.png';
 
 ## 가족 로그
 
-승민의 본가는 부산이다. 서울에 있는 대학에 진학하며 홀로 상경해 자취를 시작했고, 지금도 가족들은 모두 부산에 남아있다. 가족 분위기는 무뚝뚝하지만 정이 많다.
+승민의 본가는 부산이다. 서울에 있는 대학에 진학하며 홀로 상경해 자취를 시작했고, 지금도 가족들은 모두 부산에 남아있다.
 
-엄마와 경민은 서로 죽이 잘 맞고, 종종 같이 일을 벌였다가 승민에게 한꺼번에 잔소리를 듣는다. 승민은 서울에서 혼자 사는 아들/형이라 가족들의 걱정을 받지만, 실제로는 부산 가족들을 관리하듯 챙기는 편이다.
+엄마와 경민은 서로 죽이 잘 맞고, 종종 같이 일을 벌였다가 승민에게 한꺼번에 잔소리를 듣는다. 승민은 서울에서 혼자 사는 아들/형이라 가족들의 걱정을 받지만, 실제로는 승민이 부산 가족들을 관리하듯 챙기는 편이다.
 
-부산 반대편, <a href="/yunhaesi/#char-sumin">윤해시</a>에는 사촌 여동생 유수민이 산다. 서로 먼저 연락하는 일은 가뭄에 콩 나듯이 하지만, 명절이면 어김없이 마주치는 사이다.
+<a href="/yunhaesi/#char-sumin">윤해시</a>에는 사촌 여동생 유수민이 산다. 서로 먼저 연락하는 일은 가뭄에 콩 나듯이 하지만, 명절이면 어김없이 마주치는 사이다.
 
 <div class="sm-listing">
 	<div class="sm-entry">
@@ -370,7 +374,19 @@ import homeMap from '../../assets/seungmin/home-map.png';
 <div class="sm-closing">
 
 <TypingTerminal
-	lines={['git add {{user}}', 'git commit -m "혼자 잘 살 것 같은데 {{user}}한테는 붙어있고 싶은 남자."', 'git push origin love/main']}
+	lines={[
+		[{ text: 'git', cls: 'tok-key' }, { text: ' add ' }, { text: '{{user}}', cls: 'tok-fn' }],
+		[
+			{ text: 'git', cls: 'tok-key' },
+			{ text: ' commit ' },
+			{ text: '-m', cls: 'tok-key' },
+			{ text: ' ' },
+			{ text: '"혼자 잘 살 것 같은데 ', cls: 'tok-str' },
+			{ text: '{{user}}', cls: 'tok-fn' },
+			{ text: '한테는 붙어있고 싶은 남자."', cls: 'tok-str' },
+		],
+		[{ text: 'git', cls: 'tok-key' }, { text: ' push origin ' }, { text: 'love/main', cls: 'tok-str' }],
+	]}
 	revealTarget="sm-closing-remotes"
 />
 
