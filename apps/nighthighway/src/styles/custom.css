@@ -320,6 +320,8 @@ html {
 }
 
 .nh-rider-link {
+	/* 기본은 카드의 라이더 hue를 쓰지만, --nh-link-hue가 있으면(외부 서비스
+	   고유 브랜드 컬러 등) 그걸 우선한다 */
 	display: inline-flex;
 	align-items: center;
 	gap: 0.3rem;
@@ -330,15 +332,24 @@ html {
 	font-weight: 700;
 	letter-spacing: 0.02em;
 	text-decoration: none;
-	color: hsl(var(--nh-rider-hue), 85%, 75%);
-	background: color-mix(in srgb, hsl(var(--nh-rider-hue), 60%, 50%) 14%, transparent);
-	border: 1px solid color-mix(in srgb, hsl(var(--nh-rider-hue), 60%, 55%) 36%, transparent);
+	color: hsl(var(--nh-link-hue, var(--nh-rider-hue)), 85%, 75%);
+	background: color-mix(in srgb, hsl(var(--nh-link-hue, var(--nh-rider-hue)), 60%, 50%) 14%, transparent);
+	border: 1px solid color-mix(in srgb, hsl(var(--nh-link-hue, var(--nh-rider-hue)), 60%, 55%) 36%, transparent);
 	transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
 a.nh-rider-link:hover {
 	transform: translateY(-1px);
-	border-color: hsl(var(--nh-rider-hue), 70%, 60%);
+	border-color: hsl(var(--nh-link-hue, var(--nh-rider-hue)), 70%, 60%);
+}
+
+/* 유니챗(핑크) / 엘린(퍼플) — 각 서비스의 메인 컬러 */
+.nh-rider-link--univers {
+	--nh-link-hue: 330;
+}
+
+.nh-rider-link--elyn {
+	--nh-link-hue: 265;
 }
 
 .nh-rider-link--soon {
