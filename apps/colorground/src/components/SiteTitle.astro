@@ -1,7 +1,19 @@
 ---
 // 기본 SiteTitle(사이트 로고+제목) 앞에 대문(전체 세계관 허브)으로 가는
-// 홈 아이콘을 추가한다.
+// 홈 아이콘을, 뒤에는 대문을 거치지 않고 다른 세계관으로 바로 이동할 수 있는
+// 목차 드롭다운을 추가한다.
 import Default from '@astrojs/starlight/components/SiteTitle.astro';
+
+const CURRENT = 'colorground';
+const WORLDS = [
+	{ id: 'colorground', label: '컬러그라운드', href: '/colorground/' },
+	{ id: 'nighthighway', label: 'NIGHT HIGHWAY', href: '/nighthighway/' },
+	{
+		id: 'korea',
+		label: '어딘가의 대한민국',
+		children: [{ id: 'yunhaesi', label: '윤해시', href: '/yunhaesi/' }],
+	},
+];
 ---
 
 <a href="/" class="cg-home-link" aria-label="대문으로 이동" title="대문으로 이동">
@@ -20,7 +32,107 @@ import Default from '@astrojs/starlight/components/SiteTitle.astro';
 		<path d="M5.5 10v9.5h13V10" />
 	</svg>
 </a>
-<Default {...Astro.props} />
+<div class="cg-site-switch">
+	<Default {...Astro.props} />
+	<button
+		type="button"
+		id="cg-site-switch-trigger"
+		class="cg-site-switch-trigger"
+		aria-expanded="false"
+		aria-controls="cg-site-switch-menu"
+		aria-label="다른 세계관으로 이동"
+		title="다른 세계관으로 이동"
+	>
+		<svg
+			aria-hidden="true"
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2.5"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			width="0.8rem"
+			height="0.8rem"
+		>
+			<path d="M6 9l6 6 6-6" />
+		</svg>
+	</button>
+	<nav id="cg-site-switch-menu" class="cg-site-switch-menu" aria-label="다른 세계관">
+		{
+			WORLDS.map((item) =>
+				item.children ? (
+					<>
+						<p class="cg-site-switch-group">{item.label}</p>
+						{item.children.map((child) =>
+							child.id === CURRENT ? (
+								<span class="cg-site-switch-item cg-site-switch-item--nested cg-site-switch-item--current" aria-current="page">
+									{child.label}
+								</span>
+							) : (
+								<a href={child.href} class="cg-site-switch-item cg-site-switch-item--nested">
+									{child.label}
+								</a>
+							)
+						)}
+					</>
+				) : item.id === CURRENT ? (
+					<span class="cg-site-switch-item cg-site-switch-item--current" aria-current="page">
+						{item.label}
+					</span>
+				) : (
+					<a href={item.href} class="cg-site-switch-item">
+						{item.label}
+					</a>
+				)
+			)
+		}
+	</nav>
+</div>
+
+<script>
+	const trigger = document.getElementById('cg-site-switch-trigger');
+	const menu = document.getElementById('cg-site-switch-menu');
+	const wrapper = document.querySelector('.cg-site-switch');
+	const titleLink = wrapper?.querySelector<HTMLAnchorElement>('.site-title');
+
+	// Starlight의 .title-wrapper는 overflow: clip이라 position: absolute로는
+	// 메뉴가 잘려서 보이지 않는다. position: fixed로 클리핑을 피하고
+	// 열릴 때마다 트리거 위치를 계산해 좌표를 직접 지정한다.
+	function setExpanded(expanded: boolean): void {
+		if (expanded && wrapper) {
+			const rect = wrapper.getBoundingClientRect();
+			menu?.style.setProperty('top', `${rect.bottom + 8}px`);
+			menu?.style.setProperty('left', `${rect.left}px`);
+		}
+		menu?.classList.toggle('is-open', expanded);
+		trigger?.setAttribute('aria-expanded', String(expanded));
+	}
+
+	if (trigger && menu) {
+		trigger.addEventListener('click', (e) => {
+			e.stopPropagation();
+			setExpanded(trigger.getAttribute('aria-expanded') !== 'true');
+		});
+
+		// 제목(홈 버튼 옆 텍스트)을 눌러도 홈으로 새로고침되는 대신 목차가 열리게 한다.
+		titleLink?.addEventListener('click', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			setExpanded(trigger.getAttribute('aria-expanded') !== 'true');
+		});
+
+		document.addEventListener('click', (e) => {
+			if (!menu.contains(e.target as Node) && e.target !== trigger) setExpanded(false);
+		});
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && trigger.getAttribute('aria-expanded') === 'true') setExpanded(false);
+		});
+
+		window.addEventListener('scroll', () => setExpanded(false), { passive: true });
+	}
+</script>
 
 <style>
 	.cg-home-link {
@@ -36,5 +148,104 @@ import Default from '@astrojs/starlight/components/SiteTitle.astro';
 
 	.cg-home-link:hover {
 		color: var(--sl-color-text-accent);
+	}
+
+	.cg-site-switch {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.1rem;
+		min-width: 0;
+	}
+
+	.cg-site-switch :global(.site-title) {
+		cursor: pointer;
+	}
+
+	.cg-site-switch-trigger {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width: 1.4rem;
+		height: 1.4rem;
+		padding: 0;
+		border: none;
+		background: transparent;
+		color: var(--sl-color-gray-3);
+		border-radius: 0.4rem;
+		cursor: pointer;
+	}
+
+	.cg-site-switch-trigger:hover,
+	.cg-site-switch-trigger[aria-expanded='true'] {
+		color: var(--sl-color-text-accent);
+	}
+
+	.cg-site-switch-trigger svg {
+		transition: transform 0.2s ease;
+	}
+
+	.cg-site-switch-trigger[aria-expanded='true'] svg {
+		transform: rotate(180deg);
+	}
+
+	.cg-site-switch-menu {
+		position: fixed;
+		display: none;
+		flex-direction: column;
+		min-width: 11rem;
+		padding: 0.4rem;
+		background: var(--sl-color-bg-nav);
+		border: 1px solid var(--sl-color-hairline);
+		border-radius: 0.6rem;
+		box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.2);
+		z-index: 20;
+	}
+
+	.cg-site-switch-menu.is-open {
+		display: flex;
+	}
+
+	.cg-site-switch-group {
+		margin: 0.3rem 0 0.15rem;
+		padding-inline-start: 0.6rem;
+		font-size: 0.7rem;
+		font-weight: 700;
+		color: var(--sl-color-gray-3);
+	}
+
+	.cg-site-switch-group:first-child {
+		margin-top: 0;
+	}
+
+	.cg-site-switch-item {
+		display: block;
+		padding: 0.35rem 0.6rem;
+		border-radius: 0.4rem;
+		font-size: 0.85rem;
+		color: var(--sl-color-text);
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	a.cg-site-switch-item:hover {
+		background: var(--sl-color-gray-6);
+	}
+
+	.cg-site-switch-item--nested {
+		padding-inline-start: 1.2rem;
+	}
+
+	.cg-site-switch-item--current {
+		color: var(--sl-color-text-accent);
+		font-weight: 700;
+		cursor: default;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cg-site-switch-trigger svg {
+			transition: none;
+		}
 	}
 </style>

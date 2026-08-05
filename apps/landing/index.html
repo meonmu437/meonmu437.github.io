@@ -153,7 +153,8 @@
 		color: var(--muted);
 	}
 
-	.entry a {
+	.entry a,
+	.entry .dirname {
 		color: var(--dir);
 		font-weight: 700;
 		text-decoration: none;
@@ -172,6 +173,10 @@
 
 	.entry .desc::before {
 		content: '# ';
+	}
+
+	.entry--nested {
+		margin-inline-start: 1.6rem;
 	}
 
 	.cursor {
@@ -229,7 +234,10 @@
 	</div>
 
 	<script>
-		var WORLDS = [
+		// 판타지 세계관은 최상위에 그대로 두고, 한국을 배경으로 하는
+		// 세계관들은 '어딘가의_대한민국' 디렉터리 아래 하위 항목으로 묶는다.
+		// 새로운 한국 배경 세계관을 추가할 때는 이 항목의 children에만 추가하면 된다.
+		var ENTRIES = [
 			{
 				name: 'colorground',
 				href: 'colorground/',
@@ -241,9 +249,14 @@
 				desc: '재앙 이후 아날로그 기술만이 살아남은 밤의 고속도로 생존기',
 			},
 			{
-				name: 'yunhaesi',
-				href: 'yunhaesi/',
-				desc: '바닷바람에서 소금 냄새가 나는 작은 항구도시의 슬라이스 오브 라이프',
+				name: '어딘가의_대한민국',
+				children: [
+					{
+						name: 'yunhaesi',
+						href: 'yunhaesi/',
+						desc: '바닷바람에서 소금 냄새가 나는 작은 항구도시',
+					},
+				],
 			},
 		];
 
@@ -251,18 +264,28 @@
 
 		var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+		function renderEntry(item, nested) {
+			var entry = document.createElement('div');
+			entry.className = nested ? 'entry entry--nested' : 'entry';
+			var name = item.href
+				? '<a href="' + item.href + '">' + item.name + '/</a>'
+				: '<span class="dirname">' + item.name + '/</span>';
+			entry.innerHTML =
+				'<div class="entry-row">' +
+				'<span class="perms">drwxr-xr-x</span>' +
+				name +
+				'</div>' +
+				(item.desc ? '<span class="desc">' + item.desc + '</span>' : '');
+			return entry;
+		}
+
 		function renderListing() {
 			var listing = document.getElementById('listing');
-			WORLDS.forEach(function (world) {
-				var entry = document.createElement('div');
-				entry.className = 'entry';
-				entry.innerHTML =
-					'<div class="entry-row">' +
-					'<span class="perms">drwxr-xr-x</span>' +
-					'<a href="' + world.href + '">' + world.name + '/</a>' +
-					'</div>' +
-					'<span class="desc">' + world.desc + '</span>';
-				listing.appendChild(entry);
+			ENTRIES.forEach(function (item) {
+				listing.appendChild(renderEntry(item, false));
+				(item.children || []).forEach(function (child) {
+					listing.appendChild(renderEntry(child, true));
+				});
 			});
 		}
 
