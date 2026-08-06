@@ -248,6 +248,21 @@ html.sm-sidebar-expanded .sidebar-pane {
 	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
 }
 
+/*
+  코드 패널/러브 패널/깃발 목록/리스팅 등은 자기 자신의 margin-bottom을
+  갖고 있어서, 섹션의 마지막 요소로 오면 그 마진이 섹션 자체의
+  padding-bottom 위에 더해져 위쪽보다 아래쪽 여백이 커 보인다. 섹션의
+  실제 마지막 요소일 때만 그 마진을 없애 위/아래 여백을 맞춘다.
+*/
+.sm-section blockquote:last-child,
+.sm-section .sm-code:last-child,
+.sm-section .sm-love-panel:last-child,
+.sm-section .sm-flags:last-child,
+.sm-section .sm-listing:last-child,
+.sm-section .sm-hero-status:last-child {
+	margin-bottom: 0 !important;
+}
+
 .sm-section .sl-heading-wrapper.level-h2 {
 	text-align: center;
 	font-size: clamp(var(--sl-text-2xl), 4.5vw, var(--sl-text-4xl));

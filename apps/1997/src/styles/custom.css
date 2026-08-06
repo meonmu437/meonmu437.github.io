@@ -325,6 +325,21 @@ html.ss-sidebar-expanded .sidebar-pane {
 	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
 }
 
+/*
+  블록쿼트/트랙리스트/카드 그리드 등은 자기 자신의 margin-bottom을 갖고
+  있어서, 섹션의 마지막 요소로 오면 그 마진이 섹션 자체의 padding-bottom
+  위에 더해져 위쪽보다 아래쪽 여백이 커 보인다. 섹션의 실제 마지막
+  요소일 때만 그 마진을 없애 위/아래 여백을 맞춘다.
+*/
+.ss-section blockquote:last-child,
+.ss-section .ss-margin-note:last-child,
+.ss-section .ss-tracklist:last-child,
+.ss-section .ss-place-list:last-child,
+.ss-section .ss-card-grid:last-child,
+.ss-section .ss-person:last-child {
+	margin-bottom: 0;
+}
+
 /* 섹션 구분선: 자로 잰 직선 대신 손으로 그은 낙서선 */
 .ss-section::before {
 	content: '';
