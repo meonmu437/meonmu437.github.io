@@ -1,0 +1,709 @@
+/*
+  윤성민 위키 커스텀 테마 — "1997, 되감기"
+  - Design Read: 1997년 서울 대학가를 배경으로 한 타임슬립 캠퍼스 로맨스.
+    삐삐·워크맨·카세트테이프·공중전화가 일상인 시절. 승민(백엔드 개발자,
+    다크 터미널)이나 윤해시(바닷마을, 청록+크림)와는 전혀 다른 결로,
+    "봄볕 아래 캠퍼스"의 따뜻한 크림/올리브그린 + 벚꽃 핑크를 쓴다.
+  - 성민은 산업디자인과 학생이다. 그래서 UI 형태 자체를 매끈한 카드+그림자
+    (전형적인 모던 웹 UI)가 아니라, 스케치북/필통 서랍 속 물건들의 재질로
+    만든다. 단, 모든 요소를 같은 재질(찢은 종이)로 통일하면 오히려 정신없어
+    보이므로, 요소마다 서로 다른 실제 물건의 질감을 입힌다:
+      · 인용구(대사 박스) = 스케치북에서 찢어낸 종이 조각 (--ss-torn-edge)
+      · 태그/사실 목록/삐삐 번호 = 투명 테이프로 붙인 라벨 (반투명 + 광택)
+      · 믹스테이프 표(좋아하는 것/작은 버릇) = 카세트 라벨 그 자체 (크림/세피아,
+        CassettePlayer.astro의 라벨과 같은 고정 색)
+      · 카드(B-SIDE/장소/인물) = 레트로 메모지 (가로줄 노트 + 색 헤더 밴드)
+    헤딩 밑줄과 섹션 구분선은 자로 잰 듯한 직선 대신 손그림 낙서 선(SVG)을 쓴다.
+  - 히어로는 타이핑 터미널 대신 카세트 플레이어 컴포넌트(CassettePlayer)로
+    대체한다. 카세트 케이스 자체의 재질색은 라이트/다크 테마와 무관하게
+    고정(물건이라는 감각 유지, CassettePlayer.astro에 하드코딩).
+  - 다크 모드는 차가운 느와르가 아니라 "저녁 옥탑방"(램프 불빛의 짙은 브라운)
+    으로 해석한다.
+  - 위키 전체가 하나의 스크롤 페이지: .ss-section은 풀블리드 밴드,
+    .ss-reveal은 ScrollEffects.astro가 페이드인 제어.
+*/
+
+html {
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+:root {
+	--ss-font-display: 'Gowun Batang', serif;
+	--ss-font-hand: 'Nanum Pen Script', cursive;
+
+	--sl-font: 'Noto Sans KR', var(--sl-font-system);
+
+	/* accent = 느티나무 잎의 올리브그린 (dark 기본) */
+	--sl-color-accent-low: hsl(96, 30%, 20%);
+	--sl-color-accent: hsl(96, 35%, 55%);
+	--sl-color-accent-high: hsl(96, 45%, 78%);
+
+	/* 보조 강조: 벚꽃 핑크(첫사랑/로맨스), 데님 블루(성민의 옷차림 · B-SIDE) */
+	--ss-pink: hsl(340, 72%, 72%);
+	--ss-denim: hsl(212, 55%, 64%);
+
+	/* 다크 = 저녁 옥탑방, 램프 불빛의 짙은 브라운 (승민의 청록 블랙과는 다른 방향) */
+	--sl-color-bg: hsl(28, 22%, 11%);
+	--sl-color-bg-nav: hsl(28, 20%, 13%);
+	--sl-color-bg-sidebar: hsl(28, 18%, 12%);
+
+	/* 카드/리스팅 외곽선 — 기본 hairline보다 또렷하게 */
+	--ss-border: hsl(30, 16%, 30%);
+
+	/* 손그림 선(스케치 잉크) 색 — 다크에서는 램프 불빛에 드러나는 연필/분필 선 톤 */
+	--ss-ink: hsl(35, 30%, 72%);
+	--ss-ink-shadow: hsl(35, 20%, 55% / 0.35);
+
+	/* 모눈종이 그리드 + 찢어낸 종이 가장자리 — 카드/태그/표에 공통으로 쓰는 "종이 조각" 재질 */
+	--ss-paper-grid: repeating-linear-gradient(
+			color-mix(in srgb, var(--ss-ink) 14%, transparent) 0 1px,
+			transparent 1px 1.4rem
+		),
+		repeating-linear-gradient(90deg, color-mix(in srgb, var(--ss-ink) 14%, transparent) 0 1px, transparent 1px 1.4rem);
+	--ss-torn-edge: 0% 2%, 5% 0%, 11% 3%, 17% 0.8%, 23% 3.4%, 29% 0.5%, 35% 2.8%, 41% 0.6%, 47% 3.2%,
+		53% 0%, 59% 2.6%, 65% 0.4%, 71% 3%, 77% 0.8%, 83% 3.4%, 89% 0.5%, 95% 2.6%, 100% 1%, 100% 98%,
+		95% 100%, 89% 97%, 83% 99.6%, 77% 97.2%, 71% 100%, 65% 97.6%, 59% 99.6%, 53% 97%, 47% 100%,
+		41% 97.4%, 35% 99.6%, 29% 97%, 23% 100%, 17% 97.4%, 11% 99.6%, 5% 97%, 0% 99%;
+	--ss-torn-edge-sm: 0% 4%, 15% 0%, 30% 5%, 50% 0%, 70% 5%, 85% 0%, 100% 4%, 100% 96%, 85% 100%,
+		70% 95%, 50% 100%, 30% 95%, 15% 100%, 0% 96%;
+
+	/* 레트로 메모지 재질 — 모눈이 아니라 가로줄 노트처럼, 세로선은 없음 */
+	--ss-memo-lines: repeating-linear-gradient(
+		color-mix(in srgb, var(--ss-ink) 11%, transparent) 0 1px,
+		transparent 1px 1.7rem
+	);
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: hsl(96, 35%, 90%);
+	--sl-color-accent: hsl(96, 32%, 36%);
+	--sl-color-accent-high: hsl(96, 42%, 24%);
+
+	--ss-pink: hsl(340, 68%, 62%);
+	--ss-denim: hsl(212, 48%, 40%);
+
+	/* 라이트 = 봄볕 캠퍼스, 크림빛 종이 톤 */
+	--sl-color-bg: hsl(46, 56%, 96%);
+	--sl-color-bg-nav: hsl(46, 48%, 97%);
+	--sl-color-bg-sidebar: hsl(46, 42%, 95%);
+
+	--ss-border: hsl(40, 20%, 76%);
+
+	/* 라이트에서는 종이 위 연필 선 톤 */
+	--ss-ink: hsl(30, 30%, 28%);
+	--ss-ink-shadow: hsl(30, 30%, 28% / 0.28);
+}
+
+/* 종이 그레인 텍스처 — 배경색 위에 얇게 얹는다(색은 그대로, 질감만 추가) */
+body {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	background-repeat: repeat;
+}
+
+/* 사이트 타이틀: 세리프 + 올리브그린 */
+.site-title span {
+	font-family: var(--ss-font-display);
+	font-weight: 700;
+	color: var(--sl-color-accent);
+}
+
+.sl-container {
+	margin-inline: auto;
+}
+
+/* Starlight 자동 페이지 타이틀(h1 #_top)은 숨기고, "윤성민"을 본문 첫 ## 헤딩으로 직접 넣는다 */
+.content-panel:has(#_top) {
+	display: none;
+}
+
+.content-panel + .content-panel {
+	border-top: none;
+}
+
+/* 본문 헤딩: 손글씨 다이어리 느낌의 세리프 */
+.sl-markdown-content :is(h2, h3, h4):not(:where(.not-content *)) {
+	font-family: var(--ss-font-display);
+	font-weight: 700;
+}
+
+.sl-anchor-link {
+	display: none !important;
+}
+.sl-heading-wrapper > :first-child {
+	padding-inline-end: 0 !important;
+}
+
+/*
+  인용구 = 스케치북에서 한 장 찢어내 그대로 붙여 놓은 종이 조각. 카드가
+  쓰는 깨끗한 사각형이 아니라 위·아래 가장자리를 clip-path로 들쭥날쭥하게
+  잘라내 "찢은 자국"을 표현하고, 그 위에 옅은 그리드(모눈종이) 텍스처를
+  깔아 산업디자인과 스케치북 페이지라는 느낌을 더한다.
+*/
+.sl-markdown-content blockquote:not(:where(.not-content *)) {
+	position: relative;
+	z-index: 0;
+	border: none;
+	padding: 1.7rem 1.5rem;
+	margin: 2.75rem 0.5rem;
+	font-style: normal;
+	font-family: var(--ss-font-display);
+	font-size: var(--sl-text-base);
+	color: var(--sl-color-gray-1);
+	transform: rotate(-0.7deg);
+}
+
+/*
+  종이 조각 자체(찢은 가장자리 + 그림자)는 ::after에 그린다. clip-path를
+  블록쿼트 자체가 아니라 이 레이어에만 걸어서, ::before(테이프)가 clip으로
+  잘리지 않고 박스 밖으로 자유롭게 걸쳐 나갈 수 있게 한다.
+*/
+.sl-markdown-content blockquote:not(:where(.not-content *))::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-image: var(--ss-paper-grid);
+	background-color: var(--sl-color-bg-nav);
+	box-shadow: 0 0.6rem 1.3rem rgba(0, 0, 0, 0.22);
+	clip-path: polygon(var(--ss-torn-edge));
+}
+
+/*
+  왼쪽 상단 모서리 위로 걸쳐 붙인 마스킹테이프. 테마와 무관하게 고정된
+  카키/탄 색(실제 마스킹테이프 색)을 써서 크림색 라이트 모드 배경에서도
+  또렷이 보이게 한다. 광택(유광) 없이 매트한 섬유 텍스처만 준다.
+*/
+.sl-markdown-content blockquote:not(:where(.not-content *))::before {
+	content: '';
+	position: absolute;
+	top: -0.75rem;
+	left: 0.7rem;
+	width: 3.1rem;
+	height: 1.25rem;
+	z-index: 2;
+	background: repeating-linear-gradient(
+			100deg,
+			rgba(255, 255, 255, 0.18) 0 2px,
+			transparent 2px 4px
+		),
+		hsl(42, 36%, 72%);
+	opacity: 0.92;
+	box-shadow: 0 0.25rem 0.4rem rgba(0, 0, 0, 0.35);
+	transform: rotate(-38deg);
+	pointer-events: none;
+}
+
+.sl-markdown-content blockquote p {
+	margin: 0;
+}
+
+.sl-markdown-content blockquote strong {
+	color: var(--sl-color-text-accent);
+}
+
+@keyframes ss-blink {
+	0%,
+	50% {
+		opacity: 1;
+	}
+	50.01%,
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 되감기 속 속마음 — 손글씨로 여백에 낙서한 듣 강조 */
+.ss-margin-note {
+	display: block;
+	margin: 1.6rem 0;
+	font-family: var(--ss-font-hand);
+	font-size: 1.55em;
+	color: var(--ss-pink);
+	transform: rotate(-1deg);
+}
+
+/* 본문 이미지: 부드러운 라운드 + 그림자 (배너/지도는 예외 클래스로 처리) */
+.sl-markdown-content img:not(:where(.not-content *, .ss-banner-img, .ss-full-img)) {
+	border-radius: 0.9rem;
+	box-shadow: var(--sl-shadow-md);
+	cursor: zoom-in;
+}
+
+.ss-banner-img {
+	width: 100%;
+	height: auto;
+	border-radius: 1rem 0.4rem 1rem 0.4rem;
+	box-shadow: 5px 5px 0 var(--ss-ink-shadow);
+	cursor: zoom-in;
+}
+
+.ss-full-img {
+	width: 100%;
+	height: auto;
+	border-radius: 0.9rem;
+	box-shadow: var(--sl-shadow-md);
+	cursor: zoom-in;
+	margin-bottom: 1.5rem;
+}
+
+/* 모바일에서도 테마 토글을 헤더에 바로 노출 */
+.header .right-group {
+	display: flex !important;
+	gap: 0.5rem;
+}
+.header .social-icons {
+	display: none !important;
+}
+
+:root {
+	--sl-mobile-toc-height: 0rem;
+}
+
+[data-has-sidebar] {
+	--sl-content-inline-start: 0rem !important;
+}
+
+[data-has-sidebar] .header {
+	padding-inline-end: var(--sl-nav-pad-x);
+}
+
+@media (max-width: 49.9375rem) {
+	.header div:has(> #ss-toc-toggle) {
+		flex: 1;
+		min-width: 0;
+	}
+}
+
+.sidebar-pane {
+	display: none;
+	visibility: visible;
+	position: fixed;
+	inset-block-start: var(--sl-nav-height);
+	inset-inline: 0;
+	width: 100%;
+	height: auto;
+	max-height: calc(100vh - var(--sl-nav-height));
+	min-height: 0;
+	overflow-y: auto;
+	background: var(--sl-color-bg-sidebar);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	box-shadow: var(--sl-shadow-md);
+}
+
+html.ss-sidebar-expanded .sidebar-pane {
+	display: block;
+}
+
+.sidebar-content {
+	height: auto;
+	min-height: 0;
+}
+
+.mobile-preferences {
+	display: none !important;
+}
+
+.ss-sidebar-active {
+	color: var(--sl-color-text-accent) !important;
+	font-weight: 600;
+}
+
+/* ============ 위키 전용 컴포넌트 ============ */
+
+.ss-section {
+	position: relative;
+	margin-inline: calc(-1 * var(--sl-content-pad-x));
+	padding-inline: var(--sl-content-pad-x);
+	padding-block: clamp(3.5rem, 8vw, 6rem);
+	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
+}
+
+/* 섹션 구분선: 자로 잰 직선 대신 손으로 그은 낙서선 */
+.ss-section::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: var(--sl-content-pad-x);
+	right: var(--sl-content-pad-x);
+	height: 0.6rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 10'%3E%3Cpath d='M1 5 C 15 2, 25 8, 40 5 S 60 1, 78 5 95 9 112 4 132 6 150 2 168 6 186 4 199 5' fill='none' stroke='hsl(30 16%25 50%25)' stroke-width='1.4' stroke-linecap='round' opacity='0.55'/%3E%3C/svg%3E");
+	background-repeat: repeat-x;
+	background-size: 12.5rem 0.6rem;
+	background-position: left center;
+}
+
+.ss-section:first-child::before {
+	display: none;
+}
+
+.ss-section .sl-heading-wrapper.level-h2 {
+	text-align: center;
+	font-size: clamp(var(--sl-text-2xl), 4.5vw, var(--sl-text-4xl));
+	margin-bottom: 0.9rem;
+	position: relative;
+	display: inline-block;
+	padding-bottom: 0.5rem;
+}
+
+/* 헤딩 밑줄: 매끈한 직선 대신 손으로 두 번 그은 듯 삐뚤빼뚤한 선 */
+.ss-section .sl-heading-wrapper.level-h2::after {
+	content: '';
+	position: absolute;
+	inset-inline: 8%;
+	bottom: 0;
+	height: 0.55rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12'%3E%3Cpath d='M2 6 C 12 2, 18 10, 30 7 S 46 1, 58 6 72 11 84 4 98 8 118 5' fill='none' stroke='%2379975a' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	opacity: 0.7;
+}
+
+/* 히어로 아래로 페이드인하는 콘텐츠(되감기 이야기) */
+.ss-fade-reveal {
+	opacity: 0;
+	transition: opacity 0.6s ease;
+}
+
+.ss-fade-reveal.ss-show {
+	opacity: 1;
+}
+
+.ss-hero-tags {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.6rem;
+	margin: 2.75rem 0 0 !important;
+}
+
+/*
+  태그/사실 목록/삐삐 번호 = 투명 테이프로 붙인 라벨. 종이처럼 찢어낸 게
+  아니라 매끈하고 곧은 가장자리로 "테이프 커터로 자른" 인상을 준다 —
+  종이 재질(찢은 가장자리)과 뚜렷이 구분되도록 한다.
+*/
+.ss-tag {
+	position: relative;
+	display: inline-flex;
+	align-items: stretch;
+	overflow: hidden;
+	border-radius: 0.15rem;
+	font-family: var(--ss-font-display);
+	font-size: var(--sl-text-xs);
+	box-shadow: 0 0.15rem 0.35rem rgba(0, 0, 0, 0.2);
+}
+
+.ss-tag:nth-child(even) {
+	transform: rotate(-1.4deg);
+}
+.ss-tag:nth-child(odd) {
+	transform: rotate(1.1deg);
+}
+
+.ss-tag-label {
+	padding: 0.32rem 0.7rem;
+	background: color-mix(in srgb, var(--ss-ink) 18%, transparent);
+	color: var(--sl-color-gray-1);
+}
+
+.ss-tag-value {
+	padding: 0.32rem 0.7rem;
+	background: var(--sl-color-accent);
+	color: hsl(96, 45%, 10%);
+	font-weight: 700;
+}
+
+/* 프로필 사실 목록 — 스케치북에 낙서로 두른 라벨처럼 */
+.ss-facts {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.6rem;
+	margin: 2.25rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* 프로필 안에서 외형과 성격 / 취향과 습관을 별도 블록처럼 더 띄운다 */
+#sec-profile #sec-appearance,
+#sec-profile #sec-taste {
+	margin-top: 3.5rem;
+}
+
+.ss-facts li {
+	position: relative;
+	overflow: hidden;
+	margin: 0;
+	padding: 0.5rem 1rem;
+	border-radius: 0.15rem;
+	font-family: var(--ss-font-display);
+	font-size: var(--sl-text-sm);
+	background: color-mix(in srgb, white 14%, var(--sl-color-bg-nav));
+	box-shadow: 0 0.15rem 0.35rem rgba(0, 0, 0, 0.18);
+}
+
+.ss-facts li:nth-child(3n + 1) {
+	transform: rotate(-1.2deg);
+}
+.ss-facts li:nth-child(3n + 2) {
+	transform: rotate(1deg);
+}
+
+.ss-facts li strong {
+	margin-inline-end: 0.3rem;
+	color: var(--sl-color-text-accent);
+}
+
+/*
+  취향: 좋아하는 것 → 종이 카드가 아니라 실제 카세트 라벨 그 자체. 테마와
+  무관하게 고정된 크림/세피아 색(CassettePlayer.astro의 .ss-cassette-label과
+  동일 팔레트)을 써서 "이건 카세트에 붙은 라벨"이라는 물건감을 준다.
+*/
+.ss-tracklist {
+	position: relative;
+	margin: 1.5rem 0;
+	padding-block: 0.4rem;
+	border-radius: 0.25rem;
+	background: #ece1c2;
+	box-shadow: 0 0.5rem 1.1rem rgba(0, 0, 0, 0.28), inset 0 0 0 1px rgba(58, 47, 34, 0.25);
+	transform: rotate(-0.5deg);
+}
+
+.ss-tracklist-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.6rem;
+	padding: 0.6rem 1.1rem;
+	font-family: var(--ss-font-hand);
+	font-size: var(--sl-text-base);
+	color: rgba(58, 47, 34, 0.75);
+	border-bottom: 1px solid rgba(58, 47, 34, 0.28);
+}
+
+.ss-track {
+	display: flex;
+	align-items: center;
+	gap: 0.7rem;
+	padding: 0.7rem 1.1rem;
+	border-bottom: 1px dashed rgba(58, 47, 34, 0.22);
+	font-size: var(--sl-text-sm);
+	line-height: 1.5;
+	color: #3a2f22;
+}
+
+/*
+  이모지 글자는 한글 폰트와 폰트 자체의 세로 메트릭이 달라, 같은 텍스트
+  줄 안에 있으면 베이스라인이 아래로 처져 보인다. 이모지를 별도 flex
+  아이템으로 분리해 줄 안 정렬이 아니라 박스 단위로 가운데 정렬한다.
+*/
+.ss-track-emoji {
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.4rem;
+	line-height: 1;
+}
+
+.ss-track-text {
+	flex: 1;
+}
+
+.ss-track:last-child {
+	border-bottom: none;
+}
+
+.ss-track-no {
+	flex-shrink: 0;
+	font-family: var(--ss-font-display);
+	font-weight: 700;
+	color: #7a4423;
+	min-width: 1.6rem;
+}
+
+/* 작은 버릇 목록 */
+/* 옥탑방 / 캠퍼스 장소 리스팅 — 스케치북에 하나씩 붙인 메모 카드 */
+.ss-place-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+	margin: 1.5rem 0;
+}
+
+/*
+  카드(장소/B-SIDE/인물) = 레트로 메모지. 모눈이 아니라 가로줄 노트 +
+  색 헤더 밴드로 "메모 패드에서 한 장 뜯어 쓴 노트"라는 인상을 준다.
+  종이 재질이지만 가장자리는 곧게 잘려 있어 인용구의 찢은 종이와 구분된다.
+*/
+.ss-place {
+	position: relative;
+	padding: 1.4rem 1.5rem 1.3rem;
+	border-radius: 0.2rem;
+	background-image: var(--ss-memo-lines);
+	background-color: var(--sl-color-bg-nav);
+	border-top: 0.3rem solid color-mix(in srgb, var(--sl-color-accent) 70%, var(--ss-ink) 8%);
+	box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.18);
+}
+
+.ss-place:nth-child(even) {
+	transform: rotate(-0.35deg);
+}
+.ss-place:nth-child(odd) {
+	transform: rotate(0.3deg);
+}
+
+.ss-place-name {
+	margin: 0 0 0.4rem;
+	font-family: var(--ss-font-display);
+	font-weight: 700;
+	font-size: var(--sl-text-lg);
+	color: var(--sl-color-text-accent);
+}
+
+.ss-place-desc {
+	margin: 0;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-1);
+}
+
+/* B-SIDE / 주변 인물 카드 그리드 */
+.ss-card-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+	gap: 1.4rem;
+	margin: 1.5rem 0;
+}
+
+.ss-card {
+	position: relative;
+	padding: 1.6rem 1.6rem 1.5rem;
+	border-radius: 0.2rem;
+	background-image: var(--ss-memo-lines);
+	background-color: var(--sl-color-bg-nav);
+	border-top: 0.3rem solid color-mix(in srgb, var(--ss-denim) 75%, var(--ss-ink) 8%);
+	box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.18);
+}
+
+.ss-card:nth-child(even) {
+	transform: rotate(-0.5deg);
+}
+.ss-card:nth-child(odd) {
+	transform: rotate(0.4deg);
+}
+
+.ss-card-title-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.6rem;
+	margin-bottom: 0.4rem;
+}
+
+.ss-card-title {
+	margin: 0;
+	font-family: var(--ss-font-display);
+	font-size: var(--sl-text-lg);
+	font-weight: 700;
+	color: var(--sl-color-text-accent);
+}
+
+/* 삐삐 식별번호 태그 — 이 사이트에서 유일하게 쓰는 삐삐 모티프의 작은 흔적 */
+.ss-pager-id {
+	position: relative;
+	overflow: hidden;
+	flex-shrink: 0;
+	padding: 0.2rem 0.65rem;
+	border-radius: 0.15rem;
+	font-family: var(--ss-font-display);
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-1);
+	background: color-mix(in srgb, var(--ss-denim) 22%, color-mix(in srgb, white 12%, var(--sl-color-bg-nav)));
+	box-shadow: 0 0.15rem 0.35rem rgba(0, 0, 0, 0.18);
+	white-space: nowrap;
+}
+
+.ss-card-meta {
+	margin: 0 0 0.6rem;
+	font-family: var(--ss-font-display);
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-3);
+}
+
+.ss-card-desc {
+	margin: 0;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-1);
+}
+
+/* 큰 인물 프로필(성호/다혜) — 종이를 한 장 붙여 놓은 느낌 */
+.ss-person {
+	position: relative;
+	margin: 1.5rem 0;
+	padding: 1.8rem 1.8rem 1.7rem;
+	border-radius: 0.2rem;
+	background-image: var(--ss-memo-lines);
+	background-color: var(--sl-color-bg-nav);
+	border-top: 0.32rem solid color-mix(in srgb, var(--ss-pink) 70%, var(--ss-ink) 8%);
+	box-shadow: 0 0.5rem 1.2rem rgba(0, 0, 0, 0.2);
+}
+
+.ss-person h4 {
+	margin-top: 0;
+}
+
+.ss-person .ss-facts {
+	justify-content: flex-start;
+}
+
+/* 프로필 사진 — 앨범에 끼워 넣은 사진처럼, 크림색 마운트 + 모서리 포토코너 */
+.ss-profile-photo-wrap {
+	display: flex;
+	justify-content: center;
+	margin: 1.5rem 0 0;
+}
+
+.ss-profile-photo-frame {
+	position: relative;
+	display: inline-block;
+	padding: 0.7rem;
+	background: hsl(46, 42%, 93%);
+	border: 1.5px solid var(--ss-ink);
+	border-radius: 0.3rem;
+	box-shadow: 7px 7px 0 var(--ss-ink-shadow);
+	transform: rotate(-1.1deg);
+}
+
+.ss-profile-photo-frame::before,
+.ss-profile-photo-frame::after {
+	content: '';
+	position: absolute;
+	width: 1rem;
+	height: 1rem;
+	background: color-mix(in srgb, var(--ss-ink) 65%, transparent);
+}
+
+.ss-profile-photo-frame::before {
+	top: 0.2rem;
+	left: 0.2rem;
+	clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.ss-profile-photo-frame::after {
+	bottom: 0.2rem;
+	right: 0.2rem;
+	clip-path: polygon(100% 100%, 100% 0, 0 100%);
+}
+
+.ss-profile-photo {
+	display: block;
+	width: clamp(20rem, 68vw, 30rem);
+	border-radius: 0.15rem;
+	cursor: zoom-in;
+}

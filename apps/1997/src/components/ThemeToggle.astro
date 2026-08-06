@@ -1,0 +1,108 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+---
+
+<starlight-theme-toggle>
+	<button type="button" class="ss-theme-toggle" aria-label="테마 전환">
+		<span class="ss-theme-track">
+			<Icon name="moon" class="ss-theme-icon ss-theme-icon-moon" />
+			<Icon name="sun" class="ss-theme-icon ss-theme-icon-sun" />
+			<span class="ss-theme-knob"></span>
+		</span>
+	</button>
+</starlight-theme-toggle>
+
+<style>
+	.ss-theme-toggle {
+		display: flex;
+		align-items: center;
+		padding: 0;
+		border: none;
+		background: none;
+		cursor: pointer;
+	}
+
+	.ss-theme-track {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 3.25rem;
+		height: 1.75rem;
+		padding: 0 0.4rem;
+		border-radius: 999px;
+		border: 1px solid var(--sl-color-hairline);
+		background: var(--sl-color-bg-nav);
+		transition: border-color 0.2s ease;
+	}
+
+	.ss-theme-toggle:hover .ss-theme-track {
+		border-color: var(--sl-color-accent);
+	}
+
+	.ss-theme-icon {
+		position: relative;
+		z-index: 1;
+		width: 0.85rem;
+		height: 0.85rem;
+		color: var(--sl-color-gray-3);
+	}
+
+	.ss-theme-knob {
+		position: absolute;
+		top: 0.15rem;
+		left: 0.15rem;
+		width: 1.45rem;
+		height: 1.45rem;
+		border-radius: 50%;
+		background: var(--sl-color-accent);
+		box-shadow: var(--sl-shadow-sm);
+		transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	/* 기본(다크): knob이 왼쪽(달) 위치 */
+	:root:not([data-theme='light']) .ss-theme-icon-moon {
+		color: var(--sl-color-white);
+	}
+
+	/* 라이트: knob이 오른쪽(해) 위치로 이동 */
+	:root[data-theme='light'] .ss-theme-knob {
+		transform: translateX(1.5rem);
+	}
+	:root[data-theme='light'] .ss-theme-icon-sun {
+		color: var(--sl-color-white);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.ss-theme-knob {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	type Theme = 'dark' | 'light';
+
+	const storageKey = 'starlight-theme';
+
+	function applyTheme(theme: Theme): void {
+		document.documentElement.dataset.theme = theme;
+		localStorage.setItem(storageKey, theme);
+	}
+
+	class StarlightThemeToggle extends HTMLElement {
+		constructor() {
+			super();
+			const button = this.querySelector('button');
+			button?.addEventListener('click', () => {
+				const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+				const next: Theme = current === 'light' ? 'dark' : 'light';
+				applyTheme(next);
+			});
+		}
+	}
+
+	if (!customElements.get('starlight-theme-toggle')) {
+		customElements.define('starlight-theme-toggle', StarlightThemeToggle);
+	}
+</script>

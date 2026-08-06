@@ -1,0 +1,320 @@
+---
+// 히어로 인트로: 다른 세계관의 타이핑 터미널 자리를 대신하는 카세트 플레이어.
+// 실제 물건(플라스틱 케이스)이라는 감각을 살리기 위해 셸 색상은 라이트/다크
+// 테마와 무관하게 고정된 값을 쓴다(테마가 바뀐다고 카세트 재질이 바뀌지 않는다).
+// 화면에 들어오면 릴이 돌기 시작하고 재생 카운터가 올라가다가, 잠시 뒤
+// revealTarget으로 지정한 엘리먼트에 ss-show 클래스를 붙여 뒤이어 나올
+// 내용(되감기 이야기)을 페이드인한다.
+interface Props {
+	tagline: string;
+	side?: string;
+	revealTarget?: string;
+}
+
+const { tagline, side = 'SIDE A', revealTarget } = Astro.props;
+---
+
+<div class="ss-cassette" data-reveal-target={revealTarget}>
+	<div class="ss-cassette-body">
+		<div class="ss-cassette-screws" aria-hidden="true">
+			<span></span><span></span><span></span><span></span>
+		</div>
+
+		<div class="ss-cassette-window">
+			<div class="ss-reel ss-reel-left" aria-hidden="true">
+				<span class="ss-reel-hub"></span>
+			</div>
+			<div class="ss-cassette-tape" aria-hidden="true"></div>
+			<div class="ss-reel ss-reel-right" aria-hidden="true">
+				<span class="ss-reel-hub"></span>
+			</div>
+		</div>
+
+		<div class="ss-cassette-sprockets" aria-hidden="true">
+			<span></span><span></span>
+		</div>
+
+		<div class="ss-cassette-label">
+			<div class="ss-cassette-label-rule" aria-hidden="true"></div>
+			<p class="ss-cassette-side">{side}</p>
+			<p class="ss-cassette-tagline">{tagline}</p>
+			<p class="ss-cassette-spec" aria-hidden="true">TYPE Ⅱ · C-60</p>
+		</div>
+	</div>
+
+	<p class="ss-cassette-counter">
+		<span class="ss-cassette-time" data-time>00:00</span>
+		<span class="ss-cassette-status" data-status>재생 대기</span>
+	</p>
+</div>
+
+<script>
+	const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	function playCassette(el: HTMLElement): void {
+		const revealId = el.dataset.revealTarget;
+		const revealEl = revealId ? document.getElementById(revealId) : null;
+		const timeEl = el.querySelector<HTMLElement>('[data-time]');
+		const statusEl = el.querySelector<HTMLElement>('[data-status]');
+
+		if (prefersReduced) {
+			el.classList.add('ss-playing');
+			if (timeEl) timeEl.textContent = '00:12';
+			if (statusEl) statusEl.textContent = '재생 중';
+			revealEl?.classList.add('ss-show');
+			return;
+		}
+
+		el.classList.add('ss-playing');
+		if (statusEl) statusEl.textContent = '재생 중';
+
+		let seconds = 0;
+		const tick = setInterval(() => {
+			seconds += 1;
+			if (timeEl) {
+				const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+				const s = String(seconds % 60).padStart(2, '0');
+				timeEl.textContent = `${m}:${s}`;
+			}
+			if (seconds >= 12) clearInterval(tick);
+		}, 1000);
+
+		setTimeout(() => revealEl?.classList.add('ss-show'), 1600);
+	}
+
+	const elements = document.querySelectorAll<HTMLElement>('.ss-cassette[data-reveal-target]');
+	const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) return;
+				playCassette(entry.target as HTMLElement);
+				observer.unobserve(entry.target);
+			});
+		},
+		{ threshold: 0.35 }
+	);
+	elements.forEach((el) => observer.observe(el));
+</script>
+
+<style>
+	.ss-cassette {
+		margin: 0 auto;
+		max-width: 26rem;
+	}
+
+	/* 케이스 재질 색은 테마와 무관하게 고정 — 물건이라는 감각을 유지 */
+	.ss-cassette-body {
+		position: relative;
+		padding: 1.5rem 1.5rem 1.9rem;
+		border-radius: 0.6rem 0.7rem 0.55rem 0.75rem;
+		background:
+			repeating-linear-gradient(
+				128deg,
+				rgba(255, 255, 255, 0.035) 0px,
+				rgba(255, 255, 255, 0.035) 1px,
+				transparent 1px,
+				transparent 5px
+			),
+			radial-gradient(circle at 18% 10%, rgba(255, 255, 255, 0.07), transparent 40%),
+			linear-gradient(165deg, #35302a, #17140f);
+		border: 1.5px solid #0c0a08;
+		box-shadow: 0 1.1rem 2.5rem rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+	}
+
+	/* 낡은 모서리 — 한쪽만 살짝 닳은 느낌 */
+	.ss-cassette-body::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 2.2rem;
+		height: 2.2rem;
+		background: linear-gradient(135deg, transparent 55%, rgba(255, 255, 255, 0.06) 100%);
+		border-radius: 0 0 0.55rem 0;
+		pointer-events: none;
+	}
+
+	.ss-cassette-screws span {
+		position: absolute;
+		width: 0.45rem;
+		height: 0.45rem;
+		border-radius: 50%;
+		background: #0c0a08;
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.1);
+	}
+	.ss-cassette-screws span:nth-child(1) {
+		top: 0.75rem;
+		left: 0.75rem;
+	}
+	.ss-cassette-screws span:nth-child(2) {
+		top: 0.75rem;
+		right: 0.75rem;
+	}
+	.ss-cassette-screws span:nth-child(3) {
+		bottom: 1.6rem;
+		left: 0.75rem;
+	}
+	.ss-cassette-screws span:nth-child(4) {
+		bottom: 1.6rem;
+		right: 0.75rem;
+	}
+
+	.ss-cassette-window {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 5.2rem;
+		padding-inline: 1.6rem;
+		border-radius: 0.3rem;
+		background: linear-gradient(175deg, #d8cdae, #c7b98f);
+		box-shadow: inset 0 0.25rem 0.7rem rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+	}
+
+	.ss-reel {
+		position: relative;
+		width: 3.3rem;
+		height: 3.3rem;
+		border-radius: 50%;
+		background: repeating-conic-gradient(#6b4423 0deg 9deg, #4a2e17 9deg 18deg);
+		border: 2px solid #3a2312;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+	}
+
+	.ss-reel-hub {
+		width: 1rem;
+		height: 1rem;
+		border-radius: 50%;
+		background: #d8cdae;
+		border: 2px solid #3a2312;
+	}
+
+	/* 두 릴이 수평으로 딱 맞아 보이지 않아서, 오른쪽 릴을 위로 올린다.
+	   spin 애니메이션이 transform: rotate()를 쓰므로, 위치 보정은 top으로 한다. */
+	.ss-reel-right {
+		top: -0.45rem;
+	}
+
+	.ss-cassette.ss-playing .ss-reel {
+		animation: ss-reel-spin 2.2s linear infinite;
+	}
+
+	@keyframes ss-reel-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	.ss-cassette-tape {
+		position: absolute;
+		inset-inline: 3.5rem;
+		top: 50%;
+		height: 3px;
+		background: #4a2e17;
+		opacity: 0.75;
+		transform: translateY(-50%);
+	}
+
+	/* 테이프 구동 스프로킷 홀 — 실제 카세트 하단의 톱니바퀴 구멍 */
+	.ss-cassette-sprockets {
+		display: flex;
+		justify-content: center;
+		gap: 8.5rem;
+		margin-top: 0.5rem;
+	}
+
+	.ss-cassette-sprockets span {
+		width: 0.6rem;
+		height: 0.4rem;
+		border-radius: 0.15rem;
+		background: #0c0a08;
+		box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+	}
+
+	/* 라벨: 살짝 빛바랜 종이, 손으로 붙인 듯 아주 살짝 기울어짐 */
+	.ss-cassette-label {
+		position: relative;
+		margin-top: 1rem;
+		padding: 0.75rem 1.1rem 0.85rem;
+		border-radius: 0.2rem;
+		background: #ece1c2;
+		box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(58, 47, 34, 0.25);
+		text-align: center;
+		transform: rotate(-0.6deg);
+	}
+
+	.ss-cassette-label-rule {
+		position: absolute;
+		left: 1.1rem;
+		right: 1.1rem;
+		top: 1.9rem;
+		height: 1px;
+		background: rgba(58, 47, 34, 0.25);
+	}
+
+	.ss-cassette-side {
+		margin: 0 0 0.3rem;
+		font-family: var(--ss-font-display);
+		font-size: var(--sl-text-xs);
+		font-weight: 700;
+		letter-spacing: 0.16em;
+		color: rgba(58, 47, 34, 0.75);
+	}
+
+	.ss-cassette-tagline {
+		position: relative;
+		display: inline-block;
+		margin: 0.15rem 0 0;
+		font-family: var(--ss-font-hand);
+		font-size: var(--sl-text-xl);
+		color: #3a2f22;
+		transform: rotate(-1deg);
+	}
+
+	/* 손으로 그은 듯한 밑줄 낙서 */
+	.ss-cassette-tagline::after {
+		content: '';
+		position: absolute;
+		left: -0.3rem;
+		right: -0.3rem;
+		bottom: -0.15rem;
+		height: 0.4rem;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10'%3E%3Cpath d='M2 6 C 20 2, 35 9, 52 5 S 85 1, 118 6' fill='none' stroke='%233a2f22' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		opacity: 0.55;
+	}
+
+	.ss-cassette-spec {
+		margin: 0.55rem 0 0;
+		font-family: var(--ss-font-display);
+		font-size: 0.65rem;
+		letter-spacing: 0.1em;
+		color: rgba(58, 47, 34, 0.55);
+	}
+
+	.ss-cassette-counter {
+		margin: 0.9rem 0 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		font-family: var(--ss-font-display);
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-3);
+	}
+
+	.ss-cassette-time {
+		font-weight: 700;
+		color: var(--sl-color-text-accent);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.ss-cassette.ss-playing .ss-reel {
+			animation: none;
+		}
+	}
+</style>

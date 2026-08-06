@@ -4,7 +4,7 @@
 // 목차 드롭다운을 추가한다.
 import Default from '@astrojs/starlight/components/SiteTitle.astro';
 
-const CURRENT = 'yunhaesi';
+const CURRENT = '1997';
 const WORLDS = [
 	{ id: 'colorground', label: '컬러그라운드', href: '/colorground/' },
 	{ id: 'nighthighway', label: 'NIGHT HIGHWAY', href: '/nighthighway/' },
@@ -20,7 +20,7 @@ const WORLDS = [
 ];
 ---
 
-<a href="/" class="yh-home-link" aria-label="대문으로 이동" title="대문으로 이동">
+<a href="/" class="ss-home-link" aria-label="대문으로 이동" title="대문으로 이동">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 24 24"
@@ -36,14 +36,14 @@ const WORLDS = [
 		<path d="M5.5 10v9.5h13V10" />
 	</svg>
 </a>
-<div class="yh-site-switch">
+<div class="ss-site-switch">
 	<Default {...Astro.props} />
 	<button
 		type="button"
-		id="yh-site-switch-trigger"
-		class="yh-site-switch-trigger"
+		id="ss-site-switch-trigger"
+		class="ss-site-switch-trigger"
 		aria-expanded="false"
-		aria-controls="yh-site-switch-menu"
+		aria-controls="ss-site-switch-menu"
 		aria-label="다른 세계관으로 이동"
 		title="다른 세계관으로 이동"
 	>
@@ -62,30 +62,30 @@ const WORLDS = [
 			<path d="M6 9l6 6 6-6" />
 		</svg>
 	</button>
-	<nav id="yh-site-switch-menu" class="yh-site-switch-menu" aria-label="다른 세계관">
+	<nav id="ss-site-switch-menu" class="ss-site-switch-menu" aria-label="다른 세계관">
 		{
 			WORLDS.map((item) =>
 				item.children ? (
 					<>
-						<p class="yh-site-switch-group">{item.label}</p>
+						<p class="ss-site-switch-group">{item.label}</p>
 						{item.children.map((child) =>
 							child.id === CURRENT ? (
-								<span class="yh-site-switch-item yh-site-switch-item--nested yh-site-switch-item--current" aria-current="page">
+								<span class="ss-site-switch-item ss-site-switch-item--nested ss-site-switch-item--current" aria-current="page">
 									{child.label}
 								</span>
 							) : (
-								<a href={child.href} class="yh-site-switch-item yh-site-switch-item--nested">
+								<a href={child.href} class="ss-site-switch-item ss-site-switch-item--nested">
 									{child.label}
 								</a>
 							)
 						)}
 					</>
 				) : item.id === CURRENT ? (
-					<span class="yh-site-switch-item yh-site-switch-item--current" aria-current="page">
+					<span class="ss-site-switch-item ss-site-switch-item--current" aria-current="page">
 						{item.label}
 					</span>
 				) : (
-					<a href={item.href} class="yh-site-switch-item">
+					<a href={item.href} class="ss-site-switch-item">
 						{item.label}
 					</a>
 				)
@@ -95,9 +95,9 @@ const WORLDS = [
 </div>
 
 <script>
-	const trigger = document.getElementById('yh-site-switch-trigger');
-	const menu = document.getElementById('yh-site-switch-menu');
-	const wrapper = document.querySelector('.yh-site-switch');
+	const trigger = document.getElementById('ss-site-switch-trigger');
+	const menu = document.getElementById('ss-site-switch-menu');
+	const wrapper = document.querySelector('.ss-site-switch');
 	const titleLink = wrapper?.querySelector<HTMLAnchorElement>('.site-title');
 
 	// Starlight의 .title-wrapper는 overflow: clip이라 position: absolute로는
@@ -139,7 +139,7 @@ const WORLDS = [
 </script>
 
 <style>
-	.yh-home-link {
+	.ss-home-link {
 		display: inline-flex;
 		align-items: center;
 		flex-shrink: 0;
@@ -150,11 +150,11 @@ const WORLDS = [
 		border-radius: 0.4rem;
 	}
 
-	.yh-home-link:hover {
+	.ss-home-link:hover {
 		color: var(--sl-color-text-accent);
 	}
 
-	.yh-site-switch {
+	.ss-site-switch {
 		position: relative;
 		display: inline-flex;
 		align-items: center;
@@ -162,11 +162,11 @@ const WORLDS = [
 		min-width: 0;
 	}
 
-	.yh-site-switch :global(.site-title) {
+	.ss-site-switch :global(.site-title) {
 		cursor: pointer;
 	}
 
-	.yh-site-switch-trigger {
+	.ss-site-switch-trigger {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -181,20 +181,20 @@ const WORLDS = [
 		cursor: pointer;
 	}
 
-	.yh-site-switch-trigger:hover,
-	.yh-site-switch-trigger[aria-expanded='true'] {
+	.ss-site-switch-trigger:hover,
+	.ss-site-switch-trigger[aria-expanded='true'] {
 		color: var(--sl-color-text-accent);
 	}
 
-	.yh-site-switch-trigger svg {
+	.ss-site-switch-trigger svg {
 		transition: transform 0.2s ease;
 	}
 
-	.yh-site-switch-trigger[aria-expanded='true'] svg {
+	.ss-site-switch-trigger[aria-expanded='true'] svg {
 		transform: rotate(180deg);
 	}
 
-	.yh-site-switch-menu {
+	.ss-site-switch-menu {
 		position: fixed;
 		display: none;
 		flex-direction: column;
@@ -207,11 +207,11 @@ const WORLDS = [
 		z-index: 20;
 	}
 
-	.yh-site-switch-menu.is-open {
+	.ss-site-switch-menu.is-open {
 		display: flex;
 	}
 
-	.yh-site-switch-group {
+	.ss-site-switch-group {
 		margin: 0.3rem 0 0.15rem;
 		padding-inline-start: 0.6rem;
 		font-size: 0.7rem;
@@ -219,11 +219,11 @@ const WORLDS = [
 		color: var(--sl-color-gray-3);
 	}
 
-	.yh-site-switch-group:first-child {
+	.ss-site-switch-group:first-child {
 		margin-top: 0;
 	}
 
-	.yh-site-switch-item {
+	.ss-site-switch-item {
 		display: block;
 		padding: 0.35rem 0.6rem;
 		border-radius: 0.4rem;
@@ -233,22 +233,22 @@ const WORLDS = [
 		white-space: nowrap;
 	}
 
-	a.yh-site-switch-item:hover {
+	a.ss-site-switch-item:hover {
 		background: var(--sl-color-gray-6);
 	}
 
-	.yh-site-switch-item--nested {
+	.ss-site-switch-item--nested {
 		padding-inline-start: 1.2rem;
 	}
 
-	.yh-site-switch-item--current {
+	.ss-site-switch-item--current {
 		color: var(--sl-color-text-accent);
 		font-weight: 700;
 		cursor: default;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.yh-site-switch-trigger svg {
+		.ss-site-switch-trigger svg {
 			transition: none;
 		}
 	}

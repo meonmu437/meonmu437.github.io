@@ -15,6 +15,7 @@ const buildApps = [
 	{ dir: 'nighthighway', outPath: 'nighthighway' },
 	{ dir: 'yunhaesi', outPath: 'yunhaesi' },
 	{ dir: 'seungmin', outPath: 'seungmin' },
+	{ dir: '1997', outPath: '1997' },
 ];
 
 rmSync(dist, { recursive: true, force: true });
