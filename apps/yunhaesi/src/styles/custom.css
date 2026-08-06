@@ -385,6 +385,15 @@ html {
 	}
 }
 
+/* 모바일에서도 테마 토글을 헤더에 바로 노출(기본은 모바일 메뉴 안에만 존재) */
+.header .right-group {
+	display: flex !important;
+	gap: 0.5rem;
+}
+.header .social-icons {
+	display: none !important;
+}
+
 .sidebar-pane {
 	display: none;
 	visibility: visible;
