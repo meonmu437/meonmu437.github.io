@@ -212,6 +212,8 @@ import { Icon } from '@astrojs/starlight/components';
 </style>
 
 <script>
+	// 카드가 4개뿐이라 완전 랜덤이면 같은 대사가 자주 겹쳐 보인다. 대신
+	// 노에1 → 카미유1 → 노에2 → 카미유2 순으로 번갈아 돌게 고정 순환시킨다.
 	const QUOTES = [
 		{
 			nameKr: '노에 발렌티',
@@ -220,6 +222,14 @@ import { Icon } from '@astrojs/starlight/components';
 			hue: 205,
 			en: "Blue sky. A beautiful day for a funeral, don't you think? Let's make sure it's not ours.",
 			kr: '파란 하늘이라. 장례식 치르기 딱 좋은 날씨네, 안 그래? 우리 장례식은 아니길 빌자고.',
+		},
+		{
+			nameKr: '카미유 모로',
+			nameEn: 'Camille Moreau',
+			callsign: 'CANARY',
+			hue: 280,
+			en: "Don't worry, we'll make it. I said we'll make it, right? Now move. Vite!",
+			kr: '걱정 마, 우리 할 수 있어. 내가 할 수 있다고 했지? 자, 움직여. 빨리!',
 		},
 		{
 			nameKr: '노에 발렌티',
@@ -234,18 +244,12 @@ import { Icon } from '@astrojs/starlight/components';
 			nameEn: 'Camille Moreau',
 			callsign: 'CANARY',
 			hue: 280,
-			en: "Don't worry, we'll make it. I said we'll make it, right? Now move. Vite!",
-			kr: '걱정 마, 우리 할 수 있어. 내가 할 수 있다고 했지? 자, 움직여. 빨리!',
-		},
-		{
-			nameKr: '카미유 모로',
-			nameEn: 'Camille Moreau',
-			callsign: 'CANARY',
-			hue: 280,
 			en: "The sky's getting pale, mon étoile. Time for the ghosts to hide and for us to move.",
 			kr: '하늘이 창백해지고 있어, 나의 별. 유령들은 숨고 우리는 움직여야 할 시간이야.',
 		},
 	];
+
+	let quoteIndex = 0;
 
 	function getOverlay(): HTMLElement {
 		let overlay = document.getElementById('nh-warn-overlay');
@@ -290,7 +294,8 @@ import { Icon } from '@astrojs/starlight/components';
 
 	function showNightWarning(): void {
 		const overlay = getOverlay();
-		const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+		const quote = QUOTES[quoteIndex];
+		quoteIndex = (quoteIndex + 1) % QUOTES.length;
 
 		const box = overlay.querySelector<HTMLElement>('.nh-warn-box')!;
 		box.style.setProperty('--nh-warn-hue', String(quote.hue));
