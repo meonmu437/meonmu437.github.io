@@ -1,0 +1,335 @@
+---
+// 마무리 섹션: 영화 클래퍼보드(슬레이트) 모양의 정적 컴포넌트.
+// 시나리오 작가라는 직업, 그리고 "다시 시작하는 장면"이라는 관계의
+// 은유를 그대로 물건으로 보여준다. 카세트/삐삐와 마찬가지로 몸체 색은
+// 테마와 무관하게 고정.
+//
+// 문구는 실제 손글씨 폰트(East Sea Dokdo)의 글자 외곽선을 opentype.js로
+// 빌드 타임에 추출해서, 그 외곽선을 stroke-dasharray/dashoffset으로
+// "실제로 펜이 그 글자 모양을 따라 그리는" 애니메이션으로 보여준다
+// (애프터 이펙트의 Trim Paths로 손글씨를 그리는 것과 같은 원리).
+import opentype from 'opentype.js';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+interface Props {
+	message: string;
+	scene?: string;
+	take?: string;
+	universLink?: string;
+	elynLink?: string;
+}
+
+const { message, scene = '재회', take = '몇 번째인지 모름', universLink, elynLink } = Astro.props;
+
+const fontUrl = new URL('../assets/fonts/EastSeaDokdo-Regular.ttf', import.meta.url);
+const fontBuffer = readFileSync(fileURLToPath(fontUrl));
+const font = opentype.parse(fontBuffer.buffer.slice(fontBuffer.byteOffset, fontBuffer.byteOffset + fontBuffer.byteLength));
+
+const FONT_SIZE = 25;
+const MAX_WIDTH = 300;
+const LINE_HEIGHT = 40;
+
+function wrapLines(text: string): string[] {
+	const words = text.split(' ');
+	const lines: string[] = [];
+	let current = '';
+	for (const word of words) {
+		const candidate = current ? `${current} ${word}` : word;
+		if (current && font.getAdvanceWidth(candidate, FONT_SIZE) > MAX_WIDTH) {
+			lines.push(current);
+			current = word;
+		} else {
+			current = candidate;
+		}
+	}
+	if (current) lines.push(current);
+	return lines;
+}
+
+// 한 줄 전체를 하나의 path로 합치면 커브 명령이 너무 많아져(수천 개)
+// 브라우저가 그 path의 뒷부분을 그리다 마는 현상이 있었다. 그래서 글자
+// 하나하나를 별도의 <path>로 쪼갠다 — 각 path는 아주 가벼워서 그 문제가
+// 없고, 덕분에 글자 단위로 순서대로 그려나가는 손글씨 리듬도 자연스럽게
+// 만들 수 있다.
+function buildHandwriting(text: string) {
+	const lines = wrapLines(text);
+	const glyphs: string[] = [];
+	let minX = Infinity;
+	let minY = Infinity;
+	let maxX = -Infinity;
+	let maxY = -Infinity;
+
+	lines.forEach((line, li) => {
+		let cursorX = 0;
+		for (const ch of Array.from(line)) {
+			// opentype.js가 특정 소수점 누적값(예: 226.57500000000002)에서
+			// 커브 계산 중 NaN을 뱉는 부동소수점 엣지 케이스가 있다. 커서
+			// 위치를 소수 둘째 자리로 반올림해서 피해간다 — 시각적으로는
+			// 차이가 없다.
+			const x = Math.round(cursorX * 100) / 100;
+			const glyphPath = font.getPath(ch, x, li * LINE_HEIGHT, FONT_SIZE);
+			const d = glyphPath.toPathData(2);
+			if (d.trim() && !d.includes('NaN')) {
+				glyphs.push(d);
+				const box = glyphPath.getBoundingBox();
+				minX = Math.min(minX, box.x1);
+				minY = Math.min(minY, box.y1);
+				maxX = Math.max(maxX, box.x2);
+				maxY = Math.max(maxY, box.y2);
+			}
+			cursorX += font.getAdvanceWidth(ch, FONT_SIZE);
+		}
+	});
+
+	const pad = 4;
+	return {
+		glyphs,
+		viewBox: `${minX - pad} ${minY - pad} ${maxX - minX + pad * 2} ${maxY - minY + pad * 2}`,
+	};
+}
+
+const handwriting = buildHandwriting(message);
+---
+
+<script>
+	// 윤곽선을 따라 그리는 스트로크 애니메이션은 그리는 동안 획 두 겹이
+	// 겹쳐 보여서 그림자/이중선처럼 보였다. 그 대신 글자는 처음부터
+	// 다른 필드(재회/몇 번째인지 모름)와 똑같은 방식으로 색이 채워진
+	// 상태로 두고, 한 글자씩 순서대로 페이드인만 시킨다 — 손으로 이어서
+	// 써 내려가는 리듬은 그대로 유지하면서, 보이는 글자 자체는 평범한
+	// 폰트 렌더링과 동일하게 남는다.
+	const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	const SPEED = 0.6; // px(경로 길이 단위) per ms — 클수록 다음 글자가 빨리 나온다
+	const MIN_DELAY = 25;
+	const MAX_DELAY = 110;
+
+	function reveal(slate: HTMLElement): void {
+		const paths = Array.from(slate.querySelectorAll<SVGPathElement>('.hm-chalk-path'));
+		if (!paths.length) return;
+
+		if (prefersReduced) {
+			paths.forEach((path) => path.classList.add('hm-shown'));
+			return;
+		}
+
+		let cumulativeDelay = 0;
+		paths.forEach((path) => {
+			const length = path.getTotalLength();
+			const delay = Math.min(MAX_DELAY, Math.max(MIN_DELAY, length / SPEED));
+			setTimeout(() => path.classList.add('hm-shown'), cumulativeDelay);
+			cumulativeDelay += delay;
+		});
+	}
+
+	const slates = document.querySelectorAll<HTMLElement>('.hm-slate');
+	const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) return;
+				reveal(entry.target as HTMLElement);
+				observer.unobserve(entry.target);
+			});
+		},
+		{ threshold: 0.5 }
+	);
+	slates.forEach((el) => observer.observe(el));
+</script>
+
+<div class="hm-slate">
+	<div class="hm-slate-sticks" aria-hidden="true">
+		<div class="hm-slate-stick hm-slate-stick--top"></div>
+		<div class="hm-slate-stick hm-slate-stick--bottom"></div>
+	</div>
+
+	<div class="hm-slate-board">
+		<div class="hm-slate-fields">
+			<div class="hm-slate-field">
+				<span class="hm-slate-field-label">SCENE</span>
+				<span class="hm-slate-field-value">{scene}</span>
+			</div>
+			<div class="hm-slate-field">
+				<span class="hm-slate-field-label">TAKE</span>
+				<span class="hm-slate-field-value">{take}</span>
+			</div>
+		</div>
+
+		<div class="hm-slate-message">
+			<svg class="hm-chalk-svg" viewBox={handwriting.viewBox} preserveAspectRatio="xMinYMin meet" role="img" aria-label={message}>
+				{handwriting.glyphs.map((d) => (
+					<path class="hm-chalk-path" d={d} fill="#f2efe6" stroke="none"></path>
+				))}
+			</svg>
+		</div>
+
+		{(universLink || elynLink) && (
+			<div class="hm-slate-links">
+				{universLink && (
+					<a href={universLink} target="_blank" rel="noopener noreferrer" class="hm-slate-link hm-slate-link--univers">
+						유니챗 ↗
+					</a>
+				)}
+				{elynLink && (
+					<a href={elynLink} target="_blank" rel="noopener noreferrer" class="hm-slate-link hm-slate-link--elyn">
+						엘린 ↗
+					</a>
+				)}
+			</div>
+		)}
+
+		<p class="hm-slate-footer">청명아파트 · 장마</p>
+	</div>
+</div>
+
+<style>
+	.hm-slate {
+		margin: 0 auto;
+		max-width: 24rem;
+	}
+
+	.hm-slate-sticks {
+		position: relative;
+		height: 2.6rem;
+		margin-bottom: -0.3rem;
+	}
+
+	.hm-slate-stick {
+		position: absolute;
+		left: 0.6rem;
+		right: 0.6rem;
+		height: 1.5rem;
+		border-radius: 0.2rem;
+		background: repeating-linear-gradient(
+			45deg,
+			#16181b 0 1rem,
+			#e7e2d8 1rem 2rem
+		);
+		border: 1.5px solid #0a0b0d;
+		box-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.35);
+	}
+
+	.hm-slate-stick--top {
+		top: 0;
+		transform: rotate(-4deg);
+		transform-origin: left center;
+	}
+
+	.hm-slate-stick--bottom {
+		top: 1.1rem;
+		left: 0;
+		right: 0;
+	}
+
+	.hm-slate-board {
+		position: relative;
+		padding: 1.3rem 1.4rem 1.4rem;
+		border-radius: 0.3rem;
+		background: #1c1d1e;
+		border: 1.5px solid #050607;
+		box-shadow: 0 1.2rem 2.5rem rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+	}
+
+	.hm-slate-fields {
+		display: flex;
+		gap: 1.2rem;
+		padding-bottom: 0.8rem;
+		border-bottom: 1.5px dashed rgba(233, 230, 221, 0.25);
+	}
+
+	.hm-slate-field {
+		display: flex;
+		flex-direction: column;
+		align-self: flex-start;
+		gap: 0.2rem;
+		margin: 0;
+	}
+
+	.hm-slate-field-label {
+		font-family: var(--hm-font-mono);
+		font-size: 0.62rem;
+		letter-spacing: 0.12em;
+		color: rgba(233, 230, 221, 0.55);
+	}
+
+	.hm-slate-field-value {
+		font-family: var(--hm-font-hand);
+		font-size: 1.15rem;
+		color: #f2efe6;
+	}
+
+	.hm-slate-message {
+		margin-top: 1.1rem;
+		min-height: 4.5rem;
+		display: flex;
+		align-items: center;
+	}
+
+	.hm-chalk-svg {
+		display: block;
+		width: 100%;
+		max-height: 6rem;
+		overflow: visible;
+	}
+
+	.hm-chalk-path {
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.hm-chalk-path.hm-shown {
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hm-chalk-path {
+			transition: none;
+		}
+	}
+
+	.hm-slate-links {
+		display: flex;
+		gap: 0.5rem;
+		margin-top: 1rem;
+	}
+
+	.hm-slate-link {
+		flex: 1;
+		text-align: center;
+		padding: 0.45rem 0.5rem;
+		border-radius: 0.3rem;
+		font-family: var(--hm-font-mono);
+		font-weight: 700;
+		font-size: var(--sl-text-xs);
+		text-decoration: none;
+		background: rgba(255, 255, 255, 0.06);
+		border: 1px solid rgba(233, 230, 221, 0.25);
+		transition: transform 0.15s ease, filter 0.15s ease;
+	}
+
+	.hm-slate-link--univers {
+		color: hsl(330, 80%, 72%);
+	}
+
+	.hm-slate-link--elyn {
+		color: hsl(258, 70%, 76%);
+	}
+
+	.hm-slate-link:hover {
+		filter: brightness(1.25);
+		transform: translateY(-1px);
+	}
+
+	.hm-slate-link:active {
+		transform: translateY(0);
+	}
+
+	.hm-slate-footer {
+		margin: 1rem 0 0;
+		text-align: right;
+		font-family: var(--hm-font-mono);
+		font-size: 0.65rem;
+		letter-spacing: 0.08em;
+		color: rgba(233, 230, 221, 0.4);
+	}
+</style>

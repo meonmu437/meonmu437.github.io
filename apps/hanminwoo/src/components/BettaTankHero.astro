@@ -1,0 +1,95 @@
+---
+// 히어로: 빗물 낀 창틀 위, 어항 속에 혼자 있는 푸른 베타.
+// "혼자 두면 외롭고, 둘을 함께 두면 서로를 다치게 하는" 관계의 은유를
+// 그대로 물건으로 보여준다. 실제 일러스트 배너(푸른베타배너.png)를 쓴다.
+import { Image } from 'astro:assets';
+import banner from '../assets/hanminwoo/betta-banner.png';
+
+interface Props {
+	tagline: string;
+	revealTarget?: string;
+}
+
+const { tagline, revealTarget } = Astro.props;
+---
+
+<div class="hm-tank" data-reveal-target={revealTarget}>
+	<div class="hm-tank-frame">
+		<Image src={banner} alt="빗물 낀 창틀 위, 어항 속 푸른 베타" class="hm-tank-img" widths={[480, 768, 1024]} sizes="(min-width: 40rem) 32rem, 100vw" />
+	</div>
+
+	<p class="hm-tank-tagline">{tagline}</p>
+</div>
+
+<script>
+	const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	function revealStory(el: HTMLElement): void {
+		const revealId = el.dataset.revealTarget;
+		const revealEl = revealId ? document.getElementById(revealId) : null;
+		el.classList.add('hm-playing');
+		if (prefersReduced) {
+			revealEl?.classList.add('hm-show');
+			return;
+		}
+		setTimeout(() => revealEl?.classList.add('hm-show'), 900);
+	}
+
+	const elements = document.querySelectorAll<HTMLElement>('.hm-tank[data-reveal-target]');
+	const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) return;
+				revealStory(entry.target as HTMLElement);
+				observer.unobserve(entry.target);
+			});
+		},
+		{ threshold: 0.35 }
+	);
+	elements.forEach((el) => observer.observe(el));
+</script>
+
+<style>
+	.hm-tank {
+		margin: 0 auto;
+		max-width: 32rem;
+	}
+
+	.hm-tank-frame {
+		position: relative;
+		border-radius: 0.4rem;
+		overflow: hidden;
+		border: 1.5px solid #06090f;
+		box-shadow: 0 1.2rem 2.5rem rgba(0, 0, 0, 0.4);
+		opacity: 0;
+		transform: translateY(0.5rem);
+		transition: opacity 0.9s ease, transform 0.9s ease;
+	}
+
+	.hm-tank.hm-playing .hm-tank-frame {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.hm-tank-img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.hm-tank-tagline {
+		margin: 1.1rem 0 0;
+		text-align: center;
+		font-family: var(--hm-font-hand);
+		font-size: var(--sl-text-2xl);
+		color: var(--sl-color-gray-1);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hm-tank-frame {
+			opacity: 1;
+			transform: none;
+			transition: none;
+		}
+	}
+</style>

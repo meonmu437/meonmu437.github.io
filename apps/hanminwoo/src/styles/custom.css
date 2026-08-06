@@ -1,0 +1,751 @@
+/*
+  한민우 위키 커스텀 테마 — "청명아파트 5동 804호"
+  - Design Read: 재개발 앞둔 낡은 아파트에서 헤어진 연인과 다시 동거하는
+    장마철 도시 로맨스. 승민(백엔드 다크 터미널), 윤성민(1997, 올리브+핑크
+    캠퍼스)과는 전혀 다른 결로, 눅눅한 밤과 차가운 코발트/인디고를 쓴다.
+  - 민우는 시나리오 작가 지망생이다. 그래서 재질은 "타이핑된 원고지"를
+    기본으로 삼되, 요소마다 다른 물건으로 구분한다(1997에서 한 재질을
+    전부에 쓰면 정신없어진다는 걸 배웠다):
+      · 인용구(대사) = 찢어낸 원고 초안 페이지 + 종이집게(클립) — 버려진
+        드래프트 한 장을 집어 놓은 느낌.
+      · 방 소개 카드 = 깨끗한 시나리오 슬러그라인 카드(INT. 이름 — 시간),
+        찢지 않은 원고 한 장.
+      · 기본정보 태그 = 타이핑된 인덱스카드 라벨(모노스페이스, 각진 사각형).
+      · 좋아하는 것 / 싫어하는 것 = 두 칸으로 나눈 비교 리스트(호감=앰버,
+        비호감=쿨그레이 왼쪽 선).
+      · 작은 버릇 = 파란 잉크펜으로 여백에 쓴 손글씨.
+  - 포인트 컬러는 두 가지 역할로 분리한다: 코발트/인디고는 사이트 전체
+    UI 액센트, 앰버(현관등 불빛)는 감정이 새어나오는 순간에만 쓰는
+    감정 포인트. 볼펜 파란색은 원고 위 첨삭 표시에만 쓰는 고정 물건 색.
+  - 다크 모드는 빗물 낀 창문 너머의 차가운 밤(인디고 그레이)으로 해석한다.
+  - 위키 전체가 하나의 스크롤 페이지: .hm-section은 풀블리드 밴드,
+    .hm-fade-reveal은 ScrollEffects.astro가 페이드인 제어.
+*/
+
+html {
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+:root {
+	--hm-font-display: 'Song Myung', serif;
+	--hm-font-hand: 'East Sea Dokdo', cursive;
+	--hm-font-mono: 'Nanum Gothic Coding', monospace;
+
+	--sl-font: 'Noto Sans KR', var(--sl-font-system);
+
+	/* accent = 코발트/인디고, 빗물 낀 밤의 색 (dark 기본) */
+	--sl-color-accent-low: hsl(226, 32%, 20%);
+	--sl-color-accent: hsl(226, 58%, 63%);
+	--sl-color-accent-high: hsl(226, 62%, 82%);
+
+	/* 감정 포인트 = 현관등의 앰버(억지로 안 기다린 척해도 켜 두는 불빛) */
+	--hm-amber: hsl(36, 82%, 62%);
+	/* 볼펜 색 = 원고 첨삭에만 쓰는 고정 물건 색(테마 무관) */
+	--hm-ballpoint: #3b5fb0;
+
+	/* 다크 = 빗물 낀 창문 너머의 밤, 차가운 인디고 그레이 */
+	--sl-color-bg: hsl(222, 24%, 10%);
+	--sl-color-bg-nav: hsl(222, 22%, 13%);
+	--sl-color-bg-sidebar: hsl(222, 20%, 11%);
+
+	--hm-border: hsl(222, 16%, 30%);
+
+	/* 손그림/첨삭 선 색 — 다크에서는 창에 비치는 차가운 빛의 톤 */
+	--hm-ink: hsl(215, 20%, 68%);
+	--hm-ink-shadow: hsl(215, 25%, 8% / 0.45);
+
+	/* 원고지 재질: 아주 옅은 종이 결 + 물기/커피 얼룩 하나 */
+	--hm-paper-grain: radial-gradient(
+			ellipse 5.5rem 4rem at 88% 8%,
+			color-mix(in srgb, var(--hm-ink) 10%, transparent) 0%,
+			transparent 70%
+		),
+		repeating-linear-gradient(
+			178deg,
+			color-mix(in srgb, var(--hm-ink) 5%, transparent) 0 1px,
+			transparent 1px 3px
+		);
+	--hm-torn-edge: 0% 3%, 6% 0%, 12% 3.6%, 18% 0.6%, 24% 3%, 30% 0.4%, 36% 3.4%, 42% 0.8%, 48% 3%,
+		54% 0.4%, 60% 3.2%, 66% 0.6%, 72% 3.4%, 78% 0.4%, 84% 3%, 90% 0.6%, 96% 3.2%, 100% 0%, 100% 97%,
+		94% 100%, 88% 96.6%, 82% 99.4%, 76% 96.8%, 70% 99.6%, 64% 96.6%, 58% 99.4%, 52% 96.8%, 46% 100%,
+		40% 96.6%, 34% 99.4%, 28% 96.8%, 22% 99.6%, 16% 96.6%, 10% 99.4%, 4% 97%, 0% 100%;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: hsl(226, 45%, 92%);
+	--sl-color-accent: hsl(226, 48%, 42%);
+	--sl-color-accent-high: hsl(226, 52%, 28%);
+
+	--hm-amber: hsl(32, 70%, 46%);
+
+	/* 라이트 = 흐린 장마철 아침, 회청색 하늘 */
+	--sl-color-bg: hsl(212, 22%, 94%);
+	--sl-color-bg-nav: hsl(212, 26%, 97%);
+	--sl-color-bg-sidebar: hsl(212, 20%, 92%);
+
+	--hm-border: hsl(212, 16%, 74%);
+
+	--hm-ink: hsl(220, 28%, 26%);
+	--hm-ink-shadow: hsl(220, 30%, 20% / 0.25);
+}
+
+/* 빗물 낀 유리창 텍스처 — 배경색 위에 아주 옅게 얹는다 */
+body {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	background-repeat: repeat;
+}
+
+.site-title span {
+	font-family: var(--hm-font-display);
+	font-weight: 700;
+	color: var(--sl-color-accent);
+}
+
+.sl-container {
+	margin-inline: auto;
+}
+
+/* Starlight 자동 페이지 타이틀(h1 #_top)은 숨기고, "한민우"를 본문 첫 ## 헤딩으로 직접 넣는다 */
+.content-panel:has(#_top) {
+	display: none;
+}
+
+.content-panel + .content-panel {
+	border-top: none;
+}
+
+.sl-markdown-content :is(h2, h3, h4):not(:where(.not-content *)) {
+	font-family: var(--hm-font-display);
+	font-weight: 700;
+}
+
+.sl-anchor-link {
+	display: none !important;
+}
+.sl-heading-wrapper > :first-child {
+	padding-inline-end: 0 !important;
+}
+
+/*
+  인용구 = 그가 버린 원고 초안 한 장. 찢어낸 가장자리(clip-path) + 종이
+  결(grain) + 상단에 종이집게. 카드류(방 소개)와는 달리 "버려진 낱장"
+  이라는 인상을 주기 위해 일부러 살짝 기울이고 가장자리를 들쭥날쭥하게
+  둔다.
+*/
+.sl-markdown-content blockquote:not(:where(.not-content *)) {
+	position: relative;
+	z-index: 0;
+	border: none;
+	padding: 1.7rem 1.6rem;
+	margin: 2.75rem 0.5rem;
+	font-style: normal;
+	font-family: var(--hm-font-display);
+	font-size: var(--sl-text-base);
+	color: var(--sl-color-gray-1);
+	transform: rotate(0.6deg);
+}
+
+.sl-markdown-content blockquote:not(:where(.not-content *))::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-image: var(--hm-paper-grain);
+	background-color: var(--sl-color-bg-nav);
+	box-shadow: 0 0.6rem 1.3rem rgba(0, 0, 0, 0.28);
+	clip-path: polygon(var(--hm-torn-edge));
+}
+
+/*
+  종이집게 — 왼쪽 상단에 원고 낱장을 집어 놓은 것처럼. 금속 광택은
+  최소한으로, 눌린 자국(그림자)만 살짝. 테마 무관 고정색(물건이라는 감각).
+*/
+.sl-markdown-content blockquote:not(:where(.not-content *))::before {
+	content: '';
+	position: absolute;
+	top: -0.6rem;
+	left: 0.9rem;
+	width: 1.1rem;
+	height: 2.6rem;
+	z-index: 2;
+	border: 2.5px solid #9aa3ad;
+	border-radius: 0.55rem;
+	background: linear-gradient(100deg, #c4cbd2, #8b939d 55%, #c4cbd2);
+	box-shadow: 0.15rem 0.2rem 0.35rem rgba(0, 0, 0, 0.35);
+	transform: rotate(-4deg);
+	pointer-events: none;
+}
+
+.sl-markdown-content blockquote p {
+	margin: 0;
+}
+
+.sl-markdown-content blockquote strong {
+	color: var(--sl-color-text-accent);
+}
+
+@keyframes hm-blink {
+	0%,
+	50% {
+		opacity: 1;
+	}
+	50.01%,
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 속마음 강조 — 파란 잉크펜으로 여백에 쓴 손글씨 */
+.hm-margin-note {
+	display: block;
+	margin: 1.6rem 0;
+	font-family: var(--hm-font-hand);
+	font-size: 1.7em;
+	color: var(--hm-ballpoint);
+	transform: rotate(-0.8deg);
+}
+
+:root[data-theme='light'] .hm-margin-note {
+	color: hsl(226, 58%, 38%);
+}
+
+/* 헤어졌다 · 다시 만났다를 반복한 네 줄 — 스크롤로 지나가면 취소선이 그어진다 */
+.hm-strike-lines {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin: 1.8rem 0;
+}
+
+.hm-strike-line {
+	position: relative;
+	display: inline-block;
+	align-self: center;
+	font-family: var(--hm-font-hand);
+	font-size: 1.7em;
+	color: var(--hm-ballpoint);
+}
+
+:root[data-theme='light'] .hm-strike-line {
+	color: hsl(226, 58%, 38%);
+}
+
+.hm-strike-line::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 100%;
+	top: 55%;
+	height: 2px;
+	background: currentColor;
+	opacity: 0.75;
+	transition: right 0.45s ease;
+}
+
+.hm-strike-line.hm-struck::after {
+	right: 0;
+}
+
+/* 대사 박스(찢은 원고+클립) 대신 그냥 파란 글씨로만 강조하는 문장 — 다른
+   파란 글씨(손글씨 메모/취소선 문장)와 같은 손글씨 폰트를 쓴다 */
+.hm-blue-text {
+	display: block;
+	margin: 2rem 0.5rem;
+	font-family: var(--hm-font-hand);
+	font-size: 1.7em;
+	color: var(--hm-ballpoint);
+}
+
+:root[data-theme='light'] .hm-blue-text {
+	color: hsl(226, 58%, 38%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hm-strike-line::after {
+		transition: none;
+	}
+}
+
+/* 본문 이미지: 부드러운 라운드 + 그림자 (배너/지도/컷아웃은 예외 클래스로 처리) */
+.sl-markdown-content img:not(:where(.not-content *, .hm-banner-img, .hm-full-img, .hm-cutout-img)) {
+	border-radius: 0.9rem;
+	box-shadow: var(--sl-shadow-md);
+	cursor: zoom-in;
+}
+
+.hm-banner-img {
+	width: 100%;
+	height: auto;
+	border-radius: 0.6rem;
+	box-shadow: var(--sl-shadow-md);
+	cursor: zoom-in;
+}
+
+.hm-full-img {
+	width: 100%;
+	height: auto;
+	border-radius: 0.5rem;
+	box-shadow: var(--sl-shadow-md);
+	cursor: zoom-in;
+	margin-bottom: 1.5rem;
+}
+
+/* 배경을 지운 컷아웃 이미지 — 이미지 자체에 이미 그림자/찢은 가장자리가
+   있어서 별도 라운드/섀도를 얹지 않는다 */
+.hm-cutout-img {
+	display: block;
+	width: 100%;
+	max-width: 32rem;
+	height: auto;
+	margin: 0 auto 1.5rem;
+	cursor: zoom-in;
+}
+
+/* 모바일에서도 테마 토글을 헤더에 바로 노출 */
+.header .right-group {
+	display: flex !important;
+	gap: 0.5rem;
+}
+.header .social-icons {
+	display: none !important;
+}
+
+:root {
+	--sl-mobile-toc-height: 0rem;
+}
+
+[data-has-sidebar] {
+	--sl-content-inline-start: 0rem !important;
+}
+
+[data-has-sidebar] .header {
+	padding-inline-end: var(--sl-nav-pad-x);
+}
+
+@media (max-width: 49.9375rem) {
+	.header div:has(> #hm-toc-toggle) {
+		flex: 1;
+		min-width: 0;
+	}
+}
+
+.sidebar-pane {
+	display: none;
+	visibility: visible;
+	position: fixed;
+	inset-block-start: var(--sl-nav-height);
+	inset-inline: 0;
+	width: 100%;
+	height: auto;
+	max-height: calc(100vh - var(--sl-nav-height));
+	min-height: 0;
+	overflow-y: auto;
+	background: var(--sl-color-bg-sidebar);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	box-shadow: var(--sl-shadow-md);
+}
+
+html.hm-sidebar-expanded .sidebar-pane {
+	display: block;
+}
+
+.sidebar-content {
+	height: auto;
+	min-height: 0;
+}
+
+.mobile-preferences {
+	display: none !important;
+}
+
+.hm-sidebar-active {
+	color: var(--sl-color-text-accent) !important;
+	font-weight: 600;
+}
+
+/* ============ 위키 전용 컴포넌트 ============ */
+
+.hm-section {
+	position: relative;
+	margin-inline: calc(-1 * var(--sl-content-pad-x));
+	padding-inline: var(--sl-content-pad-x);
+	padding-block: clamp(3.5rem, 8vw, 6rem);
+	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
+}
+
+/*
+  blockquote/hm-blue-text 등은 자기 자신의 margin-bottom을 갖고 있어서,
+  섹션의 마지막 요소로 오면 그 마진이 섹션 자체의 padding-bottom 위에
+  더해져 위쪽보다 아래쪽 여백이 눈에 띄게 커 보인다. 섹션의 실제 마지막
+  요소일 때만 그 마진을 없애 위/아래 여백을 맞춘다.
+*/
+.hm-section blockquote:last-child,
+.hm-section .hm-blue-text:last-child,
+.hm-section .hm-margin-note:last-child,
+.hm-section .hm-strike-lines:last-child {
+	margin-bottom: 0;
+}
+
+/* 섹션 구분선: 빗줄기 한 줄 */
+.hm-section::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: var(--sl-content-pad-x);
+	right: var(--sl-content-pad-x);
+	height: 0.6rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 10'%3E%3Cpath d='M4 1 L2 9 M28 0 L26 8 M52 1 L49 9 M76 0 L74 8 M100 1 L97 9 M124 0 L122 8 M148 1 L145 9 M172 0 L170 8 M196 1 L193 9' stroke='hsl(220 20%25 55%25)' stroke-width='1.3' stroke-linecap='round' opacity='0.5'/%3E%3C/svg%3E");
+	background-repeat: repeat-x;
+	background-size: 12.5rem 0.6rem;
+	background-position: left center;
+}
+
+.hm-section:first-child::before {
+	display: none;
+}
+
+.hm-section .sl-heading-wrapper.level-h2 {
+	text-align: center;
+	font-size: clamp(var(--sl-text-2xl), 4.5vw, var(--sl-text-4xl));
+	margin-bottom: 0.9rem;
+	position: relative;
+	display: inline-block;
+	padding-bottom: 0.5rem;
+}
+
+/*
+  헤딩 밑줄: 밑줄 대신 볼펜으로 한 번 그은 듯한 직선 + 끝의 작은 마침점.
+  고정 비율 SVG를 background-size: 100% 100%로 늘리면 소제목 길이마다
+  선/점의 비율이 다르게 뭉개져서, 폭에 관계없이 일정한 두께를 유지하는
+  단색 선(::after)과 고정 크기 점(::before)으로 나눠 그린다.
+*/
+.hm-section .sl-heading-wrapper.level-h2::before {
+	content: '';
+	position: absolute;
+	right: 6%;
+	bottom: -0.02rem;
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background: var(--hm-ballpoint);
+	opacity: 0.85;
+}
+
+.hm-section .sl-heading-wrapper.level-h2::after {
+	content: '';
+	position: absolute;
+	left: 6%;
+	right: calc(6% + 0.75rem);
+	bottom: 0.19rem;
+	height: 0.17rem;
+	border-radius: 999px;
+	background: var(--hm-ballpoint);
+	opacity: 0.75;
+}
+
+/* 히어로 아래로 페이드인하는 콘텐츠 */
+.hm-fade-reveal {
+	opacity: 0;
+	transition: opacity 0.6s ease;
+}
+
+.hm-fade-reveal.hm-show {
+	opacity: 1;
+}
+
+.hm-hero-tags {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.6rem;
+	margin: 2.75rem 0 0 !important;
+}
+
+/*
+  기본정보 = 타이핑된 인덱스카드 라벨. 모노스페이스 폰트, 각진 사각형,
+  종이 재질도 테이프도 아닌 "타자기로 친 라벨"이라는 인상만 준다.
+*/
+.hm-tag {
+	display: inline-flex;
+	align-items: stretch;
+	border: 1px solid var(--hm-border);
+	border-radius: 0.2rem;
+	overflow: hidden;
+	font-family: var(--hm-font-mono);
+	font-size: var(--sl-text-xs);
+	background: var(--sl-color-bg-nav);
+}
+
+.hm-tag-label {
+	padding: 0.3rem 0.6rem;
+	color: var(--sl-color-gray-2);
+	background: color-mix(in srgb, var(--hm-ink) 10%, transparent);
+}
+
+.hm-tag-value {
+	padding: 0.3rem 0.65rem;
+	font-weight: 700;
+	color: var(--sl-color-text-accent);
+}
+
+/* 프로필 사실 목록(기본정보) */
+.hm-facts {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.55rem;
+	margin: 2.25rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.hm-facts li {
+	margin: 0;
+	padding: 0.4rem 0.85rem;
+	border: 1px solid var(--hm-border);
+	border-radius: 0.2rem;
+	font-family: var(--hm-font-mono);
+	font-size: var(--sl-text-xs);
+	background: var(--sl-color-bg-nav);
+	color: var(--sl-color-gray-1);
+}
+
+.hm-facts li strong {
+	margin-inline-end: 0.35rem;
+	color: var(--sl-color-text-accent);
+	font-weight: 700;
+}
+
+/*
+  좋아하는 것 / 싫어하는 것 = 그가 워드/한글 문서에 쓴 메모 그대로.
+  터미널/코드 에디터가 아니라 흰 문서 페이지 + 툴바가 있는 워드프로세서
+  창으로 보여준다. 단, 순백색 페이지는 다크 모드에서 눈이 부시므로
+  다크 모드 기본값은 세피아 톤 종이로, 라이트 모드에서만 실제 흰 문서
+  느낌을 낸다(이 컴포넌트만의 예외 — 카세트/삐삐처럼 테마 무관 고정색은
+  아니다).
+*/
+.hm-doc {
+	margin: 1.75rem 0;
+	border-radius: 0.4rem;
+	overflow: hidden;
+	background: #232324;
+	border: 1px solid #131314;
+	box-shadow: 0 0.6rem 1.3rem rgba(0, 0, 0, 0.25);
+}
+
+.hm-doc-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.5rem 0.8rem;
+	background: #2c2c2d;
+	border-bottom: 1px solid #131314;
+}
+
+.hm-doc-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 0.25rem;
+	background: #363637;
+	border: 1px solid #454546;
+	font-family: Georgia, 'Times New Roman', serif;
+	font-weight: 700;
+	font-size: 0.75rem;
+	color: #c7c7c9;
+}
+
+.hm-doc-icon--italic {
+	font-style: italic;
+}
+
+.hm-doc-icon--underline {
+	text-decoration: underline;
+}
+
+.hm-doc-filename {
+	margin-inline-start: auto;
+	font-family: var(--hm-font-mono);
+	font-size: 0.68rem;
+	color: #8a8a8c;
+}
+
+.hm-doc-page {
+	background: #333334;
+	padding: 2rem 2.2rem 2.4rem;
+	color: #e2e2e4;
+	font-family: var(--hm-font-display);
+	font-size: var(--sl-text-base);
+	line-height: 1.85;
+}
+
+.hm-doc-heading {
+	margin: 1.4rem 0 0.6rem;
+	font-weight: 700;
+	font-size: var(--sl-text-lg);
+	color: #f2f2f3;
+}
+
+.hm-doc-heading:first-child {
+	margin-top: 0;
+}
+
+.hm-doc-list {
+	margin: 0;
+	padding-inline-start: 1.5rem;
+}
+
+.hm-doc-list li {
+	margin-bottom: 0.4rem;
+}
+
+.hm-doc-cursor {
+	display: inline-block;
+	width: 0.09rem;
+	height: 1em;
+	margin-inline-start: 0.15rem;
+	background: #e2e2e4;
+	vertical-align: text-bottom;
+	animation: hm-blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hm-doc-cursor {
+		animation: none;
+	}
+}
+
+:root[data-theme='light'] .hm-doc {
+	background: #e4e4e7;
+	border-color: #c7c7cc;
+}
+
+:root[data-theme='light'] .hm-doc-toolbar {
+	background: #f4f4f5;
+	border-bottom-color: #d4d4d8;
+}
+
+:root[data-theme='light'] .hm-doc-icon {
+	background: #fff;
+	border-color: #d4d4d8;
+	color: #3f3f46;
+}
+
+:root[data-theme='light'] .hm-doc-filename {
+	color: #71717a;
+}
+
+:root[data-theme='light'] .hm-doc-page {
+	background: #fff;
+	color: #1c1c1e;
+}
+
+:root[data-theme='light'] .hm-doc-heading {
+	color: #1c1c1e;
+}
+
+:root[data-theme='light'] .hm-doc-cursor {
+	background: #1c1c1e;
+}
+
+/* 작은 버릇 — 파란 잉크펜 손글씨 메모 두 장 */
+.hm-habit-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin: 1.5rem 0;
+	padding: 0;
+	list-style: none;
+}
+
+.hm-habit-list li {
+	position: relative;
+	padding-inline-start: 1.4rem;
+	font-family: var(--hm-font-hand);
+	font-size: 1.35em;
+	line-height: 1.4;
+	color: var(--hm-ballpoint);
+}
+
+:root[data-theme='light'] .hm-habit-list li {
+	color: hsl(226, 58%, 38%);
+}
+
+.hm-habit-list li::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0.5em;
+	width: 0.6rem;
+	height: 0.6rem;
+	border: 2px solid currentColor;
+	border-radius: 50%;
+	opacity: 0.6;
+}
+
+/* 청명아파트 방 소개 = 찢지 않은 원고 한 장, 시나리오 슬러그라인 헤더 */
+.hm-scene-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 1.2rem;
+	margin: 1.75rem 0;
+}
+
+.hm-scene-card {
+	position: relative;
+	padding: 1.4rem 1.6rem 1.5rem;
+	border-radius: 0.25rem;
+	background-image: var(--hm-paper-grain);
+	background-color: var(--sl-color-bg-nav);
+	box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+.hm-scene-card:nth-child(even) {
+	transform: rotate(-0.3deg);
+}
+.hm-scene-card:nth-child(odd) {
+	transform: rotate(0.25deg);
+}
+
+.hm-scene-slug {
+	display: inline-block;
+	margin: 0 0 0.7rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 1.5px dashed var(--hm-border);
+	font-family: var(--hm-font-mono);
+	font-weight: 700;
+	font-size: var(--sl-text-sm);
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: var(--sl-color-text-accent);
+}
+
+.hm-scene-desc {
+	margin: 0;
+	font-size: var(--sl-text-sm);
+	line-height: 1.7;
+	color: var(--sl-color-gray-1);
+}
+
+/* 프로필 사진 — 배경/테두리 없이 사진만 */
+.hm-profile-photo-wrap {
+	display: flex;
+	justify-content: center;
+	margin: 1.5rem 0 0;
+}
+
+.hm-profile-photo {
+	display: block;
+	width: clamp(20rem, 68vw, 30rem);
+	border-radius: 0.2rem;
+	cursor: zoom-in;
+}
