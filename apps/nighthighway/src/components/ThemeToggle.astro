@@ -1,4 +1,322 @@
 ---
-// NIGHT HIGHWAY는 다크 모드만 쓰므로 테마 토글 버튼 자체가 필요 없다.
-// (다크 고정은 ThemeProvider.astro 오버라이드에서 처리한다.)
+// 다른 세계관 위키들과 똑같이 생긴 라이트/다크 토글이지만, NIGHT HIGHWAY는
+// 여전히 다크 모드만 쓴다(ThemeProvider.astro가 무조건 dark로 고정). 토글을
+// 눌러 라이트 모드로 바꾸려고 하면 실제로 테마가 바뀌는 대신, 노에·카미유의
+// 목소리로 "낮은 위험하다"고 경고하는 이스터에그 팝업이 뜬다.
+import { Icon } from '@astrojs/starlight/components';
 ---
+
+<nh-theme-toggle>
+	<button type="button" class="nh-theme-toggle" aria-label="테마 전환">
+		<span class="nh-theme-track">
+			<Icon name="moon" class="nh-theme-icon nh-theme-icon-moon" />
+			<Icon name="sun" class="nh-theme-icon nh-theme-icon-sun" />
+			<span class="nh-theme-knob"></span>
+		</span>
+	</button>
+</nh-theme-toggle>
+
+<style>
+	.nh-theme-toggle {
+		display: flex;
+		align-items: center;
+		padding: 0;
+		border: none;
+		background: none;
+		cursor: pointer;
+	}
+
+	.nh-theme-track {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 3.25rem;
+		height: 1.75rem;
+		padding: 0 0.4rem;
+		border-radius: 999px;
+		border: 1px solid var(--sl-color-hairline);
+		background: var(--sl-color-bg-nav);
+		transition: border-color 0.2s ease;
+	}
+
+	.nh-theme-toggle:hover .nh-theme-track {
+		border-color: var(--sl-color-accent);
+	}
+
+	.nh-theme-icon {
+		position: relative;
+		z-index: 1;
+		width: 0.85rem;
+		height: 0.85rem;
+		color: var(--sl-color-gray-3);
+	}
+
+	.nh-theme-knob {
+		position: absolute;
+		top: 0.15rem;
+		left: 0.15rem;
+		width: 1.45rem;
+		height: 1.45rem;
+		border-radius: 50%;
+		background: var(--sl-color-accent);
+		box-shadow: var(--sl-shadow-sm);
+		transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.nh-theme-icon-moon {
+		color: var(--sl-color-white);
+	}
+
+	/* 실제로 라이트 모드로 넘어가는 일은 없으므로 knob은 늘 달(왼쪽) 자리에
+	   고정된다. 대신 눌렀을 때 "거부당했다"는 느낌의 짧은 흔들림만 준다. */
+	.nh-theme-toggle--denied .nh-theme-track {
+		animation: nh-theme-denied 0.4s ease;
+	}
+
+	@keyframes nh-theme-denied {
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		25% {
+			transform: translateX(-0.2rem);
+		}
+		75% {
+			transform: translateX(0.2rem);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.nh-theme-knob {
+			transition: none;
+		}
+		.nh-theme-toggle--denied .nh-theme-track {
+			animation: none;
+		}
+	}
+</style>
+
+<style is:global>
+	.nh-warn-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 999;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1.5rem;
+		background: color-mix(in srgb, hsl(220, 30%, 4%) 78%, transparent);
+		backdrop-filter: blur(3px);
+		opacity: 0;
+		transition: opacity 0.2s ease;
+	}
+
+	.nh-warn-overlay[hidden] {
+		display: none;
+	}
+
+	.nh-warn-overlay.nh-warn-open {
+		opacity: 1;
+	}
+
+	.nh-warn-box {
+		--nh-warn-hue: 38;
+		max-width: 26rem;
+		width: 100%;
+		padding: 1.4rem 1.5rem;
+		border-radius: 0.5rem;
+		background: color-mix(in srgb, hsl(220, 22%, 9%) 92%, hsl(var(--nh-warn-hue), 40%, 20%) 8%);
+		border: 1px solid hsl(var(--nh-warn-hue), 70%, 55%);
+		box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.5), 0 0 0 3px color-mix(in srgb, hsl(var(--nh-warn-hue), 70%, 55%) 18%, transparent);
+		transform: translateY(0.5rem) scale(0.98);
+		transition: transform 0.2s ease;
+	}
+
+	.nh-warn-overlay.nh-warn-open .nh-warn-box {
+		transform: translateY(0) scale(1);
+	}
+
+	.nh-warn-tag {
+		margin: 0 0 0.6rem;
+		font-family: var(--nh-font-display);
+		font-size: 0.65rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: hsl(var(--nh-warn-hue), 90%, 68%);
+	}
+
+	.nh-warn-callsign {
+		margin: 0 0 0.9rem;
+		padding-bottom: 0.7rem;
+		border-bottom: 1px dashed color-mix(in srgb, hsl(var(--nh-warn-hue), 60%, 55%) 40%, transparent);
+		font-family: var(--nh-font-display);
+		font-size: var(--sl-text-sm);
+		font-weight: 700;
+		color: var(--sl-color-white);
+	}
+
+	.nh-warn-callsign span {
+		color: hsl(var(--nh-warn-hue), 85%, 72%);
+	}
+
+	.nh-warn-en {
+		margin: 0 0 0.5rem;
+		font-style: italic;
+		font-size: var(--sl-text-base);
+		line-height: 1.5;
+		color: var(--sl-color-white);
+	}
+
+	.nh-warn-kr {
+		margin: 0 0 1.2rem;
+		font-size: var(--sl-text-sm);
+		line-height: 1.6;
+		color: var(--sl-color-gray-2);
+	}
+
+	.nh-warn-close {
+		display: block;
+		width: 100%;
+		padding: 0.6rem 1rem;
+		border-radius: 0.3rem;
+		font-family: var(--nh-font-display);
+		font-size: var(--sl-text-xs);
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		text-align: center;
+		color: hsl(var(--nh-warn-hue), 85%, 78%);
+		background: color-mix(in srgb, hsl(var(--nh-warn-hue), 60%, 50%) 16%, transparent);
+		border: 1px solid hsl(var(--nh-warn-hue), 70%, 55%);
+		cursor: pointer;
+		transition: transform 0.15s ease, filter 0.15s ease;
+	}
+
+	.nh-warn-close:hover {
+		filter: brightness(1.2);
+		transform: translateY(-1px);
+	}
+
+	.nh-warn-close:active {
+		transform: translateY(0);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.nh-warn-overlay,
+		.nh-warn-box {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	const QUOTES = [
+		{
+			nameKr: '노에 발렌티',
+			nameEn: 'Noé Valenti',
+			callsign: 'COYOTE',
+			hue: 205,
+			en: "Blue sky. A beautiful day for a funeral, don't you think? Let's make sure it's not ours.",
+			kr: '파란 하늘이라. 장례식 치르기 딱 좋은 날씨네, 안 그래? 우리 장례식은 아니길 빌자고.',
+		},
+		{
+			nameKr: '노에 발렌티',
+			nameEn: 'Noé Valenti',
+			callsign: 'COYOTE',
+			hue: 205,
+			en: 'The shadows are getting shorter. That means our hiding spots are disappearing. Andiamo, move your ass.',
+			kr: '그림자가 짧아지고 있어. 숨을 곳이 사라지고 있다는 뜻이지. 가자고, 엉덩이 좀 떼 봐.',
+		},
+		{
+			nameKr: '카미유 모로',
+			nameEn: 'Camille Moreau',
+			callsign: 'CANARY',
+			hue: 280,
+			en: "Don't worry, we'll make it. I said we'll make it, right? Now move. Vite!",
+			kr: '걱정 마, 우리 할 수 있어. 내가 할 수 있다고 했지? 자, 움직여. 빨리!',
+		},
+		{
+			nameKr: '카미유 모로',
+			nameEn: 'Camille Moreau',
+			callsign: 'CANARY',
+			hue: 280,
+			en: "The sky's getting pale, mon étoile. Time for the ghosts to hide and for us to move.",
+			kr: '하늘이 창백해지고 있어, 나의 별. 유령들은 숨고 우리는 움직여야 할 시간이야.',
+		},
+	];
+
+	function getOverlay(): HTMLElement {
+		let overlay = document.getElementById('nh-warn-overlay');
+		if (overlay) return overlay;
+
+		overlay = document.createElement('div');
+		overlay.id = 'nh-warn-overlay';
+		overlay.className = 'nh-warn-overlay';
+		overlay.hidden = true;
+		overlay.setAttribute('role', 'alertdialog');
+		overlay.setAttribute('aria-modal', 'true');
+		overlay.setAttribute('aria-labelledby', 'nh-warn-callsign');
+		overlay.innerHTML = `
+			<div class="nh-warn-box">
+				<p class="nh-warn-tag">수신 경보 — 일출 위험</p>
+				<p class="nh-warn-callsign" id="nh-warn-callsign"><span></span></p>
+				<p class="nh-warn-en"></p>
+				<p class="nh-warn-kr"></p>
+				<button type="button" class="nh-warn-close">밤으로 돌아가기</button>
+			</div>
+		`;
+		document.body.append(overlay);
+
+		function close(): void {
+			overlay!.classList.remove('nh-warn-open');
+			overlay!.hidden = true;
+			document.removeEventListener('keydown', onKeydown);
+		}
+
+		function onKeydown(event: KeyboardEvent): void {
+			if (event.key === 'Escape') close();
+		}
+
+		overlay.addEventListener('click', (event) => {
+			if (event.target === overlay) close();
+		});
+		overlay.querySelector('.nh-warn-close')?.addEventListener('click', close);
+		(overlay as any)._nhOnKeydown = onKeydown;
+
+		return overlay;
+	}
+
+	function showNightWarning(): void {
+		const overlay = getOverlay();
+		const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+
+		const box = overlay.querySelector<HTMLElement>('.nh-warn-box')!;
+		box.style.setProperty('--nh-warn-hue', String(quote.hue));
+		overlay.querySelector('.nh-warn-callsign span')!.textContent = `${quote.callsign} · ${quote.nameEn} (${quote.nameKr})`;
+		overlay.querySelector('.nh-warn-en')!.textContent = `"${quote.en}"`;
+		overlay.querySelector('.nh-warn-kr')!.textContent = quote.kr;
+
+		overlay.hidden = false;
+		requestAnimationFrame(() => overlay.classList.add('nh-warn-open'));
+		document.addEventListener('keydown', (overlay as any)._nhOnKeydown);
+		overlay.querySelector<HTMLButtonElement>('.nh-warn-close')?.focus();
+	}
+
+	class NhThemeToggle extends HTMLElement {
+		constructor() {
+			super();
+			const button = this.querySelector('button');
+			button?.addEventListener('click', () => {
+				button.classList.add('nh-theme-toggle--denied');
+				setTimeout(() => button.classList.remove('nh-theme-toggle--denied'), 400);
+				showNightWarning();
+			});
+		}
+	}
+
+	if (!customElements.get('nh-theme-toggle')) {
+		customElements.define('nh-theme-toggle', NhThemeToggle);
+	}
+</script>
