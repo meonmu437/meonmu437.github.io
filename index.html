@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>meonmu437@worlds</title>
+<style>
+	:root {
+		--bg: #0b0d10;
+		--window: #12151a;
+		--titlebar: #1a1e24;
+		--border: #262b33;
+		--text: #d7dae0;
+		--muted: #7d8590;
+		--user: #5fd76d;
+		--path: #5b9dfa;
+		--dir: #58c4dc;
+		--cursor: #5fd76d;
+		--dot-red: #ff5f57;
+		--dot-yellow: #febc2e;
+		--dot-green: #28c840;
+	}
+
+	@media (prefers-color-scheme: light) {
+		:root {
+			--bg: #eef0f3;
+			--window: #ffffff;
+			--titlebar: #f6f8fa;
+			--border: #d8dce2;
+			--text: #24292f;
+			--muted: #6e7781;
+			--user: #1a7f37;
+			--path: #0969da;
+			--dir: #0969da;
+			--cursor: #1a7f37;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+	}
+
+	body {
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--bg);
+		padding: 2rem 1.25rem;
+		font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+	}
+
+	.terminal {
+		width: 100%;
+		max-width: 40rem;
+		border-radius: 0.75rem;
+		border: 1px solid var(--border);
+		background: var(--window);
+		box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
+		overflow: hidden;
+	}
+
+	.titlebar {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 0.65rem 0.9rem;
+		background: var(--titlebar);
+		border-bottom: 1px solid var(--border);
+	}
+
+	.dots {
+		display: flex;
+		gap: 0.45rem;
+	}
+
+	.dot {
+		width: 0.7rem;
+		height: 0.7rem;
+		border-radius: 50%;
+	}
+
+	.dot.red {
+		background: var(--dot-red);
+	}
+	.dot.yellow {
+		background: var(--dot-yellow);
+	}
+	.dot.green {
+		background: var(--dot-green);
+	}
+
+	.titlebar-label {
+		flex: 1;
+		text-align: center;
+		font-size: 0.78rem;
+		color: var(--muted);
+		margin-inline-end: 2.5rem;
+	}
+
+	.screen {
+		padding: 1.5rem 1.25rem 2rem;
+		font-size: 0.9rem;
+		line-height: 1.7;
+		color: var(--text);
+		min-height: 14rem;
+	}
+
+	.line {
+		word-break: break-word;
+	}
+
+	.prompt .user {
+		color: var(--user);
+		font-weight: 600;
+	}
+
+	.prompt .sep {
+		color: var(--muted);
+	}
+
+	.prompt .path {
+		color: var(--path);
+		font-weight: 600;
+	}
+
+	.listing {
+		margin: 0.9rem 0 1.1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.listing.show {
+		opacity: 1;
+	}
+
+	.entry-row {
+		display: flex;
+		align-items: baseline;
+		gap: 0.6rem;
+	}
+
+	.entry .perms {
+		color: var(--muted);
+	}
+
+	.entry a,
+	.entry .dirname {
+		color: var(--dir);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.entry a:hover {
+		text-decoration: underline;
+	}
+
+	.entry .desc {
+		display: block;
+		margin-top: 0.2rem;
+		padding-inline-start: 1.5rem;
+		color: var(--muted);
+	}
+
+	.entry .desc::before {
+		content: '# ';
+	}
+
+	.entry--nested {
+		margin-inline-start: 1.6rem;
+	}
+
+	.cursor {
+		display: inline-block;
+		width: 0.55em;
+		height: 1em;
+		vertical-align: text-bottom;
+		background: var(--cursor);
+		margin-inline-start: 0.15em;
+		animation: blink 1s step-end infinite;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cursor {
+			animation: none;
+		}
+		.listing {
+			transition: none;
+		}
+	}
+
+	@keyframes blink {
+		0%,
+		50% {
+			opacity: 1;
+		}
+		50.01%,
+		100% {
+			opacity: 0;
+		}
+	}
+</style>
+</head>
+<body>
+	<div class="terminal">
+		<div class="titlebar">
+			<div class="dots">
+				<span class="dot red"></span>
+				<span class="dot yellow"></span>
+				<span class="dot green"></span>
+			</div>
+			<div class="titlebar-label">guest@meonmu437: ~/worlds</div>
+		</div>
+		<div class="screen">
+			<div class="line prompt">
+				<span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds</span><span class="sep">$</span>
+				<span id="typed"></span><span class="cursor" id="typing-cursor"></span>
+			</div>
+			<div class="listing" id="listing"></div>
+			<div class="line prompt" id="final-prompt" style="opacity: 0">
+				<span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds</span><span class="sep">$</span>
+				<span class="cursor"></span>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// 판타지 세계관은 최상위에 그대로 두고, 한국을 배경으로 하는
+		// 세계관들은 '어딘가의_대한민국' 디렉터리 아래 하위 항목으로 묶는다.
+		// 새로운 한국 배경 세계관을 추가할 때는 이 항목의 children에만 추가하면 된다.
+		var ENTRIES = [
+			{
+				name: 'colorground',
+				href: 'colorground/',
+				desc: '레인보우 빌리지를 지키는 컬러 히어로와 자율 로봇들의 이야기',
+			},
+			{
+				name: 'nighthighway',
+				href: 'nighthighway/',
+				desc: '재앙 이후 아날로그 기술만이 살아남은 밤의 고속도로 생존기',
+			},
+			{
+				name: '어딘가의_대한민국',
+				children: [
+					{
+						name: 'yunhaesi',
+						href: 'yunhaesi/',
+						desc: '바닷바람에서 소금 냄새가 나는 작은 항구도시',
+					},
+					{
+						name: 'seungmin',
+						href: 'seungmin/',
+						desc: '무심한듯 다정한 백엔드 프로그래머',
+					},
+					{
+						name: '1997',
+						href: '1997/',
+						desc: '1997년, 첫사랑은 되감기 중',
+					},
+					{
+						name: 'hanminwoo',
+						href: 'hanminwoo/',
+						desc: '장마와 푸른 베타',
+					},
+				],
+			},
+		];
+
+		var COMMAND = 'ls -la';
+
+		var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		function renderEntry(item, nested) {
+			var entry = document.createElement('div');
+			entry.className = nested ? 'entry entry--nested' : 'entry';
+			var name = item.href
+				? '<a href="' + item.href + '">' + item.name + '/</a>'
+				: '<span class="dirname">' + item.name + '/</span>';
+			entry.innerHTML =
+				'<div class="entry-row">' +
+				'<span class="perms">drwxr-xr-x</span>' +
+				name +
+				'</div>' +
+				(item.desc ? '<span class="desc">' + item.desc + '</span>' : '');
+			return entry;
+		}
+
+		function renderListing() {
+			var listing = document.getElementById('listing');
+			ENTRIES.forEach(function (item) {
+				listing.appendChild(renderEntry(item, false));
+				(item.children || []).forEach(function (child) {
+					listing.appendChild(renderEntry(child, true));
+				});
+			});
+		}
+
+		function showRest() {
+			document.getElementById('typing-cursor').style.display = 'none';
+			document.getElementById('listing').classList.add('show');
+			document.getElementById('final-prompt').style.opacity = '1';
+		}
+
+		renderListing();
+
+		if (reduceMotion) {
+			document.getElementById('typed').textContent = COMMAND;
+			showRest();
+		} else {
+			var typed = document.getElementById('typed');
+			var i = 0;
+			var typer = setInterval(function () {
+				typed.textContent = COMMAND.slice(0, ++i);
+				if (i >= COMMAND.length) {
+					clearInterval(typer);
+					setTimeout(showRest, 700);
+				}
+			}, 130);
+		}
+	</script>
+</body>
+</html>
