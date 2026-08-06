@@ -17,7 +17,6 @@ export default defineConfig({
 			pagination: false,
 			components: {
 				ThemeSelect: './src/components/ThemeToggle.astro',
-				ThemeProvider: './src/components/ThemeProvider.astro',
 				PageSidebar: './src/components/PageSidebar.astro',
 				TwoColumnContent: './src/components/TwoColumnContent.astro',
 				MobileMenuToggle: './src/components/MobileMenuToggle.astro',

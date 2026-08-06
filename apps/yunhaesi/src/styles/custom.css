@@ -11,8 +11,14 @@
     다른 두 사이트와 동일한 기준.
   - 위키 전체가 하나의 스크롤 페이지: .yh-section/.yh-character-card는
     풀블리드 밴드, .yh-reveal은 ScrollEffects.astro가 페이드인 제어.
-  - 윤해시는 라이트 모드만 쓴다(볕 좋은 낮 바닷마을이라는 설정과 맞춰
-    ThemeProvider.astro에서 강제 고정) — 다크 모드 변수 오버라이드는 없다.
+  - 다른 세계관들(컬러그라운드/유승민/1997/한민우)과 똑같이 ThemeProvider를
+    따로 두지 않고 Starlight 기본 로직을 그대로 쓴다: 저장된 선호도가 없으면
+    기기(시스템) 다크 모드 설정을 따라가고, 토글로 직접 고르면 그 선택이
+    저장된다. 다크는 별개 테마인 "밤바다·별구경"으로 구성했다: 크림 종이
+    대신 짙은 남색 밤바다/밤하늘, 같은 바다색(hue 198) 액센트를 달빛처럼
+    밝혀서 쓰고, 카드 안쪽의 "종이" 색(--yh-surface)과 hue 텍스트의 밝기
+    (--yh-ink-l)만 테마별로 바꿔서 나머지 색 로직(캐릭터별 hue 등)은 그대로
+    재사용한다.
 */
 
 html {
@@ -44,6 +50,92 @@ html {
 	/* 보조 색상: 물비탈길의 복사꽃 핑크, 지도 지붕의 테라코타 */
 	--yh-hue-pink: 340;
 	--yh-hue-terracotta: 18;
+
+	/*
+	  카드/엽서/알약 배지의 "종이" 바탕(--yh-surface)과, hue 기반 텍스트의
+	  밝기(--yh-ink-l)를 변수로 빼둔다. 라이트에서는 각각 흰 종이와 진한
+	  잉크색이고, 다크(밤바다·별구경)에서는 짙은 남색 종이와 밝은 별빛
+	  텍스트로 뒤집힌다 — 그 외의 색 로직(캐릭터별 hue 등)은 그대로 둔다.
+	*/
+	--yh-surface: white;
+	--yh-ink-l: 32%;
+}
+
+/*
+  다크 모드 = "밤바다·별구경". 크림 종이/낮 바다색 대신 짙은 남색 밤하늘·
+  밤바다 배경에, 같은 바다색(hue 198) 액센트를 달빛처럼 더 밝고 선명하게
+  올린다.
+*/
+:root[data-theme='dark'] {
+	--sl-color-accent-low: hsl(198, 45%, 18%);
+	--sl-color-accent: hsl(198, 70%, 62%);
+	--sl-color-accent-high: hsl(198, 85%, 82%);
+
+	--sl-color-bg: hsl(226, 42%, 8%);
+	--sl-color-bg-nav: hsl(226, 40%, 10%);
+	--sl-color-bg-sidebar: hsl(226, 38%, 7%);
+
+	--yh-surface: hsl(226, 28%, 15%);
+	--yh-ink-l: 84%;
+}
+
+/*
+  다크 모드 전용 "별구경" 배경: 화면에 고정된 별 무리 + 밤하늘에서 밤바다로
+  이어지는 세로 그라디언트. 콘텐츠 뒤(z-index:-1)에 깔려서 스크롤해도 별자리는
+  그대로 머문다. .yh-card처럼 불투명한 카드 위로는 안 보이고, .yh-character-card
+  같은 반투명 배경 틈으로는 살짝 비쳐 보인다.
+*/
+:root[data-theme='dark'] body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	background-repeat: no-repeat;
+	background-image:
+		radial-gradient(1.6px 1.6px at 6% 12%, rgba(235, 245, 255, 0.95), transparent 60%),
+		radial-gradient(1.2px 1.2px at 14% 28%, rgba(235, 245, 255, 0.7), transparent 60%),
+		radial-gradient(1.4px 1.4px at 22% 8%, rgba(235, 245, 255, 0.85), transparent 60%),
+		radial-gradient(1px 1px at 31% 18%, rgba(235, 245, 255, 0.6), transparent 60%),
+		radial-gradient(1.8px 1.8px at 38% 32%, rgba(235, 245, 255, 0.9), transparent 60%),
+		radial-gradient(1.1px 1.1px at 46% 6%, rgba(235, 245, 255, 0.65), transparent 60%),
+		radial-gradient(1.5px 1.5px at 53% 22%, rgba(235, 245, 255, 0.8), transparent 60%),
+		radial-gradient(1px 1px at 61% 14%, rgba(235, 245, 255, 0.55), transparent 60%),
+		radial-gradient(1.7px 1.7px at 68% 30%, rgba(235, 245, 255, 0.92), transparent 60%),
+		radial-gradient(1.2px 1.2px at 76% 10%, rgba(235, 245, 255, 0.7), transparent 60%),
+		radial-gradient(1.4px 1.4px at 83% 24%, rgba(235, 245, 255, 0.82), transparent 60%),
+		radial-gradient(1px 1px at 91% 16%, rgba(235, 245, 255, 0.6), transparent 60%),
+		radial-gradient(1.6px 1.6px at 9% 42%, rgba(235, 245, 255, 0.88), transparent 60%),
+		radial-gradient(1.1px 1.1px at 19% 52%, rgba(235, 245, 255, 0.62), transparent 60%),
+		radial-gradient(1.5px 1.5px at 29% 46%, rgba(235, 245, 255, 0.78), transparent 60%),
+		radial-gradient(1.3px 1.3px at 42% 58%, rgba(235, 245, 255, 0.7), transparent 60%),
+		radial-gradient(1px 1px at 55% 44%, rgba(235, 245, 255, 0.55), transparent 60%),
+		radial-gradient(1.7px 1.7px at 64% 54%, rgba(235, 245, 255, 0.9), transparent 60%),
+		radial-gradient(1.2px 1.2px at 72% 40%, rgba(235, 245, 255, 0.68), transparent 60%),
+		radial-gradient(1.4px 1.4px at 88% 48%, rgba(235, 245, 255, 0.8), transparent 60%),
+		radial-gradient(1px 1px at 96% 36%, rgba(235, 245, 255, 0.58), transparent 60%),
+		radial-gradient(1.5px 1.5px at 12% 66%, rgba(235, 245, 255, 0.75), transparent 60%),
+		radial-gradient(1.1px 1.1px at 34% 68%, rgba(235, 245, 255, 0.6), transparent 60%),
+		radial-gradient(1.3px 1.3px at 58% 72%, rgba(235, 245, 255, 0.72), transparent 60%),
+		radial-gradient(1px 1px at 79% 64%, rgba(235, 245, 255, 0.55), transparent 60%),
+		linear-gradient(180deg, hsl(226, 46%, 6%) 0%, hsl(226, 40%, 9%) 45%, hsl(200, 38%, 13%) 100%);
+	animation: yh-twinkle 6s ease-in-out infinite;
+}
+
+@keyframes yh-twinkle {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.82;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:root[data-theme='dark'] body::before {
+		animation: none;
+	}
 }
 
 /*
@@ -108,6 +200,11 @@ html {
 	color: var(--sl-color-text-accent);
 }
 
+/* 다크: 크림 파지 메모 대신 짙은 남색 메모 카드 */
+:root[data-theme='dark'] .sl-markdown-content blockquote:not(:where(.not-content *)) {
+	background: color-mix(in srgb, var(--yh-surface) 88%, var(--sl-color-accent) 8%);
+}
+
 /*
   범용 카드 그리드: 주요 장소, 주변 인물(동료·가족·아이들)에 공통으로 쓴다.
   색은 --yh-card-hue로 항목마다 구분한다.
@@ -130,6 +227,11 @@ html {
 	box-shadow: 0 0.4rem 1rem color-mix(in srgb, hsl(var(--yh-card-hue, 198), 40%, 45%) 12%, transparent);
 }
 
+/* 다크: 크림 엽서 대신 카드 hue로 살짝 물든 짙은 남색 카드 */
+:root[data-theme='dark'] .yh-card {
+	background: color-mix(in srgb, var(--yh-surface) 82%, hsl(var(--yh-card-hue, 198), 45%, 45%) 18%);
+}
+
 /* 카드 위쪽에 살짝 비뚤어진 워시테이프 장식 — 스크랩북/엽서 느낌 */
 .yh-card::before {
 	content: '';
@@ -149,7 +251,7 @@ html {
 	font-family: var(--yh-font-display);
 	font-size: var(--sl-text-lg);
 	font-weight: 700;
-	color: hsl(var(--yh-card-hue, 198), 55%, 32%);
+	color: hsl(var(--yh-card-hue, 198), 55%, var(--yh-ink-l));
 }
 
 .yh-card-title a {
@@ -359,7 +461,7 @@ html.yh-sidebar-expanded .sidebar-pane {
 .yh-character-header h3 {
 	margin: 0.25rem 0 0;
 	font-size: clamp(var(--sl-text-2xl), 4vw, var(--sl-text-4xl));
-	color: hsl(var(--yh-character-hue), 45%, 30%);
+	color: hsl(var(--yh-character-hue), 45%, var(--yh-ink-l));
 }
 
 .yh-character-photo {
@@ -380,6 +482,12 @@ html.yh-sidebar-expanded .sidebar-pane {
 		color-mix(in srgb, hsl(var(--yh-character-hue), 70%, 75%) 55%, transparent),
 		transparent 70%
 	);
+}
+
+/* 다크: 은은한 원형 역광을 달빛처럼 조금 더 밝고 크게 */
+:root[data-theme='dark'] .yh-character-photo::before {
+	inset: -2.25rem;
+	filter: brightness(1.2);
 }
 
 .yh-character-photo img {
@@ -437,13 +545,18 @@ html.yh-sidebar-expanded .sidebar-pane {
 	border-color: color-mix(in srgb, hsl(var(--yh-character-hue), 55%, 45%) 65%, transparent);
 }
 
+/* 다크: 흰 배지 대신 캐릭터 hue로 물든 짙은 남색 배지 */
+:root[data-theme='dark'] .yh-facts li {
+	background: color-mix(in srgb, hsl(var(--yh-character-hue), 55%, 50%) 30%, var(--yh-surface));
+}
+
 .yh-facts li strong {
 	margin-inline-end: 0.2rem;
-	color: hsl(var(--yh-character-hue), 55%, 32%);
+	color: hsl(var(--yh-character-hue), 55%, var(--yh-ink-l));
 }
 
 .yh-character-card h4 {
-	color: hsl(var(--yh-character-hue), 50%, 34%);
+	color: hsl(var(--yh-character-hue), 50%, var(--yh-ink-l));
 }
 
 /* 캐릭터 카드 하단의 외부 링크(캐릭터 챗봇 등) 버튼 행 — 기본은 카드 hue를 쓰지만
@@ -466,15 +579,24 @@ html.yh-sidebar-expanded .sidebar-pane {
 	font-weight: 700;
 	font-size: var(--sl-text-sm);
 	text-decoration: none;
-	color: hsl(var(--yh-link-hue, var(--yh-character-hue)), 55%, 32%);
+	color: hsl(var(--yh-link-hue, var(--yh-character-hue)), 55%, var(--yh-ink-l));
 	background: color-mix(in srgb, hsl(var(--yh-link-hue, var(--yh-character-hue)), 65%, 60%) 25%, white);
 	border: 1px solid color-mix(in srgb, hsl(var(--yh-link-hue, var(--yh-character-hue)), 55%, 50%) 45%, transparent);
 	transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
+/* 다크: 흰 배경 대신 캐릭터/서비스 hue로 물든 짙은 남색 버튼 */
+:root[data-theme='dark'] .yh-character-link {
+	background: color-mix(in srgb, hsl(var(--yh-link-hue, var(--yh-character-hue)), 65%, 55%) 28%, var(--yh-surface));
+}
+
 a.yh-character-link:hover {
 	transform: translateY(-1px);
 	border-color: hsl(var(--yh-link-hue, var(--yh-character-hue)), 60%, 42%);
+}
+
+:root[data-theme='dark'] a.yh-character-link:hover {
+	border-color: hsl(var(--yh-link-hue, var(--yh-character-hue)), 70%, 68%);
 }
 
 /* 유니챗 = 핑크(서비스 메인 컬러) */
