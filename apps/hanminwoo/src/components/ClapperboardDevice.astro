@@ -10,7 +10,7 @@
 // (애프터 이펙트의 Trim Paths로 손글씨를 그리는 것과 같은 원리).
 import opentype from 'opentype.js';
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 
 interface Props {
 	message: string;
@@ -22,8 +22,13 @@ interface Props {
 
 const { message, scene = '재회', take = '몇 번째인지 모름', universLink, elynLink } = Astro.props;
 
-const fontUrl = new URL('../assets/fonts/EastSeaDokdo-Regular.ttf', import.meta.url);
-const fontBuffer = readFileSync(fileURLToPath(fontUrl));
+// import.meta.url을 기준으로 상대 경로를 잡으면 dev에서는 동작하지만,
+// 프로덕션 빌드에서는 이 컴포넌트가 dist/.prerender/chunks/ 아래로
+// 번들링되면서 그 경로가 완전히 달라져 폰트 파일을 못 찾는다(ENOENT).
+// astro build/dev 모두 항상 이 앱 루트에서 실행되므로 process.cwd()
+// 기준 경로를 쓴다.
+const fontPath = join(process.cwd(), 'src/assets/fonts/EastSeaDokdo-Regular.ttf');
+const fontBuffer = readFileSync(fontPath);
 const font = opentype.parse(fontBuffer.buffer.slice(fontBuffer.byteOffset, fontBuffer.byteOffset + fontBuffer.byteLength));
 
 const FONT_SIZE = 25;
