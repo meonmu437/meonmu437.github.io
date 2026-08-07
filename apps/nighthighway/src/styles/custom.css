@@ -485,6 +485,40 @@ a.nh-rider-link:hover {
 	}
 }
 
+/*
+  "NIGHT HIGHWAY"는 글자 수가 많아서, 좁은 화면에서는 사이트 제목이 헤더
+  공간을 거의 다 차지해 목차 토글이 찌그러지고 그 안의 화살표(caret)가
+  박스 밖으로 삐져나와 보였다. 모바일에서는 제목을 말줄임표로 줄여서 목차
+  토글에 필요한 최소 공간을 남겨준다.
+*/
+@media (max-width: 49.9375rem) {
+	/*
+	  .nh-site-switch에 max-width(%)를 주면 그 부모인 .title-wrapper가
+	  콘텐츠 크기로 자동 결정되는 flex item이라 퍼센트 기준이 순환 참조가
+	  되어 무시된다. .title-wrapper는 항상 폭이 정해진 .header 안에 있으므로
+	  거기에 직접 걸어야 실제로 줄어든다.
+	*/
+	.title-wrapper {
+		flex-shrink: 1;
+		max-width: 45%;
+	}
+	.nh-site-switch {
+		flex-shrink: 1;
+		min-width: 0;
+	}
+	.nh-site-switch .site-title span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+/* 위 트림으로도 공간이 모자랄 때를 대비한 안전망: 넘치는 내용은 박스
+   밖으로 새어나가지 않고 안에서 잘리게 한다 */
+.nh-toc-toggle {
+	min-width: 0;
+	overflow: hidden;
+}
+
 /* 모바일에서도 테마 토글을 헤더에 바로 노출(기본은 모바일 메뉴 안에만 존재) */
 .header .right-group {
 	display: flex !important;
