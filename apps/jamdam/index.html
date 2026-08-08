@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>잡담 — meonmu437</title>
+<style>
+	:root {
+		--bg: #0b0d10;
+		--window: #12151a;
+		--titlebar: #1a1e24;
+		--border: #262b33;
+		--text: #d7dae0;
+		--muted: #7d8590;
+		--user: #5fd76d;
+		--path: #5b9dfa;
+		--dot-red: #ff5f57;
+		--dot-yellow: #febc2e;
+		--dot-green: #28c840;
+	}
+
+	@media (prefers-color-scheme: light) {
+		:root {
+			--bg: #eef0f3;
+			--window: #ffffff;
+			--titlebar: #f6f8fa;
+			--border: #d8dce2;
+			--text: #24292f;
+			--muted: #6e7781;
+			--user: #1a7f37;
+			--path: #0969da;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+	}
+
+	body {
+		min-height: 100vh;
+		background: var(--bg);
+		padding: 2rem 1.25rem 4rem;
+		font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+		display: flex;
+		justify-content: center;
+	}
+
+	.terminal {
+		width: 100%;
+		max-width: 40rem;
+		border-radius: 0.75rem;
+		border: 1px solid var(--border);
+		background: var(--window);
+		box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
+		overflow: hidden;
+	}
+
+	.titlebar {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 0.65rem 0.9rem;
+		background: var(--titlebar);
+		border-bottom: 1px solid var(--border);
+	}
+
+	.dots {
+		display: flex;
+		gap: 0.45rem;
+	}
+
+	.dot {
+		width: 0.7rem;
+		height: 0.7rem;
+		border-radius: 50%;
+	}
+
+	.dot.red {
+		background: var(--dot-red);
+	}
+	.dot.yellow {
+		background: var(--dot-yellow);
+	}
+	.dot.green {
+		background: var(--dot-green);
+	}
+
+	.titlebar-label {
+		flex: 1;
+		text-align: center;
+		font-size: 0.78rem;
+		color: var(--muted);
+		margin-inline-end: 2.5rem;
+	}
+
+	.screen {
+		padding: 1.5rem 1.25rem 2rem;
+		font-size: 0.9rem;
+		line-height: 1.7;
+		color: var(--text);
+	}
+
+	.line {
+		word-break: break-word;
+	}
+
+	.prompt .user {
+		color: var(--user);
+		font-weight: 600;
+	}
+
+	.prompt .sep {
+		color: var(--muted);
+	}
+
+	.prompt .path {
+		color: var(--path);
+		font-weight: 600;
+	}
+
+	.toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 1.1rem;
+	}
+
+	.back-link,
+	.new-post-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		color: var(--muted);
+		text-decoration: none;
+		font-size: 0.82rem;
+	}
+
+	.new-post-link {
+		color: var(--path);
+		font-weight: 600;
+	}
+
+	.back-link:hover,
+	.new-post-link:hover {
+		text-decoration: underline;
+	}
+
+	#post-list {
+		margin-top: 1.4rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+	}
+
+	.post-row {
+		display: block;
+		padding: 0.7rem 0.15rem;
+		border-bottom: 1px dashed var(--border);
+		text-decoration: none;
+		color: var(--text);
+	}
+
+	.post-row:first-child {
+		border-top: 1px dashed var(--border);
+	}
+
+	.post-title {
+		display: block;
+		font-weight: 600;
+	}
+
+	.post-row:hover .post-title {
+		color: var(--path);
+		text-decoration: underline;
+	}
+
+	.post-meta {
+		display: block;
+		margin-top: 0.2rem;
+		font-size: 0.78rem;
+		color: var(--muted);
+	}
+
+	.state-msg {
+		margin-top: 1.4rem;
+		color: var(--muted);
+		font-size: 0.85rem;
+	}
+</style>
+</head>
+<body>
+	<div class="terminal">
+		<div class="titlebar">
+			<div class="dots">
+				<span class="dot red"></span>
+				<span class="dot yellow"></span>
+				<span class="dot green"></span>
+			</div>
+			<div class="titlebar-label">guest@meonmu437: ~/worlds/잡담</div>
+		</div>
+		<div class="screen">
+			<div class="line prompt">
+				<span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds</span><span class="sep">$</span>
+				cd 잡담/
+			</div>
+			<div class="toolbar">
+				<a href="../" class="back-link">&larr; 대문으로 돌아가기</a>
+				<a
+					href="https://github.com/meonmu437/meonmu437.github.io/discussions/new?category=general"
+					class="new-post-link"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					+ 새 글 쓰기
+				</a>
+			</div>
+			<div id="post-list"></div>
+		</div>
+	</div>
+
+	<script>
+		var REPO = 'meonmu437/meonmu437.github.io';
+		// 이 레포는 공개 저장소라 원칙적으로는 누구나 새 Discussion을 만들 수
+		// 있다. 목록에는 소유자 계정이 쓴 글만 보여줘서 낯선 사람이 올린 글이
+		// 섞여 보이는 일을 막는다.
+		var OWNER_LOGIN = 'meonmu437';
+
+		function escapeHtml(s) {
+			var d = document.createElement('div');
+			d.textContent = s;
+			return d.innerHTML;
+		}
+
+		function formatDate(iso) {
+			var d = new Date(iso);
+			return d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + String(d.getDate()).padStart(2, '0');
+		}
+
+		async function loadPosts() {
+			var listEl = document.getElementById('post-list');
+			listEl.innerHTML = '<p class="state-msg">불러오는 중...</p>';
+			try {
+				var res = await fetch('https://api.github.com/repos/' + REPO + '/discussions?per_page=100');
+				if (!res.ok) throw new Error('HTTP ' + res.status);
+				var posts = await res.json();
+				posts = posts.filter(function (p) {
+					return p.user && p.user.login === OWNER_LOGIN;
+				});
+				posts.sort(function (a, b) {
+					return new Date(b.created_at) - new Date(a.created_at);
+				});
+
+				if (posts.length === 0) {
+					listEl.innerHTML = '<p class="state-msg">아직 글이 없어요. "+ 새 글 쓰기"로 첫 글을 남겨보세요.</p>';
+					return;
+				}
+
+				listEl.innerHTML = posts
+					.map(function (p) {
+						return (
+							'<a class="post-row" href="post.html?id=' +
+							p.number +
+							'">' +
+							'<span class="post-title">' +
+							escapeHtml(p.title) +
+							'</span>' +
+							'<span class="post-meta">' +
+							formatDate(p.created_at) +
+							' · 댓글 ' +
+							p.comments +
+							'개</span>' +
+							'</a>'
+						);
+					})
+					.join('');
+			} catch (e) {
+				listEl.innerHTML = '<p class="state-msg">목록을 불러오지 못했어요: ' + escapeHtml(e.message) + '</p>';
+			}
+		}
+
+		loadPosts();
+	</script>
+</body>
+</html>

@@ -179,6 +179,16 @@
 		margin-inline-start: 1.6rem;
 	}
 
+	.final-link {
+		color: var(--dir);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.final-link:hover {
+		text-decoration: underline;
+	}
+
 	.cursor {
 		display: inline-block;
 		width: 0.55em;
@@ -189,12 +199,92 @@
 		animation: blink 1s step-end infinite;
 	}
 
+	/* 디렉터리를 읽어오는 동안 잠깐 보여주는 픽셀 아트 로딩 스피너. 8개의
+	   각진 블록이 원을 그리며 순서대로 반짝인다 — giscus 위젯이 뜨기 전에
+	   보여주는 로딩 스피너에서 착안. */
+	.pixel-spinner {
+		position: relative;
+		display: none;
+		width: 1em;
+		height: 1em;
+		vertical-align: text-bottom;
+		margin-inline-start: 0.4em;
+	}
+
+	.pixel-spinner i {
+		position: absolute;
+		width: 0.22em;
+		height: 0.22em;
+		background: var(--cursor);
+		opacity: 0.25;
+		animation: pixel-chase 0.8s steps(1, end) infinite;
+	}
+
+	.pixel-spinner i:nth-child(1) {
+		top: 0;
+		left: 0.39em;
+		animation-delay: 0s;
+	}
+	.pixel-spinner i:nth-child(2) {
+		top: 0;
+		left: 0.78em;
+		animation-delay: 0.1s;
+	}
+	.pixel-spinner i:nth-child(3) {
+		top: 0.39em;
+		left: 0.78em;
+		animation-delay: 0.2s;
+	}
+	.pixel-spinner i:nth-child(4) {
+		top: 0.78em;
+		left: 0.78em;
+		animation-delay: 0.3s;
+	}
+	.pixel-spinner i:nth-child(5) {
+		top: 0.78em;
+		left: 0.39em;
+		animation-delay: 0.4s;
+	}
+	.pixel-spinner i:nth-child(6) {
+		top: 0.78em;
+		left: 0;
+		animation-delay: 0.5s;
+	}
+	.pixel-spinner i:nth-child(7) {
+		top: 0.39em;
+		left: 0;
+		animation-delay: 0.6s;
+	}
+	.pixel-spinner i:nth-child(8) {
+		top: 0;
+		left: 0;
+		animation-delay: 0.7s;
+	}
+
+	@keyframes pixel-chase {
+		0% {
+			opacity: 1;
+		}
+		12.5% {
+			opacity: 0.25;
+		}
+		100% {
+			opacity: 0.25;
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.cursor {
 			animation: none;
 		}
 		.listing {
 			transition: none;
+		}
+		.pixel-spinner {
+			display: none !important;
+		}
+		.pixel-spinner i {
+			animation: none;
 		}
 	}
 
@@ -206,6 +296,75 @@
 		50.01%,
 		100% {
 			opacity: 0;
+		}
+	}
+
+	/* 무지개 꼬리를 끌고 날아다니는 픽셀 고양이. IDE 로딩 화면 느낌의
+	   장식 — 기능은 없고 그냥 귀엽자고 넣는다. */
+	.nyan-wrap {
+		position: relative;
+		height: 2.4rem;
+		margin-top: 1.5rem;
+		overflow: hidden;
+	}
+
+	.nyan-trail {
+		position: absolute;
+		inset-inline: 0;
+		top: 50%;
+		height: 0.5rem;
+		margin-top: -0.25rem;
+		background-image: repeating-linear-gradient(
+			90deg,
+			#ff5f57 0 8px,
+			#febc2e 8px 16px,
+			#fff44f 16px 24px,
+			#28c840 24px 32px,
+			#3ea7ff 32px 40px,
+			#7a5cff 40px 48px,
+			#ff5fd4 48px 56px
+		);
+		background-size: 56px 100%;
+		animation: nyan-trail-move 1.4s linear infinite;
+	}
+
+	.nyan-cat {
+		position: absolute;
+		top: 50%;
+		right: 1.5rem;
+		width: 5.4rem;
+		height: 2.4rem;
+		margin-top: -1.2rem;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 8'%3E%3Crect x='2' y='0' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='1' y='1' width='3' height='1' fill='%23f2a65a'/%3E%3Crect x='5' y='0' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='5' y='1' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='2' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='3' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='4' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='16' y='4' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='5' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='16' y='3' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='17' y='2' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='6' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='1' y='7' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='5' y='7' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='9' y='7' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='13' y='7' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='3' width='1' height='1' fill='%23c65b3f'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%23000'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		image-rendering: pixelated;
+		animation: nyan-bob 0.5s steps(2) infinite;
+	}
+
+	@keyframes nyan-trail-move {
+		from {
+			background-position-x: 0;
+		}
+		to {
+			background-position-x: 56px;
+		}
+	}
+
+	@keyframes nyan-bob {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-0.2rem);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.nyan-trail,
+		.nyan-cat {
+			animation: none;
 		}
 	}
 </style>
@@ -223,12 +382,16 @@
 		<div class="screen">
 			<div class="line prompt">
 				<span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds</span><span class="sep">$</span>
-				<span id="typed"></span><span class="cursor" id="typing-cursor"></span>
+				<span id="typed"></span><span class="cursor" id="typing-cursor"></span><span class="pixel-spinner" id="pixel-spinner" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
 			</div>
 			<div class="listing" id="listing"></div>
 			<div class="line prompt" id="final-prompt" style="opacity: 0">
 				<span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds</span><span class="sep">$</span>
-				<span class="cursor"></span>
+				<a href="jamdam/" class="final-link" id="final-typed"></a><span class="cursor" id="final-cursor"></span>
+			</div>
+			<div class="nyan-wrap" aria-hidden="true">
+				<div class="nyan-trail"></div>
+				<div class="nyan-cat"></div>
 			</div>
 		</div>
 	</div>
@@ -276,6 +439,7 @@
 		];
 
 		var COMMAND = 'ls -la';
+		var FINAL_COMMAND = '잡담';
 
 		var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -304,10 +468,26 @@
 			});
 		}
 
+		function typeFinalCommand() {
+			var finalTyped = document.getElementById('final-typed');
+			if (reduceMotion) {
+				finalTyped.textContent = FINAL_COMMAND;
+				return;
+			}
+			var j = 0;
+			var finalTyper = setInterval(function () {
+				finalTyped.textContent = FINAL_COMMAND.slice(0, ++j);
+				if (j >= FINAL_COMMAND.length) {
+					clearInterval(finalTyper);
+				}
+			}, 130);
+		}
+
 		function showRest() {
 			document.getElementById('typing-cursor').style.display = 'none';
 			document.getElementById('listing').classList.add('show');
 			document.getElementById('final-prompt').style.opacity = '1';
+			setTimeout(typeFinalCommand, 400);
 		}
 
 		renderListing();
@@ -322,7 +502,13 @@
 				typed.textContent = COMMAND.slice(0, ++i);
 				if (i >= COMMAND.length) {
 					clearInterval(typer);
-					setTimeout(showRest, 700);
+					document.getElementById('typing-cursor').style.display = 'none';
+					var spinner = document.getElementById('pixel-spinner');
+					spinner.style.display = 'inline-block';
+					setTimeout(function () {
+						spinner.style.display = 'none';
+						showRest();
+					}, 700);
 				}
 			}, 130);
 		}

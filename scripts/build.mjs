@@ -5,8 +5,10 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const dist = `${root}dist`;
 
-// 빌드 없이 그대로 복사하는 정적 사이트
+// 빌드 없이 그대로 복사하는 정적 사이트. landing만 대문(루트)으로 바로
+// 병합되고, 나머지는 자기 이름의 하위 폴더로 복사된다.
 const staticApps = ['landing'];
+const staticSubApps = ['jamdam'];
 
 // 자체 빌드 스텝이 있는 세계관(Astro 등). 새 세계관을 추가할 때는
 // apps/ 아래 폴더를 만들고 여기 한 줄만 추가하면 된다.
@@ -24,6 +26,10 @@ mkdirSync(dist, { recursive: true });
 
 for (const name of staticApps) {
 	cpSync(`${root}apps/${name}`, dist, { recursive: true });
+}
+
+for (const name of staticSubApps) {
+	cpSync(`${root}apps/${name}`, `${dist}/${name}`, { recursive: true });
 }
 
 for (const { dir, outPath } of buildApps) {
