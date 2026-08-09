@@ -708,3 +708,201 @@ html.nh-sidebar-expanded .sidebar-pane {
 	background: color-mix(in srgb, hsl(var(--nh-rider-hue), 70%, 55%) 22%, transparent);
 	border: 1px solid color-mix(in srgb, hsl(var(--nh-rider-hue), 70%, 55%) 45%, transparent);
 }
+
+/*
+  라이더 개인 단말/무전기 미리보기 — 실제 화면(엘린 위젯)은 각자 자기
+  안에서 완결된 인라인 스타일(올리브 CRT, 종이 로그북 등)로 그려지므로
+  여기서는 그 바깥을 감싸는 "채널 선택" 칩만 사이트 톤에 맞춘다.
+*/
+.nh-jsx-preview {
+	margin-top: 1.5rem;
+}
+
+.nh-jsx-cmdline {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6rem;
+	padding-bottom: 0.9rem;
+	margin-bottom: 1.3rem;
+	border-bottom: 1px dashed color-mix(in srgb, var(--sl-color-accent) 35%, transparent);
+}
+
+.nh-jsx-cmds {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.nh-jsx-cmd {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.4rem 0.75rem;
+	border-radius: 0.3rem;
+	/* --sl-color-hairline은 이 배경색과 명도차가 거의 없어서, 비활성 탭의
+	   테두리가 거의 안 보여 활성 탭보다 "작아 보이는" 착시를 만든다.
+	   더 밝은 회색으로 항상 또렷하게 보이게 한다. */
+	border: 1px solid color-mix(in srgb, var(--sl-color-gray-3) 55%, transparent);
+	background: var(--sl-color-bg-nav);
+	color: var(--sl-color-gray-2);
+	font-family: var(--nh-font-display);
+	font-size: var(--sl-text-xs);
+	cursor: pointer;
+	transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.nh-jsx-cmd:hover {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-white);
+}
+
+.nh-jsx-cmd.is-active {
+	border-color: var(--sl-color-accent);
+	background: color-mix(in srgb, var(--sl-color-accent) 14%, transparent);
+	color: var(--sl-color-white);
+}
+
+.nh-jsx-cmd-slash {
+	font-weight: 700;
+	color: var(--sl-color-accent);
+}
+
+.nh-jsx-cmd.is-active .nh-jsx-cmd-slash {
+	color: var(--sl-color-accent-high);
+}
+
+.nh-jsx-cmd-label {
+	white-space: nowrap;
+}
+
+.nh-jsx-stage {
+	position: relative;
+	max-width: 30rem;
+	margin: 0 auto;
+	/*
+	  각 위젯 안에는 장식용(aria-hidden) 글로우/베젤 장식이 음수 offset으로
+	  카드 바깥까지 살짝 번져 나가도록 되어 있다. 원래 더 넓은 화면을
+	  가정하고 그린 여백이라, 이 30rem 폭에서는 그 번짐이 가로 스크롤을
+	  만든다. 장식이라 잘려도 상관없으니 그냥 감춘다.
+	*/
+	overflow: hidden;
+	border-radius: 0.5rem;
+}
+
+@media (max-width: 30rem) {
+	.nh-jsx-cmd-label {
+		display: none;
+	}
+}
+
+/*
+  의뢰 수락/무전 응답 버튼을 누르면 원래 컴포넌트는 내부용 명령어 문자열을
+  sendMessage로 넘긴다. 그걸 그대로 보여주는 대신, 실제 단말기가 알림을
+  띄운 것처럼 화면 정중앙에 뜨는 알람창으로 보여준다. 라이트/다크 테마
+  토글의 노에·카미유 경고 알람(ThemeToggle.astro의 nh-warn-*)과 같은
+  구조 — 배경 딤 처리 + 정중앙 카드 + 명시적으로 닫는 버튼.
+*/
+.nh-jsx-alarm-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+	background: color-mix(in srgb, hsl(220, 30%, 4%) 78%, transparent);
+	backdrop-filter: blur(3px);
+	animation: nh-jsx-alarm-fade-in 0.2s ease;
+}
+
+.nh-jsx-alarm-box {
+	max-width: 22rem;
+	width: 100%;
+	padding: 1.4rem 1.5rem;
+	border-radius: 0.5rem;
+	background: color-mix(in srgb, var(--sl-color-bg-nav) 92%, var(--sl-color-accent) 8%);
+	border: 1px solid var(--sl-color-accent);
+	box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.5), 0 0 0 3px color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
+	text-align: center;
+	animation: nh-jsx-alarm-pop-in 0.2s ease;
+}
+
+.nh-jsx-alarm-tag {
+	margin: 0 0 0.7rem;
+	font-family: var(--nh-font-display);
+	font-size: 0.65rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--sl-color-accent-high);
+}
+
+.nh-jsx-alarm-title {
+	margin: 0 0 0.5rem;
+	font-family: var(--nh-font-display);
+	font-size: var(--sl-text-lg);
+	font-weight: 700;
+	color: var(--sl-color-white);
+}
+
+.nh-jsx-alarm-message {
+	margin: 0 0 1.2rem;
+	font-size: var(--sl-text-sm);
+	line-height: 1.6;
+	color: var(--sl-color-gray-2);
+	overflow-wrap: anywhere;
+}
+
+.nh-jsx-alarm-close {
+	display: inline-block;
+	min-width: 8rem;
+	padding: 0.6rem 1.2rem;
+	border-radius: 0.3rem;
+	font-family: var(--nh-font-display);
+	font-size: var(--sl-text-xs);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--sl-color-accent-high);
+	background: color-mix(in srgb, var(--sl-color-accent) 16%, transparent);
+	border: 1px solid var(--sl-color-accent);
+	cursor: pointer;
+	transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.nh-jsx-alarm-close:hover {
+	filter: brightness(1.2);
+	transform: translateY(-1px);
+}
+
+.nh-jsx-alarm-close:active {
+	transform: translateY(0);
+}
+
+@keyframes nh-jsx-alarm-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes nh-jsx-alarm-pop-in {
+	from {
+		transform: translateY(0.5rem) scale(0.98);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0) scale(1);
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.nh-jsx-alarm-overlay,
+	.nh-jsx-alarm-box {
+		animation: none;
+	}
+}

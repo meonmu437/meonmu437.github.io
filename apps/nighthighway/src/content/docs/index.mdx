@@ -8,6 +8,7 @@ import ScrollEffects from '../../components/ScrollEffects.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import BackToTop from '../../components/BackToTop.astro';
 import StationsMap from '../../components/StationsMap.astro';
+import ElynPreviewTerminal from '../../components/elyn/ElynPreviewTerminal.jsx';
 import banner from '../../assets/nighthighway/banner.png';
 import noeProfile from '../../assets/nighthighway/noe-profile.png';
 import camilleProfile from '../../assets/nighthighway/camille-profile.png';
@@ -387,6 +388,14 @@ import camilleBike from '../../assets/nighthighway/camille-bike.png';
 화폐 단위로 <strong>크레딧(CR)</strong>을 사용한다. 크레딧은 실물 지폐나 동전이 아니라, 개인 단말기나 교체식 저장 장치에 기록되는 전자 화폐다.
 
 거래는 단말기 간 근거리 접속이나 유선 연결로 이루어지며, 거래 기록은 정거장의 중계망에 접속할 때 동기화된다. 통신망이 끊긴 지역에서도 제한적인 오프라인 거래가 가능하다. 그러나 위조 기록과 손상된 저장 장치로 인한 분쟁도 존재한다.
+
+</div>
+
+<div class="nh-section nh-reveal" id="sec-jsx-preview">
+
+## 무선 단말 미리보기 (JSX)
+
+<ElynPreviewTerminal client:load />
 
 </div>
 
