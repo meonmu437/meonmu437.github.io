@@ -1072,6 +1072,12 @@ html.nh-sidebar-expanded .sidebar-pane {
 	margin-top: -0.15rem;
 }
 
+.nh-persona-field input::placeholder,
+.nh-persona-subfield::placeholder {
+	color: #1f2a1a;
+	opacity: 0.7;
+}
+
 .nh-persona-field select:focus,
 .nh-persona-field input:focus,
 .nh-persona-subfield:focus {

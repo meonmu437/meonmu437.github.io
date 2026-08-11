@@ -113,7 +113,7 @@ function buildPrompt(input) {
 
 	const riderLore = worldBible.relationshipLore?.[input.riderId];
 	const riderLoreBlock = riderLore
-		? `\n## 관계 상대의 비하인드 설정 (참고용 — 그대로 재서술하지 말고 관계 서사의 배경으로 자연스럽게 녹여서 활용할 것. 이 사건 이후의 전개는 아직 벌어지지 않은 것으로 간주하고 서술하지 말 것 — 그 뒤는 플레이어가 직접 진행할 부분입니다.)\n${riderLore}\n`
+		? `\n## 관계 상대의 비하인드 설정 (참고용 — 그대로 재서술하지 말고 관계 서사의 배경으로 자연스럽게 녹여서 활용할 것)\n${riderLore}\n`
 		: '';
 
 	return `당신은 "NIGHT HIGHWAY"라는 세계관의 플레이 캐릭터 프로필을 만드는 작가입니다.

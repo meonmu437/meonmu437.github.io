@@ -23,22 +23,17 @@ const OCCUPATION_OPTIONS = [
 const RELATIONSHIP_TAGS = ['전연인', '동료', '혐관', '소꿉친구'];
 
 // 태그 단어만 보내면 모델이 뉘앙스를 놓치는 경우가 있어서, 짧은 설명을 같이
-// 붙여 보낸다.
+// 붙여 보낸다. 값이 함수이면 상대 라이더 이름을 받아 설명을 만든다.
 const RELATIONSHIP_TYPE_DESCRIPTIONS = {
 	전연인: '과거에 연인 관계였다가 지금은 헤어진 사이',
 	동료: '함께 일하거나 다니며 신뢰를 쌓은 동료 관계',
 	혐관: '서로를 꺼리거나 사이가 나쁜 관계',
-	소꿉친구: '어릴 때부터 오랫동안 함께 자라온 오래된 친구 관계',
+	소꿉친구: (riderName) => `${riderName}와 같은 정거장에서 어릴 때부터 함께 자라온 오래된 친구 관계`,
 };
 
 const RIDERS = [
 	{ id: 'noe', name: 'Noé Valenti (노에 발렌티) — COYOTE', enabled: true },
 	{ id: 'camille', name: 'Camille Moreau (카미유 모로) — CANARY', enabled: false },
-	{ id: 'edmund', name: 'Edmund Shaw (에드먼드 쇼) — ROOK', enabled: false },
-	{ id: 'matthias', name: 'Matthias Reiner (마티아스 라이너) — IBEX', enabled: false },
-	{ id: 'ivan', name: 'Ivan Volkov (이반 볼코프) — VOLK', enabled: false },
-	{ id: 'nikos', name: 'Nikos Argyros (니코스 아르기로스) — KRI-KRI', enabled: false },
-	{ id: 'esmeralda', name: 'Esmeralda Navarro (에스메랄다 나바로) — LINCE', enabled: false },
 ];
 
 const RESULT_FIELDS = [
@@ -80,7 +75,8 @@ function composeRelationship(riderId, relationTags, relationCustom) {
 	if (!rider) return '';
 
 	const parts = relationTags.map((tag) => {
-		const description = RELATIONSHIP_TYPE_DESCRIPTIONS[tag];
+		const entry = RELATIONSHIP_TYPE_DESCRIPTIONS[tag];
+		const description = typeof entry === 'function' ? entry(rider.name) : entry;
 		return description ? `${tag}(${description})` : tag;
 	});
 
