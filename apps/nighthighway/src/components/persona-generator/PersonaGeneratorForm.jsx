@@ -201,6 +201,7 @@ export default function PersonaGeneratorForm() {
 								<span>이름</span>
 								<input
 									type="text"
+									maxLength={40}
 									placeholder="원하는 이름이 있다면 (비워두면 랜덤)"
 									value={name}
 									onChange={(e) => setName(e.target.value)}
@@ -234,6 +235,7 @@ export default function PersonaGeneratorForm() {
 								<span>국적</span>
 								<input
 									type="text"
+									maxLength={40}
 									placeholder="예: 프랑스 (비워두면 랜덤)"
 									value={nationality}
 									onChange={(e) => setNationality(e.target.value)}
@@ -254,6 +256,7 @@ export default function PersonaGeneratorForm() {
 								<input
 									type="text"
 									className="nh-persona-subfield"
+									maxLength={40}
 									placeholder="원하는 직업을 입력해주세요"
 									value={occupationCustom}
 									onChange={(e) => setOccupationCustom(e.target.value)}
@@ -264,6 +267,7 @@ export default function PersonaGeneratorForm() {
 								<span>성격 키워드</span>
 								<input
 									type="text"
+									maxLength={100}
 									placeholder="예: 무심함, 장난기 (비워두면 랜덤)"
 									value={personality}
 									onChange={(e) => setPersonality(e.target.value)}
@@ -274,6 +278,7 @@ export default function PersonaGeneratorForm() {
 								<span>외모</span>
 								<input
 									type="text"
+									maxLength={200}
 									placeholder="원하는 외모가 있다면 (비워두면 랜덤)"
 									value={appearance}
 									onChange={(e) => setAppearance(e.target.value)}
@@ -311,6 +316,7 @@ export default function PersonaGeneratorForm() {
 								<input
 									type="text"
 									className="nh-persona-subfield"
+									maxLength={100}
 									placeholder="직접 설명을 추가하고 싶다면 (예: 어릴 땐 친했지만 지금은 소원함)"
 									value={relationCustom}
 									onChange={(e) => setRelationCustom(e.target.value)}
@@ -322,6 +328,7 @@ export default function PersonaGeneratorForm() {
 								<span>추가 특징</span>
 								<input
 									type="text"
+									maxLength={300}
 									placeholder="넣고 싶은 디테일이 있다면 (선택)"
 									value={feature}
 									onChange={(e) => setFeature(e.target.value)}
