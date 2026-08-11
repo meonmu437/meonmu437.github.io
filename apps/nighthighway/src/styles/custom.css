@@ -1078,6 +1078,17 @@ html.nh-sidebar-expanded .sidebar-pane {
 	opacity: 0.7;
 }
 
+@media (max-width: 30rem) {
+	/* 모바일 브라우저는 입력창 글자가 16px보다 작으면 포커스할 때 페이지
+	   전체를 자동으로 확대한다. 핀치줌 자체를 막는 대신, 입력창 글자만
+	   여기서 16px로 키워서 그 자동 확대를 방지한다. */
+	.nh-persona-field select,
+	.nh-persona-field input,
+	.nh-persona-subfield {
+		font-size: 16px;
+	}
+}
+
 .nh-persona-field select:focus,
 .nh-persona-field input:focus,
 .nh-persona-subfield:focus {
