@@ -10,15 +10,16 @@ function getAdminToken() {
 }
 
 const GENDER_OPTIONS = ['여성', '남성', '랜덤'];
-const OCCUPATION_OPTIONS = [
-	'라이더',
-	'지도 제작자',
-	'정비공',
-	'정거장 진료소 의사',
-	'무전 중계사',
-	'정거장 내 일반 주민',
-	'직접입력',
-];
+
+// '랜덤'을 고르면 백엔드에 '랜덤'을 그대로 보내는 게 아니라, 이 목록 중 하나를
+// 프론트에서 미리 뽑아 보낸다 — 서사 없이 통째로 맡기는 것보다 결과가 더
+// 다채롭다.
+const FIXED_OCCUPATIONS = ['라이더', '지도 제작자', '정비공', '정거장 진료소 의사', '무전 중계사', '정거장 내 일반 주민'];
+const OCCUPATION_OPTIONS = [...FIXED_OCCUPATIONS, '랜덤', '직접입력'];
+
+function pickRandomOccupation() {
+	return FIXED_OCCUPATIONS[Math.floor(Math.random() * FIXED_OCCUPATIONS.length)];
+}
 // 관계 유형은 태그처럼 여러 개를 동시에 고를 수 있다 (예: 소꿉친구 + 혐관).
 const RELATIONSHIP_TAGS = ['전연인', '동료', '혐관', '소꿉친구'];
 
@@ -92,7 +93,7 @@ export default function PersonaGeneratorForm() {
 	const [gender, setGender] = useState('랜덤');
 	const [age, setAge] = useState('');
 	const [nationality, setNationality] = useState('');
-	const [occupation, setOccupation] = useState('정거장 내 일반 주민');
+	const [occupation, setOccupation] = useState('랜덤');
 	const [occupationCustom, setOccupationCustom] = useState('');
 	const [personality, setPersonality] = useState('');
 	const [appearance, setAppearance] = useState('');
@@ -134,7 +135,7 @@ export default function PersonaGeneratorForm() {
 			gender: gender === '랜덤' ? '' : gender,
 			age: age || undefined,
 			nationality,
-			occupation: occupation === '직접입력' ? occupationCustom : occupation,
+			occupation: occupation === '직접입력' ? occupationCustom : occupation === '랜덤' ? pickRandomOccupation() : occupation,
 			personality,
 			appearance,
 			relationship: composeRelationship(riderId, relationTags, relationCustom),
