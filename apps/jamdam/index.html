@@ -151,8 +151,45 @@
 		text-decoration: underline;
 	}
 
+	.category-tabs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin-top: 1.1rem;
+	}
+
+	.category-tab {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		padding: 0.3rem 0.7rem;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: transparent;
+		color: var(--muted);
+		font-family: inherit;
+		font-size: 0.78rem;
+		cursor: pointer;
+	}
+
+	.category-tab:hover {
+		border-color: var(--path);
+		color: var(--text);
+	}
+
+	.category-tab.is-active {
+		border-color: var(--path);
+		background: color-mix(in srgb, var(--path) 16%, transparent);
+		color: var(--text);
+		font-weight: 600;
+	}
+
+	.post-category {
+		color: var(--path);
+	}
+
 	#post-list {
-		margin-top: 1.4rem;
+		margin-top: 1rem;
 		display: flex;
 		flex-direction: column;
 		gap: 0.15rem;
@@ -212,7 +249,8 @@
 			<div class="toolbar">
 				<a href="../" class="back-link">&larr; 대문으로 돌아가기</a>
 				<a
-					href="https://github.com/meonmu437/meonmu437.github.io/discussions/new?category=general"
+					href="https://github.com/meonmu437/meonmu437.github.io/discussions/new?category=%EC%9E%A1%EB%8B%B4"
+					id="new-post-link"
 					class="new-post-link"
 					target="_blank"
 					rel="noopener noreferrer"
@@ -220,6 +258,7 @@
 					+ 새 글 쓰기
 				</a>
 			</div>
+			<div id="category-tabs" class="category-tabs"></div>
 			<div id="post-list"></div>
 		</div>
 	</div>
@@ -242,6 +281,113 @@
 			return d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + String(d.getDate()).padStart(2, '0');
 		}
 
+		// GitHub API가 카테고리 이모지를 콜론 코드(예: ":camera:")로 주기 때문에
+		// 화면에 실제 이모지로 보이도록 알려진 코드만 직접 변환한다.
+		var EMOJI_SHORTCODE_MAP = {
+			':camera:': '📷',
+			':computer:': '💻',
+			':mega:': '📣',
+			':speech_balloon:': '💬',
+			':star:': '⭐',
+			':pray:': '🙏',
+			':ballot_box:': '🗳️'
+		};
+
+		function categoryEmoji(shortcode) {
+			return EMOJI_SHORTCODE_MAP[shortcode] || '';
+		}
+
+		var activeCategorySlug = null; // null = 전체
+
+		function renderTabs(categories) {
+			var tabsEl = document.getElementById('category-tabs');
+			var allTab =
+				'<button type="button" class="category-tab' +
+				(activeCategorySlug === null ? ' is-active' : '') +
+				'" data-slug="">전체</button>';
+
+			var categoryTabs = categories
+				.map(function (c) {
+					return (
+						'<button type="button" class="category-tab' +
+						(activeCategorySlug === c.slug ? ' is-active' : '') +
+						'" data-slug="' +
+						escapeHtml(c.slug) +
+						'">' +
+						categoryEmoji(c.emoji) +
+						' ' +
+						escapeHtml(c.name) +
+						'</button>'
+					);
+				})
+				.join('');
+
+			tabsEl.innerHTML = allTab + categoryTabs;
+
+			tabsEl.querySelectorAll('.category-tab').forEach(function (btn) {
+				btn.addEventListener('click', function () {
+					activeCategorySlug = btn.dataset.slug || null;
+					renderTabs(categories);
+					renderList();
+					updateNewPostLink(categories);
+				});
+			});
+		}
+
+		function updateNewPostLink(categories) {
+			var link = document.getElementById('new-post-link');
+			var slug = activeCategorySlug;
+			if (!slug) {
+				var jamdamCategory = categories.find(function (c) {
+					return c.slug === '잡담';
+				});
+				slug = jamdamCategory ? jamdamCategory.slug : categories[0] ? categories[0].slug : '잡담';
+			}
+			link.href =
+				'https://github.com/meonmu437/meonmu437.github.io/discussions/new?category=' + encodeURIComponent(slug);
+		}
+
+		var allPosts = [];
+
+		function renderList() {
+			var listEl = document.getElementById('post-list');
+			var posts = activeCategorySlug
+				? allPosts.filter(function (p) {
+						return p.category.slug === activeCategorySlug;
+				  })
+				: allPosts;
+
+			if (posts.length === 0) {
+				listEl.innerHTML = '<p class="state-msg">이 카테고리에는 아직 글이 없어요.</p>';
+				return;
+			}
+
+			listEl.innerHTML = posts
+				.map(function (p) {
+					return (
+						'<a class="post-row" href="post.html?id=' +
+						p.number +
+						'">' +
+						'<span class="post-title">' +
+						escapeHtml(p.title) +
+						'</span>' +
+						'<span class="post-meta">' +
+						'<span class="post-category">' +
+						categoryEmoji(p.category.emoji) +
+						' ' +
+						escapeHtml(p.category.name) +
+						'</span>' +
+						' · ' +
+						formatDate(p.created_at) +
+						' · 댓글 ' +
+						p.comments +
+						'개</span>' +
+						'</a>'
+					);
+				})
+				.join('');
+		}
+
 		async function loadPosts() {
 			var listEl = document.getElementById('post-list');
 			listEl.innerHTML = '<p class="state-msg">불러오는 중...</p>';
@@ -261,24 +407,24 @@
 					return;
 				}
 
-				listEl.innerHTML = posts
-					.map(function (p) {
-						return (
-							'<a class="post-row" href="post.html?id=' +
-							p.number +
-							'">' +
-							'<span class="post-title">' +
-							escapeHtml(p.title) +
-							'</span>' +
-							'<span class="post-meta">' +
-							formatDate(p.created_at) +
-							' · 댓글 ' +
-							p.comments +
-							'개</span>' +
-							'</a>'
-						);
-					})
-					.join('');
+				allPosts = posts;
+
+				var categoryMap = {};
+				posts.forEach(function (p) {
+					if (!p.category) return;
+					var slug = p.category.slug;
+					if (!categoryMap[slug]) {
+						categoryMap[slug] = { slug: slug, name: p.category.name, emoji: p.category.emoji, count: 0 };
+					}
+					categoryMap[slug].count += 1;
+				});
+				var categories = Object.values(categoryMap).sort(function (a, b) {
+					return b.count - a.count || a.name.localeCompare(b.name);
+				});
+
+				renderTabs(categories);
+				renderList();
+				updateNewPostLink(categories);
 			} catch (e) {
 				listEl.innerHTML = '<p class="state-msg">목록을 불러오지 못했어요: ' + escapeHtml(e.message) + '</p>';
 			}
