@@ -317,11 +317,12 @@ export default function PersonaGeneratorForm() {
 									type="text"
 									className="nh-persona-subfield"
 									maxLength={100}
-									placeholder="직접 설명을 추가하고 싶다면 (예: 어릴 땐 친했지만 지금은 소원함)"
+									placeholder="직접 설명을 추가하고 싶다면"
 									value={relationCustom}
 									onChange={(e) => setRelationCustom(e.target.value)}
 									disabled={!riderId}
 								/>
+								<p className="nh-persona-field-note">* 예: 어릴 땐 친했지만 지금은 소원함</p>
 							</label>
 
 							<label className="nh-persona-field">

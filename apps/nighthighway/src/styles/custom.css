@@ -1078,6 +1078,13 @@ html.nh-sidebar-expanded .sidebar-pane {
 	opacity: 0.7;
 }
 
+.nh-persona-field-note {
+	margin: 0.15rem 0 0;
+	font-size: 0.6rem;
+	font-weight: 400;
+	color: #3f4a35;
+}
+
 @media (max-width: 30rem) {
 	/* 모바일 브라우저는 입력창 글자가 16px보다 작으면 포커스할 때 페이지
 	   전체를 자동으로 확대한다. 핀치줌 자체를 막는 대신, 입력창 글자만
