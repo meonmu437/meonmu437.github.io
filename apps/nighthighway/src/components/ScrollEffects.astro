@@ -77,6 +77,21 @@
 		window.addEventListener('load', settleThenInit);
 	}
 
+	// client:load 아일랜드(엘린 단말기 미리보기, 페르소나 생성기 등)는 초기
+	// 페이지 로드 이후 비동기로 하이드레이션되며, 하이드레이션 전후로 실제
+	// 렌더링 높이가 달라질 수 있다. setUpReveals()가 계산해 둔 ScrollTrigger
+	// 시작 위치는 그 시점의 레이아웃 기준이라, 이후 높이가 바뀌면 그 아래
+	// 섹션들의 트리거 좌표가 실제 위치와 어긋나 다시는 정상적으로 발동하지
+	// 않는다. 문서 전체 높이가 바뀔 때마다 다시 계산해서 이 문제를 막는다.
+	if (!prefersReduced) {
+		let refreshTimer: ReturnType<typeof setTimeout>;
+		const resizeObserver = new ResizeObserver(() => {
+			clearTimeout(refreshTimer);
+			refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 150);
+		});
+		resizeObserver.observe(document.body);
+	}
+
 	// 사이드바 스크롤스파이: 현재 보이는 섹션에 해당하는 사이드바 링크를 강조하고,
 	// 모바일 목차 바("목차 › 현재 위치")의 텍스트도 함께 갱신한다.
 	const sections = document.querySelectorAll<HTMLElement>('.nh-section[id], .nh-rider-card[id]');

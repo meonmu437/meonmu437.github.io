@@ -9,6 +9,7 @@ import Lightbox from '../../components/Lightbox.astro';
 import BackToTop from '../../components/BackToTop.astro';
 import StationsMap from '../../components/StationsMap.astro';
 import ElynPreviewTerminal from '../../components/elyn/ElynPreviewTerminal.jsx';
+import PersonaGeneratorForm from '../../components/persona-generator/PersonaGeneratorForm.jsx';
 import banner from '../../assets/nighthighway/banner.png';
 import noeProfile from '../../assets/nighthighway/noe-profile.png';
 import camilleProfile from '../../assets/nighthighway/camille-profile.png';
@@ -396,6 +397,17 @@ import camilleBike from '../../assets/nighthighway/camille-bike.png';
 ## 무선 단말 미리보기 (JSX)
 
 <ElynPreviewTerminal client:load />
+
+</div>
+
+<div class="nh-section nh-reveal" id="sec-persona-generator">
+
+## 페르소나 생성기
+
+<PersonaGeneratorForm client:load />
+
+<p class="nh-caption">Gemini Flash Lite 모델을 사용, 하루 5회 생성 횟수 제한</p>
+<p class="nh-caption">생성까지 평균 10~15초 정도 소요됨</p>
 
 </div>
 

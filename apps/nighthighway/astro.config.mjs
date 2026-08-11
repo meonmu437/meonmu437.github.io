@@ -92,6 +92,7 @@ export default defineConfig({
                 label: '단말기',
                 items: [
                     { label: '무선 단말 미리보기', link: '/#sec-jsx-preview' },
+                    { label: '페르소나 생성기', link: '/#sec-persona-generator' },
                 ],
             },
         ],
