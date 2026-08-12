@@ -81,7 +81,11 @@ const { tagline, revealTarget } = Astro.props;
 		margin: 1.1rem 0 0;
 		text-align: center;
 		font-family: var(--hm-font-hand);
-		font-size: var(--sl-text-2xl);
+		/* 넓은 화면(≥800px)에서는 기존 크기(1.5rem)를 유지하고, 좁은 화면
+		   (≤380px)에서는 한 줄에 들어가는 크기(0.9rem)까지 부드럽게
+		   줄어든다. 중간 폭에서는 두 값 사이를 선형으로 보간한다. */
+		font-size: clamp(0.9rem, calc(0.36rem + 2.29vw), 1.5rem);
+		white-space: nowrap;
 		color: var(--sl-color-gray-1);
 	}
 

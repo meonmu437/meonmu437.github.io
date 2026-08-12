@@ -124,6 +124,7 @@ html {
 	font-style: normal;
 	font-family: var(--nh-font-display);
 	font-size: var(--sl-text-sm);
+	text-wrap: pretty;
 }
 
 .sl-markdown-content blockquote strong {
@@ -654,6 +655,21 @@ html.nh-sidebar-expanded .sidebar-pane {
 /* 태그라인 아래 대표 대사(영문 원문 + 한국어 번역) 인용구는 본문 폭에 맞춰 좁게 */
 .nh-rider-header blockquote {
 	max-width: 32rem;
+}
+
+/* 노에의 영문 대사는 32rem 박스 안에서 살짝 넘쳐 마지막 단어가 줄바꿈됐다.
+   이 카드만 살짝 더 넓혀서 한 줄에 들어가게 한다 (다른 라이더의 짧은
+   대사는 원래 폭 그대로 좁게 유지). 화면이 좁아 박스가 이 폭만큼 나올
+   공간이 없는 화면(대략 40rem 미만)에서는 nowrap을 걸지 않아 — 그러면
+   가로 스크롤이 생기는 대신 text-wrap: pretty에 맡겨 자연스럽게 줄바꿈된다. */
+#rider-noe .nh-rider-header blockquote {
+	max-width: 36rem;
+}
+
+@media (min-width: 40rem) {
+	#rider-noe .nh-rider-header blockquote p:first-child {
+		white-space: nowrap;
+	}
 }
 
 /* 스탯: 부드러운 알약 대신, 좌측에 색 스트라이프가 붙은 각진 등록증 배지 */
