@@ -2,6 +2,9 @@
 	"functions": {
 		"api/generate.js": {
 			"maxDuration": 20
+		},
+		"api/generate-core.js": {
+			"maxDuration": 20
 		}
 	}
 }
