@@ -1,0 +1,1593 @@
+/*
+  ANEMOI 위키 커스텀 테마 — "심야 서재의 잉크와 금"
+  - Design Read: 로맨스 판타지 세계관 위키. 이 페이지는 특정 인물(라파엘)이
+    아니라 아네모이 제국 전체를 다루는 세계관 문서이므로, 어느 한 가문의
+    문장색을 site accent로 쓰지 않는다. 벤티 황실 문장(태양을 품은 금빛
+    왕관)에서 가져온 "인디고 밤빛 + 금박" 조합을 site 전체 팔레트로 쓴다.
+  - 원래는 갈색 세피아 파치먼트 톤이었으나, 같은 모노레포의 1997(윤성민)
+    페이지와 배경색이 거의 같은 갈색 계열이라 구분이 안 되는 문제가 있었다.
+    "오래된 책 + 잉크 + 금박"이라는 컨셉 자체는 유지하되, 색 온도를 갈색에서
+    차가운 남색/인디고 계열로 옮겨 같은 모노레포 안에서도 확실히 구별되게
+    했다. 다크 = 잉크병처럼 짙은 남색 밤, 라이트 = 차가운 아이보리 벨럼.
+    금색 액센트(--sl-color-accent)는 그대로 유지 — 남색 배경 위의 금박은
+    이미 각 가문 문장/코어 삽화가 쓰는 배색이라 위화감이 없다.
+  - 4가문 고유색(벨카인 아이시블루/에르덴 포레스트그린/세르카드 러스트레드/
+    마레티아 틸)은 site accent가 아니라 가문 배지 등 국소적인 곳에서만 쓴다.
+  - 헤딩: Nanum Myeongjo(세리프, 오래된 인쇄본 느낌). 본문: Noto Sans KR
+    (가독성 우선, 다른 세계관과 동일 기준).
+  - "ANEMOI" 타이틀도 다른 소제목과 동일하게 본문 첫 ## 헤딩으로 넣고,
+    Starlight가 자동 생성하는 페이지 타이틀(h1)은 처음부터 숨긴다.
+*/
+
+html {
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+:root {
+	/*
+	  Starlight의 토큰 체계는 무표시 :root가 다크 모드 기본값이고
+	  :root[data-theme='light']가 라이트 오버라이드다(컬러그라운드와 동일
+	  구조). 그래서 여기 무표시 :root에는 다크(가죽 장정 책) 값을, 아래
+	  [data-theme='light']에는 라이트(펼친 양피지) 값을 넣는다.
+	*/
+	--an-font-display: 'Nanum Myeongjo', 'Noto Serif KR', Georgia, serif;
+
+	--sl-font: 'Noto Sans KR', var(--sl-font-system);
+
+	/* 4가문 고유색 — 배지 등 국소적으로만 사용 */
+	--an-house-belkain: #7fa0c4;
+	--an-house-erden: #5c8a54;
+	--an-house-serkad: #d0765a;
+	--an-house-maretia: #3f9aa0;
+
+	/* 다크 모드 = 심야 서재, 인디고 잉크빛 어둠 속에서 금박 문자만 빛나는 가죽 장정 책 */
+	--sl-color-white: hsl(220, 30%, 92%);
+	--sl-color-gray-1: hsl(220, 20%, 80%);
+	--sl-color-gray-2: hsl(220, 14%, 64%);
+	--sl-color-gray-3: hsl(220, 12%, 50%);
+	--sl-color-gray-6: hsl(224, 22%, 20%);
+	--sl-color-gray-7: hsl(224, 24%, 16%);
+	--sl-color-black: hsl(224, 30%, 8%);
+
+	--sl-color-bg: hsl(224, 28%, 11%);
+	--sl-color-bg-nav: hsl(224, 26%, 14%);
+	--sl-color-bg-sidebar: hsl(224, 26%, 14%);
+	--sl-color-hairline: hsl(224, 18%, 28%);
+	--sl-color-hairline-light: hsl(224, 18%, 24%);
+
+	--sl-color-accent-low: hsl(36, 30%, 20%);
+	--sl-color-accent: hsl(38, 55%, 62%);
+	--sl-color-accent-high: hsl(38, 65%, 80%);
+}
+
+:root[data-theme='light'] {
+	/* 라이트 모드 = 기본값으로 보여줄, 차가운 아이보리 벨럼 위 짙은 잉크 */
+	--sl-color-white: hsl(210, 18%, 16%);
+	--sl-color-gray-1: hsl(210, 14%, 26%);
+	--sl-color-gray-2: hsl(210, 10%, 38%);
+	--sl-color-gray-3: hsl(210, 8%, 50%);
+	--sl-color-gray-6: hsl(210, 20%, 86%);
+	--sl-color-gray-7: hsl(210, 22%, 90%);
+	--sl-color-black: hsl(210, 22%, 96%);
+
+	--sl-color-bg: hsl(210, 22%, 95%);
+	--sl-color-bg-nav: hsl(210, 20%, 91%);
+	--sl-color-bg-sidebar: hsl(210, 22%, 95%);
+	--sl-color-hairline: hsl(210, 16%, 78%);
+	--sl-color-hairline-light: hsl(210, 18%, 84%);
+	--sl-color-hairline-shade: hsl(210, 16%, 78%);
+
+	--sl-color-accent-low: hsl(38, 35%, 82%);
+	--sl-color-accent: hsl(36, 46%, 34%);
+	--sl-color-accent-high: hsl(36, 60%, 22%);
+}
+
+/* 사이트 타이틀: 세리프 + 살짝 벌어진 자간, 프린트된 표제지 느낌 */
+/*
+  Starlight 기본은 .title-wrapper에 overflow:clip, .site-title span에
+  overflow:hidden을 준다(좁은 화면에서 긴 제목이 검색/메뉴 버튼을 덮지
+  않게 하려는 것). 필기체는 마지막 글자 끝에 장식 꼬리가 글자 폭 바깥으로
+  삐져나오는 경우가 많아, 이 리셋들 때문에 "ANEMOI"의 마지막 I 꼬리가
+  잘려 보인다. span의 overflow는 보이게 풀고, 바깥 title-wrapper에도
+  꼬리가 들어갈 여유 공간을 오른쪽에 더 준다.
+*/
+.site-title span {
+	font-family: 'Pinyon Script', cursive;
+	font-size: 1.5em;
+	font-weight: 400;
+	letter-spacing: 0.02em;
+	color: var(--sl-color-accent-high);
+	overflow: visible;
+	padding-inline-end: 0.35em;
+}
+
+.title-wrapper {
+	padding-inline-end: 0.75rem;
+}
+
+/*
+  Starlight의 자동 페이지 타이틀(h1 #_top)은 본문의 다른 소제목과 별도
+  레이아웃 경로로 렌더링된다. "ANEMOI"는 본문 맨 위에 다른 섹션과 똑같은
+  ## 소제목으로 직접 넣으므로, 자동 생성되는 타이틀 패널은 통째로 숨긴다.
+*/
+.content-panel:has(#_top) {
+	display: none;
+}
+
+.content-panel + .content-panel {
+	border-top: none;
+}
+
+/* 본문 헤딩: 오래된 인쇄본의 표제 느낌 */
+.sl-markdown-content :is(h1, h2, h3, h4):not(:where(.not-content *)) {
+	font-family: var(--an-font-display);
+	font-weight: 700;
+	letter-spacing: 0.01em;
+}
+
+/* 헤딩 호버 앵커(⛓) 아이콘 제거 */
+.sl-anchor-link {
+	display: none !important;
+}
+.sl-heading-wrapper > :first-child {
+	padding-inline-end: 0 !important;
+}
+
+/*
+  인용구를 "카드"가 아니라 인쇄물의 발췌 인용(pull quote)처럼: 테두리와
+  배경 틴트를 걷어내고, 왼쪽 위의 커다란 금색 따옴표 글리프 + 주변보다
+  넉넉한 여백으로 다른 본문과 확실히 구분되는 하나의 독립된 요소로 보이게
+  한다.
+*/
+.sl-markdown-content blockquote:not(:where(.not-content *)) {
+	position: relative;
+	margin: 2.2rem 0;
+	border: none;
+	background: none;
+	padding: 0.95rem 1.1rem 0.9rem 2.4rem;
+	text-wrap: pretty;
+}
+
+.sl-markdown-content blockquote:not(:where(.not-content *))::before {
+	content: '“';
+	position: absolute;
+	top: -0.35rem;
+	left: 0.15rem;
+	font-family: var(--an-font-display);
+	font-size: 3rem;
+	font-style: normal;
+	line-height: 1;
+	color: color-mix(in srgb, var(--sl-color-accent) 55%, transparent);
+	pointer-events: none;
+}
+
+/*
+  대사를 금빛 깃펜으로 쓴 것처럼: 영문을 필기체로 먼저 보여주고, 한글은
+  그 아래 자막처럼 작게 붙인다.
+*/
+.an-quote-en {
+	display: block;
+	font-family: 'Pinyon Script', cursive;
+	font-size: 1.7em;
+	line-height: 1.35;
+	padding-bottom: 0.15em;
+	color: var(--sl-color-accent-high);
+}
+
+.an-quote-ko {
+	display: block;
+	margin-top: 0.3rem;
+	font-family: var(--an-font-display);
+	font-style: italic;
+	font-size: 0.92em;
+	color: var(--sl-color-gray-1);
+}
+
+/*
+  기존 헤딩 목차는 없애고, 좌측 사이드바(세계관/인물) 하나만 내비게이션으로
+  쓴다. 모바일/데스크톱 모두 동일하게 동작한다: 헤더 안의 토글(Search
+  오버라이드, "목차 › 현재 위치")을 누르면 사이드바가 헤더 바로 아래에
+  오버레이로 펼쳐진다. 기본값은 항상 "접힘"이며 .an-sidebar-expanded가
+  있을 때만 펼쳐진다.
+*/
+:root {
+	--sl-mobile-toc-height: 0rem;
+}
+
+[data-has-sidebar] {
+	--sl-content-inline-start: 0rem !important;
+}
+
+[data-has-sidebar] .header {
+	padding-inline-end: var(--sl-nav-pad-x);
+}
+
+@media (max-width: 49.9375rem) {
+	.header div:has(> #an-toc-toggle) {
+		flex: 1;
+		min-width: 0;
+	}
+}
+
+.sidebar-pane {
+	display: none;
+	visibility: visible;
+	position: fixed;
+	inset-block-start: var(--sl-nav-height);
+	inset-inline: 0;
+	width: 100%;
+	height: auto;
+	max-height: calc(100vh - var(--sl-nav-height));
+	min-height: 0;
+	overflow-y: auto;
+	background: var(--sl-color-bg-sidebar);
+	border-bottom: 1px solid var(--sl-color-hairline);
+	box-shadow: var(--sl-shadow-md);
+}
+
+html.an-sidebar-expanded .sidebar-pane {
+	display: block;
+}
+
+.sidebar-content {
+	height: auto;
+	min-height: 0;
+}
+
+.mobile-preferences {
+	display: none !important;
+}
+
+/*
+  Starlight는 라이트/다크 토글이 들어 있는 .right-group을 50rem 이상에서만
+  보이게 한다(sl-hidden md:sl-flex). 모바일 메뉴 쪽 사본(.mobile-preferences)은
+  위에서 꺼 뒀으므로, 좁은 화면에서는 토글을 아예 볼 수 없게 된다. 헤더 쪽
+  .right-group을 항상 보이게 해서 모바일에서도 테마 토글에 접근할 수 있게 한다.
+*/
+.right-group {
+	display: flex;
+}
+
+/*
+  다른 세계관 페이지들과 동일하게 섹션 사이를 구분선 + 넉넉한 상하 여백으로
+  나눈다(컬러그라운드 .cg-section, 나이트하이웨이 .nh-section과 같은 간격).
+  다만 구분선 자체는 곧은 헤어라인 대신 InkRule.astro(펜촉 자국 모양)를
+  섹션 사이에 직접 끼워 넣는다 — border-top은 쓰지 않는다.
+*/
+.an-section {
+	padding-block: clamp(3rem, 7vw, 5.5rem);
+	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
+}
+
+.an-section:first-child {
+	padding-top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.an-reveal {
+	opacity: 0;
+	transform: translateY(1.2rem);
+	transition:
+		opacity 0.6s ease,
+		transform 0.6s ease;
+}
+
+.an-reveal-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.an-reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}
+
+a.an-sidebar-active {
+	color: var(--sl-color-accent-high) !important;
+	font-weight: 700;
+}
+
+/*
+  Starlight 기본은 뷰포트가 72rem 이상일 때만 .sl-container에 margin-inline:auto를
+  준다(TwoColumnContent.astro가 사이드바 폭을 계산해 이 변수를 채워주는 구조라서).
+  우리는 TwoColumnContent를 오버라이드해 사이드바 폭 계산 자체를 없앴기 때문에,
+  콘텐츠 폭보다는 넓고 72rem보다는 좁은 구간에서 본문이 중앙정렬 없이 왼쪽으로
+  붙어버린다. 뷰포트 크기와 무관하게 항상 중앙정렬되도록 직접 지정한다.
+*/
+.sl-container {
+	margin-inline: auto;
+}
+
+/*
+  ── 히어로: 제국 지도 ─────────────────────────────────────────
+  지도/문장/대표 코어 액자를 전부 같은 금색 이중 테두리로 통일한다: 바깥
+  테두리(프레임) + 안쪽에 매트지 여백을 두고 이미지 자체에도 얇은 금색
+  테두리를 한 겹 더 둔다.
+*/
+.an-hero {
+	position: relative;
+	margin: 0.5rem 0 2rem;
+	padding: 0.4rem;
+	border: 2px solid var(--sl-color-accent);
+	background: var(--sl-color-bg-nav);
+	overflow: hidden;
+	box-shadow: 0 1.2rem 2.6rem rgba(14, 17, 32, 0.18);
+}
+
+.an-hero img {
+	display: block;
+	width: 100%;
+	height: auto;
+	box-sizing: border-box;
+	border: 1px solid var(--sl-color-accent);
+}
+
+.an-hero-caption {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	margin: 0;
+	padding: 0.6rem 1rem;
+	background: var(--sl-color-bg-nav);
+	border-top: 1px solid var(--sl-color-hairline);
+	font-size: 0.8rem;
+	color: var(--sl-color-gray-2);
+}
+
+.an-hero-caption strong {
+	font-family: var(--an-font-display);
+	color: var(--sl-color-accent-high);
+}
+
+/* ── 가문 상세 항목(네 가문과 영지 섹션) ───────────────────────── */
+.an-house-detail {
+	margin-block: 3rem;
+	border-inline-start: 3px solid var(--sl-color-hairline);
+	padding-inline-start: 1.2rem;
+}
+
+/*
+  마지막 가문의 아래쪽 마진은 섹션 자체의 padding-bottom과 겹쳐 더해지므로
+  (margin은 padding을 사이에 두고 있어 상쇄되지 않는다), 마지막 항목만
+  아래쪽 마진을 없애 섹션 padding 하나만 남긴다.
+*/
+.an-house-detail:last-child {
+	margin-bottom: 0;
+}
+
+.an-house-detail--belkain {
+	border-inline-start-color: var(--an-house-belkain);
+}
+.an-house-detail--erden {
+	border-inline-start-color: var(--an-house-erden);
+}
+.an-house-detail--serkad {
+	border-inline-start-color: var(--an-house-serkad);
+}
+.an-house-detail--maretia {
+	border-inline-start-color: var(--an-house-maretia);
+}
+
+.an-house-detail--belkain .an-house-epithet-color {
+	color: var(--an-house-belkain);
+}
+.an-house-detail--erden .an-house-epithet-color {
+	color: var(--an-house-erden);
+}
+.an-house-detail--serkad .an-house-epithet-color {
+	color: var(--an-house-serkad);
+}
+.an-house-detail--maretia .an-house-epithet-color {
+	color: var(--an-house-maretia);
+}
+
+.an-house-detail-region {
+	margin: 0;
+	font-size: 0.85rem;
+	color: var(--sl-color-gray-2);
+}
+
+/* ── 문장 · 대표 코어 액자 갤러리(지도 히어로와 같은 디자인) ────── */
+.an-emblem-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+	margin: 1.2rem 0 1.6rem;
+}
+
+@media (max-width: 26rem) {
+	.an-emblem-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.an-emblem-frame {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	margin-top: 0;
+	padding: 0.4rem;
+	border: 2px solid var(--sl-color-accent);
+	background: var(--sl-color-bg-nav);
+	overflow: hidden;
+	box-shadow: 0 0.8rem 1.8rem rgba(14, 17, 32, 0.18);
+}
+
+.an-emblem-frame img {
+	display: block;
+	width: 100%;
+	height: auto;
+	box-sizing: border-box;
+	border: 1px solid var(--sl-color-accent);
+}
+
+/*
+  코어 캡션 글이 문장 캡션보다 길어지면서, 짧은 쪽 카드 아래에 빈 여백이
+  남는 문제가 있었다. margin-top:auto로 캡션을 바닥에 붙였더니 이번엔 그
+  여백이 캡션 배경색 없이 빈 틈으로 남았다. flex:1로 캡션 자체가 남는
+  공간을 전부 채우게 하고, 내용은 그 안에서 세로 중앙 정렬한다.
+*/
+.an-emblem-caption {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	flex: 1;
+	margin: 0;
+	padding: 0.55rem 0.8rem;
+	background: var(--sl-color-bg-nav);
+	border-top: 1px solid var(--sl-color-hairline);
+	font-size: 0.78rem;
+	color: var(--sl-color-gray-2);
+}
+
+.an-emblem-caption strong {
+	display: block;
+	font-family: var(--an-font-display);
+	color: var(--sl-color-accent-high);
+}
+
+/*
+  귀족 서열 피라미드. 위로 갈수록 좁고 진하게(황실), 아래로 갈수록 넓고
+  옅게(기타 귀족) — 단수 표기 대신 도형 자체로 위계를 보여준다.
+*/
+.an-rank-pyramid {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 1.4rem 0;
+}
+
+.an-rank-tier {
+	margin-top: 0;
+	width: 100%;
+	text-align: center;
+	padding: 0.7rem 1rem;
+	border: 1px solid var(--sl-color-accent);
+}
+
+.an-rank-tier span {
+	display: block;
+	font-family: var(--an-font-display);
+	font-weight: 700;
+}
+
+.an-rank-tier small {
+	display: block;
+	margin-top: 0.15rem;
+	font-size: 0.72rem;
+	color: var(--sl-color-gray-2);
+}
+
+.an-rank-tier--1 {
+	width: 42%;
+	background: color-mix(in srgb, var(--sl-color-accent) 38%, transparent);
+}
+.an-rank-tier--2 {
+	width: 60%;
+	background: color-mix(in srgb, var(--sl-color-accent) 26%, transparent);
+}
+.an-rank-tier--3 {
+	width: 78%;
+	background: color-mix(in srgb, var(--sl-color-accent) 15%, transparent);
+	border-color: var(--sl-color-hairline);
+}
+.an-rank-tier--4 {
+	width: 100%;
+	background: var(--sl-color-bg-nav);
+	border-color: var(--sl-color-hairline);
+}
+
+/*
+  ── 캐릭터 카드(나이트하이웨이 라이더 카드와 같은 구성) ───────────
+  사진을 오른쪽에 띄우고 표로 정보를 나열하던 방식 대신, 나이트하이웨이의
+  라이더 카드처럼 사진 · 태그라인 · 대사 인용 · 요약 정보 배지를 세로로
+  중앙 정렬해 하나의 띠(밴드)로 묶는다.
+*/
+.an-char-card {
+	position: relative;
+	margin-inline: calc(-1 * var(--sl-content-pad-x));
+	padding: clamp(1.5rem, 4vw, 2.5rem) var(--sl-content-pad-x);
+	background: color-mix(in srgb, var(--sl-color-accent) 5%, transparent);
+	border-top: 1px solid var(--sl-color-hairline);
+	border-bottom: 1px solid var(--sl-color-hairline);
+}
+
+/* 회색 헤어라인 안쪽에 얇은 금색 선을 하나 더 둬서 액자/카드와 같은
+   이중 테두리 모티프를 이 밴드에도 이어간다 */
+.an-char-card::before,
+.an-char-card::after {
+	content: '';
+	position: absolute;
+	inset-inline: 0;
+	height: 1px;
+	background: color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
+	pointer-events: none;
+}
+
+.an-char-card::before {
+	top: 3px;
+}
+
+.an-char-card::after {
+	bottom: 3px;
+}
+
+.an-char-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.75rem;
+	text-align: center;
+}
+
+.an-char-header > * {
+	margin-top: 0;
+}
+
+.an-char-header .sl-heading-wrapper {
+	margin-top: 0 !important;
+}
+
+.an-char-header h2 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 0.25rem 0 0 !important;
+	color: var(--sl-color-accent-high);
+}
+
+.an-char-name-en {
+	display: block;
+	font-family: 'Pinyon Script', cursive;
+	font-size: 1.9rem;
+	font-weight: 400;
+	line-height: 1.3;
+	padding-bottom: 0.15rem;
+}
+
+.an-char-name-ko {
+	display: block;
+	margin-top: 0.1rem;
+	color: var(--sl-color-gray-2);
+	font-family: var(--an-font-display);
+	font-size: 0.85rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+}
+
+.an-char-photo {
+	position: relative;
+	width: clamp(10rem, 38vw, 14rem);
+}
+
+/* 인물 초상 뒤로 은은한 금빛 광원을 둬서, 카드가 색 하나로 밋밋하게 끝나지 않게 함 */
+.an-char-photo::before {
+	content: '';
+	position: absolute;
+	inset: -1.5rem;
+	z-index: -1;
+	border-radius: 50%;
+	background: radial-gradient(circle, color-mix(in srgb, var(--sl-color-accent) 35%, transparent), transparent 70%);
+}
+
+.an-char-photo img:not(.an-badge-corner) {
+	display: block;
+	width: 100%;
+	aspect-ratio: 3 / 4;
+	object-fit: cover;
+	object-position: top center;
+	border: 1px solid var(--sl-color-hairline);
+	box-shadow: 0 0.6rem 1.75rem rgba(14, 17, 32, 0.35);
+}
+
+/*
+  인물 초상 위의 뱃지는 얼굴을 가리면 안 되므로 person-card용보다 작게,
+  사각 프레임(위 규칙의 border/box-shadow/aspect-ratio) 없이 압정처럼
+  왼쪽 상단 모서리에 걸쳐 얹는다.
+*/
+.an-char-photo .an-badge-corner {
+	top: -1.6rem;
+	left: -1.6rem;
+	right: auto;
+	width: 5.2rem;
+	height: 5.2rem;
+}
+
+.an-char-tagline {
+	margin: 0;
+	max-width: 30rem;
+	font-style: italic;
+	color: var(--sl-color-gray-2);
+}
+
+/*
+  .an-char-header는 flex column이라 gap:0.75rem이 이미 자식 사이 간격을
+  만든다. 인용구 자체의 margin(일반 본문용 2.2rem)까지 함께 더해지면
+  간격이 두 배로 벌어지므로, 이 안에서는 margin을 지우고 flex gap 하나만
+  쓰게 한다.
+*/
+.an-char-header blockquote {
+	margin: 0.5rem 0 0;
+	max-width: 30rem;
+}
+
+/* 캐릭터 카드 하단의 외부 링크(캐릭터 챗봇 등) 버튼 행 */
+.an-char-links {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.6rem;
+	margin-top: 1.75rem;
+}
+
+/* 고풍스러운 명패 버튼: 서비스별 색상 대신 사이트 공통 금색 하나로 통일 */
+.an-char-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.5rem 1.3rem;
+	font-family: var(--an-font-display);
+	font-size: var(--sl-text-xs);
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: var(--sl-color-accent-high);
+	background: color-mix(in srgb, var(--sl-color-accent) 8%, transparent);
+	border: 1px solid var(--sl-color-accent);
+	transition: background 0.2s ease, color 0.2s ease;
+}
+
+a.an-char-link:hover {
+	background: var(--sl-color-accent);
+	color: var(--sl-color-bg);
+}
+
+.an-char-link--soon {
+	color: var(--sl-color-gray-3);
+	background: transparent;
+	border-style: dashed;
+	border-color: var(--sl-color-hairline);
+	cursor: default;
+}
+
+/*
+  둥근 배지(칩) 목록 대신 원장(元帳)의 신상 기록란처럼: 4열 격자에 얇은
+  헤어라인으로 칸을 나눠 라벨/값을 정렬한다. 항목 수(8개)가 4열과 딱
+  맞아떨어져 예전 flex-wrap처럼 마지막 줄만 어중간하게 남는 문제도 없다.
+*/
+.an-char-facts {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 0;
+	margin: 0.25rem 0 0;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid var(--sl-color-hairline);
+	border-inline-start: 1px solid var(--sl-color-hairline);
+}
+
+@media (max-width: 30rem) {
+	.an-char-facts {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.an-char-facts li {
+	margin: 0;
+	padding: 0.6rem 0.7rem;
+	border-inline-end: 1px solid var(--sl-color-hairline);
+	border-bottom: 1px solid var(--sl-color-hairline);
+	text-align: center;
+	font-size: 0.85rem;
+}
+
+.an-char-facts li strong {
+	display: block;
+	margin: 0 0 0.15rem;
+	font-size: 0.62rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: var(--sl-color-gray-3);
+}
+
+/*
+  ── 대원/주변 인물 카드 ─────────────────────────────────────────
+  인물 카드 이모지 규칙(세 계열 카드 전체에 공통 적용, 다음에도 유지할 것):
+  - 가문 소속을 이미 밀랍 봉인 뱃지(.an-badge-corner)로 표시하는 카드(대공/공작,
+    라파엘)는 이모지를 넣지 않는다. 봉인이 곧 소속 표시이므로 중복.
+  - 뱃지가 없고 그 사람만의 고유 역할이 있는 카드(황실 사냥대원의 전술/정보/추적
+    담당, 라파엘의 "좋아하는 것")는 그 역할을 나타내는 이모지를 유지한다.
+  - 뱃지도 없고 나타낼 고유 역할도 없는 카드(가족)는 이모지를 넣지 않는다.
+*/
+.an-people-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+	gap: 0.9rem;
+	margin: 1.2rem 0;
+}
+
+/*
+  단순 사각 박스 대신, 위쪽에 얇은 금색 띠를 두르고 오른쪽 아래에 작은
+  금색 모서리 탭을 둔다. 카드 전체에 clip-path를 걸면 카드 밖으로 걸치는
+  뱃지(.an-badge-corner)까지 함께 잘려나가므로, 모서리 탭은 카드 전체가
+  아니라 작은 ::after 하나에만 적용해 뱃지는 그대로 온전히 보이게 한다.
+*/
+.an-person-card {
+	position: relative;
+	margin-top: 0;
+	padding: 0.9rem 1rem;
+	border: 1px solid var(--sl-color-hairline);
+	border-top: 2px solid var(--sl-color-accent);
+	background: var(--sl-color-bg-nav);
+}
+
+.an-person-card::after {
+	content: '';
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 0.85rem;
+	height: 0.85rem;
+	background: var(--sl-color-accent);
+	clip-path: polygon(100% 0, 100% 100%, 0 100%);
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+/*
+  나이트하이웨이 라이더 카드의 모서리 뱃지(오토바이/동물 아이콘)와 같은
+  방식: 카드 모서리 위에 걸쳐 얹은 원형 배지. 코어 계통 카드의 코어 뱃지,
+  대공/공작 카드의 밀랍 봉인 뱃지에 공용으로 쓴다.
+*/
+.an-badge-corner {
+	position: absolute;
+	top: -1.3rem;
+	right: -1.3rem;
+	z-index: 2;
+	width: 6.2rem;
+	height: 6.2rem;
+	object-fit: contain;
+	filter: drop-shadow(0 0.3rem 0.6rem rgba(8, 10, 20, 0.45));
+}
+
+/* 뱃지가 얹힌 카드는 본문 텍스트가 뱃지 아래로 파고들지 않도록 우측 여백을 더 준다 */
+.an-person-card:has(.an-badge-corner) {
+	padding-right: 6rem;
+}
+
+/*
+  코어의 네 계통 카드: 뱃지가 코인 모양 삽화라 세로/양각 봉인과는 달리
+  라이트 모드에서 그림자가 이질적으로 두드러진다. 라이트 모드에서만 제거.
+  또한 뱃지가 카드 모서리 밖으로 걸치기 때문에, 2x2로 배치되는 넓은 화면에서
+  옆/위 카드를 가리지 않도록 기본보다 훨씬 넉넉한 간격을 준다. 대공/공작
+  카드(.an-badge-grid)도 같은 이유로 같은 간격을 준다.
+*/
+:root[data-theme='light'] #sec-cores .an-badge-corner {
+	filter: none;
+}
+
+#sec-cores .an-people-grid,
+.an-people-grid.an-badge-grid {
+	gap: 2.75rem 2.25rem;
+}
+
+.an-person-name {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	font-family: var(--an-font-display);
+	font-weight: 700;
+	font-size: 0.95rem;
+	margin-bottom: 0.4rem;
+}
+
+.an-person-card p {
+	font-size: 0.84rem;
+	line-height: 1.6;
+	color: var(--sl-color-gray-2);
+	margin: 0.3rem 0 0;
+}
+
+/*
+  ── 라파엘 위젯 미리보기(JSX) ─────────────────────────────────────
+  캐릭터챗 서비스의 위젯 샌드박스용으로 만들어진 컴포넌트들을 그대로
+  가져와 명령줄 탭으로 골라볼 수 있게 감싼 것. 위젯 자체는 각자 자기
+  색을 쓰지만(양피지, 가죽 등 원래 디자인 그대로), 이 바깥 틀(명령줄
+  탭, 알람창)은 사이트 공통 금색 톤으로 맞춘다.
+*/
+.an-jsx-preview {
+	margin-top: 1.5rem;
+}
+
+/*
+  위젯 컴포넌트들은 Tailwind의 preflight(브라우저 기본 여백/테두리/폰트를
+  지우는 베이스 리셋)가 항상 적용돼 있는 환경에서 작성됐다. 이 프로젝트는
+  Starlight 본문 타이포그래피를 지키려고 preflight 자체는 불러오지 않았기
+  때문에, 위젯 안에서는 h1~h6의 브라우저 기본 여백/글자 크기, button의
+  기본 테두리/배경/폰트, svg의 인라인 정렬 등이 그대로 남아 Tailwind
+  유틸리티가 지정한 값 위에 겹쳐 보인다 — 마진/외곽선/정렬이 어긋나 보이는
+  원인이 이것이다. Tailwind preflight.css의 핵심 규칙만 그대로 옮기되,
+  선택자를 `:where(.an-jsx-preview)`로 감싸 이 위젯 영역 밖으로는 전혀
+  영향이 없게 했다.
+
+  중요: 이 리셋은 반드시 `@layer an-tw-base` 안에 있어야 한다. custom.css의
+  나머지 규칙은 의도적으로 레이어 밖(unlayered)에 둬서 Starlight의
+  레이어드 스타일을 항상 이기게 하는데, 그 습관대로 이 리셋도 레이어
+  없이 적었더니 특이도를 0으로 낮췄음에도 Tailwind의 `@layer utilities`
+  전체를 통째로 덮어써 버리는 문제가 있었다.
+
+  레이어 이름도 반드시 `base`처럼 흔한 이름이 아니라 `an-tw-base`처럼
+  이 프로젝트 전용으로 고유해야 한다 — 한 번은 base/theme/utilities라는
+  이름을 그대로 써서 tailwind.css에 순서를 선언해 뒀는데도 space-y-*
+  유틸리티의 margin이 이 리셋에 덮여 사라지는 문제가 있었다. 원인은
+  Starlight 자체가 이미 같은 이름의 레이어를 다른 상대 순서로 등록해
+  둔 상태였던 것 — 레이어는 문서 전체에서 처음 등장한 이름과 순서로
+  상대 위치가 고정되고, 나중에 같은 이름으로 다시 선언해도 그 위치는
+  바뀌지 않는다. tailwind.css에서 `@layer an-tw-base, an-tw-theme,
+  an-tw-utilities;`로 고유한 이름과 순서를 선언해 뒀으므로, 여기서는
+  `an-tw-base` 레이어 안에 넣어야 Tailwind 유틸리티 클래스가 정상적으로
+  이 리셋을 덮어쓴다.
+*/
+@layer an-tw-base {
+	/*
+	  Tailwind의 실제 preflight는 html에 기본 산세리프 스택을 지정해 두고,
+	  font-serif/font-mono 등을 명시하지 않은 모든 요소가 거기서 상속받게
+	  한다. 이 프로젝트는 html 레벨 font-family를 건드릴 수 없으니(사이트
+	  전체가 'Noto Sans KR'을 쓰게 만든 그 규칙이라), 위젯 영역에서만
+	  이 기본값을 다시 세워준다 — 안 그러면 폰트를 따로 지정하지 않은
+	  버튼("이전 장", "선택한 의뢰 수락" 등)이 사이트 폰트를 그대로
+	  상속해서 원본과 다르게 보인다.
+	*/
+	:where(.an-jsx-preview) {
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', Arial,
+			sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+	}
+
+	:where(.an-jsx-preview) *,
+	:where(.an-jsx-preview) ::before,
+	:where(.an-jsx-preview) ::after {
+		box-sizing: border-box;
+		padding: 0;
+		border: 0 solid;
+	}
+
+	/*
+	  margin:0은 원래 Tailwind preflight처럼 * 전체에 걸고 싶었지만, 그렇게
+	  하면 어째서인지(레이어를 고유 이름으로 분리해도) space-y-2 같은
+	  margin 유틸리티가 만드는 margin-block-end를 도로 덮어써서 카드 사이
+	  간격이 전부 사라지는 문제가 있었다. 브라우저가 실제로 기본 margin을
+	  주는 태그는 h1~h6/p/ul/ol/dl/dd/blockquote/figure뿐이고 div/button은
+	  원래 기본 margin이 0이라 애초에 리셋이 필요 없었으므로, 문제를 일으킨
+	  전체 선택자 대신 실제로 필요한 태그만 콕 집어 리셋한다.
+	*/
+	:where(.an-jsx-preview) h1,
+	:where(.an-jsx-preview) h2,
+	:where(.an-jsx-preview) h3,
+	:where(.an-jsx-preview) h4,
+	:where(.an-jsx-preview) h5,
+	:where(.an-jsx-preview) h6,
+	:where(.an-jsx-preview) p,
+	:where(.an-jsx-preview) ul,
+	:where(.an-jsx-preview) ol,
+	:where(.an-jsx-preview) dl,
+	:where(.an-jsx-preview) dd,
+	:where(.an-jsx-preview) blockquote,
+	:where(.an-jsx-preview) figure {
+		margin: 0;
+	}
+
+	:where(.an-jsx-preview) h1,
+	:where(.an-jsx-preview) h2,
+	:where(.an-jsx-preview) h3,
+	:where(.an-jsx-preview) h4,
+	:where(.an-jsx-preview) h5,
+	:where(.an-jsx-preview) h6 {
+		font-size: inherit;
+		font-weight: inherit;
+	}
+
+	:where(.an-jsx-preview) a {
+		color: inherit;
+		text-decoration: inherit;
+	}
+
+	:where(.an-jsx-preview) b,
+	:where(.an-jsx-preview) strong {
+		font-weight: bolder;
+	}
+
+	:where(.an-jsx-preview) small {
+		font-size: 80%;
+	}
+
+	:where(.an-jsx-preview) ol,
+	:where(.an-jsx-preview) ul,
+	:where(.an-jsx-preview) menu {
+		list-style: none;
+	}
+
+	:where(.an-jsx-preview) img,
+	:where(.an-jsx-preview) svg,
+	:where(.an-jsx-preview) video,
+	:where(.an-jsx-preview) canvas {
+		display: block;
+		vertical-align: middle;
+	}
+
+	:where(.an-jsx-preview) img,
+	:where(.an-jsx-preview) video {
+		max-width: 100%;
+		height: auto;
+	}
+
+	:where(.an-jsx-preview) button,
+	:where(.an-jsx-preview) input,
+	:where(.an-jsx-preview) select,
+	:where(.an-jsx-preview) textarea {
+		font: inherit;
+		letter-spacing: inherit;
+		color: inherit;
+		border-radius: 0;
+		background-color: transparent;
+		opacity: 1;
+	}
+
+	:where(.an-jsx-preview) button {
+		cursor: pointer;
+		text-align: inherit;
+	}
+}
+
+.an-jsx-cmdline {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6rem;
+	padding-bottom: 0.9rem;
+	margin-bottom: 1.3rem;
+	border-bottom: 1px dashed color-mix(in srgb, var(--sl-color-accent) 35%, transparent);
+}
+
+.an-jsx-cmds {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.an-jsx-cmd {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.4rem 0.75rem;
+	border: 1px solid color-mix(in srgb, var(--sl-color-gray-3) 55%, transparent);
+	background: var(--sl-color-bg-nav);
+	color: var(--sl-color-gray-2);
+	font-family: var(--an-font-display);
+	font-size: var(--sl-text-xs);
+	cursor: pointer;
+	transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.an-jsx-cmd:hover {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-white);
+}
+
+.an-jsx-cmd.is-active {
+	border-color: var(--sl-color-accent);
+	background: color-mix(in srgb, var(--sl-color-accent) 14%, transparent);
+	color: var(--sl-color-white);
+}
+
+.an-jsx-cmd-slash {
+	font-weight: 700;
+	color: var(--sl-color-accent);
+}
+
+.an-jsx-cmd.is-active .an-jsx-cmd-slash {
+	color: var(--sl-color-accent-high);
+}
+
+.an-jsx-cmd-label {
+	white-space: nowrap;
+}
+
+@media (max-width: 30rem) {
+	.an-jsx-cmd-label {
+		display: none;
+	}
+}
+
+/*
+  각 위젯은 서류철 뒤판이 살짝 삐져나오거나(RequestBoard, EventInvitations)
+  모서리에 클립/핀이 걸치는(전부) 디자인이라, 카드 자체보다 살짝 넓게
+  그려진다. 바깥에 테두리나 overflow:hidden을 주면 그 삐져나온 부분이
+  잘려서 원본과 달리 뭉툭해 보이므로, 폭 제한과 중앙 정렬만 하고 나머지는
+  각 위젯이 알아서 그리게 둔다.
+*/
+.an-jsx-stage {
+	position: relative;
+	max-width: 30rem;
+	margin: 0 auto;
+}
+
+/*
+  의뢰 수락/초대 응답 버튼을 누르면 원래 컴포넌트는 내부용 명령어 문자열을
+  sendMessage로 넘긴다. 그걸 그대로 보여주는 대신, 실제 단말기가 알림을
+  띄운 것처럼 화면 정중앙에 뜨는 알람창으로 보여준다.
+*/
+.an-jsx-alarm-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+	/* 라이트 모드의 --sl-color-black은 거의 흰색이라(밝은 벨럼 배경 대비용),
+	   테마와 무관하게 항상 어둡게 딤 처리되도록 직접 짙은 남색을 쓴다 */
+	background: color-mix(in srgb, hsl(224, 30%, 4%) 78%, transparent);
+	backdrop-filter: blur(3px);
+	animation: an-jsx-alarm-fade-in 0.2s ease;
+}
+
+.an-jsx-alarm-box {
+	max-width: 22rem;
+	width: 100%;
+	padding: 1.4rem 1.5rem;
+	background: color-mix(in srgb, var(--sl-color-bg-nav) 92%, var(--sl-color-accent) 8%);
+	border: 1px solid var(--sl-color-accent);
+	box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.5), 0 0 0 3px color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
+	text-align: center;
+	animation: an-jsx-alarm-pop-in 0.2s ease;
+}
+
+.an-jsx-alarm-tag {
+	margin: 0 0 0.7rem;
+	font-family: var(--an-font-display);
+	font-size: 0.65rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--sl-color-accent-high);
+}
+
+.an-jsx-alarm-title {
+	margin: 0 0 0.5rem;
+	font-family: var(--an-font-display);
+	font-size: var(--sl-text-lg);
+	font-weight: 700;
+	color: var(--sl-color-white);
+}
+
+.an-jsx-alarm-message {
+	margin: 0 0 1.2rem;
+	font-size: var(--sl-text-sm);
+	line-height: 1.6;
+	color: var(--sl-color-gray-2);
+	overflow-wrap: anywhere;
+}
+
+.an-jsx-alarm-close {
+	display: inline-block;
+	min-width: 8rem;
+	padding: 0.6rem 1.2rem;
+	font-family: var(--an-font-display);
+	font-size: var(--sl-text-xs);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--sl-color-accent-high);
+	background: color-mix(in srgb, var(--sl-color-accent) 16%, transparent);
+	border: 1px solid var(--sl-color-accent);
+	cursor: pointer;
+	transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.an-jsx-alarm-close:hover {
+	filter: brightness(1.2);
+	transform: translateY(-1px);
+}
+
+.an-jsx-alarm-close:active {
+	transform: translateY(0);
+}
+
+@keyframes an-jsx-alarm-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes an-jsx-alarm-pop-in {
+	from {
+		transform: translateY(0.5rem) scale(0.98);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0) scale(1);
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.an-jsx-alarm-overlay,
+	.an-jsx-alarm-box {
+		animation: none;
+	}
+}
+
+/*
+  크리스탈 코어 생성기: 황립 연구원의 코어 감정서.
+  라파엘 위젯(가제트/초대장 등)과 같은 "종이" 계열 소품이므로, 그 위젯들과
+  동일한 양피지 팔레트(paper #e9e0cf / paperLight #f3ecdf / ink #17110c /
+  accent #5f4727)를 그대로 재사용해 페이지 안에서 시각적으로 어울리게 한다.
+  실제 문서를 흉내 낸 소품이라 사이트의 라이트/다크 테마와는 무관하게 이
+  색을 고정으로 유지한다.
+*/
+.an-core-gen-sheet {
+	position: relative;
+	width: 100%;
+	max-width: 26rem;
+	margin: 1.75rem auto 0;
+	box-sizing: border-box;
+	border: 1px solid #5f4727;
+	background-color: #f3ecdf;
+	padding: 1.5rem 1.4rem 1.4rem;
+	box-shadow: 0 1rem 2.4rem rgba(23, 17, 12, 0.18);
+}
+
+.an-core-gen-stamp {
+	position: absolute;
+	top: 1.1rem;
+	right: 1.1rem;
+	display: flex;
+	width: 2.2rem;
+	height: 2.2rem;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #5f4727;
+	border-radius: 50%;
+	color: #5f4727;
+	font-size: 1rem;
+	opacity: 0.8;
+}
+
+.an-core-gen-eyebrow {
+	margin: 0;
+	color: #5a4d3e;
+	font-size: 0.62rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.an-core-gen-title {
+	margin: 0.3rem 2.6rem 0 0;
+	color: #17110c;
+	font-family: var(--an-font-display);
+	font-size: 1.15rem;
+	font-weight: 700;
+}
+
+.an-core-gen-subtitle {
+	margin: 0.35rem 0 0;
+	color: #34291f;
+	font-size: 0.75rem;
+	line-height: 1.5;
+}
+
+.an-core-gen-rule {
+	margin: 0.9rem 0 1.1rem;
+	border: none;
+	border-top: 3px solid #17110c;
+	border-bottom: 1px solid #17110c;
+	padding-top: 2px;
+}
+
+.an-core-gen-form {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	gap: 0.6rem;
+}
+
+.an-core-gen-field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	font-size: 0.78rem;
+}
+
+.an-core-gen-field > span {
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	color: #17110c;
+	font-family: var(--an-font-display);
+}
+
+.an-core-gen-field select,
+.an-core-gen-field input,
+.an-core-gen-subfield {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.45rem 0.55rem;
+	border: 1px solid #5f4727;
+	background-color: #fbf6ea;
+	color: #17110c;
+	font-family: inherit;
+	font-size: 0.78rem;
+}
+
+.an-core-gen-subfield {
+	margin-top: -0.1rem;
+}
+
+.an-core-gen-field select:focus,
+.an-core-gen-field input:focus,
+.an-core-gen-subfield:focus {
+	outline: none;
+	border-color: #17110c;
+}
+
+.an-core-gen-field input::placeholder,
+.an-core-gen-subfield::placeholder {
+	color: #8a7960;
+	font-style: italic;
+	opacity: 1;
+}
+
+@media (max-width: 30rem) {
+	.an-core-gen-field select,
+	.an-core-gen-field input,
+	.an-core-gen-subfield {
+		font-size: 16px;
+	}
+}
+
+.an-core-gen-submit {
+	display: flex;
+	width: 100%;
+	min-height: 2.5rem;
+	align-items: center;
+	justify-content: center;
+	margin-top: 0.3rem;
+	border: 1px solid #17110c;
+	background-color: #5f4727;
+	color: #f3ecdf;
+	font-family: var(--an-font-display);
+	font-weight: 700;
+	font-size: 0.8rem;
+	letter-spacing: 0.03em;
+	cursor: pointer;
+	transition: filter 0.1s ease, transform 0.1s ease;
+}
+
+.an-core-gen-submit:hover:not(:disabled) {
+	filter: brightness(1.1);
+}
+
+.an-core-gen-submit:active:not(:disabled) {
+	transform: translateY(1px);
+}
+
+.an-core-gen-submit:disabled {
+	background-color: #a99a80;
+	color: #5a4d3e;
+	cursor: default;
+}
+
+.an-core-gen-error {
+	margin: 1rem 0 0;
+	padding: 0.65rem 0.8rem;
+	border: 1px solid #8a3b2c;
+	background-color: rgba(138, 59, 44, 0.08);
+	color: #6b2418;
+	font-size: 0.78rem;
+	line-height: 1.6;
+}
+
+.an-core-gen-result {
+	position: relative;
+	z-index: 1;
+	margin-top: 1rem;
+	padding: 0.9rem 1rem 1rem;
+	border: 1px dashed #5f4727;
+	background-color: rgba(95, 71, 39, 0.06);
+}
+
+.an-core-gen-result-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.6rem;
+	margin-bottom: 0.7rem;
+}
+
+.an-core-gen-result-label {
+	margin: 0;
+	color: #5a4d3e;
+	font-size: 0.62rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.an-core-gen-result-section {
+	margin-top: 0.85rem;
+}
+
+.an-core-gen-result-section:first-of-type {
+	margin-top: 0;
+}
+
+.an-core-gen-result-section h4 {
+	margin: 0 0 0.35rem;
+	padding-bottom: 0.25rem;
+	border-bottom: 1px solid #5f4727;
+	color: #17110c;
+	font-family: var(--an-font-display);
+	font-size: 0.82rem;
+	font-weight: 700;
+}
+
+.an-core-gen-result-section ul {
+	margin: 0;
+	padding-left: 1.1rem;
+}
+
+.an-core-gen-result-section li {
+	margin: 0 0 0.35rem;
+	color: #17110c;
+	font-size: 0.82rem;
+	line-height: 1.65;
+}
+
+.an-core-gen-result-section li:last-child {
+	margin-bottom: 0;
+}
+
+.an-core-gen-copy {
+	flex-shrink: 0;
+	padding: 0.35rem 0.8rem;
+	border: 1px solid #5f4727;
+	background-color: transparent;
+	color: #5f4727;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	cursor: pointer;
+	transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.an-core-gen-copy:hover {
+	background-color: #5f4727;
+	color: #f3ecdf;
+}
+
+.an-core-gen-caption {
+	max-width: 26rem;
+	margin: 0.6rem auto 0;
+	color: var(--sl-color-gray-3);
+	font-size: 0.78rem;
+	font-style: italic;
+	text-align: center;
+}
+
+/*
+  ── 비밀 편지: 봉인된 편지 아이콘을 누르면 편지가 펼쳐지며 비밀이 드러난다.
+  트리거(아이콘+라벨)는 본문 흐름 속에 자연스럽게 섞여야 하므로 사이트
+  테마 토큰을 그대로 쓰고, 열렸을 때 나오는 편지지 자체는 라파엘 위젯·코어
+  생성기와 같은 계열의 고정 양피지 색(종이라는 물성은 테마와 무관하므로)을
+  쓴다.
+*/
+.an-secret-trigger {
+	display: inline-flex;
+	align-items: center;
+	vertical-align: middle;
+	gap: 0.35rem;
+	padding: 0.1rem 0.3rem;
+	border: none;
+	background: none;
+	color: var(--sl-color-accent-high);
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.an-secret-trigger:hover .an-secret-envelope-flap {
+	border-top-color: var(--sl-color-accent-high);
+}
+
+.an-secret-trigger-label {
+	border-bottom: 1px dashed var(--sl-color-accent);
+}
+
+/* 캐릭터 정보표 칸 안에서는 라벨(strong)과의 세로 중심이 살짝 아래로
+   치우쳐 보여, 그 칸 안에서만 위로 조금 당겨준다. */
+.an-char-facts .an-secret-trigger {
+	margin-top: -0.3rem;
+}
+
+/*
+  문단 뒤에 이어 붙는 위치에서는 문단과 떨어진 자기 줄에 와야 한다.
+  inline-flex로 두면 화면 폭에 따라 앞 문장 마지막 줄 끝에 붙어버릴 때가
+  있어(모바일에서 특히 어색해 보임), width: fit-content를 준
+  block으로 바꿔 항상 줄바꿈되면서도 내용 크기만큼만 차지하게 한다.
+*/
+.an-secret-trigger--spaced {
+	display: flex;
+	width: fit-content;
+	margin-top: 0.5rem;
+}
+
+.an-secret-envelope {
+	position: relative;
+	display: inline-block;
+	width: 1.15rem;
+	height: 0.85rem;
+	flex-shrink: 0;
+	border: 1px solid var(--sl-color-accent);
+	background: var(--sl-color-bg-nav);
+}
+
+.an-secret-envelope-flap {
+	position: absolute;
+	inset: -1px -1px auto -1px;
+	height: 0;
+	border-left: 0.575rem solid transparent;
+	border-right: 0.575rem solid transparent;
+	border-top: 0.55rem solid var(--sl-color-accent);
+}
+
+.an-secret-envelope-seal {
+	position: absolute;
+	left: 50%;
+	top: 0.28rem;
+	transform: translateX(-50%);
+	color: var(--sl-color-accent-high);
+	font-size: 0.5rem;
+	line-height: 1;
+}
+
+.an-secret-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+	background: color-mix(in srgb, hsl(224, 30%, 4%) 78%, transparent);
+	backdrop-filter: blur(3px);
+	animation: an-secret-fade-in 0.2s ease;
+}
+
+.an-secret-letter {
+	position: relative;
+	width: 100%;
+	max-width: 26rem;
+	max-height: 85vh;
+	overflow-y: auto;
+	box-sizing: border-box;
+	padding: 1.7rem 1.5rem 1.5rem;
+	background-color: #f3ecdf;
+	border: 1px solid #5f4727;
+	box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.5);
+	transform-origin: top center;
+	transform: scaleY(0.12) scaleX(0.72);
+	opacity: 0;
+	transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+}
+
+.an-secret-letter.is-open {
+	transform: scaleY(1) scaleX(1);
+	opacity: 1;
+}
+
+.an-secret-close {
+	position: absolute;
+	top: 0.6rem;
+	right: 0.6rem;
+	width: 1.6rem;
+	height: 1.6rem;
+	border: 1px solid #5f4727;
+	background: transparent;
+	color: #5f4727;
+	font-size: 1rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.an-secret-close:hover {
+	background: #5f4727;
+	color: #f3ecdf;
+}
+
+.an-secret-image {
+	display: block;
+	width: 100%;
+	max-width: 9rem;
+	margin: 0 auto 0.9rem;
+}
+
+.an-secret-title {
+	margin: 0 0 0.8rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 1px solid #5f4727;
+	color: #17110c;
+	font-family: var(--an-font-display);
+	font-size: 1rem;
+	font-weight: 700;
+	text-align: center;
+}
+
+.an-secret-bullets {
+	margin: 0;
+	padding-left: 1.1rem;
+}
+
+.an-secret-bullets li {
+	margin: 0 0 0.6rem;
+	color: #2c2013;
+	font-size: 0.82rem;
+	line-height: 1.7;
+}
+
+.an-secret-bullets li:last-child {
+	margin-bottom: 0;
+}
+
+@keyframes an-secret-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.an-secret-overlay,
+	.an-secret-letter {
+		animation: none;
+		transition: none;
+	}
+}
+

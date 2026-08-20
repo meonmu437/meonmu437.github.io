@@ -1,0 +1,42 @@
+---
+// 섹션 사이 구분선. 곧은 헤어라인 대신, 펜촉으로 한 번에 그은 듯한
+// 굵기가 일정하지 않은 잉크 자국 모양으로 그린다. fill="currentColor"라
+// 감싸는 요소의 color(라이트/다크 테마별 accent)를 그대로 따라간다.
+---
+
+<div class="an-ink-rule" aria-hidden="true">
+	<svg viewBox="0 0 600 20" preserveAspectRatio="none">
+		<path
+			d="M 0 10
+				C 20 8, 40 7, 60 7
+				C 90 7, 120 8, 150 9.5
+				C 200 8.5, 250 7, 300 6.5
+				C 350 7, 400 8, 450 9
+				C 480 8.5, 510 8, 540 7.5
+				C 560 8, 580 9, 600 10
+				C 580 9, 560 8.5, 540 8.5
+				C 510 8.5, 480 9, 450 10.5
+				C 400 12, 350 13.5, 300 13.5
+				C 250 13.5, 200 12, 150 10.5
+				C 120 9.5, 90 9, 60 9
+				C 40 9.5, 20 9.8, 0 10
+				Z"
+			fill="currentColor"
+		></path>
+	</svg>
+</div>
+
+<style>
+	.an-ink-rule {
+		display: flex;
+		justify-content: center;
+		color: var(--sl-color-accent);
+		opacity: 0.55;
+	}
+
+	.an-ink-rule svg {
+		width: min(100%, 34rem);
+		height: 0.7rem;
+		display: block;
+	}
+</style>

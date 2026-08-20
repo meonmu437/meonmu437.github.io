@@ -1,0 +1,96 @@
+---
+// 위키 전체 페이지에 스크롤 연출(등장 애니메이션, 사이드바 스크롤스파이)을
+// 담당하는 로직 전용 컴포넌트. 시각적 출력은 없음.
+//
+// 나이트하이웨이 버전과 달리 gsap에 의존하지 않는다 — 이 세계관 문서는
+// 무거운 인터랙션 위젯이 없는 정적 위키 뼈대라, CSS 트랜지션 +
+// IntersectionObserver만으로 충분하다.
+---
+
+<script>
+	const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	function setUpReveals() {
+		const targets = document.querySelectorAll<HTMLElement>('.an-reveal');
+		if (prefersReduced) {
+			targets.forEach((el) => el.classList.add('an-reveal-visible'));
+			return;
+		}
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('an-reveal-visible');
+						observer.unobserve(entry.target);
+					}
+				});
+			},
+			{ rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
+		);
+		targets.forEach((el) => observer.observe(el));
+	}
+
+	// 페이지가 해시로 바로 열리면(사이드바 링크, 공유 링크 등) 커스텀 폰트가
+	// 늦게 스왑되면서 위쪽 헤딩들의 높이가 바뀌어 초기 점프가 짧게 끝날 수
+	// 있다. 폰트가 안정된 뒤 한 번 더 보정한다.
+	function correctHashScroll() {
+		if (!location.hash) return;
+		document.querySelector(location.hash)?.scrollIntoView();
+	}
+
+	async function settleThenInit() {
+		correctHashScroll();
+		if (document.fonts?.ready) {
+			try {
+				await document.fonts.ready;
+			} catch {
+				// ignore — fall through and init anyway
+			}
+		}
+		correctHashScroll();
+		setUpReveals();
+		setTimeout(correctHashScroll, 300);
+	}
+
+	if (document.readyState === 'complete') {
+		settleThenInit();
+	} else {
+		window.addEventListener('load', settleThenInit);
+	}
+
+	// 사이드바 스크롤스파이: 현재 보이는 섹션에 해당하는 사이드바 링크를 강조한다.
+	const sections = document.querySelectorAll<HTMLElement>('.an-section[id]');
+	const sidebarLinks = new Map<string, HTMLElement[]>();
+	document.querySelectorAll<HTMLAnchorElement>('nav a[href*="#"]').forEach((a) => {
+		const hash = a.href.split('#')[1];
+		if (!hash) return;
+		const list = sidebarLinks.get(hash) ?? [];
+		list.push(a);
+		sidebarLinks.set(hash, list);
+	});
+
+	const currentLabelEl = document.getElementById('an-toggle-current');
+
+	if (sections.length && sidebarLinks.size) {
+		const setActive = (id: string) => {
+			sidebarLinks.forEach((links, hash) => {
+				links.forEach((link) => link.classList.toggle('an-sidebar-active', hash === id));
+			});
+			if (currentLabelEl) {
+				const label = sidebarLinks.get(id)?.[0]?.textContent?.trim();
+				if (label) currentLabelEl.textContent = label;
+			}
+		};
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				const visible = entries
+					.filter((entry) => entry.isIntersecting)
+					.sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+				if (visible) setActive(visible.target.id);
+			},
+			{ rootMargin: '-20% 0px -70% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+		);
+		sections.forEach((section) => observer.observe(section));
+	}
+</script>

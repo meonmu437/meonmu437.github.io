@@ -1,0 +1,474 @@
+---
+title: ANEMOI
+description: 근대 초입의 귀족 사회와 오래된 마력의 흔적이 공존하는 로맨스 판타지 세계, 아네모이 제국
+---
+
+import { Image } from 'astro:assets';
+import ScrollEffects from '../../components/ScrollEffects.astro';
+import AnemoiPreviewTerminal from '../../components/jsx/AnemoiPreviewTerminal.jsx';
+import CoreGeneratorForm from '../../components/core-generator/CoreGeneratorForm.jsx';
+import SecretLetter from '../../components/secrets/SecretLetter.jsx';
+import raphaelCore from '../../assets/anemoi/raphael-core.png';
+import Lightbox from '../../components/Lightbox.astro';
+import BackToTop from '../../components/BackToTop.astro';
+import InkRule from '../../components/InkRule.astro';
+import map from '../../assets/anemoi/map.png';
+import sealBelkain from '../../assets/anemoi/seal-belkain.png';
+import sealErden from '../../assets/anemoi/seal-erden.png';
+import sealSerkad from '../../assets/anemoi/seal-serkad.png';
+import sealMaretia from '../../assets/anemoi/seal-maretia.png';
+import raphaelProfile from '../../assets/anemoi/raphael-profile.webp';
+import crestBelkain from '../../assets/anemoi/crest-belkain.png';
+import crestErden from '../../assets/anemoi/crest-erden.png';
+import crestSerkad from '../../assets/anemoi/crest-serkad.png';
+import crestMaretia from '../../assets/anemoi/crest-maretia.png';
+import crestVenti from '../../assets/anemoi/crest-venti.png';
+import coreBelkain from '../../assets/anemoi/core-belkain.png';
+import coreErden from '../../assets/anemoi/core-erden.png';
+import coreSerkad from '../../assets/anemoi/core-serkad.png';
+import coreMaretia from '../../assets/anemoi/core-maretia.png';
+import coreVenti from '../../assets/anemoi/core-venti.png';
+import badgeStrength from '../../assets/anemoi/badge-core-strength.png';
+import badgeSense from '../../assets/anemoi/badge-core-sense.png';
+import badgeMind from '../../assets/anemoi/badge-core-mind.png';
+import badgePhenomenon from '../../assets/anemoi/badge-core-phenomenon.png';
+
+<div class="an-section an-reveal" id="sec-overview">
+
+## 네 바람과 제국
+
+<div class="an-hero">
+  <Image src={map} alt="아네모이 제국 지도" />
+  <div class="an-hero-caption">
+    <strong>아네모이의 바람, 하나의 제국</strong>
+    <span>황도를 중심으로 한 네 공작령의 지도</span>
+  </div>
+</div>
+
+### 건국
+
+제국이 세워지기 전, 중앙을 둘러싼 네 지역에는 각각 독립된 부족과 소왕국이 존재했다.
+
+초대 황제는 네 지역의 지배자와 맹약을 맺어 하나의 나라를 세우며, **네 바람이 한곳에서 만나는 땅**이라는 뜻으로 나라를 **아네모이**라 이름 지었다. 지금은 이 국명의 원래 의미를 아는 사람이 많지 않다.
+
+황실의 성씨 **벤티**(Venti) 역시 ‘바람들’을 의미하며, 네 지역을 하나로 묶은 황실의 건국 정통성을 상징한다.
+
+### 네 바람의 건국신화
+
+후대의 건국신화는 초대 황제와 맹약한 네 지배자를 각각 **보레아스의 수호자**, **제피로스의 사냥꾼**, **에우로스의 길잡이**, **노토스의 항해자**로 부른다. 보레아스, 제피로스, 에우로스, 노토스는 각각 북·서·동·남의 바람을 상징하며, 지금도 네 대가문의 당주는 의례적으로 이 칭호를 계승한다. 실질적인 권력과는 무관한 고풍스러운 호칭이지만, 황제 즉위식 같은 중요한 국가 의례에서는 반드시 사용된다.
+
+이 때문에 제국은 중앙 정부가 지방을 지배하는 나라라기보다, 네 방위의 균형 위에 세워진 나라라는 관념을 여전히 가지고 있다.
+
+### 국교와 신앙
+
+아네모이 제국에는 네 바람과 세계의 순환을 신성하게 여기는 전통 신앙이 국교로 남아 있으며, 지역마다 서로 다른 전승과 의례가 발달했다. 황제 즉위식, 귀족의 혼인과 장례, 출정과 항해 같은 중요한 행사에는 여전히 성직자가 참여해 전통 의식을 치른다.
+
+황도에는 건국 맹약을 기리는 **아네모이 대성전**이 있어, 황제 즉위식과 국가 장례, 대귀족의 주요 의례가 이곳에서 거행된다.
+
+다만 근대화와 학문의 발달로 신앙은 상당히 세속화되어, 성직자와 신전이 정치에 직접 개입하는 힘은 크지 않다. 크리스탈 코어를 신이 남긴 흔적이라 믿는 사람도 있지만 학계에서는 고대 마력의 잔재로 연구하며, 두 해석은 사회 안에서 공존한다.
+
+</div>
+
+<InkRule />
+
+<div class="an-section an-reveal" id="sec-cores">
+
+## 크리스탈 코어
+
+크리스탈 코어는 모든 인간이 태어날 때부터 몸 안에 가지고 있는 결정체다. 자유롭게 마력을 생산하는 기관이라기보다, 마력이 세상을 지배하던 고대의 흔적에 가깝다.
+
+- 모든 인간에게 하나씩 존재하지만, 대부분은 평생 자신의 코어를 느끼거나 보지 못한다.
+- 코어는 생명과 정신에 깊게 연결되어 있으며, 극소수만이 이를 외부로 현현할 수 있다.
+- 코어의 색과 형태는 혈통과 개인의 본질을 나타내는 상징에 가깝다. 같은 색과 형태라고 같은 능력을 쓰는 것은 아니다.
+
+### 현현
+
+평상시 코어는 몸 안에서 잠들어 있다. 공포, 분노, 절박함, 사랑, 상실 같은 강한 감정이 임계점을 넘으면 공명이 시작될 수 있다.
+
+첫 현현은 대개 본인의 의지와 무관하게 일어나지만, 한 번 경험한 뒤에는 훈련을 통해 어느 정도 의식적으로 조절할 수 있다. 황족과 대귀족의 아이들은 어릴 때부터 현현 가능성을 관찰받으며, 공포나 고통으로 현현을 억지로 유도하는 행위는 사회적 금기로 취급된다.
+
+### 코어의 네 계통
+
+<div class="an-people-grid">
+  <div class="an-person-card">
+    <Image src={badgeStrength} alt="강화형 코어 뱃지" class="an-badge-corner" />
+    <p class="an-person-name">강화형</p>
+    <p>신체 능력을 보조하는 계통. 신체 강화, 반사신경 상승, 감각 증폭, 회복력, 지구력. 기사와 사냥꾼에게 비교적 자주 나타난다.</p>
+  </div>
+  <div class="an-person-card">
+    <Image src={badgeSense} alt="감각형 코어 뱃지" class="an-badge-corner" />
+    <p class="an-person-name">감각형</p>
+    <p>존재하는 정보나 흔적을 감지하는 계통. 흔적 감지, 위험 감지, 생명체의 기척, 방향 감각, 특정 대상 또는 자연과의 공명.</p>
+  </div>
+  <div class="an-person-card">
+    <Image src={badgeMind} alt="정신형 코어 뱃지" class="an-badge-corner" />
+    <p class="an-person-name">정신형</p>
+    <p>인간의 정신과 인식에 관련된 계통. 기억, 집중력, 감정 감지, 정신 방어, 제한적인 인식 교란. 희귀하며 사회적으로 경계받는다.</p>
+  </div>
+  <div class="an-person-card">
+    <Image src={badgePhenomenon} alt="현상형 코어 뱃지" class="an-badge-corner" />
+    <p class="an-person-name">현상형</p>
+    <p>현실의 물리 현상에 직접 영향을 주는 계통. 열, 빛, 바람, 냉기 등. 고대 마법에 가장 가까우며 극히 희귀해, 일반인들은 흔히 그냥 마법이라 부른다.</p>
+  </div>
+</div>
+
+### 코어 손상
+
+현현된 코어는 단순한 보석이 아니라, 그 사람의 생명과 정신 자체가 외부로 노출된 상태에 가깝다.
+
+- **가벼운 균열**: 극심한 통증, 현기증, 일시적인 능력 사용 불가
+- **큰 균열**: 장기간의 쇠약, 감각 이상, 기억 또는 감정 손상
+- **완전 파괴**: 사망 또는 회복 불가능한 정신적 손상
+
+> <span class="an-quote-en">“To fully manifest one's core in battle is often likened to fighting with one's own heart in hand.”</span><span class="an-quote-ko">전투 중 코어를 완전히 현현하는 것은 흔히 심장을 손에 들고 싸우는 것에 비유된다.</span>
+
+### 코어와 사생활
+
+코어의 실제 모습은 상당히 사적인 정보다. 가문의 대표적인 색과 형태는 공개되어 있어도, 개인의 코어를 직접 보여주는 것은 전혀 다른 문제로 받아들여진다. 연인에게조차 끝까지 보여주지 않는 사람이 있는 반면, 키스보다 먼저 코어를 보여주는 사람도 있다.
+
+</div>
+
+<InkRule />
+
+<div class="an-section an-reveal" id="sec-capital">
+
+## 황도와 제국의 질서
+
+황도는 제국의 정치·문화·경제 중심지로, 동서남북의 물자와 사람이 모두 이곳으로 모인다. 황궁과 귀족원, 대학, 황립 코어 연구기관, 오페라 극장과 대형 극장, 주요 살롱이 모두 황도에 있다. 대귀족가의 후계자들도 대부분 일정 기간 이곳에서 교육받으며 사교계에 데뷔한다.
+
+### 벤티 황실
+
+<div class="an-emblem-grid">
+  <div class="an-emblem-frame">
+    <Image src={crestVenti} alt="벤티 황실 문장" />
+    <p class="an-emblem-caption"><strong>문장</strong><span>태양을 품은 금빛 왕관</span></p>
+  </div>
+  <div class="an-emblem-frame">
+    <Image src={coreVenti} alt="벤티 황실 대표 코어" />
+    <p class="an-emblem-caption"><strong>대표 코어</strong><span>금색 다이아몬드형 크리스탈</span></p>
+  </div>
+</div>
+
+황족의 코어는 전통적으로 금빛 계열의 다면체 형태로 나타나며, 특히 황금 다이아몬드형 코어는 대중적으로 황제의 피를 증명하는 상징처럼 여겨진다. 지금의 황제는 라파엘을 황실 사냥대장으로 직접 임명한 인물이다.
+
+### 귀족 서열
+
+<div class="an-rank-pyramid">
+  <div class="an-rank-tier an-rank-tier--1"><span>황실</span><small>벤티</small></div>
+  <div class="an-rank-tier an-rank-tier--2"><span>대공가</span><small>벨카인</small></div>
+  <div class="an-rank-tier an-rank-tier--3"><span>3대 공작가</span><small>에르덴, 세르카드, 마레티아</small></div>
+  <div class="an-rank-tier an-rank-tier--4"><span>기타 귀족</span></div>
+</div>
+
+네 대귀족가 중 북부의 벨카인만이 대공가다. 제국 최전선이라는 특수성 때문에, 과거 독립 왕가 또는 황족 방계와 연결된 집안에 특별히 대공의 지위가 주어졌다.
+
+### 시대와 기술
+
+아네모이 제국은 증기혁명 직전의 근대 초입에 해당한다. 사회·문화적으로는 현실의 18세기 말~19세기 초에 가까우며, 일부 미학에는 빅토리아풍 요소가 섞여 있다. 화약과 총기는 존재하지 않는다.
+
+통신은 편지와 정기 우편망, 전령과 파발에 의존하며, 실시간 장거리 통신이나 원거리에서 특정 인물의 위치를 확인하는 기술은 존재하지 않는다. 이동은 말과 마차, 선박에 의존한다.
+
+황실 관료제와 귀족원이 발달해 황제도 모든 사안을 독단적으로 결정할 수 없다. 상인과 신흥 부르주아가 성장하고 있으며, 오래된 귀족가 역시 투자와 사업을 통해 재산을 유지해야 한다. 대학과 황립 연구원에서는 학자들이 크리스탈 코어를 연구하고 분류한다.
+
+</div>
+
+<InkRule />
+
+<div class="an-section an-reveal" id="sec-houses">
+
+## 네 가문과 영지
+
+<div class="an-house-detail an-house-detail--belkain" id="house-belkain">
+
+### 벨카인 대공가 · <span class="an-house-epithet-color">보레아스의 수호자</span>
+
+<p class="an-house-detail-region">북부 · 설원과 백색 산맥</p>
+
+혹독한 추위와 마수를 막아 온 군사와 생존의 땅이다. 광산과 희귀 광물이 풍부하지만, 고대 마수 역시 제국에서 가장 많이 남아 있다.
+
+초대 벨카인은 혹한의 북풍 보레아스가 몰아치는 설원에서 사람들을 이끌고 살아남은 전사로 전해진다. 북부에서 보레아스는 추위와 겨울을 가져오는 바람일 뿐 아니라, **약한 것을 시험하고 살아남은 것을 단단하게 만드는 바람**으로 여겨진다.
+
+<div class="an-emblem-grid">
+  <div class="an-emblem-frame">
+    <Image src={crestBelkain} alt="벨카인 대공가 문장" />
+    <p class="an-emblem-caption"><strong>문장</strong><span>은빛 설원 위의 백색 늑대</span></p>
+  </div>
+  <div class="an-emblem-frame">
+    <Image src={coreBelkain} alt="벨카인 대공가 대표 코어" />
+    <p class="an-emblem-caption"><strong>대표 코어</strong><span>무색투명한 크리스탈 원석. 빛을 비추면 주변 색을 받아들이지만 스스로 색을 내지 않는다.</span></p>
+  </div>
+</div>
+
+<blockquote><span class="an-quote-en">“The north wind spares no one. Only those who endure live to see spring.”</span><span class="an-quote-ko">북풍은 누구도 비켜 가지 않는다. 견딘 자만이 봄을 본다.</span></blockquote>
+
+</div>
+
+<InkRule />
+
+<div class="an-house-detail an-house-detail--erden" id="house-erden">
+
+### 에르덴 공작가 · <span class="an-house-epithet-color">제피로스의 사냥꾼</span>
+
+<p class="an-house-detail-region">서부 · 에버우드 대삼림</p>
+
+에르덴 공작가는 제국 서부의 거대한 **에버우드 대삼림**을 다스리는 오래된 명문이다. 약초와 약재, 귀한 수지와 염료, 사냥감과 과실주, 희귀 목재가 주요 특산품이다.
+
+에버우드 깊은 곳은 오래된 마력 때문에 길이 쉽게 변한다. 때문에 에르덴가는 대규모 군사력보다 숲의 길을 읽고 사냥감과 사람을 추적하는 능력으로 성장해 왔다.
+
+건국신화에서 에르덴의 선조는 서풍 제피로스를 따라 숲을 누빈 사냥꾼으로 전해진다. 서부에서 제피로스는 생명을 불러오는 온화한 바람인 동시에, **방향을 바꾸며 숲의 길과 짐승의 움직임을 흔드는 변덕스러운 바람**으로 여겨진다. 그래서 서부는 자유롭고 유연하면서도, 한번 집착한 것은 쉽게 놓지 않는 기질을 가진 지역으로 통한다.
+
+<div class="an-emblem-grid">
+  <div class="an-emblem-frame">
+    <Image src={crestErden} alt="에르덴 공작가 문장" />
+    <p class="an-emblem-caption"><strong>문장</strong><span>검은 수사슴과 황금 화살</span></p>
+  </div>
+  <div class="an-emblem-frame">
+    <Image src={coreErden} alt="에르덴 공작가 대표 코어" />
+    <p class="an-emblem-caption"><strong>대표 코어</strong><span>나뭇가지 같은 결을 가진 짙은 호박색 크리스탈. 크리스탈이지만 흔히 숲을 가둔 호박이라고 불린다.</span></p>
+  </div>
+</div>
+
+<blockquote><span class="an-quote-en">“Loose your arrow with the west wind at your back, and no prey outruns it.”</span><span class="an-quote-ko">서풍을 등지고 화살을 쏘면 사냥감은 달아나지 못한다.</span></blockquote>
+
+</div>
+
+<InkRule />
+
+<div class="an-house-detail an-house-detail--serkad" id="house-serkad">
+
+### 세르카드 공작가 · <span class="an-house-epithet-color">에우로스의 길잡이</span>
+
+<p class="an-house-detail-region">동부 · 적갈색 고원과 사막</p>
+
+대상과 오아시스 도시가 이어지는 육상무역과 이국문화의 땅이다. 향신료, 보석, 직물, 유리 공예품, 말이 주요 특산품이다.
+
+초대 세르카드는 일정한 방향을 약속하지 않는 동풍 에우로스를 읽어 사막을 건넌 최초의 대상 지도자로 전해진다. 동부에서 에우로스는 길을 알려주는 바람이 아니라, **상황이 끊임없이 바뀌는 가운데 스스로 판단하고 방향을 선택하게 만드는 변화와 불확실성의 바람**으로 여겨진다.
+
+<div class="an-emblem-grid">
+  <div class="an-emblem-frame">
+    <Image src={crestSerkad} alt="세르카드 공작가 문장" />
+    <p class="an-emblem-caption"><strong>문장</strong><span>붉은 태양 아래의 검은 매</span></p>
+  </div>
+  <div class="an-emblem-frame">
+    <Image src={coreSerkad} alt="세르카드 공작가 대표 코어" />
+    <p class="an-emblem-caption"><strong>대표 코어</strong><span>붉은 별꽃형 크리스탈. 빛을 받으면 내부에서 불씨가 번지는 것처럼 반짝인다.</span></p>
+  </div>
+</div>
+
+<blockquote><span class="an-quote-en">“The east wind does not show the way. It only makes you choose one.”</span><span class="an-quote-ko">동풍은 길을 알려주지 않는다. 길을 선택하게 할 뿐이다.</span></blockquote>
+
+</div>
+
+<InkRule />
+
+<div class="an-house-detail an-house-detail--maretia" id="house-maretia">
+
+### 마레티아 공작가 · <span class="an-house-epithet-color">노토스의 항해자</span>
+
+<p class="an-house-detail-region">남부 · 푸른 해안과 군도</p>
+
+항구와 포도밭, 폭풍이 공존하는 해상무역과 풍요의 땅이다. 와인, 과일, 향수, 진주, 해산물, 고급 직물이 주요 특산품이다.
+
+초대 마레티아는 거센 남풍 노토스가 몰아치는 폭풍 속에서 함대를 이끌고 살아 돌아온 항해자로 전해진다. 남부에서 노토스는 따뜻한 바람일 뿐 아니라, **풍요를 가져오는 비와 동시에 바다를 뒤엎는 폭풍을 품은 양면적인 바람**으로 여겨진다.
+
+<div class="an-emblem-grid">
+  <div class="an-emblem-frame">
+    <Image src={crestMaretia} alt="마레티아 공작가 문장" />
+    <p class="an-emblem-caption"><strong>문장</strong><span>은빛 돌고래를 감싼 푸른 파도</span></p>
+  </div>
+  <div class="an-emblem-frame">
+    <Image src={coreMaretia} alt="마레티아 공작가 대표 코어" />
+    <p class="an-emblem-caption"><strong>대표 코어</strong><span>내부에 진주광이 흐르는 청록빛 물방울형 크리스탈. 각도에 따라 광택이 천천히 번져 얕은 바다에 햇빛이 흔들리는 것처럼 보인다.</span></p>
+  </div>
+</div>
+
+<blockquote><span class="an-quote-en">“The wilder the wind, the more a sailor learns.”</span><span class="an-quote-ko">바람이 거칠수록 항해자는 길을 배운다.</span></blockquote>
+
+</div>
+
+</div>
+
+<InkRule />
+
+<div class="an-section an-reveal" id="sec-raphael">
+
+## 주요 인물
+
+<div class="an-char-card">
+<div class="an-char-header">
+
+<div class="an-char-photo">
+  <Image src={raphaelProfile} alt="라파엘 에르덴" />
+  <Image src={sealErden} alt="에르덴 공작가 밀랍 봉인" class="an-badge-corner" />
+</div>
+
+## <span class="an-char-name-en">Raphael Erden</span><span class="an-char-name-ko">라파엘 에르덴</span>
+
+<p class="an-char-tagline">황실의 사냥개이자 사교계의 한량. 둘 다 진짜이면서, 둘 다 가짜다.</p>
+
+> <span class="an-quote-en">“Trading names before drawing swords? A bit too polite, don't you think?”</span><span class="an-quote-ko">검 들고 서로 이름부터 밝히는 건 너무 친절하지 않아?</span>
+
+<ul class="an-char-facts">
+  <li><strong>애칭</strong> 라프, 라피, 라파, 엘, 라페</li>
+  <li><strong>나이</strong> 29세</li>
+  <li><strong>키</strong> 187cm</li>
+  <li><strong>신분</strong> 에르덴 공작가 장남</li>
+  <li><strong>직위</strong> 황실 사냥대장</li>
+  <li><strong>무기</strong> 장궁 · 사냥용 단검</li>
+  <li><strong>크리스탈 코어</strong> <SecretLetter client:load label="비밀" title="라파엘의 크리스탈 코어" imageSrc={raphaelCore.src} imageAlt="라파엘의 크리스탈 코어" bullets={[
+    '에르덴 가문의 전통적인 형태인 짙은 호박빛 크리스탈이지만, 다른 에르덴의 코어와 달리 내부에 짙은 녹색 결이 여러 갈래로 뻗어 있다. 빛을 받으면 나뭇가지처럼 보이고 어떤 각도에서는 화살이 갈라져 날아가는 궤적처럼 보인다.',
+    '감각형. 부성향은 약한 강화형.',
+    '주변에 흩어진 미세한 정보를 하나의 경로로 연결해 인식한다. 없는 흔적을 만들거나 미래를 보지는 못한다.',
+    '공명 시 황갈색 눈이 밝아지고 동공 주변에 희미한 녹색 고리가 나타난다.',
+    '어린 시절 에버우드에서 동생 에드윈을 잃어버렸을 때 처음 코어가 반응했다. 공포가 임계점을 넘자 숲의 모든 흔적이 선명해졌고, 그것들을 따라가 결국 에드윈을 찾아냈다.',
+  ]} /></li>
+  <li><strong>혼인 상태</strong> 미혼. 약혼 경력 없음</li>
+</ul>
+
+</div>
+
+사교계에서는 에버우드의 에르덴 공자로 불리지만, 귀족과 기사들 사이에서는 황제의 사냥개로 통한다. 공작위를 물려받으면 의례상 제피로스의 사냥꾼이라는 칭호도 잇는다. 평소에는 황도의 공작저와 황궁 사냥대 관사를 오가며 지낸다.
+
+### 외모와 성격
+
+- 허리에 가까운 짙은 적갈색 장발을 한 갈래로 느슨하게 땋는다. 실내에서는 흑갈색에 가깝지만 햇빛 아래에서는 붉은 기가 선명해진다.
+- 눈은 꿀을 탄 듯한 황금빛 갈색이다. 길고 조금 처진 눈매와 올라간 입꼬리 때문에 가만히 있어도 나른하게 웃는 듯한 인상을 준다.
+- 승마와 궁술로 단련된 유연한 체격.
+- 느긋하고 능글맞으며 사교계에서는 술과 도박, 연애와 염문을 즐기는 방탕한 한량으로 유명하다.
+- 공작위를 이어받는 것보다 동생에게 가문을 넘기고 숲과 사냥대에서 살아가는 쪽을 원한다.
+
+### 좋아하는 것
+
+- 🌲 사람이 적은 숲과 높은 나무 위
+- 🍷 좋은 와인과 늦은 술자리
+- 🍑 향이 강한 과일과 달콤한 술
+- 😏 예상대로 움직이지 않는 사람 놀리기
+
+### 가족
+
+<div class="an-people-grid">
+  <div class="an-person-card">
+    <p class="an-person-name">알브레히트 에르덴</p>
+    <p>현 에르덴 공작이자 라파엘의 아버지.</p>
+    <p>자식들을 아끼지만 고지식하고 엄격하며, 장남이 기사단장이 아닌 사냥대장이 된 것을 탐탁지 않게 여긴다.</p>
+    <p>라파엘은 아버지의 불만을 대부분 웃어넘기지만 뜻을 바꾸지는 않는다.</p>
+  </div>
+  <div class="an-person-card">
+    <p class="an-person-name">엘레오노라 에르덴</p>
+    <p>라파엘의 어머니이며 사교계에서 활동한다.</p>
+    <p>마음이 약하고 걱정이 많으며, 아들의 끊이지 않는 혼담과 염문을 가장 가까이서 감당한다.</p>
+    <p>라파엘을 어릴 적 애칭인 '라피엘'이라고 부른다.</p>
+  </div>
+  <div class="an-person-card">
+    <p class="an-person-name">에드윈 에르덴</p>
+    <p>27세. 라파엘의 친동생이자 현 황실 기사단장.</p>
+    <p>말수가 적고 원칙과 규율을 중시해 형과는 성격이 정반대다.</p>
+    <p>라파엘이 공작위를 넘기고 싶어 하지만 정작 에드윈은 이를 달가워하지 않는다. 서로의 삶은 이해하지 못해도 등은 가장 믿는 형제.</p>
+  </div>
+</div>
+
+<div class="an-char-links">
+  <a href="https://www.univers.chat/character/cfc44821-4bd1-4f71-839c-175cce4e90f9" target="_blank" rel="noopener noreferrer" class="an-char-link an-char-link--univers">유니챗 ↗</a>
+  <span class="an-char-link an-char-link--soon">엘린 · 준비중</span>
+</div>
+
+</div>
+
+### 대공과 공작
+
+<div class="an-people-grid an-badge-grid">
+  <div class="an-person-card">
+    <Image src={sealBelkain} alt="벨카인 대공가 밀랍 봉인" class="an-badge-corner" />
+    <p class="an-person-name">콘라트 벨카인</p>
+    <p>북부 설원과 백색 산맥을 다스리는 벨카인 대공.</p>
+    <p>엄격하고 과묵하며 책임을 개인적인 감정보다 앞세우고, 말을 아끼지만 한번 내린 판단은 좀처럼 번복하지 않는다.</p>
+    <p>북부를 제국을 대신해 희생하는 땅이라 여기지 않으며, 혹독한 환경을 견디는 것 자체를 벨카인의 의무이자 자부심으로 삼는다.</p>
+  </div>
+  <div class="an-person-card">
+    <Image src={sealSerkad} alt="세르카드 공작가 밀랍 봉인" class="an-badge-corner" />
+    <p class="an-person-name">자히르 세르카드</p>
+    <p>동부의 대상로와 사막 무역을 관리하는 세르카드 공작.</p>
+    <p>세련되고 사교적이며 계산이 빠르고, 전통이나 명예보다 상황에서 무엇을 얻고 무엇을 포기해야 하는지를 중요하게 여긴다.</p>
+    <p>귀족이 상업에 관여하는 것을 천하게 보는 오래된 인식을 대놓고 비웃으며, 새로운 기술과 학문, 외국 문화를 가장 먼저 받아들이는 편이다.</p>
+  </div>
+  <div class="an-person-card">
+    <Image src={sealMaretia} alt="마레티아 공작가 밀랍 봉인" class="an-badge-corner" />
+    <p class="an-person-name">발렌티노 마레티아</p>
+    <p>남부의 항구와 군도를 다스리는 마레티아 공작.</p>
+    <p>밝고 호방하며 사람들과 쉽게 어울려 상인과 선원들에게도 인기가 높다.</p>
+    <p>겉으로는 낙천적이지만 위험을 빠르게 계산하며, 손해를 감수해야 할 때와 끝까지 밀어붙여야 할 때를 구분하는 데 능하다.</p>
+  </div>
+</div>
+
+</div>
+
+<InkRule />
+
+<div class="an-section an-reveal" id="sec-hunt-squad">
+
+## 황실 사냥대
+
+사냥대장은 황제에게 직접 보고할 권한을 가지며, 명목상 군부의 지휘체계에 속하지 않는다. <SecretLetter client:load label="봉인된 보고서" className="an-secret-trigger--spaced" title="황실 사냥대의 실체" bullets={[
+  '표면적으로는 황실의 사냥과 영지를 관리하는 조직이지만, 실제로는 기사단과 군부가 공개적으로 개입하기 어려운 사건을 처리한다.',
+  '도주 귀족 및 범죄자 추적, 외부에 알려져서는 안 되는 사건 조사, 필요할 경우 황명에 따른 은밀한 제거 등의 비공식 업무를 처리한다.',
+]} />
+
+> <span class="an-quote-en">“If the knights are the empire's sword, the hunt squad is its eyes and arrows.”</span><span class="an-quote-ko">기사단이 제국의 검이라면, 사냥대는 제국의 눈과 화살이다.</span>
+
+이러한 특성 때문에 기사단과 일부 귀족은 사냥대를 **황제의 사냥개**라고 비꼰다. 또한 귀족 사회에서는 활이 전통적으로 기사보다 병사나 사냥꾼의 무기로 여겨지기 때문에, 활을 주무기로 사용하는 귀족은 비겁하다는 편견을 받기도 한다.
+
+> <span class="an-quote-en">“So I'm a hound. Fine by me, so long as the master keeps the meat coming.”</span><span class="an-quote-ko">사냥개가 뭐 어때서. 주인이 좋은 고기만 던져 주면 되지.</span>
+
+### 황실 사냥대원
+
+<div class="an-people-grid">
+  <div class="an-person-card">
+    <p class="an-person-name">⚔️ 이사크 베른</p>
+    <p>31세. 황실 사냥대 부대장이자 전술 · 현장 통제 담당.</p>
+    <p>몰락한 기사 귀족가 출신으로, 강화형 코어를 지녔다.</p>
+    <p>라파엘의 능력은 깊이 신뢰하지만 생활태도는 오래전에 포기했다.</p>
+    <p>대장이 보이지 않으면 집무실보다 먼저 근처 나무를 확인하는 사람이다.</p>
+  </div>
+  <div class="an-person-card">
+    <p class="an-person-name">🗝️ 레미 로셰</p>
+    <p>27세. 정찰, 잠입, 정보수집 담당.</p>
+    <p>남부 항구도시의 평민 출신으로, 긴장이나 공포 같은 강한 정서의 흔들림을 감지하는 정신형 코어를 지녔다.</p>
+    <p>붙임성이 좋고 눈치가 빠르며, 귀족 사교계와 뒷골목 어디에서든 자연스럽게 정보를 캐낸다.</p>
+    <p>위장과 연기에 능하고 라파엘의 플러팅에도 전혀 흔들리지 않는다.</p>
+  </div>
+  <div class="an-person-card">
+    <p class="an-person-name">🌿 오스윈 헤일</p>
+    <p>24세. 추적 보조, 야전의무, 마수 대응 담당.</p>
+    <p>에버우드 변두리의 사냥꾼 집안 출신으로, 동물과 마수의 기척에 민감한 감각형 코어를 지녔다.</p>
+    <p>조용하고 순하지만 야외에서는 판단이 빠르며, 약초와 독, 응급처치에도 능하다.</p>
+    <p>라파엘을 진심으로 존경해 가끔은 대장이 그냥 농땡이 중이라는 사실까지 계획의 일부라고 믿는다.</p>
+  </div>
+</div>
+
+</div>
+
+<InkRule />
+
+<div class="an-section an-reveal" id="sec-jsx-preview">
+
+## 문서 미리보기 (JSX)
+
+<AnemoiPreviewTerminal client:load />
+
+</div>
+
+<InkRule />
+
+<div class="an-section an-reveal" id="sec-core-generator">
+
+## 크리스탈 코어 생성기
+
+<CoreGeneratorForm client:load />
+
+<p class="an-core-gen-caption">Gemini Flash Lite 모델을 사용, 하루 5회 생성 횟수 제한</p>
+
+</div>
+
+<Lightbox />
+<BackToTop />
+<ScrollEffects />

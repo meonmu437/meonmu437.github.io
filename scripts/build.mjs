@@ -15,6 +15,7 @@ const staticSubApps = ['jamdam'];
 const buildApps = [
 	{ dir: 'colorground', outPath: 'colorground' },
 	{ dir: 'nighthighway', outPath: 'nighthighway' },
+	{ dir: 'anemoi', outPath: 'anemoi' },
 	{ dir: 'yunhaesi', outPath: 'yunhaesi' },
 	{ dir: 'seungmin', outPath: 'seungmin' },
 	{ dir: '1997', outPath: '1997' },
