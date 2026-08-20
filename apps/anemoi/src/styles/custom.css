@@ -19,8 +19,12 @@
     Starlight가 자동 생성하는 페이지 타이틀(h1)은 처음부터 숨긴다.
 */
 
-html {
+html,
+body {
 	overflow-x: hidden;
+}
+
+html {
 	scroll-behavior: smooth;
 }
 
@@ -216,6 +220,34 @@ html {
 	}
 }
 
+/*
+  ANEMOI는 커서시브 서체(1.5em)로 사이트 타이틀을 키워 놓아서, 글자 수는
+  적어도 좁은 화면에서는 "NIGHT HIGHWAY"만큼 폭을 차지해 목차 토글이
+  찌그러지고 화살표가 박스 밖으로 삐져나온다. 나이트하이웨이처럼
+  overflow:hidden + ellipsis로 자르면 위에서 필기체 꼬리를 위해 일부러
+  overflow:visible로 풀어둔 것과 충돌해 "I" 꼬리가 다시 잘리므로, 대신
+  좁은 화면에서는 폰트 크기 자체를 줄여 필요한 폭을 줄인다.
+*/
+@media (max-width: 49.9375rem) {
+	.title-wrapper {
+		flex-shrink: 1;
+		min-width: 0;
+		max-width: 55%;
+	}
+	.nh-site-switch {
+		flex-shrink: 1;
+		min-width: 0;
+	}
+	.site-title span {
+		font-size: 0.95em;
+	}
+}
+
+.an-toc-toggle {
+	min-width: 0;
+	overflow: hidden;
+}
+
 .sidebar-pane {
 	display: none;
 	visibility: visible;
@@ -365,6 +397,16 @@ a.an-sidebar-active {
 	margin-bottom: 0;
 }
 
+/*
+  "에르덴 공작가 · 제피로스의 사냥꾼"처럼 긴 제목이 좁은 화면에서 줄바꿈
+  되며 아래로 밀리던 문제를, 화면 폭에 따라 폰트 크기가 유동적으로
+  줄어들도록 clamp()로 해결(hanminwoo 태그라인과 같은 패턴). 480px
+  이상에서는 기존 크기(1.5rem, Starlight 기본 h3)를 그대로 유지한다.
+*/
+.an-house-detail h3 {
+	font-size: clamp(1.05rem, calc(0.15rem + 4.5vw), 1.5rem);
+}
+
 .an-house-detail--belkain {
 	border-inline-start-color: var(--an-house-belkain);
 }
@@ -397,7 +439,12 @@ a.an-sidebar-active {
 	color: var(--sl-color-gray-2);
 }
 
-/* ── 문장 · 대표 코어 액자 갤러리(지도 히어로와 같은 디자인) ────── */
+/*
+  ── 문장 · 대표 코어 액자 갤러리(지도 히어로와 같은 디자인) ──────
+  화면이 좁아져도 두 액자가 세로로 쌓이지 않고 항상 나란히 있는 채로
+  크기만 함께 줄어들게 한다(minmax(0, 1fr)이라 이미지 자체는 각 칸
+  너비에 맞춰 자연스럽게 축소됨). 좁을 때는 간격만 살짝 줄인다.
+*/
 .an-emblem-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -407,7 +454,7 @@ a.an-sidebar-active {
 
 @media (max-width: 26rem) {
 	.an-emblem-grid {
-		grid-template-columns: 1fr;
+		gap: 0.6rem;
 	}
 }
 
@@ -1253,6 +1300,17 @@ a.an-char-link:hover {
 	color: #17110c;
 	font-family: inherit;
 	font-size: 0.78rem;
+}
+
+/* select라는 걸 알 수 있도록 네이티브 화살표 대신 직접 그린 화살표를 둔다 */
+.an-core-gen-field select {
+	appearance: none;
+	-webkit-appearance: none;
+	padding-right: 1.9rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235f4727' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 0.55rem center;
+	background-size: 0.75rem;
 }
 
 .an-core-gen-subfield {
