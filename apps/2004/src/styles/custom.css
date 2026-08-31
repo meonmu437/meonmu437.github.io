@@ -274,12 +274,6 @@ body {
 	padding: 1.3rem 1.2rem 1rem;
 }
 
-.y04-alert-icon {
-	flex-shrink: 0;
-	font-size: 1.7rem;
-	line-height: 1;
-}
-
 .y04-alert-text {
 	margin: 0;
 	flex: 1;
