@@ -1,0 +1,112 @@
+---
+// 본문 이미지를 클릭하면 원본 크기로 볼 수 있는 모달(라이트박스).
+// 스크립트/스타일만 있는 컴포넌트로, index.mdx 맨 끝에서 한 번만 렌더링한다.
+---
+
+<script>
+	function ensureModal(): HTMLDivElement {
+		let modal = document.querySelector<HTMLDivElement>('.y04-lightbox');
+		if (modal) return modal;
+
+		modal = document.createElement('div');
+		modal.className = 'y04-lightbox';
+		modal.innerHTML = `
+			<button type="button" class="y04-lightbox-close" aria-label="닫기">✕</button>
+			<img class="y04-lightbox-img" alt="" />
+		`;
+		document.body.appendChild(modal);
+
+		modal.addEventListener('click', (e) => {
+			const target = e.target;
+			if (
+				target === modal ||
+				(target instanceof HTMLElement && target.classList.contains('y04-lightbox-close'))
+			) {
+				closeModal(modal!);
+			}
+		});
+
+		return modal;
+	}
+
+	function openModal(src: string, alt: string): void {
+		const modal = ensureModal();
+		const img = modal.querySelector('img');
+		if (img) {
+			img.src = src;
+			img.alt = alt;
+		}
+		modal.classList.add('y04-lightbox-open');
+		document.body.classList.add('y04-lightbox-locked');
+	}
+
+	function closeModal(modal: HTMLDivElement): void {
+		modal.classList.remove('y04-lightbox-open');
+		document.body.classList.remove('y04-lightbox-locked');
+	}
+
+	document.addEventListener('click', (e) => {
+		const target = e.target;
+		if (!(target instanceof HTMLImageElement)) return;
+		if (!target.closest('.sl-markdown-content')) return;
+		openModal(target.currentSrc || target.src, target.alt);
+	});
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key !== 'Escape') return;
+		const modal = document.querySelector<HTMLDivElement>('.y04-lightbox.y04-lightbox-open');
+		if (modal) closeModal(modal);
+	});
+</script>
+
+<style is:global>
+	.y04-lightbox {
+		position: fixed;
+		inset: 0;
+		z-index: 9999;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: clamp(1rem, 5vw, 3rem);
+		background: rgba(0, 0, 0, 0.85);
+		cursor: zoom-out;
+	}
+
+	.y04-lightbox.y04-lightbox-open {
+		display: flex;
+	}
+
+	.y04-lightbox-img {
+		max-width: 100%;
+		max-height: 100%;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+		border-radius: 0.75rem;
+		box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.5);
+		cursor: default;
+	}
+
+	.y04-lightbox-close {
+		position: fixed;
+		top: 1rem;
+		right: 1rem;
+		width: 2.5rem;
+		height: 2.5rem;
+		border: none;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.15);
+		color: white;
+		font-size: 1.1rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.y04-lightbox-close:hover {
+		background: rgba(255, 255, 255, 0.3);
+	}
+
+	body.y04-lightbox-locked {
+		overflow: hidden;
+	}
+</style>

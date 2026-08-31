@@ -1,0 +1,758 @@
+---
+// 마무리 섹션: 실제 폴더폰(Y2K 은색 폴더폰) 모양의 정적 컴포넌트.
+// 원본은 /윤성민_04/jsx/휴대폰jsx.rtf에 있는 Play 플랫폼용 문자메시지 위젯
+// (React + Tailwind)이었으나, 이 사이트는 정적 Astro 컴포넌트만 쓰므로
+// 같은 셸/키패드 조형(겹겹의 셸 → 아일랜드 → 키캡 그림자 시스템)을 순수
+// CSS로 옮겨왔다. 위/아래 유닛을 하나의 overflow:hidden 셸로 묶어 힌지에서
+// 끊어져 보이지 않게 했고, 화면 내용은 문자함이 아니라 "성민에게서 걸려오는
+// 수신 전화" 화면으로 바꿨다. 통화(초록)/거절(빨강) 자리는 실제 링크
+// (유니챗=분홍/엘린=보라)로 바꿔치기했다.
+interface Props {
+	contactName?: string;
+	universLink?: string;
+	elynLink?: string;
+}
+
+const {
+	contactName = '윤성민',
+	universLink = '#',
+	elynLink = '#',
+} = Astro.props;
+
+const numpad = [
+	{ num: '1', label: 'ㅣ' },
+	{ num: '2', label: '·' },
+	{ num: '3', label: 'ㅡ' },
+	{ num: '4', label: 'ㄱㅋ' },
+	{ num: '5', label: 'ㄴㄹ' },
+	{ num: '6', label: 'ㄷㅌ' },
+	{ num: '7', label: 'ㅂㅍ' },
+	{ num: '8', label: 'ㅅㅎ' },
+	{ num: '9', label: 'ㅈㅊ' },
+	{ num: '✳', label: '획추가' },
+	{ num: '0', label: 'ㅇㅁ' },
+	{ num: '#', label: '쌍자음' },
+];
+---
+
+<div class="y04-phone">
+	<div class="y04-phone-unit">
+		<!-- ═══ 상단부 (화면) ═══ -->
+		<div class="y04-phone-top">
+			<div class="y04-phone-earpiece" aria-hidden="true">
+				<span></span>
+				<span class="y04-phone-earpiece-dot"></span>
+			</div>
+
+			<div class="y04-phone-brand-row" aria-hidden="true">
+				<span>Y2K MOBILE</span>
+				<span class="y04-phone-brand-dots"><span></span><span></span><span></span></span>
+			</div>
+
+			<!-- LCD -->
+			<div class="y04-phone-lcd-well">
+				<div class="y04-phone-lcd-ring">
+					<div class="y04-phone-lcd-bezel">
+						<div class="y04-phone-lcd-screen">
+							<div class="y04-phone-statusbar">
+								<span class="y04-phone-signal" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+								<span class="y04-phone-statustext">수신 전화</span>
+								<span class="y04-phone-battery" aria-hidden="true"><span></span></span>
+							</div>
+
+							<div class="y04-phone-titlebar">
+								<span class="y04-phone-title-text">전화가 오고 있어요</span>
+							</div>
+
+							<div class="y04-phone-contact">
+								<span class="y04-phone-call-icon" aria-hidden="true">☎</span>
+								<p class="y04-phone-contact-name">{contactName}</p>
+							</div>
+
+							<div class="y04-phone-footer">
+								<p>벨이 울리는 중<span class="y04-phone-ring-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></p>
+							</div>
+
+							<div class="y04-phone-softkeys" aria-hidden="true">
+								<span>메뉴</span>
+								<span>받기</span>
+								<span>거절</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- ═══ 입체 크롬 힌지 ═══ -->
+		<div class="y04-phone-hinge" aria-hidden="true">
+			<span class="y04-phone-hinge-cap y04-phone-hinge-cap-l"></span>
+			<span class="y04-phone-hinge-bar"></span>
+			<span class="y04-phone-hinge-knuckle"></span>
+			<span class="y04-phone-hinge-cap y04-phone-hinge-cap-r"></span>
+		</div>
+
+		<!-- ═══ 하단부 (키패드) ═══ -->
+		<div class="y04-phone-bottom">
+			<div class="y04-phone-func-island">
+				<div class="y04-phone-func-frame">
+					<div class="y04-phone-func-row">
+						<span class="y04-phone-key y04-phone-key-silver" aria-hidden="true">✉ 문자</span>
+						<span class="y04-phone-key y04-phone-key-silver" aria-hidden="true">☎ 전화</span>
+						<span class="y04-phone-key y04-phone-key-silver" aria-hidden="true">♪ 벨</span>
+					</div>
+
+					<div class="y04-phone-mid-row">
+						<a href={universLink} target="_blank" rel="noopener noreferrer" class="y04-phone-key y04-phone-key-pink">유니챗</a>
+
+						<div class="y04-phone-dpad">
+							<div class="y04-phone-dpad-well">
+								<span class="y04-phone-dpad-up" aria-hidden="true">▲</span>
+								<span class="y04-phone-dpad-down" aria-hidden="true">▼</span>
+								<span class="y04-phone-dpad-left" aria-hidden="true">◀</span>
+								<span class="y04-phone-dpad-right" aria-hidden="true">▶</span>
+								<span class="y04-phone-dpad-center" aria-hidden="true"></span>
+							</div>
+						</div>
+
+						<a href={elynLink} target="_blank" rel="noopener noreferrer" class="y04-phone-key y04-phone-key-purple">엘린</a>
+					</div>
+
+					<div class="y04-phone-cancel-row">
+						<span class="y04-phone-key y04-phone-key-silver" aria-hidden="true">취소</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="y04-phone-led-row" aria-hidden="true">
+				<span></span><span></span><span></span><span class="is-lit"></span><span></span><span></span><span></span>
+			</div>
+
+			<div class="y04-phone-numpad-island">
+				<div class="y04-phone-numpad">
+					{numpad.map((k) => (
+						<span class="y04-phone-numkey">
+							<span class="y04-phone-numkey-num">{k.num}</span>
+							<span class="y04-phone-numkey-label">{k.label}</span>
+						</span>
+					))}
+				</div>
+			</div>
+
+			<div class="y04-phone-mic-row" aria-hidden="true">
+				<span></span>
+				<span class="y04-phone-mic-hole"></span>
+				<span></span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.y04-phone {
+		display: flex;
+		justify-content: center;
+		padding: 1rem;
+		font-family: 'Dotum', 'Noto Sans KR', sans-serif;
+	}
+
+	.y04-phone-unit {
+		width: 17.5rem;
+		flex-shrink: 0;
+		overflow: hidden;
+		border: 1px solid #7f8794;
+		border-radius: 2.5rem 2.5rem 2.65rem 2.65rem;
+		box-shadow:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.62),
+			inset 0 2px 0 rgba(255, 255, 255, 0.7),
+			inset 0 -3px 0 rgba(132, 141, 158, 0.32),
+			0 2px 3px rgba(37, 42, 52, 0.28),
+			0 10px 22px rgba(37, 42, 52, 0.18),
+			0 20px 34px rgba(37, 42, 52, 0.1);
+	}
+
+	/* 위/아래를 하나의 셸로 묶어 힌지에서 끊어져 보이지 않게 한다 —
+	   테두리/모서리/그림자는 .y04-phone-unit 하나에만 있고, 상/하 섹션은
+	   배경(재질)만 다를 뿐 자체 border-radius가 없다 */
+	.y04-phone-top,
+	.y04-phone-bottom {
+		position: relative;
+		padding: 0.85rem 0.85rem 1.1rem;
+		background-image: linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(121, 131, 151, 0.1) 1px, transparent 1px);
+		background-size: 0.75rem 0.75rem;
+	}
+
+	.y04-phone-top {
+		background-color: #e5e8ef;
+		padding-top: 1.15rem;
+		padding-bottom: 0.4rem;
+	}
+
+	.y04-phone-bottom {
+		margin: 0;
+		background-color: #d9dde6;
+		padding-top: 0.4rem;
+	}
+
+	.y04-phone-earpiece {
+		position: relative;
+		margin: 0 auto 0.6rem;
+		width: 3.6rem;
+		height: 0.5rem;
+		display: flex;
+		align-items: center;
+	}
+	.y04-phone-earpiece span:first-child {
+		width: 100%;
+		height: 0.5rem;
+		border-radius: 999px;
+		border: 1px solid #9da4ae;
+		background: #d5dae3;
+		box-shadow: inset 0 2px 3px rgba(84, 91, 103, 0.45), 0 1px 0 rgba(255, 255, 255, 0.9);
+	}
+	.y04-phone-earpiece-dot {
+		position: absolute;
+		right: 0;
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 999px;
+		background: linear-gradient(180deg, #fff 0%, #cdd2da 100%);
+		box-shadow: inset 0 1px 1px rgba(104, 111, 124, 0.45);
+	}
+
+	.y04-phone-brand-row {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin: 0 0 0.4rem;
+		padding: 0 0.15rem;
+		font-size: 0.5rem;
+		font-weight: 900;
+		letter-spacing: 0.1em;
+		color: #7b8495;
+	}
+
+	.y04-phone-brand-dots {
+		display: flex;
+		gap: 0.15rem;
+	}
+	.y04-phone-brand-dots span {
+		width: 0.25rem;
+		height: 0.25rem;
+		background: #9aa7c2;
+	}
+
+	/* ── LCD: 파인 웰 → 링 → 베젤 → 스크린 4단 ── */
+	.y04-phone-lcd-well {
+		position: relative;
+		border-radius: 1.15rem;
+		border: 1px solid #8b929d;
+		background: #b9c0cb;
+		padding: 0.3rem;
+		box-shadow: inset 0 2px 5px rgba(37, 42, 52, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+	}
+
+	.y04-phone-lcd-ring {
+		border-radius: 0.9rem;
+		background: #d7dce5;
+		padding: 0.25rem;
+		box-shadow: inset 0 1px 0 white, 0 3px 6px rgba(55, 61, 73, 0.32);
+	}
+
+	.y04-phone-lcd-bezel {
+		border-radius: 0.65rem;
+		border: 3px solid #4c525b;
+		background: #2f343b;
+		padding: 0.3rem;
+		box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.72), 0 1px 0 rgba(255, 255, 255, 0.22);
+	}
+
+	.y04-phone-lcd-screen {
+		position: relative;
+		overflow: hidden;
+		border: 1px solid #3f5f8c;
+		background: #eef4fb;
+		color: #16283f;
+	}
+
+	.y04-phone-statusbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.25rem;
+		padding: 0.2rem 0.4rem;
+		background: linear-gradient(180deg, #40628f 0%, #2f4a6d 60%, #25405f 100%);
+	}
+
+	.y04-phone-signal {
+		display: flex;
+		align-items: flex-end;
+		gap: 0.1rem;
+	}
+	.y04-phone-signal span {
+		width: 0.15rem;
+		background: #7fd4f5;
+	}
+	.y04-phone-signal span:nth-child(1) { height: 0.2rem; }
+	.y04-phone-signal span:nth-child(2) { height: 0.3rem; }
+	.y04-phone-signal span:nth-child(3) { height: 0.4rem; }
+	.y04-phone-signal span:nth-child(4) { height: 0.5rem; }
+
+	.y04-phone-statustext {
+		flex: 1;
+		min-width: 0;
+		text-align: center;
+		font-size: 0.62rem;
+		color: #e4edf8;
+	}
+
+	.y04-phone-battery {
+		display: flex;
+		align-items: center;
+		width: 0.85rem;
+		height: 0.5rem;
+		border: 1px solid #cfe0f2;
+		padding: 0.05rem;
+		flex-shrink: 0;
+	}
+	.y04-phone-battery span {
+		display: block;
+		width: 70%;
+		height: 100%;
+		background: #6ede78;
+	}
+
+	.y04-phone-titlebar {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		padding: 0.25rem 0.4rem;
+		background: linear-gradient(180deg, #7fa3ce 0%, #4a72a4 46%, #2f4a6d 100%);
+		color: #fff;
+	}
+
+	.y04-phone-title-text {
+		font-size: 0.66rem;
+		font-weight: 700;
+	}
+
+	.y04-phone-contact {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 1.8rem 0.6rem 1.6rem;
+		text-align: center;
+	}
+
+	.y04-phone-call-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.3rem;
+		height: 2.3rem;
+		margin-bottom: 0.15rem;
+		border-radius: 999px;
+		background: #2fae4e;
+		color: #eafff0;
+		font-size: 1.05rem;
+		animation: y04-ring-pulse 1.6s ease-out infinite;
+	}
+
+	@keyframes y04-ring-pulse {
+		0% { box-shadow: 0 0 0 0 rgba(47, 174, 78, 0.55); }
+		70% { box-shadow: 0 0 0 0.75rem rgba(47, 174, 78, 0); }
+		100% { box-shadow: 0 0 0 0 rgba(47, 174, 78, 0); }
+	}
+
+	.y04-phone-contact-name {
+		margin: 0;
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: #16283f;
+	}
+
+	.y04-phone-footer {
+		margin: 0;
+		border-top: 1px solid #b9cce0;
+		background: #dfeaf5;
+		padding: 0.25rem 0.5rem;
+	}
+	.y04-phone-footer p {
+		margin: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.15rem;
+		font-size: 0.62rem;
+		color: #1d3557;
+	}
+	.y04-phone-ring-dots span {
+		animation: y04-ring-dot 1.2s infinite;
+	}
+	.y04-phone-ring-dots span:nth-child(2) { animation-delay: 0.2s; }
+	.y04-phone-ring-dots span:nth-child(3) { animation-delay: 0.4s; }
+	@keyframes y04-ring-dot {
+		0%, 100% { opacity: 0.25; }
+		50% { opacity: 1; }
+	}
+
+	.y04-phone-softkeys {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		margin: 0;
+		border-top: 1px solid #b9cce0;
+		background: linear-gradient(180deg, #3f6698 0%, #2f4a6d 100%);
+		font-size: 0.6rem;
+		font-weight: 700;
+		color: #dbe6f4;
+	}
+	.y04-phone-softkeys span {
+		padding: 0.2rem 0.3rem;
+		text-align: center;
+	}
+	.y04-phone-softkeys span:first-child {
+		text-align: left;
+	}
+	.y04-phone-softkeys span:last-child {
+		text-align: right;
+	}
+
+	/* ── 힌지: 위/아래 섹션 사이에 바로 놓인다 (겹칠 필요 없음, 셸이 하나라 이음새가 생기지 않음) ──
+	   margin: 0은 장식이 아니라 버그 픽스다 — Starlight owl-selector가
+	   ".y04-phone-top" 뒤에 오는 이 블록 요소에 margin-top: 1rem을 주입해서
+	   힌지 위로 빈 공백이 생겼었다. */
+	.y04-phone-hinge {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		margin: -0.2rem 0;
+		height: 1.3rem;
+		padding: 0 0.5rem;
+		background: linear-gradient(180deg, #d9dde6 0%, #e5e8ef 100%);
+	}
+	.y04-phone-hinge-cap {
+		flex-shrink: 0;
+		width: 1.4rem;
+		height: 1rem;
+		border: 1px solid #717986;
+		background: #cfd5de;
+		box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.9), 0 2px 4px rgba(24, 28, 37, 0.42);
+	}
+	.y04-phone-hinge-cap-l {
+		border-radius: 999px 0 0 999px;
+	}
+	.y04-phone-hinge-cap-r {
+		border-radius: 0 999px 999px 0;
+	}
+	.y04-phone-hinge-bar {
+		flex: 1;
+		height: 0.75rem;
+		margin: 0 0.1rem;
+		border-block: 1px solid #747c88;
+		background: #c9d0da;
+		box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.88), 0 2px 4px rgba(24, 28, 37, 0.38);
+	}
+	.y04-phone-hinge-knuckle {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 3.6rem;
+		height: 1.05rem;
+		border-radius: 999px;
+		border: 1px solid #6b7380;
+		background: linear-gradient(180deg, #fff 0%, #d9dde4 28%, #989fab 62%, #646c78 100%);
+		box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.9), 0 2px 4px rgba(22, 26, 34, 0.46);
+	}
+
+	/* ── 기능키 아일랜드 ── */
+	.y04-phone-func-island {
+		position: relative;
+		z-index: 1;
+		border: 1px solid #8f97a5;
+		background: #c7ccd7;
+		border-radius: 0.65rem;
+		padding: 0.3rem;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -2px 0 rgba(110, 119, 135, 0.18), 0 2px 5px rgba(49, 55, 67, 0.14);
+	}
+
+	.y04-phone-func-frame {
+		overflow: hidden;
+		border-radius: 0.4rem;
+		border: 2px solid #626a78;
+		background: #8f97a5;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -2px 0 rgba(82, 89, 103, 0.26);
+	}
+
+	.y04-phone-func-row,
+	.y04-phone-mid-row {
+		display: grid;
+		margin: 0;
+		gap: 1px;
+		background: #4f5561;
+	}
+	.y04-phone-func-row {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.y04-phone-mid-row {
+		grid-template-columns: 3.6rem minmax(0, 1fr) 3.6rem;
+		border-top: 1px solid #4f5561;
+	}
+
+	.y04-phone-key {
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		height: 2.25rem;
+		font-size: 0.56rem;
+		font-weight: 700;
+		text-decoration: none;
+		opacity: 0.92;
+	}
+	.y04-phone-key::before {
+		content: '';
+		position: absolute;
+		left: 0.25rem;
+		right: 0.25rem;
+		top: 0.25rem;
+		height: 0.5rem;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.45);
+		pointer-events: none;
+	}
+
+	.y04-phone-key-silver {
+		background: #eef1f6;
+		color: #454a55;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68), inset 0 -2px 0 rgba(118, 126, 141, 0.34), 0 1px 0 rgba(104, 112, 127, 0.4);
+	}
+
+	.y04-phone-key-pink,
+	.y04-phone-key-purple {
+		min-height: 5.4rem;
+		font-size: 0.78rem;
+		letter-spacing: -0.01em;
+		cursor: pointer;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), inset 0 -2px 0 rgba(118, 126, 141, 0.45), 0 2px 0 rgba(104, 112, 127, 0.55);
+		transition: filter 0.15s ease, transform 0.1s ease;
+	}
+
+	.y04-phone-key-pink {
+		background: #f8e2ee;
+		color: #9c2f66;
+	}
+	.y04-phone-key-purple {
+		background: #e9e1f7;
+		color: #5b3696;
+	}
+	.y04-phone-key-pink:hover,
+	.y04-phone-key-purple:hover {
+		filter: brightness(1.05);
+	}
+	.y04-phone-key-pink:active,
+	.y04-phone-key-purple:active {
+		transform: translateY(1px);
+	}
+
+	.y04-phone-dpad {
+		min-height: 5.4rem;
+		background: #cfd7e6;
+		padding: 0.25rem;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78), 0 2px 0 rgba(92, 105, 132, 0.38);
+	}
+
+	.y04-phone-dpad-well {
+		position: relative;
+		height: 100%;
+		min-height: 4.9rem;
+		overflow: hidden;
+		border: 2px solid #6176a4;
+		background: #aebbd3;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 2px 0 rgba(62, 76, 106, 0.45);
+	}
+
+	.y04-phone-dpad-up,
+	.y04-phone-dpad-down,
+	.y04-phone-dpad-left,
+	.y04-phone-dpad-right {
+		position: absolute;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #e5ebf6;
+		color: #43577f;
+		font-size: 0.6rem;
+		font-weight: 900;
+		box-shadow: inset 0 1px 0 white, inset 0 -3px 0 rgba(112, 129, 164, 0.48), 0 2px 0 rgba(79, 95, 129, 0.62), 0 3px 4px rgba(44, 54, 73, 0.16);
+	}
+	.y04-phone-dpad-up {
+		left: 2rem;
+		right: 2rem;
+		top: 0;
+		height: 1.25rem;
+	}
+	.y04-phone-dpad-down {
+		left: 2rem;
+		right: 2rem;
+		bottom: 0;
+		height: 1.25rem;
+	}
+	.y04-phone-dpad-left {
+		left: 0;
+		top: 1.25rem;
+		bottom: 1.25rem;
+		width: 2rem;
+	}
+	.y04-phone-dpad-right {
+		right: 0;
+		top: 1.25rem;
+		bottom: 1.25rem;
+		width: 2rem;
+	}
+
+	.y04-phone-dpad-center {
+		position: absolute;
+		z-index: 1;
+		left: 2rem;
+		right: 2rem;
+		top: 1.25rem;
+		bottom: 1.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.2rem;
+		border: 2px solid #405c9b;
+		background: #5579c8;
+		color: #fff;
+		font-size: 0.6rem;
+		font-weight: 900;
+		letter-spacing: 0.02em;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), inset 0 -4px 0 rgba(47, 69, 118, 0.62), 0 3px 0 rgba(37, 55, 96, 0.72), 0 5px 7px rgba(42, 54, 82, 0.2);
+	}
+	.y04-phone-cancel-row {
+		margin: 0;
+		border-top: 1px solid #4f5561;
+	}
+	.y04-phone-cancel-row .y04-phone-key {
+		height: 1.9rem;
+	}
+
+	.y04-phone-led-row {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.2rem;
+		margin: 0.5rem 0 0;
+	}
+	.y04-phone-led-row span {
+		width: 0.2rem;
+		height: 0.2rem;
+		background: #a6afbf;
+	}
+	.y04-phone-led-row span.is-lit {
+		background: #5f79aa;
+	}
+
+	/* ── 천지인 번호 키패드 ── */
+	.y04-phone-numpad-island {
+		position: relative;
+		z-index: 1;
+		margin: 0.6rem 0 0;
+		border: 1px solid #8f97a5;
+		background: #c7ccd7;
+		border-radius: 0.75rem;
+		padding: 0.3rem;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -2px 0 rgba(110, 119, 135, 0.18), 0 2px 5px rgba(49, 55, 67, 0.14);
+	}
+
+	.y04-phone-numpad {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.2rem;
+	}
+
+	.y04-phone-numkey {
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.1rem;
+		min-height: 2.7rem;
+		background: #eef1f6;
+		color: #454a55;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), inset 0 -2px 0 rgba(120, 128, 144, 0.42), 0 2px 0 rgba(90, 98, 114, 0.48), 0 4px 6px rgba(34, 38, 47, 0.18);
+	}
+	.y04-phone-numkey::before {
+		content: '';
+		position: absolute;
+		left: 0.25rem;
+		right: 0.25rem;
+		top: 0.25rem;
+		height: 0.5rem;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.45);
+		pointer-events: none;
+	}
+	.y04-phone-numkey:nth-child(3n+1) { border-radius: 0.6rem 0.2rem 0.2rem 0.6rem; }
+	.y04-phone-numkey:nth-child(3n+2) { border-radius: 0.2rem; }
+	.y04-phone-numkey:nth-child(3n) { border-radius: 0.2rem 0.6rem 0.6rem 0.2rem; }
+
+	.y04-phone-numkey-num {
+		position: relative;
+		font-size: 0.7rem;
+		font-weight: 400;
+		opacity: 0.45;
+	}
+	.y04-phone-numkey-label {
+		position: relative;
+		font-size: 0.8rem;
+		font-weight: 700;
+	}
+
+	.y04-phone-mic-row {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		margin: 0.7rem 0 0;
+	}
+	.y04-phone-mic-row span:not(.y04-phone-mic-hole) {
+		width: 1.9rem;
+		height: 0.3rem;
+		border-radius: 999px;
+		background: #aeb5c0;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+	}
+	.y04-phone-mic-hole {
+		width: 0.4rem;
+		height: 0.4rem;
+		border-radius: 999px;
+		border: 1px solid #7a818d;
+		background: #707887;
+		box-shadow: inset 0 1px 1px rgba(31, 36, 45, 0.35);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.y04-phone-call-icon {
+			animation: none;
+		}
+		.y04-phone-ring-dots span {
+			animation: none;
+			opacity: 0.75;
+		}
+	}
+</style>

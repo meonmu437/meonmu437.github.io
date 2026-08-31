@@ -1,0 +1,319 @@
+---
+// 시스템 메시지박스(Win2000 알림창). 확인 버튼을 누르면 이스터에그로
+// 화면 전체를 덮는 모달이 뜨고, 그 안에 그 시절 폴더폰 LCD 화면 그대로의
+// 문자 알림이 나타난다 — easterEggLines 중 하나를 무작위로 골라 보여준다.
+// 알림창 자체는 Win2000 색, 문자 화면은 FlipPhone.astro와 같은 크롬
+// (링+베젤+LCD) 재질이다. 둘 다 라이트/다크 테마와 무관하게 고정색.
+interface Props {
+	icon?: string;
+	title?: string;
+	message: string;
+	easterEggLines: string[];
+}
+
+const { icon = '⚠', title = '메시지', message, easterEggLines } = Astro.props;
+---
+
+<div class="y04-alert">
+	<div class="y04-alert-titlebar">
+		<span class="y04-alert-titlebar-icon" aria-hidden="true">{icon}</span>
+		<span class="y04-alert-titlebar-text">{title}</span>
+		<span class="y04-alert-titlebar-close" aria-hidden="true">✕</span>
+	</div>
+	<div class="y04-alert-body">
+		<span class="y04-alert-icon" aria-hidden="true">📩</span>
+		<p class="y04-alert-text">{message}</p>
+	</div>
+	<div class="y04-alert-actions">
+		<button type="button" class="y04-alert-btn" data-alert-confirm>확인</button>
+	</div>
+</div>
+
+<div class="y04-sms-overlay" data-sms-overlay hidden>
+	<div class="y04-sms-modal">
+		<div class="y04-sms-lcd-well">
+			<div class="y04-sms-lcd-ring">
+				<div class="y04-sms-lcd-bezel">
+					<div class="y04-sms-lcd-screen">
+						<div class="y04-sms-statusbar">
+							<span class="y04-sms-signal" aria-label="통신 신호 최대">
+								<span></span><span></span><span></span><span></span>
+							</span>
+							<span class="y04-sms-statustime" data-sms-time></span>
+							<span class="y04-sms-battery" aria-hidden="true"><span></span></span>
+						</div>
+
+						<div class="y04-sms-titlerow">
+							<span class="y04-sms-titlerow-text">새 메시지 도착</span>
+						</div>
+
+						<div class="y04-sms-body">
+							<p class="y04-sms-msgtext" data-sms-text></p>
+						</div>
+
+						<div class="y04-sms-softkeys">
+							<span>메뉴</span>
+							<button type="button" class="y04-sms-confirmkey" data-sms-close>확인</button>
+							<span>삭제</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script define:vars={{ lines: easterEggLines }}>
+	const overlay = document.querySelector('[data-sms-overlay]');
+	if (overlay) {
+		// GSAP(ScrollEffects.astro)이 .y04-reveal 섹션에 transform을 남겨
+		// 두는데, position:fixed 자식은 transform이 걸린 가장 가까운 조상을
+		// 기준으로 배치된다 — 그 조상이 스크롤에 따라 움직이니 모달도 같이
+		// 움직여 보였다. body 바로 아래로 옮겨서 진짜 뷰포트 기준 fixed가
+		// 되게 한다(표준 모달 포털 패턴).
+		document.body.appendChild(overlay);
+
+		const textEl = overlay.querySelector('[data-sms-text]');
+		const timeEl = overlay.querySelector('[data-sms-time]');
+		const closeBtn = overlay.querySelector('[data-sms-close]');
+
+		let lastIndex = -1;
+
+		function openSms() {
+			let index = Math.floor(Math.random() * lines.length);
+			if (lines.length > 1 && index === lastIndex) {
+				index = (index + 1) % lines.length;
+			}
+			lastIndex = index;
+
+			if (textEl) textEl.textContent = lines[index];
+			if (timeEl) {
+				timeEl.textContent = new Date().toLocaleTimeString('ko-KR', {
+					hour: '2-digit',
+					minute: '2-digit',
+				});
+			}
+
+			overlay.hidden = false;
+			overlay.classList.remove('y04-sms-pop');
+			// 리플로우를 강제해 같은 클래스를 다시 붙여도 애니메이션이 재생되게 한다.
+			void overlay.offsetWidth;
+			overlay.classList.add('y04-sms-pop');
+		}
+
+		function closeSms() {
+			overlay.hidden = true;
+		}
+
+		document.querySelectorAll('[data-alert-confirm]').forEach((btn) => {
+			btn.addEventListener('click', openSms);
+		});
+
+		closeBtn?.addEventListener('click', closeSms);
+
+		overlay.addEventListener('click', (event) => {
+			if (event.target === overlay) closeSms();
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && !overlay.hidden) closeSms();
+		});
+	}
+</script>
+
+<style>
+	/*
+	  이스터에그 문자 알림 = 실제 화면 전체를 덮는 모달. 안쪽 LCD는
+	  FlipPhone.astro의 링+베젤+화면 크롬을 그대로 다시 쌓는다 — 컴포넌트가
+	  달라 스타일이 자동으로 스코프되므로 이름은 같아도 충돌하지 않지만,
+	  구분을 위해 y04-sms- 접두를 쓴다. 라이트/다크 테마와 무관하게 고정색.
+	*/
+	.y04-sms-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 9999;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1.5rem;
+		background: rgba(10, 12, 18, 0.6);
+	}
+
+	.y04-sms-overlay[hidden] {
+		display: none;
+	}
+
+	.y04-sms-overlay.y04-sms-pop .y04-sms-modal {
+		animation: y04-sms-pop 0.3s ease;
+	}
+
+	@keyframes y04-sms-pop {
+		0% {
+			opacity: 0;
+			transform: scale(0.9);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	.y04-sms-modal {
+		width: 17rem;
+		font-family: 'Dotum', 'Noto Sans KR', sans-serif;
+	}
+
+	.y04-sms-lcd-well {
+		position: relative;
+		border-radius: 1.15rem;
+		border: 1px solid #8b929d;
+		background: #b9c0cb;
+		padding: 0.3rem;
+		box-shadow: 0 1.2rem 2.5rem rgba(0, 0, 0, 0.45), inset 0 2px 5px rgba(37, 42, 52, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+	}
+
+	.y04-sms-lcd-ring {
+		border-radius: 0.9rem;
+		background: #d7dce5;
+		padding: 0.25rem;
+		box-shadow: inset 0 1px 0 white, 0 3px 6px rgba(55, 61, 73, 0.32);
+	}
+
+	.y04-sms-lcd-bezel {
+		border-radius: 0.65rem;
+		border: 3px solid #4c525b;
+		background: #2f343b;
+		padding: 0.3rem;
+		box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.72), 0 1px 0 rgba(255, 255, 255, 0.22);
+	}
+
+	.y04-sms-lcd-screen {
+		position: relative;
+		overflow: hidden;
+		border: 1px solid #3f5f8c;
+		background: #eef4fb;
+		background-image: repeating-linear-gradient(to bottom, rgba(22, 40, 63, 0.035) 0px, rgba(22, 40, 63, 0.035) 1px, transparent 1px, transparent 3px);
+		color: #16283f;
+	}
+
+	.y04-sms-statusbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.25rem;
+		padding: 0.2rem 0.4rem;
+		background: linear-gradient(180deg, #40628f 0%, #2f4a6d 60%, #25405f 100%);
+	}
+
+	.y04-sms-signal {
+		display: flex;
+		align-items: flex-end;
+		gap: 0.1rem;
+	}
+	.y04-sms-signal span {
+		width: 0.15rem;
+		background: #7fd4f5;
+	}
+	.y04-sms-signal span:nth-child(1) { height: 0.2rem; }
+	.y04-sms-signal span:nth-child(2) { height: 0.3rem; }
+	.y04-sms-signal span:nth-child(3) { height: 0.4rem; }
+	.y04-sms-signal span:nth-child(4) { height: 0.5rem; }
+
+	.y04-sms-statustime {
+		flex: 1;
+		min-width: 0;
+		text-align: right;
+		font-size: 0.6rem;
+		color: #e4edf8;
+	}
+
+	.y04-sms-battery {
+		display: flex;
+		align-items: center;
+		width: 0.85rem;
+		height: 0.5rem;
+		border: 1px solid #cfe0f2;
+		padding: 0.05rem;
+		flex-shrink: 0;
+	}
+	.y04-sms-battery span {
+		display: block;
+		width: 70%;
+		height: 100%;
+		background: #6ede78;
+	}
+
+	.y04-sms-titlerow {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		padding: 0.25rem 0.4rem;
+		background: linear-gradient(180deg, #7fa3ce 0%, #4a72a4 46%, #2f4a6d 100%);
+		color: #fff;
+	}
+
+	.y04-sms-titlerow-text {
+		font-size: 0.66rem;
+		font-weight: 700;
+	}
+
+	.y04-sms-body {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		padding: 1.1rem 0.9rem 0.8rem;
+	}
+
+	.y04-sms-msgtext {
+		margin: 0;
+		text-align: left;
+		font-family: 'DotumChe', '돋움체', Menlo, Consolas, monospace;
+		font-size: 0.8rem;
+		line-height: 1.65;
+		color: #16283f;
+	}
+
+
+	.y04-sms-softkeys {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		margin: 0;
+		border-top: 1px solid #b9cce0;
+		background: linear-gradient(180deg, #3f6698 0%, #2f4a6d 100%);
+		font-size: 0.62rem;
+		font-weight: 700;
+		color: #dbe6f4;
+	}
+
+	.y04-sms-softkeys span,
+	.y04-sms-confirmkey {
+		margin: 0;
+		padding: 0.3rem 0.3rem;
+		border: none;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-align: center;
+	}
+
+	.y04-sms-softkeys span:first-child {
+		text-align: left;
+	}
+	.y04-sms-softkeys span:last-child {
+		text-align: right;
+	}
+
+	.y04-sms-confirmkey {
+		cursor: pointer;
+	}
+	.y04-sms-confirmkey:active {
+		background: rgba(255, 255, 255, 0.15);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.y04-sms-overlay.y04-sms-pop .y04-sms-modal {
+			animation: none;
+		}
+	}
+</style>

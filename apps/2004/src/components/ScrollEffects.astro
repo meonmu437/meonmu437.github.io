@@ -1,0 +1,105 @@
+---
+// 위키 전체 페이지에 스크롤 연출(등장 애니메이션, 사이드바 스크롤스파이)을
+// 담당하는 로직 전용 컴포넌트. 시각적 출력은 없음.
+---
+
+<script>
+	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	function setUpReveals() {
+		if (prefersReduced) return;
+		document.querySelectorAll<HTMLElement>('.y04-reveal').forEach((el) => {
+			// A late webfont swap can shift layout after ScrollTrigger has
+			// already fired "enter" for content near the top of the page,
+			// making it recalculate that the element hasn't reached its start
+			// position yet and reverse it back to invisible. Sidestep that
+			// entirely for anything already on screen at setup time — just
+			// show it immediately instead of animating it in.
+			if (el.getBoundingClientRect().top < window.innerHeight * 0.85) {
+				gsap.set(el, { opacity: 1, y: 0 });
+				return;
+			}
+			gsap.set(el, { opacity: 0, y: 32 });
+			gsap.to(el, {
+				opacity: 1,
+				y: 0,
+				duration: 0.7,
+				ease: 'power2.out',
+				scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
+			});
+		});
+		ScrollTrigger.refresh();
+	}
+
+	// A page that loads directly on a URL hash (e.g. a sidebar link's
+	// `#sec-work`, or a shared link) has the browser jump to that anchor
+	// before the custom webfonts swap in. That swap resizes every heading
+	// above the target, pushing it further down the page, so the initial
+	// jump lands short. Re-scroll to the hash target to correct for the reflow.
+	function correctHashScroll() {
+		if (!location.hash) return;
+		document.querySelector(location.hash)?.scrollIntoView();
+	}
+
+	async function settleThenInit() {
+		correctHashScroll();
+		if (document.fonts?.ready) {
+			try {
+				await document.fonts.ready;
+			} catch {
+				// ignore — fall through and init anyway
+			}
+		}
+		correctHashScroll();
+		setUpReveals();
+		setTimeout(correctHashScroll, 300);
+	}
+
+	if (document.readyState === 'complete') {
+		settleThenInit();
+	} else {
+		window.addEventListener('load', settleThenInit);
+	}
+
+	// 사이드바 스크롤스파이: 현재 보이는 섹션에 해당하는 사이드바 링크를 강조하고,
+	// 모바일 목차 바("목차 › 현재 위치")의 텍스트도 함께 갱신한다.
+	const sections = document.querySelectorAll<HTMLElement>('.y04-section[id]');
+	const sidebarLinks = new Map<string, HTMLElement[]>();
+	document.querySelectorAll<HTMLAnchorElement>('nav a[href*="#"]').forEach((a) => {
+		const hash = a.href.split('#')[1];
+		if (!hash) return;
+		const list = sidebarLinks.get(hash) ?? [];
+		list.push(a);
+		sidebarLinks.set(hash, list);
+	});
+
+	const currentLabelEl = document.getElementById('y04-toggle-current');
+
+	if (sections.length && sidebarLinks.size) {
+		const setActive = (id: string) => {
+			sidebarLinks.forEach((links, hash) => {
+				links.forEach((link) => link.classList.toggle('y04-sidebar-active', hash === id));
+			});
+			if (currentLabelEl) {
+				const label = sidebarLinks.get(id)?.[0]?.textContent?.trim();
+				if (label) currentLabelEl.textContent = label;
+			}
+		};
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				const visible = entries
+					.filter((entry) => entry.isIntersecting)
+					.sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+				if (visible) setActive(visible.target.id);
+			},
+			{ rootMargin: '-20% 0px -70% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+		);
+		sections.forEach((section) => observer.observe(section));
+	}
+</script>

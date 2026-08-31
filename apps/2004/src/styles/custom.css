@@ -1,0 +1,1095 @@
+/*
+  윤성민 · 2004 위키 커스텀 테마 — "재생 중"
+  - Design Read: 1997년 대학가 로맨스(apps/1997, "되감기")의 스핀오프. 그
+    이야기의 타임슬립 장치는 가져오지 않고, 감정선 하나만 이어받는다 —
+    97년 대학에서 만난 그 사람을, 성민은 7년째 혼자 좋아하고 있다.
+  - 1997이 "이미 끝난 첫사랑을 처음부터 다시 재생해 보는" 되감기(과거형)
+    라면, 2004는 "아직 못 꺼낸 마음이 지금도 흘러가고 있는" 재생 중
+    (현재진행형)이다. 그래서 히어로도 카세트(되감기 가능한 매체) 대신
+    MP3 플레이어(계속 곡이 늘어나는 재생목록)를 쓴다. 다만 성민 개인은
+    여전히 CD를 더 좋아하는 아날로그 취향을 버리지 않았다는 설정이라,
+    "취향과 습관" 목록만은 카세트 라벨이 아니라 CD 트랙 인덱스로 그린다.
+  - 팔레트: 벚꽃 핑크 액센트는 걷어내고, 그 시절 실제 화면에 있던 두 색
+    체계로 라이트/다크를 나눈다. 라이트는 Win2000/포털사이트의 남색
+    (타이틀바 #0a246a 계열) — 이 위키 곳곳의 고정 Win2000 크롬과 같은
+    계열이라 라이트 테마 전체가 "그 시절 OS/포털"처럼 읽힌다. 다크는
+    Winamp/mIRC 같은 그 시절 다크 소프트웨어의 검은 셸 + 네온 그린(LCD
+    형광) — 2000년대에는 라이트/다크 "테마 토글"이라는 개념 자체가 없었고,
+    다크 배경은 이런 미디어 플레이어 UI에서만 존재했다는 사실을 반영한다.
+    보조 강조는 가로등의 앰버(유지) + 청록(다크 네온 그린과 어울리게
+    시안 쪽으로 조정).
+  - 위키 전체가 하나의 스크롤 페이지: .y04-section은 풀블리드 밴드,
+    .y04-reveal은 ScrollEffects.astro가 페이드인 제어. 태그(테이프 라벨),
+    헤딩 밑줄(손그림 선) 등 1997의 손으로 만든 "물건 재질" 문법은 일부
+    그대로 가져오되 색만 새 팔레트로 바꾼다.
+  - 다만 대사박스(내레이션/발화)와 주변 인물·장소 카드는 손글씨 노트가
+    아니라 2004년 데스크톱의 실제 UI로 구현한다: 내레이션은 메모장
+    (.y04-note), 발화는 시스템 메시지박스(.y04-alert), 인물/장소 정보는
+    탐색기 속성창(SectionBar + DataTable, .y04-card/.y04-place)로 —
+    Win2000 크롬 색은 실제 OS 색이므로 라이트/다크 테마와 무관하게
+    고정한다. CD 트랙리스트(.y04-tracklist)와 웹메일 팝업(.y04-mail),
+    폴더폰(FlipPhone)도 같은 이유로 이미 고정색 "물건"이었다.
+*/
+
+html {
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+:root {
+	/* 배너/섹션 헤딩 전용 — 1997의 붓글씨풍 세리프 대신 그 시절 개인
+	   홈페이지 타이틀에 흔했던 두껍고 각진 표시용 서체. */
+	--y04-font-heading: 'Do Hyeon', 'Noto Sans KR', sans-serif;
+	--y04-font-display: 'Gowun Batang', serif;
+	--y04-font-hand: 'Nanum Pen Script', cursive;
+
+	--sl-font: 'Noto Sans KR', var(--sl-font-system);
+
+	/* accent = Winamp/mIRC식 LCD 네온 그린 (dark 기본) */
+	--sl-color-accent-low: hsl(135, 55%, 16%);
+	--sl-color-accent: hsl(135, 70%, 52%);
+	--sl-color-accent-high: hsl(135, 75%, 76%);
+
+	/* 보조 강조: 가로등 앰버(도심의 밤), 네온 시안(다크 소프트웨어 스펙트럼) */
+	--y04-amber: hsl(35, 75%, 62%);
+	--y04-teal: hsl(190, 65%, 55%);
+
+	/* 다크 = 그 시절 미디어 플레이어의 검은 셸 (모던 다크모드 남색이 아닌, 진짜 무채색 검정) */
+	--sl-color-bg: hsl(210, 10%, 7%);
+	--sl-color-bg-nav: hsl(210, 10%, 9%);
+	--sl-color-bg-sidebar: hsl(210, 10%, 8%);
+
+	--y04-border: hsl(210, 8%, 26%);
+
+	--y04-ink: hsl(210, 8%, 88%);
+	--y04-ink-shadow: hsl(210, 10%, 3% / 0.4);
+
+	/* Win2000 UI 재질 — 실제 OS 크롬 색이므로 라이트/다크와 무관하게 고정 */
+	--y04-win-face: #d4d0c8;
+	--y04-win-hi: #ffffff;
+	--y04-win-lo: #404040;
+	--y04-win-lo-2: #808080;
+	--y04-win-bar-1: #0a246a;
+	--y04-win-bar-2: #26468f;
+	--y04-win-bar-3: #5a86c4;
+	--y04-win-section-1: #3f5f88;
+	--y04-win-section-2: #2a4263;
+	--y04-win-body: #f7f8f9;
+	--y04-win-row-label: #dfe4e9;
+	--y04-win-grid: #b9c2cc;
+	--y04-win-ink: #2a3038;
+	--y04-win-meta: #414b58;
+	--y04-win-font: 'Dotum', '돋움', Gulim, '굴림', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+}
+
+:root[data-theme='light'] {
+	/* accent = Win2000/포털사이트식 남색 (타이틀바 #0a246a와 같은 계열) */
+	--sl-color-accent-low: hsl(222, 45%, 92%);
+	--sl-color-accent: hsl(222, 60%, 32%);
+	--sl-color-accent-high: hsl(222, 65%, 20%);
+
+	--y04-amber: hsl(35, 65%, 40%);
+	--y04-teal: hsl(190, 55%, 32%);
+
+	/* 라이트 = Win2000 데스크톱의 차가운 중성 그레이 (핑크 색조 없음) */
+	--sl-color-bg: hsl(220, 16%, 96%);
+	--sl-color-bg-nav: hsl(220, 14%, 97%);
+	--sl-color-bg-sidebar: hsl(220, 12%, 95%);
+
+	--y04-border: hsl(220, 14%, 80%);
+
+	--y04-ink: hsl(220, 18%, 18%);
+	--y04-ink-shadow: hsl(220, 18%, 18% / 0.22);
+}
+
+/* 종이/그레인 텍스처 — 배경색 위에 얇게 얹는다 */
+body {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	background-repeat: repeat;
+}
+
+.site-title span {
+	font-family: var(--y04-font-heading);
+	font-weight: 400;
+	letter-spacing: 0.01em;
+	color: var(--sl-color-accent);
+}
+
+.sl-container {
+	margin-inline: auto;
+}
+
+.content-panel:has(#_top) {
+	display: none;
+}
+
+.content-panel + .content-panel {
+	border-top: none;
+}
+
+.sl-markdown-content :is(h2, h3, h4):not(:where(.not-content *)) {
+	font-family: var(--y04-font-heading);
+	font-weight: 400;
+	letter-spacing: 0.01em;
+}
+
+.sl-anchor-link {
+	display: none !important;
+}
+.sl-heading-wrapper > :first-child {
+	padding-inline-end: 0 !important;
+}
+
+/*
+  대사박스 = 윈도우 2000 UI 오브젝트. 내레이션/속마음 한 줄은 "메모장"
+  창(.y04-note)으로, 실제로 입 밖에 낸 말은 "시스템 알림" 메시지박스
+  (.y04-alert)로 구현한다. 둘 다 실제 OS 창이라는 감각을 위해 라이트/다크
+  테마와 무관하게 고정된 Win2000 색을 쓴다.
+*/
+.y04-win-raised {
+	border-width: 2px;
+	border-style: solid;
+	border-color: var(--y04-win-hi) var(--y04-win-lo) var(--y04-win-lo) var(--y04-win-hi);
+}
+
+.y04-note,
+.y04-alert {
+	margin: 2.25rem auto;
+	max-width: 27rem;
+	background: var(--y04-win-face);
+	border-width: 2px;
+	border-style: solid;
+	border-color: var(--y04-win-hi) var(--y04-win-lo) var(--y04-win-lo) var(--y04-win-hi);
+	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.y04-note-titlebar,
+.y04-alert-titlebar {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.32rem 0.5rem;
+	background: linear-gradient(90deg, var(--y04-win-bar-1), var(--y04-win-bar-2), var(--y04-win-bar-3));
+	color: #fff;
+	font-family: var(--y04-win-font);
+	font-size: 0.7rem;
+	font-weight: 700;
+}
+
+.y04-note-titlebar-icon,
+.y04-alert-titlebar-icon {
+	flex-shrink: 0;
+	font-size: 0.75rem;
+	line-height: 1;
+}
+
+.y04-note-titlebar-text,
+.y04-alert-titlebar-text {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.y04-note-titlebar-btns {
+	flex-shrink: 0;
+	display: flex;
+	gap: 2px;
+}
+
+.y04-note-btn,
+.y04-alert-titlebar-close {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1rem;
+	height: 0.95rem;
+	background: var(--y04-win-face);
+	color: #0a0a0a;
+	font-size: 0.62rem;
+	font-weight: 700;
+	line-height: 1;
+	border-width: 1px;
+	border-style: solid;
+	border-color: var(--y04-win-hi) var(--y04-win-lo) var(--y04-win-lo) var(--y04-win-hi);
+}
+
+.y04-note-menubar {
+	display: flex;
+	gap: 0.9rem;
+	margin: 0;
+	padding: 0.3rem 0.6rem;
+	background: var(--y04-win-face);
+	border-bottom: 1px solid var(--y04-win-lo-2);
+	font-family: var(--y04-win-font);
+	font-size: 0.66rem;
+	color: #0a0a0a;
+}
+
+.y04-note-text {
+	margin: 0;
+	min-height: 4rem;
+	padding: 1.1rem 1.2rem;
+	background: #fff;
+	color: #1c1c1c;
+	font-family: 'DotumChe', '돋움체', Menlo, Consolas, monospace;
+	font-size: 0.92rem;
+	line-height: 1.75;
+}
+
+.y04-note-cursor {
+	display: inline-block;
+	width: 2px;
+	height: 1em;
+	margin-inline-start: 2px;
+	background: #1c1c1c;
+	vertical-align: text-bottom;
+	animation: y04-note-blink 1s steps(1, jump-none) infinite;
+}
+
+@keyframes y04-note-blink {
+	0%, 49% { opacity: 1; }
+	50%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.y04-note-cursor {
+		animation: none;
+	}
+}
+
+.y04-alert-body {
+	display: flex;
+	align-items: center;
+	gap: 0.9rem;
+	margin: 0;
+	padding: 1.3rem 1.2rem 1rem;
+}
+
+.y04-alert-icon {
+	flex-shrink: 0;
+	font-size: 1.7rem;
+	line-height: 1;
+}
+
+.y04-alert-text {
+	margin: 0;
+	flex: 1;
+	text-align: center;
+	font-family: var(--y04-win-font);
+	font-size: 0.85rem;
+	line-height: 1.65;
+	color: #1c1c1c;
+}
+
+.y04-alert-actions {
+	display: flex;
+	justify-content: center;
+	margin: 0;
+	padding: 0 1.2rem 1.2rem;
+}
+
+.y04-alert-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 5rem;
+	padding: 0.35rem 0.9rem;
+	margin: 0;
+	background: var(--y04-win-face);
+	color: #0a0a0a;
+	font-family: var(--y04-win-font);
+	font-size: 0.72rem;
+	font-weight: 700;
+	border-width: 2px;
+	border-style: solid;
+	border-color: var(--y04-win-hi) var(--y04-win-lo) var(--y04-win-lo) var(--y04-win-hi);
+	cursor: pointer;
+}
+
+.y04-alert-btn:active {
+	border-color: var(--y04-win-lo) var(--y04-win-hi) var(--y04-win-hi) var(--y04-win-lo);
+}
+
+/*
+  마음속 혼잣말 = 못 보낸 이메일. 손글씨 낙서 대신, 2004년의 웹메일 쓰기
+  팝업 창 그대로 재현한다("받는사람" 입력 안 함, "제목" 없음 — 끝내 보내지
+  못한 메일이라는 걸 창 자체로 보여준다). 테마와 무관하게 고정된 Y2K
+  브라우저 크롬 색(파란 그라데이션 타이틀바)을 쓴다 — 물건이라는 감각.
+*/
+.y04-mail {
+	margin: 1.8rem auto;
+	max-width: 26rem;
+	overflow: hidden;
+	border-width: 2px;
+	border-style: solid;
+	border-color: var(--y04-win-hi) var(--y04-win-lo) var(--y04-win-lo) var(--y04-win-hi);
+	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.y04-mail-titlebar {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 0;
+	padding: 0.4rem 0.5rem;
+	background: linear-gradient(180deg, #74a3e0, #3f6cad 55%, #2c5288);
+	color: #fff;
+	font-family: 'Dotum', 'Noto Sans KR', sans-serif;
+	font-size: 0.72rem;
+	font-weight: 700;
+}
+
+.y04-mail-titlebar-icon {
+	flex-shrink: 0;
+}
+
+.y04-mail-titlebar-text {
+	flex: 1;
+}
+
+.y04-mail-titlebar-close {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.05rem;
+	height: 1rem;
+	background: #d33a3a;
+	color: #fff;
+	border-width: 1px;
+	border-style: solid;
+	border-color: var(--y04-win-hi) var(--y04-win-lo) var(--y04-win-lo) var(--y04-win-hi);
+	font-size: 0.68rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.y04-mail-fields {
+	margin: 0;
+	padding: 0.5rem 0.75rem 0.35rem;
+	background: #eef3fa;
+	border-bottom: 1px solid #c7d6ea;
+}
+
+.y04-mail-field {
+	margin: 0 0 0.3rem;
+	font-family: 'Dotum', 'Noto Sans KR', sans-serif;
+	font-size: 0.68rem;
+	color: #5c6b80;
+}
+
+.y04-mail-field:last-child {
+	margin-bottom: 0;
+}
+
+.y04-mail-field-label {
+	display: inline-block;
+	min-width: 3.6rem;
+	color: #7c8a9c;
+}
+
+.y04-mail-field-empty {
+	font-style: italic;
+	color: #a9b4c4;
+}
+
+.y04-mail-body {
+	margin: 0;
+	padding: 0.9rem 0.9rem 0.6rem;
+	background: #fff;
+	color: #22262d;
+	font-family: var(--y04-font-display);
+	font-size: 0.92rem;
+	line-height: 1.65;
+}
+
+.y04-mail-caption {
+	margin: 0;
+	padding: 0 0.9rem 0.6rem;
+	background: #fff;
+	color: #9aa4b2;
+	font-family: 'Dotum', 'Noto Sans KR', sans-serif;
+	font-size: 0.62rem;
+	text-align: right;
+}
+
+/*
+  임시보관함 목록 + 미리보기 — 메일 한 통짜리 "쓰기" 창이 아니라, 못 보낸
+  메일이 여러 통 쌓여 있는 폴더 그 자체를 보여준다(위: 목록 / 아래: 선택된
+  메일의 미리보기 — Outlook Express식 2단 구성). 마지막 줄이 선택돼
+  있고, 그게 지금 이 대사다.
+*/
+.y04-mailbox {
+	max-width: none;
+	width: 100%;
+	margin-bottom: 3.5rem;
+}
+
+.y04-mailbox-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0;
+	padding: 0.35rem 0.9rem;
+	background: #dde5ef;
+	border-bottom: 1px solid #b7c4d6;
+	color: #5c6b80;
+	font-family: 'Dotum', 'Noto Sans KR', sans-serif;
+	font-size: 0.62rem;
+	font-weight: 700;
+}
+
+.y04-mailbox-list {
+	margin: 0;
+	background: #fff;
+	border-bottom: 1px solid #c7d6ea;
+}
+
+.y04-mailbox-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.6rem;
+	margin: 0;
+	padding: 0.32rem 0.9rem;
+	border-bottom: 1px solid #eef1f5;
+	font-family: 'Dotum', 'Noto Sans KR', sans-serif;
+	font-size: 0.68rem;
+}
+
+.y04-mailbox-row:last-child {
+	border-bottom: none;
+}
+
+.y04-mailbox-row-subject {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-style: italic;
+	color: #a9b4c4;
+}
+
+.y04-mailbox-row-date {
+	flex-shrink: 0;
+	color: #8b97a8;
+}
+
+.y04-mailbox-row-selected {
+	background: #0a246a;
+}
+
+.y04-mailbox-row-selected .y04-mailbox-row-subject,
+.y04-mailbox-row-selected .y04-mailbox-row-date {
+	color: #fff;
+}
+
+/*
+  강조 문장 = 그 시절 CRT 인광(燐光) 컬러. 1997의 .ss-margin-note(손글씨
+  여백 메모)와 같은 문법 — 본문 흐름에서 블록으로 뚝 떨어져 나와 위아래
+  여백을 넉넉히 두고, 본문과 확실히 다른 서체·크기로 눈에 띈다. 손글씨
+  대신 그 시절 컴퓨터 글꼴(돋움체 고정폭)을 쓰고, 종이가 아니라 화면이라는
+  감각을 위해 회전 대신 인광 번짐(text-shadow)을 준다. 가로등 앰버색
+  (--y04-amber, 라이트/다크 각각 대비 맞춰 정의됨) — 나머지는 다 흘러가는
+  일상 서술인데, 이 몇 줄만은 성민의 마음이 멈칫하는 지점이라는 뜻이다.
+*/
+.y04-retro-emphasis {
+	display: block;
+	margin: 1.75rem 0;
+	font-family: 'DotumChe', '돋움체', Menlo, Consolas, monospace;
+	font-size: 1.2em;
+	line-height: 1.6;
+	color: var(--y04-amber);
+	letter-spacing: 0.03em;
+	text-shadow: 0 0 0.4em color-mix(in srgb, var(--y04-amber) 50%, transparent);
+}
+
+.sl-markdown-content img:not(:where(.not-content *, .y04-banner-img, .y04-full-img)) {
+	border-radius: 0.9rem;
+	box-shadow: var(--sl-shadow-md);
+	cursor: zoom-in;
+}
+
+.y04-full-img {
+	width: 100%;
+	height: auto;
+	border-radius: 0.9rem;
+	box-shadow: var(--sl-shadow-md);
+	cursor: zoom-in;
+	margin-bottom: 1.5rem;
+}
+
+/* 모바일에서도 테마 토글을 헤더에 바로 노출 */
+.header .right-group {
+	display: flex !important;
+	gap: 0.5rem;
+}
+.header .social-icons {
+	display: none !important;
+}
+
+:root {
+	--sl-mobile-toc-height: 0rem;
+}
+
+[data-has-sidebar] {
+	--sl-content-inline-start: 0rem !important;
+}
+
+[data-has-sidebar] .header {
+	padding-inline-end: var(--sl-nav-pad-x);
+}
+
+@media (max-width: 49.9375rem) {
+	.header div:has(> #y04-toc-toggle) {
+		flex: 1;
+		min-width: 0;
+	}
+}
+
+.sidebar-pane {
+	display: none;
+	visibility: visible;
+	position: fixed;
+	inset-block-start: var(--sl-nav-height);
+	inset-inline: 0;
+	width: 100%;
+	height: auto;
+	max-height: calc(100vh - var(--sl-nav-height));
+	min-height: 0;
+	overflow-y: auto;
+	background: var(--sl-color-bg-sidebar);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	box-shadow: var(--sl-shadow-md);
+}
+
+html.y04-sidebar-expanded .sidebar-pane {
+	display: block;
+}
+
+.sidebar-content {
+	height: auto;
+	min-height: 0;
+}
+
+.mobile-preferences {
+	display: none !important;
+}
+
+.y04-sidebar-active {
+	color: var(--sl-color-text-accent) !important;
+	font-weight: 600;
+}
+
+/* ============ 위키 전용 컴포넌트 ============ */
+
+.y04-section {
+	position: relative;
+	margin-inline: calc(-1 * var(--sl-content-pad-x));
+	padding-inline: var(--sl-content-pad-x);
+	padding-block: clamp(3.5rem, 8vw, 6rem);
+	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
+}
+
+.y04-section .y04-note:last-child,
+.y04-section .y04-alert:last-child,
+.y04-section .y04-mail:last-child,
+.y04-section .y04-tracklist:last-child,
+.y04-section .y04-card-grid:last-child,
+.y04-section .y04-place-list:last-child,
+.y04-section .y04-retro-emphasis:last-child {
+	margin-bottom: 0;
+}
+
+/*
+  섹션 구분선 = 손그림 물결선 대신 Win2000 파인 홈(groove) 가로줄 —
+  헤딩 밑줄과 같은 베벨 기법(어두운 선 + 밝은 선)이지만, 이쪽은 헤딩
+  액센트가 아니라 페이지 레벨 구조선이라 중립적인 --y04-border 색을 쓴다.
+  실제 <hr>이 그 시절 브라우저에서 렌더링되던 방식 그대로.
+*/
+.y04-section::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: var(--sl-content-pad-x);
+	right: var(--sl-content-pad-x);
+	height: 2px;
+	background: var(--y04-border);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.y04-section:first-child::before {
+	display: none;
+}
+
+.y04-section .sl-heading-wrapper.level-h2 {
+	text-align: center;
+	font-size: clamp(var(--sl-text-2xl), 4.5vw, var(--sl-text-4xl));
+	margin-bottom: 0.9rem;
+	position: relative;
+	display: inline-block;
+	padding-bottom: 0.5rem;
+}
+
+/*
+  헤딩 밑줄 = 손그림 물결선 대신 Win2000 "파인 홈" 선(groove). 위쪽에
+  어두운 선, 바로 아래 밝은 선을 겹쳐 실제로 표면이 파인 것처럼 보이게
+  하는 건 이 위키 전역에서 이미 쓰고 있는 3D 베벨과 같은 기법이다 — 새
+  장식을 더하는 대신 이미 있는 재질 문법을 헤딩에도 그대로 적용한다.
+  wrapper가 inline-block이라 밑줄 너비(inset-inline 8%)는 글자 수에 따라
+  자동으로 늘어나거나 줄어든다.
+*/
+.y04-section .sl-heading-wrapper.level-h2::after {
+	content: '';
+	position: absolute;
+	inset-inline: 8%;
+	bottom: 0;
+	height: 2px;
+	background: var(--sl-color-accent);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.y04-fade-reveal {
+	opacity: 0;
+	transition: opacity 0.6s ease;
+}
+
+.y04-fade-reveal.y04-show {
+	opacity: 1;
+}
+
+.y04-hero-tags {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.6rem;
+	margin: 2.75rem 0 0 !important;
+}
+
+/*
+  기본 정보 태그 — 마스킹테이프로 붙인 라벨 대신, Win2000 "속성" 배지.
+  회전과 부드러운 그림자를 걷어내고 각진 테두리 + 인셋 하이라이트(FRAME)로
+  통일한다. 라벨 칸은 카드/표와 같은 회색, 값 칸만 액센트색을 유지해
+  프로필의 핵심 정보라는 강조를 남긴다.
+*/
+.y04-tag {
+	position: relative;
+	display: inline-flex;
+	align-items: stretch;
+	overflow: hidden;
+	margin: 0;
+	border: 1px solid #96a3b2;
+	box-shadow: inset 0 0 0 1px #fff;
+	font-family: var(--y04-win-font);
+	font-size: 0.72rem;
+}
+
+.y04-tag-label {
+	padding: 0.32rem 0.7rem;
+	background: var(--y04-win-row-label);
+	color: var(--y04-win-meta);
+}
+
+.y04-tag-value {
+	padding: 0.32rem 0.7rem;
+	background: var(--sl-color-accent);
+	/* 배경이 다크에선 밝은 네온 그린, 라이트에선 어두운 남색이라
+	   대비를 위한 글자색이 테마마다 반대로 필요하다 */
+	color: hsl(135, 60%, 10%);
+	font-weight: 700;
+}
+
+:root[data-theme='light'] .y04-tag-value {
+	color: hsl(0, 0%, 100%);
+}
+
+.y04-facts {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.6rem;
+	margin: 2.25rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+#sec-profile #sec-appearance,
+#sec-profile #sec-taste {
+	margin-top: 3.5rem;
+}
+
+/* 나이/직업/회사 태그(.y04-tag)와 같은 Win2000 속성 배지 재질 —
+   회전과 부드러운 그림자 대신 각진 테두리 + 인셋 하이라이트를 쓴다.
+   <strong> 라벨이 있는 항목은 음수 마진으로 라벨 칸만 회색으로 분리해
+   .y04-tag의 라벨/값 2단 구조를 그대로 흉내낸다. */
+.y04-facts li {
+	position: relative;
+	display: flex;
+	align-items: stretch;
+	overflow: hidden;
+	margin: 0;
+	padding: 0.32rem 0.7rem;
+	border: 1px solid #96a3b2;
+	box-shadow: inset 0 0 0 1px #fff;
+	background: var(--y04-win-body);
+	font-family: var(--y04-win-font);
+	font-size: 0.72rem;
+	line-height: 1.4;
+	color: var(--y04-win-ink);
+}
+
+.y04-facts li strong {
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+	margin: -0.32rem 0.6rem -0.32rem -0.7rem;
+	padding: 0.32rem 0.7rem;
+	background: var(--y04-win-row-label);
+	color: var(--y04-win-meta);
+	font-weight: 700;
+}
+
+/*
+  취향: 좋아하는 것/버릇 → CD 케이스 뒷면(back tray card) 그대로. 종이
+  다이어리 재질(크림색, 컬러 스티커, 넉넉한 줄간격)을 걷어내고, 실제 CD
+  뒷면 인쇄 — 그래파이트 바탕에 흰/은색 인쇄체, 빽빽한 줄간격, 무채색
+  아이콘(컬러 이모지는 grayscale 필터로 채도만 뺀다) — 로 바꾼다. 테마와
+  무관하게 고정된 색(실제 CD라는 물건감 유지).
+*/
+.y04-tracklist {
+	position: relative;
+	overflow: hidden;
+	margin: 1.5rem 0;
+	padding-block: 0.2rem;
+	background-color: #c7cad0;
+	background-image: repeating-linear-gradient(100deg, rgba(255, 255, 255, 0.5) 0px, rgba(255, 255, 255, 0.5) 1px, transparent 1px, transparent 3px),
+		linear-gradient(155deg, #f2f3f5, #cfd2d8 35%, #eef0f2 55%, #b7bac1 80%, #e4e6e9);
+	border: 1px solid #9a9da4;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 0.5rem 1.1rem rgba(0, 0, 0, 0.3);
+}
+
+.y04-tracklist-head {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1.1rem;
+	font-family: 'DotumChe', '돋움체', Menlo, Consolas, monospace;
+	font-size: 0.66rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #55575e;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+}
+
+/* 표(그리드) 대신 여백으로만 구분되는 흐르는 목록 — 줄 사이 테두리도,
+   줄마다 깔린 배경도 없다. 대신 그 시절 CD-R을 손으로 굽던 믹스테이프
+   자켓처럼, 트랙마다 서로 다른 서체를 준다(이미 로드된 4개 서체를
+   순환) — 표 느낌을 완전히 지우면서 "각 곡마다 다른 기분으로 적어
+   넣은" 손맛을 준다. */
+.y04-track {
+	display: flex;
+	align-items: baseline;
+	gap: 0.6rem;
+	margin: 0;
+	padding: 0.55rem 1.1rem;
+	font-size: 0.8rem;
+	line-height: 1.5;
+	color: #38383c;
+}
+
+.y04-track:nth-of-type(4n + 1) {
+	font-family: var(--y04-font-heading);
+	color: #a86a1f;
+}
+.y04-track:nth-of-type(4n + 2) {
+	font-family: var(--y04-font-display);
+	color: #a8503a;
+}
+.y04-track:nth-of-type(4n + 3) {
+	font-family: 'DotumChe', '돋움체', Menlo, Consolas, monospace;
+	color: #1f7a5c;
+}
+.y04-track:nth-of-type(4n) {
+	font-family: 'Noto Sans KR', sans-serif;
+	font-weight: 900;
+	color: #33469e;
+}
+
+.y04-track-emoji {
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.2rem;
+	line-height: 1;
+}
+
+.y04-track-text {
+	flex: 1;
+}
+
+.y04-track-no {
+	flex-shrink: 0;
+	font: inherit;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	color: #b23e63;
+	min-width: 1.6rem;
+}
+
+/*
+  프로필 사진 — 앨범 포토코너 대신, 그 시절 "그림판"으로 사진을 열어본
+  것처럼 Win2000 창으로 감싼다. 타이틀바는 .y04-note와 같은 크롬을
+  그대로 재사용하고, 하단에는 그림판/사진 보기 프로그램의 상태 표시줄을
+  흉내낸 캡션(크기·배율)을 붙인다.
+*/
+.y04-profile-photo-wrap {
+	display: flex;
+	justify-content: center;
+	margin: 1.5rem 0 0;
+}
+
+.y04-photo-window {
+	display: inline-block;
+	overflow: hidden;
+	background: var(--y04-win-face);
+	border-width: 2px;
+	border-style: solid;
+	border-color: var(--y04-win-hi) var(--y04-win-lo) var(--y04-win-lo) var(--y04-win-hi);
+	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.y04-photo-body {
+	padding: 0.8rem;
+}
+
+.y04-photo-status {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.6rem;
+	padding: 0.3rem 0.7rem;
+	border-top: 1px solid var(--y04-win-lo-2);
+	font-family: var(--y04-win-font);
+	font-size: 0.62rem;
+	color: #454a55;
+}
+
+.y04-profile-photo {
+	display: block;
+	width: clamp(20rem, 68vw, 30rem);
+	border: 1px solid #96a3b2;
+	cursor: zoom-in;
+}
+
+/*
+  장소 설명(온음뮤직/오피스텔/한국대학교 안의 개별 공간)과 주변 인물 카드
+  — 둘 다 같은 "노트" 문법(줄쳐진 메모지, 손으로 붙인 듯한 회전)을 쓰고
+  있었다. 이제는 Win2000 "속성창" 재질로 통일한다: SectionBar(짙은 남색
+  그라데이션 헤더 + 흰 사각 점) + 본문. 인물 카드만 라벨/값 표(DataTable)를
+  추가로 갖는다 — 나이·직책 같은 정보가 구조화된 사실이기 때문이다.
+  실제 OS 창이라는 감각을 위해 라이트/다크 테마와 무관하게 고정색을 쓴다.
+*/
+.y04-place-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+	margin: 1.5rem 0;
+}
+
+.y04-place {
+	position: relative;
+	margin: 0;
+	overflow: hidden;
+	background: var(--y04-win-body);
+	border: 1px solid #96a3b2;
+	box-shadow: inset 0 0 0 1px #fff;
+}
+
+.y04-place-titlebar {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin: 0;
+	padding: 0.4rem 0.65rem;
+	background: linear-gradient(180deg, var(--y04-win-section-1), var(--y04-win-section-2));
+	border-bottom: 1px solid #1e3350;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.y04-place-dot {
+	flex-shrink: 0;
+	width: 0.4rem;
+	height: 0.4rem;
+	background: rgba(255, 255, 255, 0.8);
+}
+
+.y04-place-title {
+	flex: 1;
+	min-width: 0;
+	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--y04-win-font);
+	font-size: 0.8rem;
+	font-weight: 700;
+	color: #fff;
+}
+
+.y04-place-tag {
+	flex-shrink: 0;
+	margin: 0;
+	font-family: var(--y04-win-font);
+	font-size: 0.68rem;
+	color: rgba(255, 255, 255, 0.85);
+	white-space: nowrap;
+}
+
+/* 설명 문단 = 속성창 안의 읽기 전용 텍스트 필드. 나머지 Win2000
+   요소들과 같은 "파인 판" 기법 — 블러 그림자가 아니라 어두운 선(위/왼쪽)
+   + 밝은 선(아래/오른쪽) 2px 단단한 베벨로 실제로 파여 보이게 한다. */
+.y04-place-desc {
+	margin: 0.5rem;
+	padding: 0.75rem 0.8rem 0.85rem;
+	background: var(--y04-win-body);
+	border-width: 2px;
+	border-style: solid;
+	border-color: var(--y04-win-lo-2) #fff #fff var(--y04-win-lo-2);
+	font-family: var(--y04-win-font);
+	font-size: 0.78rem;
+	line-height: 1.6;
+	color: var(--y04-win-ink);
+}
+
+/*
+  주변 인물 카드 — 속성창 표 대신, 그 시절 컴퓨터 메신저(버디버디/네이트온/
+  MSN)의 대화상대 프로필 팝업처럼. 연한 하늘색 헤더에 각진 아바타(그 시절
+  버디 아이콘은 원이 아니라 각진 정사각형이었다), 온라인은 점 배지가
+  아니라 텍스트 상태로, 상태메시지 스타일 부제, 자기소개 같은 본문.
+  그림자는 부드러운 블러 대신 나머지 Win2000 요소와 같은 단단한 베벨/
+  오프셋 그림자를 쓴다 — 장소 카드(남색 속성창)와는 색으로만 구분되는
+  같은 재질의 "물건". 테마와 무관하게 고정색.
+*/
+.y04-card-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+	gap: 1rem;
+	margin: 1.5rem 0;
+}
+
+.y04-card {
+	position: relative;
+	margin: 0;
+	overflow: hidden;
+	background: #fff;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #eef6ff #4a72a4 #4a72a4 #eef6ff;
+	box-shadow: 3px 3px 8px rgba(20, 40, 70, 0.3);
+}
+
+.y04-card-header {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin: 0;
+	padding: 0.6rem 0.7rem;
+	background: linear-gradient(180deg, #eaf3fc, #cfe3f6);
+	border-bottom: 1px solid #a8c6e6;
+}
+
+.y04-card-avatar {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #fff rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.35) #fff;
+	font-family: var(--y04-win-font);
+	font-size: 0.8rem;
+	font-weight: 700;
+	color: #fff;
+}
+
+.y04-card-grid .y04-card:nth-of-type(4n + 1) .y04-card-avatar {
+	background: #2f5fbf;
+}
+.y04-card-grid .y04-card:nth-of-type(4n + 2) .y04-card-avatar {
+	background: #2f9e4f;
+}
+.y04-card-grid .y04-card:nth-of-type(4n + 3) .y04-card-avatar {
+	background: #c23a78;
+}
+.y04-card-grid .y04-card:nth-of-type(4n) .y04-card-avatar {
+	background: #d97f1f;
+}
+
+.y04-card-online-text {
+	flex-shrink: 0;
+	align-self: flex-start;
+	margin-top: 0.1rem;
+	font-family: var(--y04-win-font);
+	font-size: 0.6rem;
+	font-weight: 700;
+	color: #1f8a3e;
+}
+
+.y04-card-heading {
+	flex: 1;
+	min-width: 0;
+}
+
+.y04-card-title {
+	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--y04-win-font);
+	font-size: 0.82rem;
+	font-weight: 700;
+	color: #1d4d80;
+}
+
+.y04-card-title::before {
+	content: '◈ ';
+	opacity: 0.6;
+}
+.y04-card-title::after {
+	content: ' ◈';
+	opacity: 0.6;
+}
+
+.y04-card-status {
+	margin: 0.15rem 0 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--y04-win-font);
+	font-size: 0.66rem;
+	font-style: italic;
+	color: #5c7fa3;
+}
+
+.y04-card-bio {
+	margin: 0;
+	padding: 0.85rem 0.8rem 0.95rem;
+	background: #fff;
+	font-size: 0.78rem;
+	line-height: 1.6;
+	color: #2c3138;
+}
