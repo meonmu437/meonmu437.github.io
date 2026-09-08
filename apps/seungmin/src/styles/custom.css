@@ -658,6 +658,11 @@ html.sm-sidebar-expanded .sidebar-pane {
 	color: hsl(258, 70%, 72%);
 }
 
+.sm-remote-row--teapot .sm-remote-name {
+	background: color-mix(in srgb, hsl(145, 65%, 45%) 20%, transparent);
+	color: hsl(145, 65%, 55%);
+}
+
 .sm-remote-url {
 	flex: 1;
 	min-width: 0;
