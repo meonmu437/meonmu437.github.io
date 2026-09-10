@@ -1,0 +1,297 @@
+---
+title: 줄리안 · RAINBOW VILLAGE
+description: 완벽한 위장 신분, 완벽하지 않은 진심 — 언더커버 로맨틱 코미디
+---
+
+import { Image } from 'astro:assets';
+import ScrollEffects from '../../components/ScrollEffects.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import BackToTop from '../../components/BackToTop.astro';
+import TrailerIntro from '../../components/TrailerIntro.astro';
+import ReceiptReveal from '../../components/ReceiptReveal.astro';
+import martProfile from '../../assets/julian/mart-profile.webp';
+import fbiProfile from '../../assets/julian/fbi-profile.webp';
+import villageMap from '../../assets/julian/village-map.png';
+import martMap from '../../assets/julian/mart-map-v2.png';
+import safehouse from '../../assets/julian/safehouse.png';
+
+<TrailerIntro />
+
+<div class="jl-feature-presentation" aria-label="Now showing: Meet Julian">
+	<span class="jl-feature-kicker">Feature Presentation</span>
+	<p><span>Now Showing</span> Meet Julian</p>
+</div>
+
+<div class="jl-section jl-act-mart jl-reveal" id="sec-intro">
+
+<div class="jl-hero">
+	<div class="jl-hero-photo-frame">
+		<Image src={martProfile} alt="줄리안, 레인보우 마트 파란 앞치마 차림" widths={[320, 480, 640]} sizes="(max-width: 640px) 80vw, 320px" />
+		<div class="jl-hero-stars" aria-label="이달의 우수사원 3회">
+			<span>★</span><span>★</span><span>★</span>
+		</div>
+		<div class="jl-hero-badge">
+			<small>RAINBOW MART PROUDLY PRESENTS</small>
+			<strong>EMPLOYEE<br />OF THE MONTH</strong>
+		</div>
+	</div>
+	<div class="jl-hero-copy">
+		<p class="jl-hero-kicker">RAINBOW MART · 6번 계산대</p>
+		<p class="jl-hero-name">Julian <span>“Jules”</span> Valenti</p>
+		<div class="jl-subtitle">
+			<p class="jl-subtitle-en">“I’m excellent with customers. Says so on the wall.”</p>
+			<p class="jl-subtitle-tr">나 손님 응대 엄청 잘해. 벽에도 그렇게 적혀 있잖아.</p>
+		</div>
+	</div>
+</div>
+
+<div class="jl-subsection" id="sec-profile">
+
+## ✨ Profile
+
+<ul class="jl-tag-grid">
+	<li><span class="jl-tag-label">본명</span><span class="jl-tag-value">Julian Valenti<small>줄리안 발렌티</small></span></li>
+	<li><span class="jl-tag-label">애칭</span><span class="jl-tag-value">Jules<small>줄스</small></span></li>
+	<li><span class="jl-tag-label">나이</span><span class="jl-tag-value">31세</span></li>
+	<li><span class="jl-tag-label">키</span><span class="jl-tag-value">188cm</span></li>
+	<li><span class="jl-tag-label">출신</span><span class="jl-tag-value">뉴저지주<small>이탈리아계 미국인</small></span></li>
+	<li><span class="jl-tag-label">직업</span><span class="jl-tag-value">프런트엔드 캐셔</span></li>
+	<li><span class="jl-tag-label">주 근무지</span><span class="jl-tag-value">6번 계산대</span></li>
+	<li><span class="jl-tag-label">앞치마</span><span class="jl-tag-value">파란색</span></li>
+	<li><span class="jl-tag-label">이달의 직원</span><span class="jl-tag-value">3회</span></li>
+	<li><span class="jl-tag-label">차량</span><span class="jl-tag-value">Honda Civic<small>구형 · 은색</small></span></li>
+</ul>
+
+<p class="jl-aside-note" aria-label="레인보우 빌리지 외곽에는 줄리안이 혼자 사는 평범한 2층 주택이 있다. 적어도 밖에서 보기에는 그렇다.">
+	<span class="jl-rumor-label" aria-hidden="true"><small>OVERHEARD AT CHECKOUT 06</small>Rumor Has It!</span>
+	<span class="jl-rumor-cutouts" aria-hidden="true">
+		<span>레인보우 빌리지 외곽에는 줄리안이 혼자 사는 평범한 2층 주택이 있다.</span>
+		<strong>적어도 밖에서 보기에는 그렇다.<i>?</i></strong>
+	</span>
+</p>
+
+</div>
+
+<div class="jl-subsection" id="sec-appearance">
+
+## ✨ Appearance & Personality
+
+검은 곱슬머리와 선명한 푸른 눈, 왼쪽 눈 아래의 작은 점. 선이 고운 얼굴과 길고 또렷한 눈매 때문에 예쁘다는 인상을 주는 눈에 띄는 미남이다.
+
+특히 선글라스를 거의 항상 코끝에 느슨하게 걸쳐 놓는다. 눈을 숨기기 위해서라기보다 오히려 사람들이 한 번 더 쳐다보게 만들기 위해서다.
+
+<div class="jl-subtitle">
+	<p class="jl-subtitle-en">“What? It works.”</p>
+	<p class="jl-subtitle-tr">왜. 잘 먹히잖아.</p>
+</div>
+
+평소의 줄리안은 느긋하고 능글맞다. 사람의 긴장을 풀어 주는 데 능숙하고, 빈정거림과 농담을 자연스럽게 섞으며, 상대가 자신에게 관심을 보이는 상황도 꽤 즐긴다. 플러팅도, 거짓말도 능숙하다.
+
+<div class="jl-subtitle">
+	<p class="jl-subtitle-en">“And?”</p>
+	<p class="jl-subtitle-tr">그래서?</p>
+</div>
+
+<p class="jl-truth-collage" aria-label="진짜에 면역이 없을 뿐이다.">
+	<span aria-hidden="true">진짜에</span>
+	<span aria-hidden="true">면역이 없을</span>
+	<span aria-hidden="true">뿐이다.</span>
+</p>
+
+</div>
+
+<div class="jl-subsection" id="sec-likes">
+
+## ✨ Favorite Things
+
+<ul class="jl-pin-grid">
+	<li><span class="jl-pin-badge">🕶️</span><p class="jl-pin-text">상대가 자신의 선글라스를 신경 쓰는 순간</p></li>
+	<li><span class="jl-pin-badge">🍩</span><p class="jl-pin-text">휴게실에 놓여 있는 쿠키와 도넛</p></li>
+	<li><span class="jl-pin-badge">🛒</span><p class="jl-pin-text">이상할 정도로 잘 맞는 계산대 업무</p></li>
+	<li><span class="jl-pin-badge">💬</span><p class="jl-pin-text">자신에게 지지 않고 받아치는 사람</p></li>
+	<li><span class="jl-pin-badge">🦷</span><p class="jl-pin-text">레인보우 마트의 훌륭한 치과 보험</p></li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="jl-section jl-act-mart jl-reveal" id="sec-village">
+
+## ✨ Rainbow Village
+
+<Image src={villageMap} alt="레인보우 빌리지 지도" class="jl-full-img" />
+
+<div class="jl-place-list">
+	<div class="jl-place-masthead" aria-hidden="true"><span>RAINBOW VILLAGE</span><strong>LOCAL GUIDE</strong><small>8 PLACES WORTH KNOWING · TAKE ONE, IT'S FREE!</small></div>
+	<div class="jl-place">
+		<div class="jl-place-titlebar"><span class="jl-place-icon">🧱</span><p class="jl-place-title"><strong>OLD TOWN</strong><small>올드 타운</small></p></div>
+		<p class="jl-place-desc">오래된 벽돌 건물과 작은 가게가 이어지는 구시가지. 주민들이 우연히 마주치고 새로운 소문이 시작되는 곳.</p>
+	</div>
+	<div class="jl-place">
+		<div class="jl-place-titlebar"><span class="jl-place-icon">🌳</span><p class="jl-place-title"><strong>MAPLEWOOD</strong><small>메이플우드</small></p></div>
+		<p class="jl-place-desc">커다란 나무와 오래된 단독주택이 늘어선 조용한 주택가. 은퇴자와 장기 거주자가 많아 낯선 사람은 금방 눈에 띈다.</p>
+	</div>
+	<div class="jl-place">
+		<div class="jl-place-titlebar"><span class="jl-place-icon">🏡</span><p class="jl-place-title"><strong>BRIAR HILL</strong><small>브라이어 힐</small></p></div>
+		<p class="jl-place-desc">젊은 가족과 D.C. 통근자가 주로 거주하는 신축 주택단지. 정부 계약업체나 연구기관 종사자도 많다.</p>
+	</div>
+	<div class="jl-place">
+		<div class="jl-place-titlebar"><span class="jl-place-icon">🚗</span><p class="jl-place-title"><strong>MAIN STRIP</strong><small>메인 스트립</small></p></div>
+		<p class="jl-place-desc">카페, 주유소, 약국과 쇼핑센터가 이어지는 상업도로. 밤이 되면 교통량이 크게 줄고 외곽 도로로 이어진다.</p>
+	</div>
+	<div class="jl-place">
+		<div class="jl-place-titlebar"><span class="jl-place-icon">☕</span><p class="jl-place-title"><strong>BLUEBELL DINER</strong><small>블루벨 다이너</small></p></div>
+		<p class="jl-place-desc">24시간 영업하는 오래된 동네 다이너. 커피 리필보다 주민들의 정보 교환이 더 빠르다.</p>
+	</div>
+	<div class="jl-place">
+		<div class="jl-place-titlebar"><span class="jl-place-icon">🌿</span><p class="jl-place-title"><strong>RIVERSIDE PARK</strong><small>리버사이드 파크</small></p></div>
+		<p class="jl-place-desc">산책로와 놀이터가 있는 강변 공원. 여름에는 야외 영화와 축제, 가을에는 작은 장터가 열린다.</p>
+	</div>
+	<div class="jl-place">
+		<div class="jl-place-titlebar"><span class="jl-place-icon">🎪</span><p class="jl-place-title"><strong>ST. CLAIR CENTER</strong><small>세인트 클레어 센터</small></p></div>
+		<p class="jl-place-desc">주민회의부터 벼룩시장, 학교 모금 행사와 댄스 수업까지 온갖 동네 행사가 열리는 장소.</p>
+	</div>
+	<div class="jl-place">
+		<div class="jl-place-titlebar"><span class="jl-place-icon">🌲</span><p class="jl-place-title"><strong>NORTHWEST HILLS</strong><small>북서부 구릉지</small></p></div>
+		<p class="jl-place-desc">마을 밖으로 이어지는 숲과 오래된 농로. 낮에는 산책로지만 밤에는 전혀 다른 얼굴을 가진다.</p>
+	</div>
+</div>
+
+<div class="jl-subsection jl-mart-directory" id="sec-mart">
+
+## ✨ Rainbow Mart
+
+<p class="jl-mart-lede">레인보우 빌리지에서 시작해 버지니아와 인근 몇 개 주까지 지점을 넓힌 중견 할인마트 체인. 밝고 친근하고, 조금 촌스럽다. 오래된 주민들에게는 그 촌스러움까지 지역의 전통이다.</p>
+
+<Image src={martMap} alt="레인보우 마트 내부 안내 지도" class="jl-full-img jl-mart-map" />
+
+<div class="jl-mart-board">
+	<p class="jl-mart-board-title">직원 휴게실 게시판 <small>꼭 읽어 주세요!</small></p>
+	<div class="jl-mart-traditions">
+		<div><span>앞치마 규칙</span><strong>일곱 색 중 하나</strong><p>직원은 입사할 때 빨강부터 보라까지, 무지개의 일곱 색 중 자신의 앞치마 색을 고른다. 직급과는 무관하지만 대부분 자기 색에 애착을 갖고, 직원끼리는 서로를 앞치마 색으로 부르기도 한다.</p></div>
+		<div><span>이달의 우수사원</span><strong>사진 한 달 · 상품권 · 근무일 우선권</strong><p>매달 전 지점의 직원 투표와 점장 평가를 합쳐 한 명을 선정한다. 출입구 게시판에는 줄리안의 사진이 벌써 세 장 걸렸다.</p></div>
+	</div>
+
+	<div class="jl-mart-space-grid">
+		<div><span>6번 계산대</span><strong>프런트엔드 · 계산대</strong><p>일곱 개의 계산대와 셀프 계산대가 있다. 줄리안의 자리는 대체로 6번, 이상하게도 그 줄만 조금 더 길다.</p></div>
+		<div><span>직원 전용</span><strong>직원 휴게실</strong><em class="jl-backroom-easter">aka. BACKROOM?</em><p>오래된 소파와 자판기, 전자레인지, 공용 냉장고와 직원 공지판. 쿠키와 도넛은 늘 있지만 오래 남아 있지는 않는다.</p></div>
+		<div><span>점장 전용</span><strong>점장실</strong><p>프런트엔드 뒤쪽의 작은 사무실. 근무표와 평가 자료, 오래된 마트 기념품, 역대 이달의 직원 사진이 빼곡하다.</p></div>
+		<div><span>영업 종료 후</span><strong>주차장</strong><p>낮에는 가족 손님과 카트로 붐비고, 늦은 밤에는 넓고 한산해진다.</p></div>
+		<div><span>계절 행사</span><strong>계절 행사 구역</strong><p>입구 근처의 넓은 행사 공간. 지역 행사와 연계한 홍보가 잦고 인기 직원은 높은 확률로 차출된다.</p></div>
+	</div>
+</div>
+
+<aside class="jl-manager-note">
+	<span class="jl-manager-note-label">STORE MANAGER</span>
+	<p class="jl-manager-note-name">Harold “Hal” Brennan</p>
+	<p class="jl-manager-note-meta">54세 · 레인보우 빌리지 지점장</p>
+	<p>목소리가 크고 잔소리가 많지만 자기 직원이 부당한 일을 당하면 가장 먼저 나선다. 줄리안을 프런트엔드 팀 리드로 승진시키려 여러 번 시도했고, 거절하는 이유를 그저 “책임지는 걸 싫어해서”라고 오해하고 있다. 사람 보는 눈이 좋다고 확신하지만 줄리안의 정체는 전혀 눈치채지 못했다.</p>
+</aside>
+
+</div>
+
+</div>
+
+<div class="jl-pos-transition" aria-label="6번 계산대에서 상품을 두 번 스캔한 뒤 줄리안이 합계를 알려준다.">
+	<span class="jl-pos-pause" aria-hidden="true"><i></i><i></i><i></i></span>
+	<span class="jl-pos-beat" aria-hidden="true">Beep!</span>
+	<span class="jl-pos-beat" aria-hidden="true">Beep!</span>
+	<div class="jl-pos-dialogue">
+		<p>Your total is twenty-one ninety-eight. Ma'am, that coupon expired during the last administration.</p>
+		<p>총 21달러 98센트입니다. 부인, 그 쿠폰은 지난 행정부 때 만료됐는데.</p>
+	</div>
+</div>
+
+<ReceiptReveal />
+
+<div id="jl-classified-content" class="jl-classified-content" hidden>
+
+<div class="jl-section jl-act-file jl-reveal" id="sec-restricted">
+
+## 🔒 EMPLOYEE RECORD — RESTRICTED
+
+<div class="jl-dossier">
+	<span class="jl-dossier-tab">CLASSIFIED · PERSONNEL</span>
+	<p class="jl-dossier-index"><span>FEDERAL BUREAU OF INVESTIGATION</span><span>CASE FILE · JV-031</span></p>
+	<div class="jl-dossier-paper">
+		<p class="jl-stamp">Restricted</p>
+		<div class="jl-dossier-layout">
+			<div class="jl-file-photo-frame">
+				<Image src={fbiProfile} alt="줄리안, FBI 요원 복장" widths={[320, 480, 640]} sizes="(max-width: 640px) 80vw, 320px" />
+				<span>SUBJECT: VALENTI, JULIAN</span>
+			</div>
+			<div class="jl-agent-resume">
+				<p class="jl-agent-resume-kicker">Personnel Résumé · Field Operations</p>
+				<p class="jl-agent-resume-name">Julian Valenti</p>
+				<p class="jl-agent-resume-meta">SPECIAL AGENT <span>BADGE NO. JV-031</span></p>
+				<p class="jl-agent-vitals"><span><b>AGE</b>31</span><span><b>ORIGIN</b>New Jersey, USA · Italian-American</span></p>
+				<ul class="jl-file-facts">
+					<li class="jl-file-strike"><span class="jl-file-label">Cover Employment</span><span class="jl-file-value">레인보우 마트 프런트엔드 캐셔</span></li>
+					<li><span class="jl-file-label">Current Appointment</span><span class="jl-file-value">FBI Special Agent</span></li>
+					<li><span class="jl-file-label">Areas of Expertise</span><span class="jl-file-value">장기 잠복 · 현장 정보수집 · 인물 관찰 및 추적</span></li>
+					<li><span class="jl-file-label">Active Assignment</span><span class="jl-file-value">레인보우 빌리지 장기 잠복 수사</span></li>
+					<li><span class="jl-file-label">Issued Vehicle</span><span class="jl-file-value">검은색 Dodge Charger</span></li>
+					<li><span class="jl-file-label">Service Weapon</span><span class="jl-file-value">Glock 19M</span></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="jl-file-exhibit">
+	<p class="jl-file-exhibit-label"><span>Exhibit</span><span>Safehouse Floor Plan</span></p>
+	<Image src={safehouse} alt="줄리안의 안전가옥 도면" />
+	<p class="jl-file-exhibit-caption">레인보우 빌리지 외곽의 평범한 2층 주택. 곳곳에 숨은 수납공간과 위장문, 낡은 보안장치가 있다. 오래된 장치라 가끔 예민해서, 잘못 건드리면 숨은 문이 열리거나 집 안 전체에 SECURITY CHECK 경고음이 울린다.</p>
+</div>
+
+</div>
+
+<div class="jl-section jl-act-file jl-reveal" id="sec-backroom">
+
+## 🗃️ BACKROOM
+
+<p class="jl-backroom-aside">레인보우 마트 휴게실 이야기는 아니다. 아마도.</p>
+
+Backroom은 줄리안이 소속된 FBI 소규모 현장팀의 비공식 별칭이다. 표면에 드러나지 않는 공간에서 사건의 연결고리를 찾고, 필요한 순간에만 현장으로 나오는 팀이라는 의미에서 붙었다.
+
+<div class="jl-file-card-grid">
+	<div class="jl-file-card" data-tab="Agent File">
+		<p class="jl-file-card-name">Daniel Cole</p>
+		<p class="jl-file-card-role">43세 · Supervisory Special Agent</p>
+		<p class="jl-file-card-bio">Backroom의 팀장. 침착하고 무뚝뚝하며 작전과 팀원의 안전을 무엇보다 중요하게 생각한다. 줄리안의 실력은 높게 평가하지만 즉흥적인 판단과 능글맞은 태도 때문에 자주 골머리를 앓는다.</p>
+	</div>
+	<div class="jl-file-card" data-tab="Agent File">
+		<p class="jl-file-card-name">Ethan Park</p>
+		<p class="jl-file-card-role">26세 · Special Agent</p>
+		<p class="jl-file-card-bio">LA 출신 한국계 미국인, 줄리안의 후배 요원. 규정과 절차를 중요하게 생각하는 까칠한 완벽주의자. 겉으로는 줄리안을 “규정 안 지키는 인간”이라 평가하지만, 실제로는 그의 작전 기록을 찾아볼 만큼 동경하고 있다.</p>
+	</div>
+</div>
+
+</div>
+
+<div class="jl-section jl-act-file jl-reveal" id="sec-closing">
+
+<div class="jl-title-card">
+	<p class="jl-title-card-line">위장 신분은 완벽했다.</p>
+	<p class="jl-title-card-line">문제는 진심까지 위장할 수는 없었다는 것.</p>
+	<p class="jl-title-card-main">OPERATION: FALLING</p>
+	<span class="jl-title-card-rainbow" aria-hidden="true"></span>
+	<div class="jl-subtitle jl-outro-dialogue">
+		<p class="jl-subtitle-en">“Don’t forget your rewards card—shit. Wrong line of work.”</p>
+		<p class="jl-subtitle-tr">(적립카드 잊지 마세—젠장. 직업을 잘못 골랐네.)</p>
+	</div>
+	<nav class="jl-outro-links" aria-label="캐릭터 채팅 링크">
+		<a class="jl-outro-link jl-outro-link-primary" href="" data-card="RAINBOW MART" aria-label="유니챗으로 이동">유니챗<small>REWARDS MEMBER</small></a>
+		<a class="jl-outro-link jl-outro-link-pending" href="" data-card="RAINBOW MART" aria-label="엘린으로 이동">엘린<small>REWARDS MEMBER</small></a>
+		<a class="jl-outro-link jl-outro-link-pending" href="" data-card="RAINBOW MART" aria-label="티팟으로 이동">티팟<small>REWARDS MEMBER</small></a>
+	</nav>
+</div>
+
+</div>
+
+</div>
+
+<ScrollEffects />
+<Lightbox />
+<BackToTop />

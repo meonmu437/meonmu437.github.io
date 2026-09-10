@@ -1,0 +1,2313 @@
+/*
+  줄리안 · RAINBOW VILLAGE 커스텀 테마 — "영화 예고편"
+  - Design Read: 어딘가의 지구 시리즈 첫 캐릭터. 언더커버 로맨틱 코미디 —
+    FBI 잠복요원 줄리안이 미국 교외 마을의 대형마트 캐셔로 위장 근무 중이다.
+    소개 자료 자체가 이미 "평범한 마트 직원 표지 → EMPLOYEE RECORD
+    RESTRICTED → FBI 도시에"라는 반전 구조를 갖고 있어, 그 반전을 페이지의
+    핵심 시각 장치로 그대로 쓴다: 딱 한 번, 페이지 중간에서 배경/타이포/
+    컬러가 전부 하드컷으로 뒤집힌다.
+  - 1막 COVER(레인보우 마트) = 빈티지 아메리카나 일러스트 톤. 무지개 7색을
+    전부 쓰는 대신 줄리안의 앞치마 색인 파랑 하나만 메인 액센트로 고정하고,
+    무지개는 클로징에서 "정체가 새어 나오는" 순간에만 살짝 등장시킨다.
+    헤딩은 마트 세일 사인 서체(Archivo Black), 대사는 그 시절 영화 자막처럼
+    검은 바 + 흰 글자로.
+  - 2막 BACKROOM(FBI) = 차갑고 어두운 차콜, 타자기 모노스페이스(Courier
+    Prime/Special Elite), 리댁션과 빨간 RESTRICTED 도장. 영수증을 뒤집으면
+    사이트 크롬과 1막 카드도 함께 야간 팔레트로 전환된다.
+  - 도입부(TrailerIntro.astro)는 스크롤 리빌이 아니라 페이지에 들어오자마자
+    재생되는 예고편 시퀀스 — 내레이션 카드가 순서대로 나타났다 사라지고
+    장르 도장에서 멈춘다.
+*/
+
+html {
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+
+/* ============ 직원 휴게실 코르크 게시판 ============ */
+
+.jl-mart-board {
+	position: relative;
+	max-width: 44rem;
+	margin: 3rem auto 0;
+	padding: clamp(2.8rem, 6vw, 3.8rem) clamp(1rem, 3vw, 1.6rem) clamp(1.3rem, 4vw, 2rem);
+	border: 0.65rem solid #8c5834;
+	border-radius: 0.3rem;
+	background:
+		radial-gradient(circle at 18% 22%, rgba(90, 48, 25, 0.2) 0 1px, transparent 1.5px) 0 0 / 0.8rem 0.8rem,
+		radial-gradient(circle at 70% 68%, rgba(255, 236, 190, 0.18) 0 1px, transparent 1.6px) 0 0 / 1.05rem 1.05rem,
+		#bd8150;
+	box-shadow: 0.55rem 0.7rem 0 rgba(37, 48, 67, 0.2), inset 0 0 1.4rem rgba(76, 38, 17, 0.25);
+}
+
+.jl-mart-board-title {
+	position: absolute;
+	top: 0.75rem;
+	left: 50%;
+	margin: 0 !important;
+	padding: 0.35rem 1.2rem 0.4rem;
+	background: #fff5b8;
+	box-shadow: 0.18rem 0.22rem 0 rgba(68, 39, 23, 0.24);
+	font-family: var(--jl-font-body);
+	font-size: 0.9rem;
+	font-weight: 900;
+	color: #183f72 !important;
+	transform: translateX(-50%) rotate(-0.7deg);
+	white-space: nowrap;
+}
+
+.jl-mart-board-title small {
+	margin-left: 0.45rem;
+	font-family: var(--jl-font-sign);
+	font-size: 0.65rem;
+	font-weight: 700;
+	color: #c52d3c;
+}
+
+.jl-mart-board .jl-mart-traditions {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+	max-width: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+.jl-mart-board .jl-mart-traditions::before { content: none; }
+
+.jl-mart-board .jl-mart-traditions > div {
+	display: block;
+	min-height: 12rem;
+	padding: 1.35rem 1.15rem 1.1rem;
+	border: 0;
+	background: #fffdf5;
+	box-shadow: 0.2rem 0.28rem 0 rgba(70, 39, 22, 0.22);
+	transform: rotate(-0.65deg);
+}
+
+.jl-mart-board .jl-mart-traditions > div + div {
+	padding-top: 1.35rem;
+	border: 0;
+	transform: rotate(0.55deg);
+}
+
+.jl-mart-board .jl-mart-traditions > div::before {
+	content: '';
+	top: 0.55rem;
+	right: 0.75rem;
+	width: 0.65rem;
+	height: 0.65rem;
+	background: #4ba873;
+}
+
+.jl-mart-board .jl-mart-traditions > div:last-child::before { background: #d33a49; }
+
+.jl-mart-board .jl-mart-traditions span,
+.jl-mart-board .jl-mart-traditions strong,
+.jl-mart-board .jl-mart-traditions p {
+	display: block;
+	grid-column: auto;
+	grid-row: auto;
+}
+
+.jl-mart-board .jl-mart-traditions span {
+	width: fit-content;
+	margin: 0 0 0.6rem;
+	padding-bottom: 0.18rem;
+	border-bottom: 0.2rem solid #efc832;
+	font-family: var(--jl-font-body);
+	font-size: 0.72rem;
+	letter-spacing: 0.03em;
+	color: #c52d3c;
+}
+
+.jl-mart-board .jl-mart-traditions strong {
+	margin: 0;
+	font-family: var(--jl-font-sign);
+	font-size: 1.08rem;
+	color: #183f72;
+}
+
+.jl-mart-board .jl-mart-traditions p {
+	margin-top: 0.8rem;
+	font-size: 0.75rem;
+	line-height: 1.7;
+	color: #525b67 !important;
+}
+
+.jl-mart-board .jl-mart-space-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+	max-width: none;
+	margin: 1.35rem 0 0;
+	border: 0;
+	counter-reset: none;
+}
+
+.jl-mart-board .jl-mart-space-grid::before { content: none; }
+
+.jl-mart-board .jl-mart-space-grid > div {
+	display: block;
+	min-height: 9.5rem;
+	margin: 0;
+	padding: 1.3rem 1rem 1rem;
+	border: 0;
+	background: #fff1a8;
+	box-shadow: 0.18rem 0.24rem 0 rgba(70, 39, 22, 0.2);
+	transform: rotate(-0.8deg);
+}
+
+.jl-mart-board .jl-mart-space-grid > div:nth-child(2) { background: #ccefd8; transform: rotate(0.7deg); }
+.jl-mart-board .jl-mart-space-grid > div:nth-child(3) { background: #ffd3df; transform: rotate(0.45deg); }
+.jl-mart-board .jl-mart-space-grid > div:nth-child(4) { background: #cfe9fb; transform: rotate(-0.55deg); }
+.jl-mart-board .jl-mart-space-grid > div:nth-child(5) {
+	grid-column: 1 / -1;
+	min-height: 0;
+	background: #e5d8f5;
+	transform: rotate(0.3deg);
+}
+
+.jl-mart-board .jl-mart-space-grid > div::before {
+	content: '';
+	position: absolute;
+	top: -0.38rem;
+	left: 50%;
+	width: 3.6rem;
+	height: 0.8rem;
+	background: rgba(255, 246, 210, 0.72);
+	box-shadow: none;
+	transform: translateX(-50%) rotate(-2deg);
+}
+
+.jl-mart-board .jl-mart-space-grid span,
+.jl-mart-board .jl-mart-space-grid strong,
+.jl-mart-board .jl-mart-space-grid p,
+.jl-mart-board .jl-backroom-easter {
+	display: block;
+	grid-column: auto;
+	grid-row: auto;
+}
+
+.jl-mart-board .jl-mart-space-grid span {
+	margin: 0 0 0.25rem;
+	font-family: var(--jl-font-body);
+	font-size: 0.64rem;
+	letter-spacing: 0.02em;
+	color: #b52c3c;
+}
+
+.jl-mart-board .jl-mart-space-grid strong {
+	font-family: var(--jl-font-sign);
+	font-size: 1rem;
+	color: #183f72;
+}
+
+.jl-mart-board .jl-mart-space-grid p {
+	margin-top: 0.65rem;
+	font-size: 0.74rem;
+	line-height: 1.65;
+	color: #4c5867 !important;
+}
+
+.jl-mart-board .jl-backroom-easter {
+	margin: 0.25rem 0 0;
+	font-size: 0.5rem;
+}
+
+:root[data-theme='dark'] .jl-mart-board {
+	border-color: #604126;
+	background: radial-gradient(circle at 18% 22%, rgba(30, 15, 8, 0.3) 0 1px, transparent 1.5px) 0 0 / 0.8rem 0.8rem, #765033;
+	box-shadow: 0.55rem 0.7rem 0 rgba(0, 0, 0, 0.4), inset 0 0 1.4rem rgba(0, 0, 0, 0.3);
+}
+
+:root[data-theme='dark'] .jl-mart-board .jl-mart-traditions { background: transparent; box-shadow: none; }
+:root[data-theme='dark'] .jl-mart-board .jl-mart-traditions > div { background: #292b2f; }
+:root[data-theme='dark'] .jl-mart-board .jl-mart-traditions span,
+:root[data-theme='dark'] .jl-mart-board .jl-mart-space-grid span { color: #ff98ac; }
+:root[data-theme='dark'] .jl-mart-board .jl-mart-traditions strong,
+:root[data-theme='dark'] .jl-mart-board .jl-mart-space-grid strong { color: #bbd6ff; }
+:root[data-theme='dark'] .jl-mart-board .jl-mart-traditions p,
+:root[data-theme='dark'] .jl-mart-board .jl-mart-space-grid p { color: #d4cec0 !important; }
+:root[data-theme='dark'] .jl-mart-board .jl-mart-space-grid > div { background: #4b4227; }
+:root[data-theme='dark'] .jl-mart-board .jl-mart-space-grid > div:nth-child(2) { background: #294638; }
+:root[data-theme='dark'] .jl-mart-board .jl-mart-space-grid > div:nth-child(3) { background: #50313a; }
+:root[data-theme='dark'] .jl-mart-board .jl-mart-space-grid > div:nth-child(4) { background: #293f54; }
+:root[data-theme='dark'] .jl-mart-board .jl-mart-space-grid > div:nth-child(5) { background: #40354f; }
+
+@media (max-width: 30rem) {
+	.jl-mart-board {
+		padding-inline: 0.75rem;
+		border-width: 0.45rem;
+	}
+	.jl-mart-board-title { font-size: 0.76rem; }
+	.jl-mart-board-title small { display: none; }
+	.jl-mart-board .jl-mart-traditions,
+	.jl-mart-board .jl-mart-space-grid { grid-template-columns: 1fr; }
+	.jl-mart-board .jl-mart-traditions > div,
+	.jl-mart-board .jl-mart-traditions > div + div,
+	.jl-mart-board .jl-mart-space-grid > div {
+		min-height: 0;
+		padding: 1.25rem 1rem 1rem;
+	}
+	.jl-mart-board .jl-mart-space-grid > div:nth-child(5) { grid-column: auto; }
+}
+
+html.jl-receipt-theme body,
+html.jl-receipt-theme .header,
+html.jl-receipt-theme .sidebar-pane {
+	transition: background-color 0.65s ease, color 0.65s ease, border-color 0.65s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+:root {
+	/* 영문 타이틀/이름/대사 전용 — 헤더 로고와 같은 흘림체로 통일 */
+	--jl-font-title: 'Pacifico', cursive;
+	/* 1막 영문 소제목 — 줄리안 이름과 같은 흘림체 */
+	--jl-font-heading-kr: var(--jl-font-title);
+	/* 대사 자막 박스 전용 — 영화/OTT 자막에서 흔한 깔끔한 고딕 */
+	--jl-font-subtitle: 'Archivo', 'Noto Sans KR', sans-serif;
+	/* 1막 마트 사이니지(가격표·장소 타이틀·배지) — 딱딱한 임팩트 대신 둥글고 다정한 느낌 */
+	--jl-font-sign: 'Fredoka', 'Noto Sans KR', sans-serif;
+	--jl-font-body: 'Noto Sans KR', var(--sl-font-system);
+	--jl-font-mono: 'Courier Prime', 'Noto Sans KR', monospace;
+	--jl-font-stamp: 'Special Elite', 'Courier Prime', monospace;
+
+	/* 1막 · 레인보우 마트 (표지 정체) — 빈티지 아메리카나, 테마와 무관하게 고정 */
+	--jl-mart-bg: hsl(42, 46%, 95%);
+	--jl-mart-card: hsl(0, 0%, 100%);
+	--jl-mart-blue: hsl(214, 62%, 42%);
+	--jl-mart-blue-deep: hsl(214, 68%, 26%);
+	--jl-mart-ink: hsl(220, 26%, 16%);
+	--jl-mart-ink-soft: hsl(220, 14%, 40%);
+	--jl-mart-border: hsl(36, 28%, 76%);
+	--jl-mart-yellow: hsl(45, 88%, 52%);
+	--jl-mart-red: hsl(355, 68%, 46%);
+
+	/* 2막 · BACKROOM (FBI 본색) — 차갑고 어두운 기밀문서, 테마와 무관하게 고정 */
+	--jl-file-bg: hsl(210, 12%, 8%);
+	--jl-file-card: hsl(210, 11%, 12%);
+	--jl-file-ink: hsl(40, 18%, 92%);
+	--jl-file-ink-soft: hsl(210, 8%, 66%);
+	--jl-file-border: hsl(210, 8%, 28%);
+	--jl-file-red: hsl(2, 70%, 50%);
+
+	/* Starlight 자체 크롬(헤더/사이드바)에만 쓰는 최소한의 토큰 */
+	--sl-font: 'Noto Sans KR', var(--sl-font-system);
+	--sl-color-accent-low: hsl(214, 40%, 20%);
+	--sl-color-accent: hsl(214, 62%, 55%);
+	--sl-color-accent-high: hsl(214, 70%, 82%);
+	--sl-color-bg: hsl(220, 16%, 7%);
+	--sl-color-bg-nav: hsl(220, 14%, 9%);
+	--sl-color-bg-sidebar: hsl(220, 14%, 8%);
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: hsl(214, 55%, 92%);
+	--sl-color-accent: var(--jl-mart-blue-deep);
+	--sl-color-accent-high: hsl(214, 60%, 24%);
+	--sl-color-bg: hsl(42, 30%, 97%);
+	--sl-color-bg-nav: hsl(42, 26%, 98%);
+	--sl-color-bg-sidebar: hsl(42, 22%, 96%);
+}
+
+.site-title span {
+	font-family: var(--jl-font-title);
+	font-weight: 400;
+	font-size: 1.15em;
+	letter-spacing: 0.02em;
+	color: var(--sl-color-accent);
+}
+
+.sl-container {
+	margin-inline: auto;
+}
+
+/* 프론트매터 title이 만드는 기본 H1 패널은 숨기고, 히어로는 직접 그린다 */
+.content-panel:has(#_top) {
+	display: none;
+}
+
+.content-panel + .content-panel {
+	border-top: none;
+}
+
+.sl-anchor-link {
+	display: none !important;
+}
+.sl-heading-wrapper > :first-child {
+	padding-inline-end: 0 !important;
+}
+
+/* 모바일에서도 테마 토글을 헤더에 바로 노출 */
+.header .right-group {
+	display: flex !important;
+	gap: 0.5rem;
+}
+.header .social-icons {
+	display: none !important;
+}
+
+:root {
+	--sl-mobile-toc-height: 0rem;
+}
+
+[data-has-sidebar] {
+	--sl-content-inline-start: 0rem !important;
+}
+
+[data-has-sidebar] .header {
+	padding-inline-end: var(--sl-nav-pad-x);
+}
+
+@media (max-width: 49.9375rem) {
+	.header div:has(> #jl-toc-toggle) {
+		flex: 1;
+		min-width: 0;
+	}
+}
+
+.sidebar-pane {
+	display: none;
+	visibility: visible;
+	position: fixed;
+	inset-block-start: var(--sl-nav-height);
+	inset-inline: 0;
+	width: 100%;
+	height: auto;
+	max-height: calc(100vh - var(--sl-nav-height));
+	min-height: 0;
+	overflow-y: auto;
+	background: var(--sl-color-bg-sidebar);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	box-shadow: var(--sl-shadow-md);
+}
+
+html.jl-sidebar-expanded .sidebar-pane {
+	display: block;
+}
+
+.sidebar-content {
+	height: auto;
+	min-height: 0;
+}
+
+.mobile-preferences {
+	display: none !important;
+}
+
+.jl-sidebar-active {
+	color: var(--sl-color-text-accent) !important;
+	font-weight: 600;
+}
+
+/* ============ 섹션 뼈대 ============ */
+
+/* 예고편에서 인물 소개로 넘어가는 극장 마키. 짧은 간판 한 장으로
+   "이제 본편 시작"을 알리고, 바로 아래 줄리안 히어로로 시선을 보낸다. */
+.jl-feature-presentation {
+	position: relative;
+	margin-inline: calc(-1 * var(--sl-content-pad-x));
+	margin-bottom: clamp(3.5rem, 8vw, 6rem);
+	padding: clamp(1.45rem, 4vw, 2.2rem) var(--sl-content-pad-x);
+	overflow: hidden;
+	background: var(--jl-mart-red);
+	color: #fff9dd;
+	text-align: center;
+	box-shadow: inset 0 0.32rem 0 #f7cc55, inset 0 -0.32rem 0 #f7cc55;
+}
+
+.jl-feature-presentation::before,
+.jl-feature-presentation::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 0.32rem;
+	background: radial-gradient(circle, #fff7bd 0 2px, transparent 2.5px) 0 0 / 1.2rem 0.32rem repeat-x;
+	filter: drop-shadow(0 0 0.2rem rgba(255, 240, 150, 0.8));
+}
+
+.jl-feature-presentation::before {
+	top: 0.55rem;
+}
+
+.jl-feature-presentation::after {
+	bottom: 0.55rem;
+}
+
+.jl-feature-kicker {
+	display: block;
+	margin-bottom: 0.15rem;
+	font-family: var(--jl-font-sign);
+	font-size: clamp(0.6rem, 1.7vw, 0.78rem);
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.jl-feature-presentation p {
+	margin: 0;
+	font-family: var(--jl-font-title);
+	font-size: clamp(1.65rem, 5vw, 2.7rem);
+	font-weight: 400;
+	line-height: 1.25;
+	color: inherit !important;
+}
+
+.jl-feature-presentation p span {
+	display: inline-block;
+	margin-right: 0.6rem;
+	padding: 0.2rem 0.55rem 0.25rem;
+	background: #fff9dd;
+	border-radius: 0.2rem;
+	font-family: var(--jl-font-sign);
+	font-size: 0.42em;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	vertical-align: 0.35em;
+	color: var(--jl-mart-red);
+	transform: rotate(-2deg);
+}
+
+.jl-section {
+	position: relative;
+	margin-inline: calc(-1 * var(--sl-content-pad-x));
+	padding-inline: var(--sl-content-pad-x);
+	padding-block: clamp(3.5rem, 8vw, 6rem);
+	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
+}
+
+/* 1막 = 레인보우 마트. 영수증 공개 상태에 따라 낮/밤 팔레트를 적용한다. */
+.jl-section.jl-act-mart {
+	background: var(--sl-color-bg);
+	color: var(--jl-mart-ink);
+}
+
+/* 큰 구역은 같은 바탕 위에서 이어지고, 경계에는 얇은 무지개 마스킹 테이프를
+   붙인다. 반투명한 섬유 결, 살짝 비뚤어진 각도와 뜯긴 양끝으로 종이 질감을 낸다. */
+.jl-section.jl-act-mart::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: var(--sl-content-pad-x);
+	right: var(--sl-content-pad-x);
+	height: 0.72rem;
+	background:
+		repeating-linear-gradient(97deg, rgba(255, 255, 255, 0.2) 0 1px, transparent 1px 4px),
+		linear-gradient(90deg, #f58aa3 0 16.6%, #f6b565 16.6% 33.2%, #f2da70 33.2% 49.8%, #86c992 49.8% 66.4%, #75b9df 66.4% 83%, #b393d3 83% 100%);
+	box-shadow: 0 0.16rem 0.25rem rgba(69, 54, 38, 0.13);
+	clip-path: polygon(0.3% 18%, 1.1% 4%, 2% 15%, 3% 3%, 4.2% 12%, 96% 6%, 97% 16%, 98% 4%, 99% 13%, 100% 1%, 99.7% 83%, 98.7% 96%, 97.7% 85%, 96.5% 98%, 95.4% 88%, 4% 94%, 3% 84%, 2% 97%, 1% 86%, 0 100%);
+	opacity: 0.8;
+	transform: translateY(-50%) rotate(-0.18deg);
+}
+
+/* 2막 = BACKROOM. 여기서부터 하드컷 — 이 경계선 자체가 "반전의 순간"이다. */
+.jl-section.jl-act-file {
+	background: var(--sl-color-bg);
+	color: var(--jl-file-ink);
+}
+
+/* FBI 구역 경계는 사건 현장의 폴리스 라인처럼 처리한다. 노란 테이프 위에
+   검은 경고 문구를 반복하고, 얇은 사선 결로 비닐 테이프의 광택을 남긴다. */
+.jl-section.jl-act-file::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: var(--sl-content-pad-x);
+	right: var(--sl-content-pad-x);
+	height: 1rem;
+	background:
+		repeating-linear-gradient(105deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 8px),
+		#f0c928;
+	box-shadow: 0 0.18rem 0.3rem rgba(0, 0, 0, 0.35);
+	transform: translateY(-50%) rotate(0.15deg);
+}
+
+.jl-section.jl-act-file::after {
+	content: 'DO NOT CROSS  ·  FBI RESTRICTED  ·  DO NOT CROSS';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: calc(100% - 2 * var(--sl-content-pad-x));
+	overflow: hidden;
+	font-family: var(--jl-font-mono);
+	font-size: 0.58rem;
+	font-weight: 700;
+	line-height: 1rem;
+	letter-spacing: 0.1em;
+	text-align: center;
+	white-space: nowrap;
+	color: #171717;
+	transform: translate(-50%, -50%) rotate(0.15deg);
+	pointer-events: none;
+}
+
+.jl-section.jl-act-mart .sl-markdown-content :is(p, li) {
+	color: var(--jl-mart-ink);
+}
+.jl-section.jl-act-file .sl-markdown-content :is(p, li) {
+	color: var(--jl-file-ink-soft);
+}
+
+.jl-section .jl-place-list:last-child,
+.jl-section .jl-file-card-grid:last-child,
+.jl-section .jl-title-card:last-child {
+	margin-bottom: 0;
+}
+
+/* 줄리안/프로필/외모와 성격/좋아하는 것 — 한 장의 카드 안에서 이어지는
+   내부 구획. 배경은 부모 .jl-section과 그대로 이어받고, 구획 사이는
+   배경이 끊기는 큰 밴드 대신 평범한 여백으로만 나눈다. */
+.jl-subsection {
+	margin-top: clamp(3.5rem, 8vw, 5rem);
+	scroll-margin-top: calc(1.5rem + var(--sl-nav-height));
+}
+
+.jl-section .sl-heading-wrapper.level-h2 {
+	text-align: center;
+	font-size: clamp(var(--sl-text-2xl), 4.5vw, var(--sl-text-4xl));
+	margin-bottom: 0.9rem;
+	position: relative;
+	display: inline-block;
+}
+
+.jl-act-mart :is(h2, h3, h4):not(:where(.not-content *)) {
+	font-family: var(--jl-font-heading-kr);
+	font-weight: 400;
+	color: var(--jl-mart-blue-deep) !important;
+}
+.jl-act-file :is(h2, h3, h4):not(:where(.not-content *)) {
+	font-family: var(--jl-font-stamp);
+	font-weight: 400;
+	letter-spacing: 0.02em;
+	color: var(--jl-file-red) !important;
+}
+/* BACKROOM(FBI) 파트는 소제목 밑줄 없이 그대로 둔다 — 요원 파일 느낌은
+   타자기체 색만으로 충분하다. */
+
+/* ============ 1막 · 마트 히어로 ============ */
+
+.jl-hero {
+	display: grid;
+	grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+	align-items: center;
+	gap: clamp(1.5rem, 5vw, 3.5rem);
+	max-width: 52rem;
+	margin: 0 auto;
+}
+
+.jl-hero-photo-frame {
+	position: relative;
+	padding: 0.72rem 0.72rem 4.45rem;
+	border: 0.35rem solid #fff8dc;
+	border-radius: 1.35rem;
+	background:
+		repeating-linear-gradient(135deg, #ff7f9d 0 0.7rem, #ffd950 0.7rem 1.4rem, #62cfa0 1.4rem 2.1rem, #66b9ef 2.1rem 2.8rem);
+	box-shadow:
+		0 0 0 0.22rem var(--jl-mart-blue-deep),
+		0.65rem 0.8rem 0 var(--jl-mart-yellow),
+		0 1.2rem 2.5rem rgba(30, 40, 70, 0.22);
+	transform: rotate(-1.2deg);
+	isolation: isolate;
+}
+
+.jl-hero-photo-frame img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border: 0.28rem solid #fffdf5;
+	border-radius: 0.72rem;
+	box-shadow: 0 0 0 0.15rem var(--jl-mart-blue-deep);
+	cursor: zoom-in;
+}
+
+.jl-hero-stars {
+	position: absolute;
+	z-index: 2;
+	top: -1.45rem;
+	left: 50%;
+	display: flex;
+	align-items: flex-end;
+	gap: 0.18rem;
+	transform: translateX(-50%) rotate(1.2deg);
+}
+
+.jl-hero-stars span {
+	display: grid;
+	place-items: center;
+	width: 2.35rem;
+	aspect-ratio: 1;
+	color: #ffd83d;
+	font-family: var(--jl-font-sign);
+	font-size: 1.9rem;
+	line-height: 1;
+	-webkit-text-stroke: 0.12rem var(--jl-mart-red);
+	filter: drop-shadow(0.14rem 0.18rem 0 var(--jl-mart-blue-deep));
+}
+
+.jl-hero-stars span:nth-child(2) {
+	width: 2.8rem;
+	font-size: 2.35rem;
+	transform: translateY(-0.45rem) rotate(7deg);
+}
+
+.jl-hero-stars span:first-child { transform: rotate(-12deg); }
+.jl-hero-stars span:last-child { transform: rotate(14deg); }
+
+.jl-hero-badge {
+	position: absolute;
+	z-index: 2;
+	right: 0.45rem;
+	bottom: 0.42rem;
+	left: 0.45rem;
+	display: grid;
+	place-items: center;
+	transform: rotate(1.3deg);
+	background: #fff9da;
+	border: 0.17rem solid var(--jl-mart-red);
+	border-radius: 0.55rem;
+	box-shadow: 0.22rem 0.25rem 0 var(--jl-mart-blue-deep);
+	color: var(--jl-mart-ink);
+	text-align: center;
+	line-height: 1;
+	padding: 0.42rem 0.55rem 0.38rem;
+}
+
+.jl-hero-badge small {
+	font-family: var(--jl-font-mono);
+	font-size: 0.46rem;
+	font-weight: 700;
+	letter-spacing: 0.11em;
+}
+
+.jl-hero-badge strong {
+	font-family: var(--jl-font-sign);
+	font-size: 1.08rem;
+	font-weight: 700;
+	letter-spacing: 0.035em;
+	color: var(--jl-mart-blue-deep);
+}
+
+.jl-hero-kicker {
+	margin: 0 0 0.5rem;
+	font-family: var(--jl-font-mono);
+	font-weight: 700;
+	font-size: 0.72rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--jl-mart-blue);
+}
+
+.jl-hero-name {
+	margin: 0 0 1.1rem;
+	font-family: var(--jl-font-title);
+	font-weight: 400;
+	font-size: clamp(1.7rem, 5.5vw, 2.7rem);
+	line-height: 1.3;
+	color: var(--jl-mart-ink);
+}
+
+.jl-hero-name span {
+	color: var(--jl-mart-blue);
+}
+
+@media (max-width: 40rem) {
+	.jl-hero {
+		grid-template-columns: 1fr;
+		text-align: center;
+		max-width: 24rem;
+	}
+	.jl-hero-photo-frame {
+		max-width: 16rem;
+		margin: 0 auto;
+	}
+}
+
+/* 대사 = 그 시절 극장 자막. 검은 바탕 + 흰 글자 + 원문/번역 2줄.
+   1막 전체에서 반복되는 "이건 영화 속 대사다"라는 모티프. */
+.jl-subtitle {
+	margin: 1.4rem auto;
+	max-width: 30rem;
+	padding: 0.9rem 1.2rem;
+	background: #14151a;
+	border-radius: 0.5rem;
+	box-shadow: 0.28rem 0.34rem 0 var(--jl-mart-blue);
+}
+
+.jl-hero-copy .jl-subtitle {
+	margin-inline: auto;
+}
+
+.jl-subtitle p {
+	margin: 0;
+	font-family: var(--jl-font-body);
+	color: #f5f4f0;
+	text-align: center;
+	word-break: keep-all;
+}
+
+.jl-subtitle-en {
+	font-family: var(--jl-font-subtitle);
+	font-weight: 700;
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
+.jl-subtitle-tr {
+	margin-top: 0.4rem !important;
+	font-family: var(--jl-font-subtitle);
+	font-weight: 500;
+	font-size: 0.85rem;
+	color: #b9bcc4 !important;
+}
+
+/* 능글맞은 대사 뒤에 드러나는 진심. 예고편 영문 콜라주와 같은 색종이
+   리듬을 한글 단어 덩어리로 옮겨, 한 줄짜리 반전 카드처럼 보이게 한다. */
+.jl-truth-collage {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.3rem;
+	margin: 2rem auto 0 !important;
+	font-family: var(--jl-font-body);
+	text-align: center;
+}
+
+.jl-truth-collage span {
+	display: inline-block;
+	margin: 0;
+	padding: 0.32rem 0.6rem 0.38rem;
+	background: #fff4a8;
+	box-shadow: 0.12rem 0.16rem 0 rgba(30, 45, 75, 0.2);
+	font-size: clamp(1rem, 3vw, 1.3rem);
+	font-weight: 900;
+	line-height: 1;
+	color: var(--jl-mart-blue-deep);
+	transform: rotate(-1.5deg);
+}
+
+.jl-truth-collage span:nth-child(2) {
+	background: #79d8ef;
+	font-size: clamp(0.95rem, 2.8vw, 1.2rem);
+	transform: rotate(1.2deg);
+}
+
+.jl-truth-collage span:nth-child(3) {
+	background: #ff91ae;
+	color: #4b1730;
+	transform: rotate(-0.5deg);
+}
+
+/* ============ 1막 · 가격표 배지 (기본 정보) ============ */
+
+.jl-tag-grid {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1.1rem 0.8rem;
+	max-width: 44rem;
+	margin: 2.6rem auto 0;
+	padding: 0;
+	list-style: none;
+}
+
+.jl-tag-grid li {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	min-width: 6.8rem;
+	padding: 0.5rem 0.8rem 0.45rem 1.3rem;
+	background: var(--jl-mart-card);
+	border: 1.5px solid var(--jl-mart-border);
+	border-radius: 0.35rem;
+	box-shadow: 3px 4px 0 rgba(40, 50, 70, 0.1);
+}
+
+.jl-tag-grid li::before {
+	content: '';
+	position: absolute;
+	left: 0.5rem;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 0.42rem;
+	height: 0.42rem;
+	border-radius: 50%;
+	background: var(--jl-mart-bg);
+	border: 1px solid var(--jl-mart-border);
+}
+
+.jl-tag-grid li:nth-child(3n + 1) {
+	transform: rotate(-1.4deg);
+}
+.jl-tag-grid li:nth-child(3n + 2) {
+	transform: rotate(1deg);
+}
+.jl-tag-grid li:nth-child(3n) {
+	transform: rotate(-0.6deg);
+}
+
+.jl-tag-label {
+	font-family: var(--jl-font-mono);
+	font-size: 0.62rem;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: var(--jl-mart-ink-soft);
+}
+
+.jl-tag-value {
+	font-family: var(--jl-font-sign);
+	font-weight: 600;
+	font-size: 0.94rem;
+	line-height: 1.25;
+	color: var(--jl-mart-blue-deep);
+}
+
+.jl-tag-value small {
+	display: block;
+	font-family: var(--jl-font-body);
+	font-size: 0.68rem;
+	font-weight: 400;
+	color: var(--jl-mart-ink-soft);
+	margin-top: 0.1rem;
+}
+
+.jl-aside-note {
+	position: relative;
+	max-width: 42rem;
+	margin: 3.4rem auto 0;
+	padding: 0.5rem 0;
+	font-family: var(--jl-font-body);
+	font-size: 0.88rem;
+	font-style: normal;
+	line-height: 1.5;
+	text-align: left;
+	color: var(--jl-mart-ink) !important;
+}
+
+.jl-rumor-label {
+	display: flex;
+	align-items: end;
+	gap: clamp(0.7rem, 3vw, 1.5rem);
+	margin: 0 0 0.65rem;
+	border-bottom: 0.32rem solid var(--jl-mart-red);
+	font-family: var(--jl-font-title);
+	font-size: clamp(1.55rem, 5vw, 2.65rem);
+	font-weight: 700;
+	line-height: 1;
+	color: var(--jl-mart-red);
+	transform: rotate(-0.7deg);
+}
+
+.jl-rumor-label small {
+	order: 2;
+	margin: 0 0 0.3rem auto;
+	font-family: var(--jl-font-mono);
+	font-size: 0.52rem;
+	letter-spacing: 0.09em;
+	color: var(--jl-mart-blue-deep);
+}
+
+.jl-rumor-cutouts {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	gap: 0.38rem;
+	padding: 0.65rem 0.7rem 0.8rem;
+	background: repeating-linear-gradient(0deg, transparent 0 1.45rem, color-mix(in srgb, var(--jl-mart-blue) 14%, transparent) 1.45rem 1.5rem);
+}
+
+.jl-rumor-cutouts > * {
+	display: inline-block;
+	width: fit-content;
+	max-width: 100%;
+	margin: 0;
+	padding: 0.28rem 0.55rem 0.32rem;
+	background: #fff7c9;
+	border-radius: 0.08rem;
+	box-shadow: 0.1rem 0.13rem 0 rgba(27, 50, 85, 0.17);
+	font-weight: 700;
+	word-break: keep-all;
+	color: var(--jl-mart-blue-deep);
+	transform: rotate(-0.35deg);
+}
+
+.jl-rumor-cutouts > strong {
+	position: relative;
+	align-self: flex-end;
+	background: #ff9bb3;
+	font-size: 1.04em;
+	font-weight: 900;
+	color: #4b1730;
+	transform: rotate(0.75deg);
+}
+
+.jl-rumor-cutouts > strong::after {
+	content: '';
+	position: absolute;
+	inset: 45% -0.45rem auto;
+	height: 0.18rem;
+	background: var(--jl-mart-red);
+	transform: rotate(-1.7deg);
+	opacity: 0.76;
+}
+
+.jl-rumor-cutouts > strong i {
+	position: absolute;
+	right: -1.35rem;
+	top: -0.75rem;
+	font-family: var(--jl-font-title);
+	font-size: 2.15rem;
+	font-style: normal;
+	color: var(--jl-mart-red);
+	transform: rotate(13deg);
+}
+
+/* ============ 1막 · 핀 배지 (좋아하는 것) ============ */
+
+.jl-pin-grid {
+	display: grid;
+	grid-template-columns: repeat(6, 3rem);
+	justify-content: center;
+	gap: 1.6rem 1.2rem;
+	max-width: 40rem;
+	margin: 2.6rem auto 0;
+	padding: 0;
+	list-style: none;
+}
+
+.jl-pin-grid li {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.55rem;
+	grid-column: span 2;
+	width: 7.2rem;
+	text-align: center;
+}
+
+.jl-pin-grid li:nth-child(4) {
+	grid-column: 2 / span 2;
+}
+
+.jl-pin-grid li:nth-child(5) {
+	grid-column: 4 / span 2;
+}
+
+.jl-pin-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.4rem;
+	height: 3.4rem;
+	border-radius: 50%;
+	border: 3px solid #fff;
+	font-size: 1.4rem;
+	box-shadow: 0 0.3rem 0.6rem rgba(20, 30, 50, 0.28), inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.jl-pin-grid li:nth-child(5n + 1) .jl-pin-badge {
+	background: var(--jl-mart-blue);
+}
+.jl-pin-grid li:nth-child(5n + 2) .jl-pin-badge {
+	background: var(--jl-mart-yellow);
+}
+.jl-pin-grid li:nth-child(5n + 3) .jl-pin-badge {
+	background: var(--jl-mart-red);
+}
+.jl-pin-grid li:nth-child(5n + 4) .jl-pin-badge {
+	background: hsl(150, 45%, 40%);
+}
+.jl-pin-grid li:nth-child(5n) .jl-pin-badge {
+	background: hsl(280, 40%, 52%);
+}
+
+.jl-pin-text {
+	margin: 0;
+	font-size: 0.8rem;
+	line-height: 1.45;
+	color: var(--jl-mart-ink);
+}
+
+/* ============ 1막 · 마을 안내 ============ */
+
+.jl-full-img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: 0.9rem;
+	box-shadow: 0 1rem 2.2rem rgba(30, 40, 70, 0.22);
+	cursor: zoom-in;
+	margin: 1.6rem 0 2.4rem;
+}
+
+.jl-place-list {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0;
+	margin: 2rem 0 0;
+	border-block: 0.3rem solid var(--jl-mart-blue-deep);
+	background:
+		radial-gradient(circle at 16% 10%, color-mix(in srgb, var(--jl-mart-yellow) 24%, transparent), transparent 29%),
+		linear-gradient(100deg, #fffdf5, #fff9e6);
+	counter-reset: jl-place;
+}
+
+.jl-place-masthead {
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	grid-template-rows: auto auto;
+	align-items: start;
+	gap: 0.75rem 0.7rem;
+	padding: 1.1rem 1.25rem 1rem;
+	border-bottom: 1px solid var(--jl-mart-blue-deep);
+	font-family: var(--jl-font-mono);
+	color: var(--jl-mart-blue-deep);
+}
+
+.jl-place-masthead span {
+	grid-row: 1 / span 2;
+	align-self: center;
+	padding-right: 0.8rem;
+	border-right: 1px solid currentColor;
+	font-size: 0.6rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	writing-mode: vertical-rl;
+}
+
+.jl-place-masthead strong {
+	grid-column: 2;
+	grid-row: 1;
+	font-family: var(--jl-font-title);
+	font-size: clamp(2rem, 7vw, 4rem);
+	font-weight: 400;
+	line-height: 0.9;
+	color: var(--jl-mart-red);
+}
+
+.jl-place-masthead small {
+	grid-column: 2;
+	grid-row: 2;
+	justify-self: end;
+	align-self: end;
+	max-width: 22rem;
+	margin: 0.45rem 0 0;
+	padding-top: 0.25rem;
+	font-size: 0.56rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	line-height: 1.5;
+	text-align: right;
+}
+
+.jl-place {
+	--jl-place-accent: var(--jl-mart-blue);
+	position: relative;
+	margin: 0;
+	min-height: 11.5rem;
+	padding: 1.25rem clamp(1rem, 3vw, 1.5rem) 1.45rem 4.1rem;
+	counter-increment: jl-place;
+	border-bottom: 1px dashed var(--jl-mart-border);
+	background: transparent;
+}
+
+.jl-place:nth-child(4n + 2) {
+	--jl-place-accent: hsl(150, 48%, 38%);
+}
+
+.jl-place:nth-child(4n + 3) {
+	--jl-place-accent: var(--jl-mart-red);
+}
+
+.jl-place:nth-child(4n) {
+	--jl-place-accent: hsl(280, 42%, 48%);
+}
+
+.jl-place::before {
+	content: counter(jl-place, decimal-leading-zero);
+	position: absolute;
+	top: 1.1rem;
+	left: 1rem;
+	font-family: var(--jl-font-title);
+	font-size: 2.6rem;
+	line-height: 1;
+	color: var(--jl-place-accent);
+}
+
+.jl-place::after {
+	content: none;
+}
+
+.jl-place:nth-child(odd) { border-left: 1px solid var(--jl-mart-blue-deep); }
+.jl-place:nth-last-child(-n + 2) { border-bottom: 0; }
+
+.jl-place-titlebar {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	padding: 0.5rem 0 0;
+	background: transparent;
+	color: var(--jl-mart-blue-deep);
+}
+
+.jl-place-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: auto;
+	height: auto;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+	font-size: 1.05rem;
+	line-height: 1;
+	transform: rotate(-4deg);
+}
+
+.jl-place-title {
+	margin: 0;
+	color: var(--jl-place-accent) !important;
+}
+
+.jl-place-title strong {
+	display: block;
+	font-family: var(--jl-font-sign);
+	font-size: clamp(1rem, 2.5vw, 1.28rem);
+	line-height: 1.05;
+}
+
+.jl-place-title small {
+	display: block;
+	margin-top: 0.2rem;
+	font-family: var(--jl-font-body);
+	font-size: 0.62rem;
+	font-weight: 700;
+	color: var(--jl-mart-ink-soft);
+}
+
+.jl-place-desc {
+	margin: 0;
+	padding: 1rem 0 0;
+	border-top: 0;
+	font-size: 0.82rem;
+	line-height: 1.65;
+	color: var(--jl-mart-ink-soft) !important;
+}
+
+/* ============ 1막 · 레인보우 마트 안내 ============ */
+
+.jl-mart-directory {
+	text-align: center;
+}
+
+.jl-mart-directory .sl-heading-wrapper {
+	text-align: left;
+}
+
+.jl-mart-lede {
+	max-width: 37rem;
+	margin: 0.8rem auto 2rem;
+	font-size: 0.9rem;
+	line-height: 1.8;
+	color: var(--jl-mart-ink-soft) !important;
+}
+
+.jl-mart-map {
+	box-sizing: border-box;
+	max-width: none;
+	margin-inline: auto;
+	border: 0.65rem solid #fffdf5;
+	border-radius: 0.3rem;
+	box-shadow: 0.5rem 0.6rem 0 var(--jl-mart-yellow), 0 1rem 2.2rem rgba(30, 40, 70, 0.2);
+	transform: rotate(-0.25deg);
+}
+
+.jl-mart-traditions {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0;
+	max-width: 42rem;
+	margin: 3rem auto 0;
+	padding: 3.4rem 1.1rem 1.2rem;
+	border: 0.48rem solid #d8d0c0;
+	border-radius: 0.35rem;
+	background:
+		linear-gradient(rgba(72, 131, 190, 0.07) 1px, transparent 1px) 0 0 / 100% 1.55rem,
+		#fffef9;
+	box-shadow: 0.5rem 0.6rem 0 rgba(35, 48, 70, 0.16), inset 0 0 1.2rem rgba(40, 50, 70, 0.06);
+	text-align: left;
+}
+
+.jl-mart-traditions::before {
+	content: 'STAFF BOARD  /  HOUSE RULES';
+	position: absolute;
+	top: 0.85rem;
+	left: 1rem;
+	padding-bottom: 0.25rem;
+	border-bottom: 0.22rem solid var(--jl-mart-red);
+	font-family: var(--jl-font-mono);
+	font-size: 0.62rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	color: var(--jl-mart-blue-deep);
+}
+
+.jl-mart-traditions > div {
+	position: relative;
+	margin: 0;
+	padding: 0.8rem 1.15rem 1rem;
+	background: transparent;
+}
+
+.jl-mart-traditions > div + div { border-left: 1px dashed var(--jl-mart-border); }
+
+.jl-mart-traditions > div::before {
+	content: '';
+	position: absolute;
+	top: -0.1rem;
+	right: 0.6rem;
+	width: 0.62rem;
+	height: 0.62rem;
+	border-radius: 50%;
+	background: #55aa78;
+	box-shadow: 0.08rem 0.1rem 0 rgba(0, 0, 0, 0.18);
+}
+
+.jl-mart-traditions > div:last-child::before { background: var(--jl-mart-red); }
+
+.jl-mart-traditions span,
+.jl-mart-space-grid span {
+	display: block;
+	grid-column: 2;
+	grid-row: 1;
+	margin-bottom: 0.25rem;
+	font-family: var(--jl-font-mono);
+	font-size: 0.58rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: var(--jl-mart-red);
+}
+
+.jl-mart-traditions strong,
+.jl-mart-space-grid strong {
+	display: block;
+	grid-column: 2;
+	grid-row: 2;
+	font-family: var(--jl-font-sign);
+	font-size: 1rem;
+	color: var(--jl-mart-blue-deep);
+}
+
+.jl-mart-traditions p,
+.jl-mart-space-grid p {
+	grid-column: 3;
+	grid-row: 1 / span 2;
+	margin: 0;
+	font-size: 0.77rem;
+	line-height: 1.7;
+	color: var(--jl-mart-ink-soft) !important;
+}
+
+.jl-mart-traditions span,
+.jl-mart-traditions strong,
+.jl-mart-traditions p {
+	grid-column: auto;
+	grid-row: auto;
+}
+
+.jl-mart-traditions strong {
+	margin-top: 0.35rem;
+	font-size: 1.12rem;
+	transform: rotate(-0.35deg);
+}
+
+.jl-mart-traditions p { margin-top: 0.85rem; }
+
+.jl-backroom-easter {
+	display: inline-block;
+	grid-column: 2;
+	margin: 0.18rem 0 0 0.35rem;
+	font-family: var(--jl-font-mono);
+	font-size: 0.53rem;
+	font-weight: 700;
+	font-style: normal;
+	letter-spacing: 0.05em;
+	color: var(--jl-mart-red);
+	opacity: 0.68;
+	transform: rotate(-2deg);
+}
+
+.jl-mart-space-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0;
+	max-width: 42rem;
+	margin: 2.8rem auto 0;
+	border-block: 0.3rem solid var(--jl-mart-blue-deep);
+	text-align: left;
+	counter-reset: jl-aisle;
+}
+
+.jl-mart-space-grid::before {
+	content: 'STORE DIRECTORY  ·  YOU ARE HERE';
+	padding: 0.5rem 0.9rem;
+	background: var(--jl-mart-blue-deep);
+	font-family: var(--jl-font-mono);
+	font-size: 0.58rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	color: var(--jl-mart-bg);
+}
+
+.jl-mart-space-grid > div {
+	position: relative;
+	display: grid;
+	grid-template-columns: 2.8rem minmax(9rem, 0.7fr) minmax(0, 1.3fr);
+	align-items: center;
+	gap: 1rem;
+	margin: 0;
+	padding: 0.9rem 0.9rem;
+	border-bottom: 1px dashed var(--jl-mart-border);
+	counter-increment: jl-aisle;
+}
+
+.jl-mart-space-grid > div::before {
+	content: counter(jl-aisle, decimal-leading-zero);
+	grid-column: 1;
+	grid-row: 1 / span 3;
+	font-family: var(--jl-font-title);
+	font-size: 1.8rem;
+	line-height: 1;
+	text-align: center;
+	color: var(--jl-mart-red);
+}
+
+.jl-mart-space-grid > div:last-child {
+	border-bottom: 0;
+}
+
+.jl-manager-note {
+	position: relative;
+	max-width: 36rem;
+	margin: 2.8rem auto 0;
+	padding: 1.5rem 1.35rem 1.25rem;
+	border: 1.5px solid #d6b947;
+	background: #fff2a8;
+	box-shadow: 0.42rem 0.5rem 0 #75b9df;
+	text-align: left;
+	transform: rotate(0.35deg);
+}
+
+.jl-manager-note-label {
+	position: absolute;
+	top: -0.7rem;
+	left: 1rem;
+	padding: 0.28rem 0.65rem;
+	background: var(--jl-mart-blue);
+	font-family: var(--jl-font-mono);
+	font-size: 0.58rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: #fff;
+	transform: rotate(-1deg);
+}
+
+.jl-manager-note-name {
+	margin: 0;
+	font-family: var(--jl-font-sign);
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: #193a68 !important;
+}
+
+.jl-manager-note-meta {
+	margin: 0.1rem 0 0.65rem !important;
+	font-family: var(--jl-font-mono);
+	font-size: 0.66rem !important;
+	font-weight: 700;
+	color: #9b3648 !important;
+}
+
+.jl-manager-note > p:last-child {
+	margin: 0;
+	font-size: 0.8rem;
+	line-height: 1.75;
+	color: #4d4a43 !important;
+}
+
+/* 마트 안내에서 영수증으로 넘어가는 계산대 스캔 타이포. */
+.jl-pos-transition {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.55rem;
+	max-width: 30rem;
+	margin: 0 auto;
+	padding: 0 1rem 1.2rem;
+	text-align: center;
+}
+
+.jl-pos-pause {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.38rem;
+	margin-bottom: 0.55rem;
+}
+
+.jl-pos-pause i {
+	display: block;
+	width: 0.28rem;
+	height: 0.28rem;
+	border-radius: 50%;
+	background: var(--jl-mart-ink-soft);
+}
+
+.jl-pos-beat {
+	display: inline-block;
+	padding: 0.18rem 0.45rem 0.22rem;
+	font-family: var(--jl-font-sign);
+	font-size: clamp(1.45rem, 5vw, 2.15rem);
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	line-height: 1;
+	color: var(--jl-mart-blue);
+	transform: rotate(-4deg);
+}
+
+.jl-pos-beat + .jl-pos-beat {
+	color: var(--jl-mart-red);
+	transform: rotate(4deg);
+}
+
+.jl-pos-dialogue {
+	width: 100%;
+	margin-top: 0.85rem;
+	padding: 0.9rem 1.2rem;
+	background: #14151a;
+	border-radius: 0.5rem;
+	box-shadow: 0.28rem 0.34rem 0 var(--jl-mart-blue);
+	text-align: center;
+}
+
+.jl-pos-dialogue p {
+	margin: 0;
+	font-family: var(--jl-font-subtitle);
+	line-height: 1.55;
+	color: #f7f5ef !important;
+}
+
+.jl-pos-dialogue p:first-child {
+	font-size: 0.82rem;
+	font-weight: 600;
+}
+
+.jl-pos-dialogue p:last-child {
+	margin-top: 0.35rem;
+	font-size: 0.72rem;
+	color: #d8d5ce !important;
+}
+
+:root[data-theme='dark'] .jl-pos-beat { color: #8bbcff; }
+:root[data-theme='dark'] .jl-pos-beat + .jl-pos-beat { color: #ff98ac; }
+:root[data-theme='dark'] .jl-pos-pause i { background: #b9c3d2; }
+:root[data-theme='dark'] .jl-pos-dialogue { box-shadow: 0.28rem 0.34rem 0 #8bbcff; }
+
+.jl-classified-content {
+	margin: 0;
+}
+
+.jl-classified-content > .jl-section {
+	margin-block: 0;
+}
+
+.jl-classified-content[hidden] {
+	display: none;
+}
+
+/* 영수증 뒷면을 공개하면 위쪽 마트도 야간 조명으로 전환한다.
+   밝은 글자용 색은 1막 안에서만 바꿔 영수증과 FBI 팔레트에 번지지 않게 한다. */
+:root[data-theme='dark'] .jl-act-mart {
+	--jl-mart-bg: #151b25;
+	--jl-mart-card: #232d3c;
+	--jl-mart-blue: #8bbcff;
+	--jl-mart-blue-deep: #bbd6ff;
+	--jl-mart-ink: #f0ece3;
+	--jl-mart-ink-soft: #b9c3d2;
+	--jl-mart-border: #485469;
+	--jl-mart-yellow: #74602d;
+	--jl-mart-red: #ff98ac;
+}
+
+:root[data-theme='dark'] .jl-feature-presentation {
+	background: #462230;
+	box-shadow: inset 0 0.32rem 0 #786137, inset 0 -0.32rem 0 #786137;
+}
+:root[data-theme='dark'] .jl-feature-presentation p span {
+	background: #302d29;
+	color: #ffbdca;
+}
+:root[data-theme='dark'] .jl-hero-badge {
+	background: #302d29;
+	border-color: #ff98ac;
+	color: #ffe6a4;
+}
+:root[data-theme='dark'] .jl-hero-badge strong { color: #bbd6ff; }
+:root[data-theme='dark'] .jl-hero-photo-frame {
+	border-color: #302d29;
+	box-shadow: 0 0 0 0.22rem #8bbcff, 0.65rem 0.8rem 0 #74602d, 0 1.2rem 2.5rem rgba(0, 0, 0, 0.45);
+}
+:root[data-theme='dark'] :is(.jl-tag-grid li, .jl-hero-photo-frame, .jl-full-img) {
+	box-shadow: 0 0.6rem 1.4rem rgba(0, 0, 0, 0.4);
+}
+:root[data-theme='dark'] .jl-subtitle {
+	background: #0c1018;
+	box-shadow: 0.28rem 0.34rem 0 #8bbcff, inset 0 0 0 1px #354052;
+}
+:root[data-theme='dark'] .jl-aside-note {
+	color: var(--jl-mart-ink) !important;
+}
+:root[data-theme='dark'] .jl-rumor-label {
+	background: transparent;
+	border-color: #ff98ac;
+	box-shadow: none;
+	color: #ff98ac;
+}
+:root[data-theme='dark'] :is(.jl-rumor-cutouts > span, .jl-truth-collage span:first-child) {
+	background: #51482e;
+	color: #ffe7a4;
+}
+:root[data-theme='dark'] .jl-truth-collage span:nth-child(2) {
+	background: #245263;
+	color: #b8f1ff;
+}
+:root[data-theme='dark'] :is(.jl-rumor-cutouts > strong, .jl-truth-collage span:nth-child(3)) {
+	background: #653249;
+	color: #ffd0df;
+}
+:root[data-theme='dark'] :is(.jl-pin-badge, .jl-place-icon) {
+	color: var(--jl-mart-ink);
+}
+:root[data-theme='dark'] .jl-place-list {
+	background: radial-gradient(circle at 16% 10%, rgba(116, 96, 45, 0.28), transparent 29%), #1d2633;
+}
+:root[data-theme='dark'] .jl-place {
+	background: transparent;
+}
+:root[data-theme='dark'] .jl-place:nth-child(4n + 2) {
+	--jl-place-accent: #8cddb2;
+}
+:root[data-theme='dark'] .jl-place:nth-child(4n) {
+	--jl-place-accent: #c7a7ee;
+}
+:root[data-theme='dark'] .jl-mart-map {
+	border-color: #273243;
+	box-shadow: 0.5rem 0.6rem 0 #594d2b, 0 1rem 2.2rem rgba(0, 0, 0, 0.42);
+}
+:root[data-theme='dark'] .jl-mart-traditions > div {
+	box-shadow: 0.25rem 0.3rem 0 rgba(0, 0, 0, 0.3);
+}
+:root[data-theme='dark'] .jl-mart-traditions {
+	border-color: #596273;
+	background: linear-gradient(rgba(139, 188, 255, 0.08) 1px, transparent 1px) 0 0 / 100% 1.55rem, #202833;
+	box-shadow: 0.5rem 0.6rem 0 rgba(0, 0, 0, 0.32), inset 0 0 1.2rem rgba(0, 0, 0, 0.18);
+}
+:root[data-theme='dark'] .jl-manager-note {
+	border-color: #695a31;
+	background: #3f3a27;
+	box-shadow: 0.42rem 0.5rem 0 #294858;
+}
+:root[data-theme='dark'] .jl-manager-note-name { color: #b9d6ff !important; }
+:root[data-theme='dark'] .jl-manager-note-meta { color: #ff9caf !important; }
+:root[data-theme='dark'] .jl-manager-note > p:last-child { color: #d4cec0 !important; }
+
+@media (prefers-reduced-motion: no-preference) {
+	html.jl-receipt-theme :is(.jl-act-mart, .jl-feature-presentation, .jl-tag-grid li, .jl-aside-note, .jl-place, .jl-subtitle, .jl-rumor-cutouts > *, .jl-truth-collage span) {
+		transition: background-color 0.65s ease, color 0.65s ease, border-color 0.65s ease, box-shadow 0.65s ease;
+	}
+}
+
+/* ============ 2막 · BACKROOM (FBI 파일) ============ */
+
+.jl-backroom-aside {
+	display: inline-block;
+	max-width: 13rem;
+	margin: 0 0 0.85rem 0.8rem;
+	vertical-align: middle;
+	font-family: var(--jl-font-mono);
+	font-size: 0.62rem;
+	line-height: 1.45;
+	color: var(--jl-file-ink-soft) !important;
+	text-decoration: line-through;
+	text-decoration-color: var(--jl-file-red);
+	text-decoration-thickness: 2px;
+	transform: rotate(-1.4deg);
+}
+
+.jl-dossier {
+	position: relative;
+	max-width: 43rem;
+	margin: 3.55rem auto 0;
+	padding: 1.4rem 1.1rem 1.15rem;
+	border: 1px solid #9d7c48;
+	border-radius: 0.18rem 0.25rem 0.3rem 0.22rem;
+	background:
+		repeating-linear-gradient(102deg, rgba(91, 63, 25, 0.045) 0 1px, transparent 1px 5px),
+		#b99357;
+	box-shadow: 0.65rem 0.8rem 0 rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 239, 194, 0.35);
+	transform: rotate(-0.18deg);
+}
+
+.jl-dossier::before {
+	content: '';
+	position: absolute;
+	inset: 0.35rem -0.3rem -0.35rem 0.4rem;
+	z-index: -1;
+	border: 1px solid #816437;
+	background: #9f7b45;
+	transform: rotate(0.65deg);
+}
+
+.jl-dossier-tab {
+	position: absolute;
+	top: -1.82rem;
+	left: 0.8rem;
+	min-width: 12.5rem;
+	padding: 0.48rem 1rem 0.62rem;
+	border: 1px solid #9d7c48;
+	border-bottom: 0;
+	border-radius: 0.35rem 0.35rem 0 0;
+	background: #b99357;
+	font-family: var(--jl-font-mono);
+	font-size: 0.62rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: #332818;
+}
+
+.jl-dossier-index {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	margin: 0 0 0.8rem;
+	font-family: var(--jl-font-mono);
+	font-size: 0.6rem;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	color: #3f301d !important;
+}
+
+.jl-dossier-paper {
+	position: relative;
+	padding: 2.2rem 1.5rem 1.5rem;
+	border: 1px solid #c9c0ad;
+	background:
+		repeating-linear-gradient(0deg, rgba(49, 55, 60, 0.025) 0 1px, transparent 1px 4px),
+		#e9e5da;
+	box-shadow: 0.15rem 0.2rem 0.3rem rgba(46, 35, 20, 0.28);
+	color: #232b34;
+}
+
+.jl-dossier-layout {
+	display: grid;
+	grid-template-columns: minmax(10rem, 0.78fr) minmax(0, 1.5fr);
+	align-items: start;
+	gap: 1.4rem;
+}
+
+.jl-stamp {
+	display: block;
+	width: fit-content;
+	margin: 0 0 1.2rem auto;
+	padding: 0.4rem 1.3rem;
+	border: 3px solid var(--jl-file-red);
+	border-radius: 0.3rem;
+	transform: rotate(-3deg);
+	font-family: var(--jl-font-stamp);
+	font-weight: 400;
+	font-size: 1rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--jl-file-red);
+	opacity: 0.92;
+}
+
+.jl-file-photo-frame {
+	position: relative;
+	max-width: 16rem;
+	margin: 0;
+	padding: 0.45rem 0.45rem 0.7rem;
+	background: #f8f6ef;
+	box-shadow: 0.18rem 0.24rem 0.35rem rgba(28, 32, 36, 0.28);
+	transform: rotate(-1.2deg);
+}
+
+.jl-file-photo-frame::before {
+	content: '';
+	position: absolute;
+	top: -0.7rem;
+	left: 50%;
+	width: 1.2rem;
+	height: 2.5rem;
+	border: 2px solid #73777c;
+	border-bottom-color: transparent;
+	border-radius: 0.65rem 0.65rem 0 0;
+	transform: translateX(-50%) rotate(5deg);
+}
+
+.jl-file-photo-frame img {
+	display: block;
+	width: 100%;
+	height: auto;
+	cursor: zoom-in;
+}
+
+.jl-file-photo-frame > span {
+	display: block;
+	margin-top: 0.45rem;
+	font-family: var(--jl-font-mono);
+	font-size: 0.55rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-align: center;
+	color: #4d535a;
+}
+
+.jl-agent-resume {
+	min-width: 0;
+	font-family: var(--jl-font-mono);
+}
+
+.jl-agent-resume-kicker {
+	margin: 0;
+	font-size: 0.57rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--jl-file-red) !important;
+}
+
+.jl-agent-resume-name {
+	margin: 0.25rem 0 0;
+	font-family: var(--jl-font-stamp);
+	font-size: clamp(1.65rem, 4vw, 2.25rem);
+	line-height: 1.1;
+	color: #202832 !important;
+}
+
+.jl-agent-resume-meta {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 0.25rem 0.8rem;
+	margin: 0.45rem 0 1.35rem;
+	padding-bottom: 0.55rem;
+	border-bottom: 2px solid #353b42;
+	font-size: 0.62rem;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	color: #343b44 !important;
+}
+
+.jl-agent-resume-meta span {
+	color: #7c302f;
+}
+
+.jl-agent-vitals {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem 1.4rem;
+	margin: -0.55rem 0 1.35rem;
+	font-family: var(--jl-font-mono);
+	font-size: 0.7rem;
+	color: #343b44 !important;
+}
+
+.jl-agent-vitals span {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.45rem;
+}
+
+.jl-agent-vitals b {
+	font-size: 0.55rem;
+	letter-spacing: 0.1em;
+	color: #7c302f;
+}
+
+.jl-file-facts {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1.15rem 1.3rem;
+	max-width: none;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-family: var(--jl-font-mono);
+}
+
+.jl-file-facts li {
+	display: block;
+	margin: 0;
+	padding: 0;
+	font-size: 0.84rem;
+	line-height: 1.5;
+}
+
+.jl-file-facts li:nth-child(-n + 4) {
+	grid-column: 1 / -1;
+}
+
+.jl-file-label {
+	display: block;
+	width: auto;
+	margin-bottom: 0.18rem;
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #7c302f;
+}
+
+.jl-file-value {
+	display: block;
+	color: #202832;
+}
+
+.jl-file-strike .jl-file-value {
+	text-decoration: line-through;
+	text-decoration-color: var(--jl-file-red);
+	text-decoration-thickness: 2px;
+	color: #777b7e;
+	opacity: 0.7;
+}
+
+.jl-file-card-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	align-items: stretch;
+	gap: 1.6rem 1.2rem;
+	max-width: 40rem;
+	margin: 2.2rem auto 0;
+}
+
+.jl-file-card {
+	position: relative;
+	box-sizing: border-box;
+	height: 100%;
+	margin: 0;
+	background: var(--jl-file-card);
+	border: 1px solid var(--jl-file-border);
+	padding: 1.3rem 1.1rem 1.1rem;
+	font-family: var(--jl-font-mono);
+}
+
+.jl-file-card::before {
+	content: attr(data-tab);
+	position: absolute;
+	top: -0.7rem;
+	left: 1rem;
+	background: var(--jl-file-red);
+	color: #fff;
+	font-family: var(--jl-font-stamp);
+	font-weight: 400;
+	font-size: 0.6rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	padding: 0.22rem 0.6rem;
+}
+
+.jl-file-card-name {
+	margin: 0.2rem 0 0.15rem;
+	font-family: var(--jl-font-stamp);
+	font-weight: 400;
+	font-size: 1.05rem;
+	color: var(--jl-file-ink);
+}
+
+.jl-file-card-role {
+	margin: 0 0 0.75rem;
+	font-size: 0.7rem;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--jl-file-red);
+}
+
+.jl-file-card-bio {
+	margin: 0;
+	font-size: 0.82rem;
+	line-height: 1.75;
+	color: var(--jl-file-ink-soft);
+}
+
+.jl-file-exhibit {
+	max-width: 30rem;
+	margin: 2.6rem auto 0;
+	border: 1px solid var(--jl-file-border);
+	background: var(--jl-file-card);
+}
+
+.jl-file-exhibit-label {
+	display: flex;
+	justify-content: space-between;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0.5rem 0.9rem;
+	border-bottom: 1px solid var(--jl-file-border);
+	font-family: var(--jl-font-mono);
+	font-size: 0.66rem;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: var(--jl-file-ink-soft);
+}
+
+.jl-file-exhibit img {
+	display: block;
+	width: 100%;
+	height: auto;
+	margin: 0;
+	cursor: zoom-in;
+}
+
+.jl-file-exhibit-caption {
+	margin: 0;
+	padding: 0.8rem 0.9rem 0.9rem;
+	font-family: var(--jl-font-mono);
+	font-size: 0.78rem;
+	line-height: 1.7;
+	color: var(--jl-file-ink-soft);
+}
+
+/* ============ 클로징 타이틀 카드 ============ */
+
+.jl-title-card {
+	max-width: 32rem;
+	margin: 0 auto;
+	text-align: center;
+	padding-top: 1rem;
+}
+
+.jl-title-card-line {
+	margin: 0 0 0.4rem;
+	font-family: var(--jl-font-mono);
+	font-size: 1rem;
+	line-height: 1.7;
+	color: var(--jl-file-ink-soft);
+}
+
+.jl-title-card-main {
+	margin: 1.6rem 0 0;
+	font-family: var(--jl-font-stamp);
+	font-weight: 400;
+	font-size: clamp(2rem, 7vw, 3.2rem);
+	letter-spacing: 0.04em;
+	color: #fff;
+}
+
+.jl-title-card-rainbow {
+	display: block;
+	height: 5px;
+	width: 55%;
+	margin: 1.1rem auto 1.4rem;
+	border-radius: 999px;
+	background: linear-gradient(
+		90deg,
+		hsl(355, 68%, 55%),
+		hsl(38, 88%, 55%),
+		hsl(50, 85%, 55%),
+		hsl(150, 45%, 45%),
+		var(--jl-mart-blue),
+		hsl(280, 40%, 55%)
+	);
+}
+
+.jl-outro-dialogue {
+	width: min(100%, 29rem);
+	margin: 0 auto 1.7rem;
+	box-shadow: 0.28rem 0.34rem 0 #8bbcff;
+}
+
+.jl-outro-links {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem 0.8rem;
+	margin: 0;
+}
+
+.jl-outro-link {
+	position: relative;
+	display: inline-flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-start;
+	gap: 0;
+	width: 9.6rem;
+	min-width: 9.6rem;
+	aspect-ratio: 1.58 / 1;
+	padding: 2.05rem 0.9rem 1rem;
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-radius: 0.85rem;
+	font-family: var(--jl-font-body);
+	font-size: 1.05rem;
+	font-weight: 900;
+	line-height: 1;
+	text-align: left;
+	text-decoration: none;
+	overflow: hidden;
+	transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.jl-outro-link:nth-child(1) { transform: rotate(-1.4deg); }
+.jl-outro-link:nth-child(2) { transform: rotate(0.7deg); }
+.jl-outro-link:nth-child(3) { transform: rotate(-0.35deg); }
+
+.jl-outro-link small {
+	display: block;
+	margin-top: 0.38rem;
+	font-family: var(--jl-font-mono);
+	font-size: 0.42rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	opacity: 0.68;
+}
+
+.jl-outro-link::before {
+	content: attr(data-card);
+	position: absolute;
+	top: 0.65rem;
+	left: 0.88rem;
+	right: 0.88rem;
+	padding: 0 0 0.35rem;
+	border-bottom: 1px solid currentColor;
+	background: transparent;
+	font-family: var(--jl-font-mono);
+	font-size: 0.48rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-align: left;
+	opacity: 0.82;
+}
+
+.jl-outro-link::after {
+	content: '';
+	position: absolute;
+	right: 0.85rem;
+	bottom: 0.65rem;
+	left: 0.85rem;
+	height: 0.72rem;
+	background: repeating-linear-gradient(
+		90deg,
+		#e95077 0 2px, transparent 2px 4px,
+		#f1a343 4px 7px, transparent 7px 9px,
+		#efd24c 9px 10px, transparent 10px 13px,
+		#55aa78 13px 17px, transparent 17px 19px,
+		#4c8ccc 19px 21px, transparent 21px 24px,
+		#8d62b5 24px 27px, transparent 27px 30px
+	);
+	filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.22));
+}
+
+.jl-outro-link:hover,
+.jl-outro-link:focus-visible {
+	transform: translateY(-3px) rotate(0deg);
+	filter: brightness(1.08);
+}
+
+.jl-outro-link-primary {
+	background:
+		linear-gradient(120deg, rgba(255, 255, 255, 0.24), transparent 28%),
+		radial-gradient(circle at 82% 62%, rgba(255, 255, 255, 0.16), transparent 25%),
+		#dc4770;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+	filter: drop-shadow(0.22rem 0.28rem 0 #76243f);
+	color: #fff !important;
+}
+
+.jl-outro-link-pending {
+	background:
+		linear-gradient(120deg, rgba(255, 255, 255, 0.1), transparent 28%),
+		radial-gradient(circle at 82% 62%, rgba(255, 255, 255, 0.06), transparent 25%),
+		#30343a;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+	filter: drop-shadow(0.18rem 0.22rem 0 #111318);
+	color: #a9adb4 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.jl-tag-grid li {
+		transform: none !important;
+	}
+}
+
+/* ============ 좁은 화면(휴대폰) 전용 튜닝 ============
+   auto-fit/flex-wrap 그리드는 대부분 알아서 줄어들지만, 고정폭·큰 글자
+   크기를 쓰는 지점들은 30rem(480px) 아래에서 명시적으로 눌러 준다. */
+@media (max-width: 30rem) {
+	.jl-section {
+		padding-block: clamp(2.25rem, 11vw, 3.5rem);
+	}
+
+	.jl-trailer-stage {
+		height: clamp(14rem, 68vw, 18rem);
+		padding: 2rem 1rem;
+	}
+	.jl-trailer-beat-sm {
+		font-size: clamp(1.15rem, 6vw, 1.55rem);
+	}
+	.jl-trailer-beat-lg {
+		font-size: clamp(1.3rem, 7vw, 1.8rem);
+	}
+	.jl-trailer-stamp {
+		font-size: clamp(0.9rem, 5vw, 1.2rem);
+		padding: 0.45rem 0.9rem;
+	}
+
+	.jl-hero-photo-frame {
+		max-width: 13rem;
+		padding: 0.52rem 0.52rem 3.75rem;
+	}
+	.jl-hero-badge {
+		padding: 0.34rem 0.4rem;
+	}
+	.jl-hero-badge strong { font-size: 0.86rem; }
+	.jl-hero-badge small { font-size: 0.38rem; }
+	.jl-hero-stars { top: -1.2rem; }
+	.jl-hero-stars span { width: 1.9rem; font-size: 1.55rem; }
+	.jl-hero-stars span:nth-child(2) { width: 2.25rem; font-size: 1.9rem; }
+	.jl-hero-name {
+		font-size: clamp(1.6rem, 9vw, 2.1rem);
+	}
+
+	.jl-tag-grid {
+		gap: 0.7rem 0.5rem;
+	}
+	.jl-tag-grid li {
+		min-width: 5.4rem;
+		padding: 0.4rem 0.6rem 0.35rem 1.05rem;
+	}
+	.jl-tag-value {
+		font-size: 0.85rem;
+	}
+
+	.jl-pin-grid {
+		grid-template-columns: repeat(6, 2.35rem);
+		gap: 1.1rem 0.7rem;
+	}
+	.jl-pin-grid li {
+		width: 5.4rem;
+	}
+	.jl-pin-badge {
+		width: 2.9rem;
+		height: 2.9rem;
+		font-size: 1.2rem;
+	}
+
+	.jl-place-list,
+	.jl-file-card-grid {
+		grid-template-columns: 1fr;
+	}
+	.jl-place-masthead { grid-template-columns: auto 1fr; }
+	.jl-place {
+		min-height: 0;
+		border-left: 0 !important;
+		border-bottom: 1px dashed var(--jl-mart-border) !important;
+	}
+	.jl-place:last-child { border-bottom: 0 !important; }
+	.jl-mart-traditions,
+	.jl-mart-space-grid {
+		grid-template-columns: 1fr;
+	}
+	.jl-mart-space-grid > div {
+		grid-template-columns: 2.6rem minmax(0, 1fr);
+		gap: 0.75rem;
+	}
+	.jl-mart-space-grid > div::before {
+		grid-row: 1 / span 2;
+	}
+	.jl-mart-traditions > div { padding-inline: 0.65rem; }
+	.jl-mart-traditions > div + div {
+		padding-top: 1.35rem;
+		border-top: 1px dashed var(--jl-mart-border);
+		border-left: 0;
+	}
+	.jl-mart-traditions p,
+	.jl-mart-space-grid p {
+		grid-column: 2;
+		grid-row: auto;
+	}
+	.jl-mart-space-grid > div:last-child {
+		grid-column: auto;
+	}
+	.jl-file-facts li {
+		flex-direction: column;
+		gap: 0.2rem;
+		padding: 0.55rem 0.8rem;
+	}
+	.jl-file-label {
+		width: auto;
+	}
+
+	.jl-file-photo-frame {
+		max-width: 11.5rem;
+	}
+
+	.jl-dossier {
+		margin-top: 3.4rem;
+		padding: 1rem 0.7rem 0.75rem;
+	}
+	.jl-dossier-tab {
+		min-width: 10.5rem;
+		font-size: 0.55rem;
+	}
+	.jl-dossier-index {
+		flex-direction: column;
+		gap: 0.15rem;
+	}
+	.jl-dossier-paper {
+		padding: 1.4rem 0.8rem 1rem;
+	}
+	.jl-dossier-layout {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		gap: 1.4rem;
+	}
+	.jl-dossier-layout .jl-file-facts {
+		width: 100%;
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+	.jl-dossier-layout .jl-file-facts li {
+		grid-column: auto;
+		padding: 0;
+	}
+
+	.jl-stamp {
+		font-size: 0.85rem;
+		padding: 0.35rem 1rem;
+	}
+
+	.jl-title-card-main {
+		font-size: clamp(1.6rem, 11vw, 2.3rem);
+	}
+}

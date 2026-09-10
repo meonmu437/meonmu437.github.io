@@ -1,0 +1,9 @@
+---
+// 이 사이트의 테마는 영수증 반전 연출이 제어한다.
+// Starlight가 요구하는 ThemeSelect 슬롯은 유지하되 UI는 렌더링하지 않는다.
+---
+
+<script is:inline>
+	document.documentElement.dataset.theme = 'light';
+	localStorage.setItem('starlight-theme', 'light');
+</script>

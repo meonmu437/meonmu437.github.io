@@ -1,0 +1,11 @@
+---
+// Starlight는 기본적으로 `페이지 제목 | 사이트 제목`을 출력한다. 이 프로젝트의
+// 각 앱은 단일 페이지라 두 제목이 같거나 거의 같으므로 첫 제목만 탭에 남긴다.
+const { head } = Astro.locals.starlightRoute;
+const normalizedHead = head.map((item) => {
+	if (item.tag !== 'title' || typeof item.content !== 'string') return item;
+	return { ...item, content: item.content.split(/\s+\|\s+/u)[0] };
+});
+---
+
+{normalizedHead.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}

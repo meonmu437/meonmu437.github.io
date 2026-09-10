@@ -1,0 +1,490 @@
+<div class="jl-receipt-gate">
+	<div class="jl-flip-receipt">
+		<span class="jl-flip-receipt-inner">
+			<span class="jl-receipt-face jl-receipt-front">
+				<span class="jl-receipt-gate-kicker">Rainbow Mart Special Event</span>
+				<span class="jl-receipt-store">RAINBOW MART · CHECKOUT 06</span>
+				<span class="jl-receipt-deal"><b>1</b><i>+</i><b>1</b></span>
+				<span class="jl-receipt-promo">BUY ONE · GET ONE FREE</span>
+				<span class="jl-receipt-items">
+					<span class="jl-receipt-row jl-receipt-head"><span>ITEM</span><span>QTY</span><span>PRICE</span></span>
+					<span class="jl-receipt-row"><span>파란 앞치마</span><span>1</span><span>$12.99</span></span>
+					<span class="jl-receipt-row"><span>6번 계산대 근무</span><span>1</span><span>$8.99</span></span>
+					<span class="jl-receipt-row"><span>완벽한 위장</span><span>1</span><span>$0.00</span></span>
+					<span class="jl-receipt-row jl-receipt-bonus"><span>1+1 BONUS</span><span>1</span><span>FREE</span></span>
+				</span>
+				<span class="jl-receipt-totals">
+					<span><span>SUBTOTAL</span><span>$21.98</span></span>
+					<span><span>PROMO</span><span>-$0.00</span></span>
+					<b><span>TOTAL</span><span>$21.98</span></b>
+				</span>
+				<span class="jl-receipt-barcode" aria-hidden="true"></span>
+				<strong class="jl-receipt-code">006-JV-031 · 다만 전부가 아닐 뿐이다.</strong>
+				<span class="jl-fold-hint">1+1 상품 하나 더 받기 ↘</span>
+				<button class="jl-receipt-fold" type="button" aria-label="1+1 상품 하나 더 받고 FBI 기록 보기" aria-expanded="false" aria-controls="jl-classified-content"><span>GET ↗</span></button>
+			</span>
+			<span class="jl-receipt-face jl-receipt-back">
+				<span class="jl-receipt-classified">CLASSIFIED</span>
+				<span class="jl-receipt-file">EMPLOYEE RECORD<br />#JV-031</span>
+				<strong>FBI<br />SPECIAL AGENT</strong>
+				<span class="jl-receipt-access">IDENTITY CONFIRMED</span>
+				<span class="jl-fold-hint jl-fold-hint-back">안전한 곳으로 돌아가기 ↘</span>
+				<button class="jl-receipt-fold jl-receipt-fold-back" type="button" aria-label="안전한 앞면으로 돌아가기" aria-expanded="true" aria-controls="jl-classified-content"><span>BACK ↗</span></button>
+			</span>
+		</span>
+	</div>
+</div>
+
+<div class="jl-record-warning" hidden role="alertdialog" aria-modal="true" aria-labelledby="jl-record-warning-title" aria-describedby="jl-record-warning-message">
+	<div class="jl-record-warning-card">
+		<span class="jl-record-warning-tape">REGISTER 06 · MISSCAN ALERT</span>
+		<span class="jl-record-warning-icon" aria-hidden="true">⚠</span>
+		<p class="jl-record-warning-code">ITEM NOT FOUND · JV-031</p>
+		<p class="jl-record-warning-title" id="jl-record-warning-title">아, 이쪽은 직원 기록이 아닙니다.</p>
+		<p class="jl-record-warning-message" id="jl-record-warning-message">1+1 상품에 다른 기록이 섞여 있습니다.<br />정말 하나 더 확인하시겠어요?</p>
+		<button type="button" class="jl-record-warning-confirm">그래도 하나 더 받기</button>
+	</div>
+</div>
+
+<script>
+	const receipt = document.querySelector<HTMLElement>('.jl-flip-receipt');
+	const buttons = document.querySelectorAll<HTMLButtonElement>('.jl-receipt-fold');
+	const content = document.getElementById('jl-classified-content');
+	const warning = document.querySelector<HTMLElement>('.jl-record-warning');
+	const warningConfirm = warning?.querySelector<HTMLButtonElement>('.jl-record-warning-confirm');
+	let hasShownRecordWarning = false;
+	let warningTrigger: HTMLButtonElement | null = null;
+
+	function setRevealed(revealed: boolean) {
+		if (!receipt || !content) return;
+		receipt.classList.toggle('is-flipped', revealed);
+		buttons.forEach((button) => button.setAttribute('aria-expanded', String(revealed)));
+		content.hidden = !revealed;
+		document.documentElement.classList.toggle('jl-classified-open', revealed);
+		document.documentElement.dataset.theme = revealed ? 'dark' : 'light';
+		window.dispatchEvent(new Event('resize'));
+	}
+
+	buttons.forEach((button) => button.addEventListener('click', () => {
+		const willReveal = !receipt?.classList.contains('is-flipped');
+		if (willReveal && !hasShownRecordWarning) {
+			hasShownRecordWarning = true;
+			warningTrigger = button;
+			if (warning) {
+				warning.hidden = false;
+				requestAnimationFrame(() => warning.classList.add('is-open'));
+				warningConfirm?.focus();
+			}
+			return;
+		}
+		setRevealed(willReveal);
+	}));
+
+	function closeWarning(reveal = false) {
+		if (!warning) return;
+		warning.classList.remove('is-open');
+		warning.hidden = true;
+		if (reveal) setRevealed(true);
+		else warningTrigger?.focus();
+	}
+
+	warningConfirm?.addEventListener('click', () => closeWarning(true));
+	warning?.addEventListener('click', (event) => {
+		if (event.target === warning) closeWarning();
+	});
+	document.addEventListener('keydown', (event) => {
+		if (event.key === 'Escape' && warning && !warning.hidden) closeWarning();
+	});
+
+	function revealForHash() {
+		if (location.hash && content?.querySelector(location.hash)) setRevealed(true);
+	}
+
+	revealForHash();
+	document.documentElement.classList.add('jl-receipt-theme');
+	window.addEventListener('hashchange', revealForHash);
+</script>
+
+<style>
+	.jl-record-warning {
+		position: fixed;
+		inset: 0;
+		z-index: 999;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1.25rem;
+		background: rgba(13, 18, 28, 0.72);
+		backdrop-filter: blur(4px);
+		opacity: 0;
+		transition: opacity 0.2s ease;
+	}
+	.jl-record-warning[hidden] { display: none; }
+	.jl-record-warning.is-open { opacity: 1; }
+	.jl-record-warning-card {
+		position: relative;
+		width: min(100%, 24rem);
+		padding: 2.5rem 1.5rem 1.4rem;
+		border: 1px solid #d5c5ad;
+		background:
+			repeating-linear-gradient(0deg, rgba(45, 55, 70, 0.025) 0 1px, transparent 1px 4px),
+			#fffefa;
+		box-shadow: 0.65rem 0.8rem 0 rgba(0, 0, 0, 0.28);
+		color: #252c38;
+		text-align: center;
+		transform: translateY(0.55rem) rotate(-0.4deg) scale(0.98);
+		transition: transform 0.2s ease;
+	}
+	.jl-record-warning.is-open .jl-record-warning-card {
+		transform: translateY(0) rotate(-0.4deg) scale(1);
+	}
+	.jl-record-warning-card::after {
+		content: '';
+		position: absolute;
+		inset: auto 0 -0.45rem;
+		height: 0.7rem;
+		background: #fffefa;
+		clip-path: polygon(0 0, 3% 65%, 7% 12%, 11% 78%, 16% 18%, 21% 74%, 27% 10%, 33% 82%, 39% 16%, 45% 72%, 51% 8%, 58% 80%, 65% 14%, 72% 76%, 79% 10%, 86% 82%, 93% 16%, 100% 68%, 100% 0);
+	}
+	.jl-record-warning-tape {
+		position: absolute;
+		top: -0.7rem;
+		left: 50%;
+		width: max-content;
+		padding: 0.4rem 0.85rem;
+		background: var(--jl-mart-red);
+		box-shadow: 0.15rem 0.2rem 0 rgba(56, 30, 35, 0.25);
+		font-family: var(--jl-font-sign);
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		color: #fff;
+		transform: translateX(-50%) rotate(-1.5deg);
+	}
+	.jl-record-warning-icon {
+		display: grid;
+		place-items: center;
+		width: 2.8rem;
+		height: 2.8rem;
+		margin: 0 auto 0.7rem;
+		border: 2px solid var(--jl-mart-red);
+		border-radius: 50%;
+		font-size: 1.3rem;
+	}
+	.jl-record-warning-code {
+		margin: 0 0 0.8rem;
+		font-family: var(--jl-font-mono);
+		font-size: 0.62rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		color: var(--jl-mart-red);
+	}
+	.jl-record-warning-title {
+		margin: 0;
+		font-family: var(--jl-font-body);
+		font-size: clamp(1.05rem, 4vw, 1.25rem);
+		font-weight: 900;
+		line-height: 1.45;
+		color: #172c4d;
+	}
+	.jl-record-warning-message {
+		margin: 0.75rem 0 1.2rem;
+		font-family: var(--jl-font-body);
+		font-size: 0.78rem;
+		line-height: 1.65;
+		color: #626978;
+	}
+	.jl-record-warning-confirm {
+		display: block;
+		width: 100%;
+		margin: 0;
+		padding: 0.7rem 1rem;
+		border: 2px solid #173d72;
+		border-radius: 0.25rem;
+		background: #2f68ad;
+		box-shadow: 0.18rem 0.22rem 0 #f3c928;
+		font-family: var(--jl-font-sign);
+		font-size: 0.82rem;
+		font-weight: 700;
+		color: #fff;
+		cursor: pointer;
+	}
+	.jl-record-warning-confirm:hover,
+	.jl-record-warning-confirm:focus-visible {
+		background: #24558f;
+		outline: 3px solid rgba(243, 201, 40, 0.45);
+		outline-offset: 2px;
+	}
+	.jl-receipt-gate {
+		margin: 0;
+		padding: clamp(3rem, 8vw, 5rem) var(--sl-content-pad-x);
+		text-align: center;
+		perspective: 90rem;
+	}
+	.jl-receipt-gate-kicker {
+		position: absolute;
+		top: -0.8rem;
+		left: 50%;
+		z-index: 2;
+		width: max-content;
+		padding: 0.35rem 0.8rem;
+		background: var(--jl-mart-red);
+		box-shadow: 0.15rem 0.2rem 0 rgba(50, 30, 30, 0.2);
+		font-family: var(--jl-font-sign);
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #fff;
+		transform: translateX(-50%) rotate(-1.5deg);
+	}
+	.jl-flip-receipt {
+		display: block;
+		width: min(100%, 21rem);
+		height: 33rem;
+		margin: 0 auto;
+		padding: 0;
+		background: transparent;
+		perspective: 90rem;
+	}
+	.jl-flip-receipt-inner {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		transition: transform 0.75s cubic-bezier(0.2, 0.75, 0.25, 1);
+		transform-style: preserve-3d;
+	}
+	.jl-flip-receipt.is-flipped .jl-flip-receipt-inner {
+		transform: rotateY(180deg);
+	}
+	.jl-receipt-face {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 2.5rem 1.45rem 1.5rem;
+		border: 1px solid var(--jl-mart-border);
+		box-shadow: 0.5rem 0.65rem 0 rgba(40, 50, 70, 0.14);
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+	}
+	.jl-receipt-front {
+		background: #fffefa;
+		color: var(--jl-mart-ink);
+		justify-content: flex-start;
+	}
+	.jl-receipt-store {
+		display: block;
+		width: 100%;
+		padding-bottom: 0.6rem;
+		border-bottom: 2px dashed var(--jl-mart-blue);
+		font-family: var(--jl-font-mono);
+		font-size: 0.62rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		color: var(--jl-mart-blue);
+	}
+	.jl-receipt-deal {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: center;
+		width: 9rem;
+		margin: 1rem auto 0;
+		font-family: var(--jl-font-sign);
+		line-height: 1;
+		color: var(--jl-mart-red);
+	}
+	.jl-receipt-deal b {
+		display: block;
+		margin: 0;
+		font-size: 3.8rem;
+		text-align: center;
+	}
+	.jl-receipt-deal i {
+		display: block;
+		margin: 0;
+		font-size: 2rem;
+		font-style: normal;
+		color: var(--jl-mart-blue);
+	}
+	.jl-receipt-promo {
+		margin-top: -0.25rem;
+		font-family: var(--jl-font-sign);
+		font-size: 0.65rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		color: var(--jl-mart-red);
+	}
+	.jl-receipt-items {
+		display: block;
+		width: 100%;
+		margin-top: 1rem;
+		padding-block: 0.55rem;
+		border-block: 1px dashed var(--jl-mart-ink-soft);
+		font-family: var(--jl-font-mono);
+	}
+	.jl-receipt-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 2rem 4rem;
+		gap: 0.25rem;
+		padding: 0.18rem 0;
+		font-size: 0.67rem;
+		line-height: 1.35;
+		text-align: left;
+	}
+	.jl-receipt-row > :nth-child(2) {
+		text-align: center;
+	}
+	.jl-receipt-row > :last-child {
+		text-align: right;
+	}
+	.jl-receipt-head {
+		font-size: 0.56rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		color: var(--jl-mart-ink-soft);
+	}
+	.jl-receipt-bonus {
+		margin-top: 0.25rem;
+		background: rgba(245, 217, 10, 0.22);
+		font-weight: 700;
+		color: var(--jl-mart-red);
+	}
+	.jl-receipt-totals {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		margin-top: 0.65rem;
+		font-family: var(--jl-font-mono);
+		font-size: 0.64rem;
+	}
+	.jl-receipt-totals > * {
+		display: flex;
+		justify-content: space-between;
+	}
+	.jl-receipt-totals b {
+		margin-top: 0.3rem;
+		padding-top: 0.3rem;
+		border-top: 1px solid var(--jl-mart-ink);
+		font-size: 0.8rem;
+	}
+	.jl-receipt-barcode {
+		width: 76%;
+		height: 1.25rem;
+		margin-top: 0.9rem;
+		background: repeating-linear-gradient(90deg, var(--jl-mart-ink) 0 2px, transparent 2px 4px, var(--jl-mart-ink) 4px 5px, transparent 5px 8px);
+	}
+	.jl-receipt-code {
+		margin-top: 0.42rem;
+		font-family: var(--jl-font-mono);
+		font-size: 0.52rem;
+		font-weight: 400;
+		letter-spacing: 0.045em;
+		color: var(--jl-mart-ink-soft);
+	}
+	.jl-fold-hint {
+		position: absolute;
+		right: 3.9rem;
+		bottom: 1rem;
+		font-family: var(--jl-font-body);
+		font-size: 0.64rem;
+		font-weight: 700;
+		color: var(--jl-mart-blue-deep);
+		animation: jl-fold-nudge 1.6s ease-in-out infinite;
+	}
+	.jl-receipt-fold {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		z-index: 3;
+		width: 4.8rem;
+		height: 4.8rem;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: #a9dcf0;
+		clip-path: polygon(100% 0, 100% 100%, 0 100%);
+		filter: drop-shadow(-0.2rem -0.2rem 0.16rem rgba(40, 50, 70, 0.2));
+		cursor: pointer;
+		transition: filter 0.2s, transform 0.2s;
+	}
+	.jl-receipt-fold:hover,
+	.jl-receipt-fold:focus-visible {
+		filter: drop-shadow(-0.35rem -0.35rem 0.25rem rgba(40, 50, 70, 0.3));
+		transform: translate(-0.12rem, -0.12rem);
+		outline: none;
+	}
+	.jl-receipt-fold span {
+		position: absolute;
+		right: 0.3rem;
+		bottom: 0.95rem;
+		font-family: var(--jl-font-sign);
+		font-size: 0.58rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		color: var(--jl-mart-blue-deep);
+		transform: rotate(-45deg);
+	}
+	@keyframes jl-fold-nudge {
+		0%, 100% { transform: translateX(0); }
+		50% { transform: translateX(0.22rem); }
+	}
+	.jl-receipt-back {
+		border-color: var(--jl-file-border);
+		background: var(--jl-file-bg);
+		color: var(--jl-file-ink);
+		transform: rotateY(180deg);
+	}
+	.jl-receipt-classified {
+		padding: 0.45rem 1rem;
+		border: 3px solid var(--jl-file-red);
+		font-family: var(--jl-font-stamp);
+		font-size: 1rem;
+		letter-spacing: 0.1em;
+		color: var(--jl-file-red);
+		transform: rotate(-3deg);
+	}
+	.jl-receipt-file {
+		margin-top: 2rem;
+		font-family: var(--jl-font-mono);
+		font-size: 0.72rem;
+		line-height: 1.7;
+		letter-spacing: 0.08em;
+		color: var(--jl-file-ink-soft);
+	}
+	.jl-receipt-back strong {
+		margin-top: 0.8rem;
+		font-family: var(--jl-font-stamp);
+		font-size: clamp(2rem, 8vw, 3rem);
+		font-weight: 400;
+		line-height: 1.05;
+		color: #fff;
+	}
+	.jl-receipt-access {
+		margin-top: 1rem;
+		padding: 0.35rem 0.65rem;
+		background: var(--jl-file-red);
+		font-family: var(--jl-font-mono);
+		font-size: 0.65rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		color: #fff;
+	}
+	.jl-fold-hint-back {
+		color: var(--jl-file-ink-soft);
+	}
+	.jl-receipt-fold-back {
+		background: var(--jl-file-red);
+	}
+	.jl-receipt-fold-back span {
+		color: #fff;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.jl-flip-receipt-inner,
+		.jl-record-warning,
+		.jl-record-warning-card { transition: none; }
+	}
+</style>
