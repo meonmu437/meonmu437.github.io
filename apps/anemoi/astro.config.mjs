@@ -25,6 +25,7 @@ export default defineConfig({
         pagefind: false,
         pagination: false,
         components: {
+				Head: '../shared/FirstTitleHead.astro',
             ThemeProvider: './src/components/ThemeProvider.astro',
             ThemeSelect: './src/components/ThemeToggle.astro',
             PageSidebar: './src/components/PageSidebar.astro',
