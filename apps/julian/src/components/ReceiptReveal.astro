@@ -258,6 +258,10 @@
 	.jl-flip-receipt.is-flipped .jl-flip-receipt-inner {
 		transform: rotateY(180deg);
 	}
+	.jl-flip-receipt.is-flipped .jl-receipt-front :is(.jl-receipt-fold, .jl-fold-hint) {
+		opacity: 0;
+		visibility: hidden;
+	}
 	.jl-receipt-face {
 		position: absolute;
 		inset: 0;
