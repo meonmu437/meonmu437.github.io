@@ -809,6 +809,13 @@ html.jl-sidebar-expanded .sidebar-pane {
 	transform: rotate(-0.5deg);
 }
 
+.jl-truth-collage span:nth-child(4) {
+	background: #b9e69a;
+	color: #214c35;
+	font-size: clamp(0.95rem, 2.8vw, 1.2rem);
+	transform: rotate(1.4deg);
+}
+
 /* ============ 1막 · 가격표 배지 (기본 정보) ============ */
 
 .jl-tag-grid {
@@ -1602,6 +1609,10 @@ html.jl-sidebar-expanded .sidebar-pane {
 :root[data-theme='dark'] :is(.jl-rumor-cutouts > strong, .jl-truth-collage span:nth-child(3)) {
 	background: #653249;
 	color: #ffd0df;
+}
+:root[data-theme='dark'] .jl-truth-collage span:nth-child(4) {
+	background: #31533b;
+	color: #c9f2cf;
 }
 :root[data-theme='dark'] :is(.jl-pin-badge, .jl-place-icon) {
 	color: var(--jl-mart-ink);
