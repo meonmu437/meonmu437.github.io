@@ -19,56 +19,241 @@ const BEAT_DURATION = 1.6;
 ---
 
 <div class="jl-trailer">
-	<div class="jl-trailer-bar jl-trailer-bar-top" aria-hidden="true"></div>
-	<div class="jl-trailer-bar jl-trailer-bar-bottom" aria-hidden="true"></div>
+	<div class="jl-tv-antenna" aria-hidden="true"><i></i><i></i><b></b></div>
+	<div class="jl-tv-shell">
+		<header class="jl-tv-label"><strong>JULES-TV</strong><span><i></i> ON AIR · CH 06</span></header>
+		<div class="jl-tv-bezel">
+			<div class="jl-tv-screen">
+				<div class="jl-trailer-stage" aria-hidden="true">
+					{
+						beats.map((beat, i) => (
+							<p class={`jl-trailer-beat jl-trailer-beat-${beat.size}`} style={`--jl-i: ${i}`}>
+								<span class="jl-trailer-en" aria-label={beat.en}>
+									{beat.en.split(' ').map((word) => <span class="jl-collage-word" aria-hidden="true">{word}</span>)}
+								</span>
+								<span class="jl-trailer-ko">{beat.ko}</span>
+							</p>
+						))
+					}
+					<p class="jl-trailer-stamp" style={`--jl-i: ${beats.length}`}>
+						<span class="jl-trailer-en" aria-label={stamp.en}>
+							{stamp.en.split(' ').map((word) => <span class="jl-collage-word" aria-hidden="true">{word}</span>)}
+						</span>
+						<span class="jl-trailer-ko">{stamp.ko}</span>
+						<small class="jl-trailer-note"><span>{stamp.noteEn}</span><span>{stamp.noteKo}</span></small>
+					</p>
+				</div>
 
-	<div class="jl-trailer-stage" aria-hidden="true">
-		{
-			beats.map((beat, i) => (
-				<p class={`jl-trailer-beat jl-trailer-beat-${beat.size}`} style={`--jl-i: ${i}`}>
-					<span class="jl-trailer-en" aria-label={beat.en}>
-						{beat.en.split(' ').map((word) => <span class="jl-collage-word" aria-hidden="true">{word}</span>)}
-					</span>
-					<span class="jl-trailer-ko">{beat.ko}</span>
-				</p>
-			))
-		}
-		<p class="jl-trailer-stamp" style={`--jl-i: ${beats.length}`}>
-			<span class="jl-trailer-en" aria-label={stamp.en}>
-				{stamp.en.split(' ').map((word) => <span class="jl-collage-word" aria-hidden="true">{word}</span>)}
-			</span>
-			<span class="jl-trailer-ko">{stamp.ko}</span>
-			<small class="jl-trailer-note"><span>{stamp.noteEn}</span><span>{stamp.noteKo}</span></small>
-		</p>
-	</div>
-
-	<div class="jl-trailer-static">
-		{beats.map((beat) => <p><span class="jl-trailer-en" aria-label={beat.en}>{beat.en.split(' ').map((word) => <span class="jl-collage-word" aria-hidden="true">{word}</span>)}</span><span class="jl-trailer-ko">{beat.ko}</span></p>)}
-		<p class="jl-trailer-static-stamp"><span class="jl-trailer-en" aria-label={stamp.en}>{stamp.en.split(' ').map((word) => <span class="jl-collage-word" aria-hidden="true">{word}</span>)}</span><span class="jl-trailer-ko">{stamp.ko}</span><small class="jl-trailer-note"><span>{stamp.noteEn}</span><span>{stamp.noteKo}</span></small></p>
+				<div class="jl-trailer-static">
+					{beats.map((beat) => <p><span class="jl-trailer-en" aria-label={beat.en}>{beat.en.split(' ').map((word) => <span class="jl-collage-word" aria-hidden="true">{word}</span>)}</span><span class="jl-trailer-ko">{beat.ko}</span></p>)}
+					<p class="jl-trailer-static-stamp"><span class="jl-trailer-en" aria-label={stamp.en}>{stamp.en.split(' ').map((word) => <span class="jl-collage-word" aria-hidden="true">{word}</span>)}</span><span class="jl-trailer-ko">{stamp.ko}</span><small class="jl-trailer-note"><span>{stamp.noteEn}</span><span>{stamp.noteKo}</span></small></p>
+				</div>
+				<span class="jl-tv-glass" aria-hidden="true"></span>
+			</div>
+		</div>
+		<div class="jl-tv-controls" aria-hidden="true">
+			<div class="jl-tv-tuner"><span>VHF</span><b><i></i></b><span>UHF</span></div>
+			<div class="jl-tv-knob"><span>CH</span><b>06</b></div>
+		</div>
 	</div>
 </div>
 
 <style define:vars={{ beatDuration: `${BEAT_DURATION}s` }}>
 	.jl-trailer {
 		position: relative;
-		overflow: hidden;
-		margin-inline: calc(-1 * var(--sl-content-pad-x));
-		background: #05060a;
+		isolation: isolate;
+		width: min(100%, 48rem);
+		margin: clamp(5.2rem, 10vw, 6.5rem) auto 2.4rem;
+		padding-inline: clamp(0.2rem, 2vw, 0.8rem);
 	}
 
-	.jl-trailer-bar {
+	.jl-tv-antenna {
 		position: absolute;
-		left: 0;
-		right: 0;
-		height: clamp(0.9rem, 3.2vw, 2.1rem);
-		background: #000;
-		z-index: 2;
+		top: -4.5rem;
+		left: 50%;
+		width: 8rem;
+		height: 4.8rem;
+		transform: translateX(-50%);
 	}
-	.jl-trailer-bar-top {
-		top: 0;
+	.jl-tv-antenna i {
+		position: absolute;
+		bottom: 0.4rem;
+		left: calc(50% - 0.15rem);
+		width: 0.3rem;
+		height: 4.4rem;
+		border-radius: 99px;
+		background: linear-gradient(90deg, #625263, #f7e4eb 48%, #625263);
+		transform-origin: center bottom;
+		transform: rotate(-38deg);
 	}
-	.jl-trailer-bar-bottom {
+	.jl-tv-antenna i:nth-child(2) { height: 4rem; transform: rotate(38deg); }
+	.jl-tv-antenna i::before {
+		content: '';
+		position: absolute;
+		top: -0.25rem;
+		left: -0.22rem;
+		width: 0.72rem;
+		height: 0.72rem;
+		border: 1px solid #8b5870;
+		border-radius: 50%;
+		background: #ffe184;
+	}
+	.jl-tv-antenna i:nth-child(2)::before { background: #9cdbd0; }
+	.jl-tv-antenna b {
+		position: absolute;
 		bottom: 0;
+		left: 50%;
+		width: 2.7rem;
+		height: 1rem;
+		border-radius: 1rem 1rem 0 0;
+		background: #8f536c;
+		transform: translateX(-50%);
+	}
+
+	.jl-tv-shell {
+		position: relative;
+		z-index: 1;
+		padding: clamp(0.65rem, 2.5vw, 1rem);
+		border: 2px solid #96536d;
+		border-radius: clamp(1.4rem, 4vw, 2.3rem);
+		background: linear-gradient(145deg, #f8b3ca, #ed99b4 50%, #e487a7);
+		box-shadow: 0.3rem 0.5rem 0 #a75d7a, inset 0 0.2rem 0.25rem #ffd3e1, inset 0 -0.25rem 0.4rem #cf7597;
+	}
+
+	.jl-tv-label {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0.1rem 0.45rem 0.65rem;
+		color: #fff1c8;
+	}
+	.jl-tv-label strong {
+		font-family: 'Pacifico', cursive;
+		font-size: clamp(0.95rem, 3vw, 1.25rem);
+		font-weight: 400;
+		text-shadow: 1px 1px 0 #38534e;
+	}
+	.jl-tv-label span {
+		font-family: 'Courier Prime', monospace;
+		font-size: 0.55rem;
+		font-weight: 700;
+		letter-spacing: 0.09em;
+		color: #4f3845;
+	}
+	.jl-tv-label span i {
+		display: inline-block;
+		width: 0.45rem;
+		height: 0.45rem;
+		margin-right: 0.22rem;
+		border-radius: 50%;
+		background: #b42d3b;
+		box-shadow: 0 0 0.35rem #ff6f79;
+	}
+
+	.jl-tv-bezel {
+		padding: clamp(0.35rem, 1.4vw, 0.55rem);
+		border: 2px solid #4d4354;
+		border-radius: clamp(1.1rem, 3.5vw, 1.9rem);
+		background: #615369;
+		box-shadow: inset 0 0.2rem 0.55rem #202027;
+	}
+
+	.jl-tv-screen {
+		position: relative;
+		overflow: hidden;
+		border: 1px solid #25252d;
+		border-radius: clamp(0.9rem, 3vw, 1.55rem);
+		background: #08090d;
+		box-shadow: inset 0 0 2.2rem rgba(0, 0, 0, 0.9), inset 0 0 0.8rem rgba(116, 199, 209, 0.13);
+	}
+	.jl-tv-screen::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 3;
+		pointer-events: none;
+		background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(155, 220, 221, 0.045) 3px 4px);
+		mix-blend-mode: screen;
+	}
+	.jl-tv-glass {
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		pointer-events: none;
+		background: radial-gradient(ellipse at 28% 12%, rgba(255, 255, 255, 0.12), transparent 36%);
+	}
+
+	.jl-tv-controls {
+		display: grid;
+		grid-template-columns: minmax(7rem, 1fr) auto;
+		align-items: center;
+		gap: clamp(0.75rem, 2.5vw, 1.25rem);
+		margin-top: 0.65rem;
+		padding: 0.65rem 0.8rem;
+		border: 1px solid #729786;
+		border-radius: 1.3rem;
+		background: #b9dfd2;
+		box-shadow: inset 0 0.15rem 0.2rem #e5f8ef;
+	}
+	.jl-tv-tuner {
+		display: grid;
+		grid-template-columns: 1.35rem minmax(0, 1fr) 1.35rem;
+		align-items: center;
+		align-self: center;
+		gap: 0.38rem;
+		height: 2.5rem;
+		font-family: 'Courier Prime', monospace;
+		font-size: 0.48rem;
+		font-weight: 700;
+		color: #405d55;
+	}
+	.jl-tv-tuner > span {
+		display: block;
+		line-height: 1;
+		text-align: center;
+	}
+	.jl-tv-tuner b {
+		position: relative;
+		display: block;
+		height: 1.15rem;
+		border-radius: 0.5rem;
+		background: repeating-linear-gradient(90deg, #bed9c4 0 1px, transparent 1px 0.6rem), #3d6258;
+		box-shadow: inset 0 0.12rem 0.25rem #29483f;
+	}
+	.jl-tv-tuner b i {
+		position: absolute;
+		top: 0.08rem;
+		bottom: 0.08rem;
+		left: 62%;
+		width: 0.16rem;
+		border-radius: 99px;
+		background: #ff9cbd;
+		box-shadow: 0 0 0.3rem #ff88af;
+		animation: jl-tv-tune 7s ease-in-out infinite;
+	}
+	.jl-tv-knob {
+		display: grid;
+		place-items: center;
+		align-self: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border: 2px solid #283d38;
+		border-radius: 50%;
+		background: #405a52;
+		box-shadow: 0 0.18rem 0 #263a35, inset 0 0.12rem 0.15rem #70877e;
+		font-family: 'Courier Prime', monospace;
+		color: #f4e8c8;
+		transform: translateY(-0.1rem);
+	}
+	.jl-tv-knob span { font-size: 0.38rem; line-height: 1; }
+	.jl-tv-knob b { font-size: 0.78rem; line-height: 0.8; }
+	@keyframes jl-tv-tune {
+		0%, 18%, 100% { left: 62%; }
+		25% { left: 22%; }
+		34% { left: 78%; }
+		42% { left: 55%; }
+		50%, 94% { left: 62%; }
 	}
 
 	.jl-trailer-stage {
@@ -252,7 +437,58 @@ const BEAT_DURATION = 1.6;
 		}
 	}
 
+	@media (max-width: 30rem) {
+		.jl-trailer {
+			margin-top: 4.8rem;
+			padding-inline: 0;
+		}
+		.jl-tv-antenna {
+			top: -4rem;
+			transform: translateX(-50%) scale(0.88);
+			transform-origin: center bottom;
+		}
+		.jl-tv-shell {
+			padding: 0.55rem;
+			border-radius: 1.45rem;
+			box-shadow: 0.22rem 0.38rem 0 #a75d7a, inset 0 0.15rem 0.2rem #ffd3e1, inset 0 -0.2rem 0.3rem #cf7597;
+		}
+		.jl-tv-label {
+			padding: 0 0.3rem 0.48rem;
+		}
+		.jl-tv-label span {
+			font-size: 0.48rem;
+		}
+		.jl-tv-bezel {
+			padding: 0.3rem;
+		}
+		.jl-tv-controls {
+			grid-template-columns: minmax(4rem, 1fr) auto;
+			gap: 0.65rem;
+			margin-top: 0.5rem;
+			padding: 0.55rem 0.65rem;
+			border-radius: 1rem;
+		}
+		.jl-tv-knob {
+			width: 2.2rem;
+			height: 2.2rem;
+		}
+		.jl-tv-tuner {
+			height: 2.2rem;
+		}
+	}
+
+	@media (max-width: 22rem) {
+		.jl-trailer-note {
+			flex-direction: column;
+			align-items: center;
+			gap: 0.05rem;
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
+		.jl-tv-tuner b i {
+			animation: none;
+		}
 		.jl-trailer-stage {
 			display: none;
 		}
