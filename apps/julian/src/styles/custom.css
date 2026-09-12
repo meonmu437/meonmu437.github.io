@@ -1220,10 +1220,6 @@ html.jl-sidebar-expanded .sidebar-pane {
 /* ============ 1막 · 레인보우 마트 안내 ============ */
 
 .jl-mart-directory {
-	text-align: center;
-}
-
-.jl-mart-directory .sl-heading-wrapper {
 	text-align: left;
 }
 
@@ -1232,6 +1228,7 @@ html.jl-sidebar-expanded .sidebar-pane {
 	margin: 0.8rem auto 2rem;
 	font-size: 0.9rem;
 	line-height: 1.8;
+	text-align: center;
 	color: var(--jl-mart-ink-soft) !important;
 }
 
