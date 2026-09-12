@@ -1224,12 +1224,13 @@ html.jl-sidebar-expanded .sidebar-pane {
 }
 
 .jl-mart-lede {
-	max-width: 37rem;
-	margin: 0.8rem auto 2rem;
-	font-size: 0.9rem;
-	line-height: 1.8;
-	text-align: center;
-	color: var(--jl-mart-ink-soft) !important;
+	max-width: none;
+	margin: 0.8rem 0 2rem;
+	font-family: var(--jl-font-body);
+	font-size: 1rem;
+	line-height: 1.75;
+	text-align: left;
+	color: var(--jl-mart-ink) !important;
 }
 
 .jl-mart-map {
