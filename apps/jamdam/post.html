@@ -19,19 +19,6 @@
 		--dot-green: #28c840;
 	}
 
-	@media (prefers-color-scheme: light) {
-		:root {
-			--bg: #eef0f3;
-			--window: #ffffff;
-			--titlebar: #f6f8fa;
-			--border: #d8dce2;
-			--text: #24292f;
-			--muted: #6e7781;
-			--user: #1a7f37;
-			--path: #0969da;
-		}
-	}
-
 	* {
 		box-sizing: border-box;
 	}
@@ -238,20 +225,23 @@
 		margin-top: 1.75rem;
 	}
 </style>
+<link rel="stylesheet" href="diary.css" />
 </head>
 <body>
 	<div class="terminal">
+		<span class="diary-sticker diary-sticker--dog" aria-hidden="true">🐶</span>
+		<span class="diary-sticker diary-sticker--alien" aria-hidden="true">👾</span>
 		<div class="titlebar">
 			<div class="dots">
 				<span class="dot red"></span>
 				<span class="dot yellow"></span>
 				<span class="dot green"></span>
 			</div>
-			<div class="titlebar-label">guest@meonmu437: ~/worlds/잡담</div>
+			<div class="titlebar-label">잡담 노트</div>
 		</div>
 		<div class="screen">
 			<div class="line prompt">
-				<a href="index.html" class="prompt-path-link"><span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds/잡담</span></a><span class="sep">$</span>
+				<a href="index.html" class="prompt-path-link"><span class="path">잡담 노트</span></a><span class="sep"> / </span>
 				<span id="post-command"></span>
 			</div>
 
@@ -387,7 +377,7 @@
 			script.setAttribute('data-reactions-enabled', '0');
 			script.setAttribute('data-emit-metadata', '0');
 			script.setAttribute('data-input-position', 'top');
-			script.setAttribute('data-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+			script.setAttribute('data-theme', 'light');
 			script.setAttribute('data-lang', 'ko');
 			script.crossOrigin = 'anonymous';
 			script.async = true;
@@ -403,7 +393,7 @@
 				return;
 			}
 
-			document.getElementById('post-command').textContent = 'cat ' + id;
+			document.getElementById('post-command').textContent = '기록 #' + id;
 
 			try {
 				var res = await fetch('https://api.github.com/repos/' + REPO + '/discussions/' + id, {

@@ -3,37 +3,31 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>meonmu437@worlds</title>
+<title>어딘가의 세계들 · meonmu437</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+	rel="stylesheet"
+/>
 <style>
-	:root {
-		--bg: #0b0d10;
-		--window: #12151a;
-		--titlebar: #1a1e24;
-		--border: #262b33;
-		--text: #d7dae0;
-		--muted: #7d8590;
-		--user: #5fd76d;
-		--path: #5b9dfa;
-		--dir: #58c4dc;
-		--cursor: #5fd76d;
-		--dot-red: #ff5f57;
-		--dot-yellow: #febc2e;
-		--dot-green: #28c840;
+	@font-face {
+		font-family: 'SSRONET Handwritten';
+		src: url('https://cdn.jsdelivr.net/gh/sweetherofonts/fontshero_pack4/ssronethandwritten/ssronethandwritten-Regular.woff2') format('woff2');
+		font-weight: 400;
+		font-style: normal;
+		font-display: swap;
 	}
 
-	@media (prefers-color-scheme: light) {
-		:root {
-			--bg: #eef0f3;
-			--window: #ffffff;
-			--titlebar: #f6f8fa;
-			--border: #d8dce2;
-			--text: #24292f;
-			--muted: #6e7781;
-			--user: #1a7f37;
-			--path: #0969da;
-			--dir: #0969da;
-			--cursor: #1a7f37;
-		}
+	:root {
+		--paper: #fbf4e6;
+		--dot: rgba(120, 100, 70, 0.16);
+		--ink: #3a3128;
+		--muted: #8a7b64;
+		--card: #fffdf7;
+		--card-border: #e7d9bd;
+		--shadow: rgba(90, 70, 30, 0.18);
+		--pin: #d94f6b;
 	}
 
 	* {
@@ -48,490 +42,759 @@
 
 	body {
 		min-height: 100vh;
+		background-color: var(--paper);
+		background-image: radial-gradient(var(--dot) 1.3px, transparent 1.3px);
+		background-size: 18px 18px;
+		color: var(--ink);
+		font-family: 'Noto Sans KR', sans-serif;
+		padding: clamp(2.5rem, 8vw, 4.5rem) 1.25rem clamp(3.5rem, 8vw, 5rem);
+	}
+
+	.diary {
+		max-width: 40rem;
+		margin: 0 auto;
+	}
+
+	/* ── 표지: 워시테이프로 고정한 제목 ── */
+	.masthead {
+		position: relative;
+		text-align: center;
+		margin-bottom: clamp(2.2rem, 6vw, 3rem);
+	}
+
+	.masthead-tape {
+		position: absolute;
+		top: -0.9rem;
+		left: 50%;
+		width: 8rem;
+		height: 1.6rem;
+		transform: translateX(-50%) rotate(-2deg);
+		background: repeating-linear-gradient(45deg, #f2c9d6 0 8px, #f7dbe4 8px 16px);
+		opacity: 0.88;
+		box-shadow: 0 2px 3px var(--shadow);
+	}
+
+	.masthead h1 {
+		margin: 1.3rem 0 0;
+		font-family: 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		font-weight: 400;
+		font-size: clamp(2.1rem, 7vw, 3rem);
+		color: var(--ink);
+		transform: rotate(-1deg);
+	}
+
+	.masthead .doodle {
+		position: absolute;
+		z-index: 2;
+		font-size: 1.45rem;
+		opacity: 1;
+		filter:
+			drop-shadow(-2px 0 #fffaf0) drop-shadow(2px 0 #fffaf0)
+			drop-shadow(0 -2px #fffaf0) drop-shadow(0 2px #fffaf0)
+			drop-shadow(1px 2px 1px rgba(76,54,35,.24));
+	}
+	.masthead .doodle--star {
+		top: -1.6rem;
+		left: 14%;
+		transform: rotate(-12deg);
+	}
+	.masthead .doodle--heart {
+		top: 0.2rem;
+		right: 12%;
+		transform: rotate(10deg);
+	}
+
+	.masthead .subtitle {
+		margin: 0.65rem 0 0;
+		font-family: 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		font-size: 1.05rem;
+		color: var(--muted);
+	}
+
+	/* ── 책 전체: 책갈피 리본이 꽂힐 기준 좌표 ── */
+	.book {
+		position: relative;
+	}
+
+	/* ── 잡담: 말풍선 모양 레트로 스티커 (흰 테두리 + 진한 아웃라인의
+	   "다이어리 스티커북" 재질). SVG path를 halo(두꺼운 흰 선) → outline
+	   (진한 선 + 채우기) 순서로 두 번 그려서 스티커 특유의 컷팅 라인을
+	   흉내 낸다. ── */
+	.chat-sticker {
+		position: absolute;
+		top: -1.15rem;
+		right: clamp(0.4rem, 6vw, 2rem);
+		z-index: 3;
+		display: block;
+		width: 6.8rem;
+		height: 4.15rem;
+		transform: rotate(-6deg);
+		filter: drop-shadow(2px 3px 1px var(--shadow));
+		transition: transform 0.15s ease;
+	}
+	.chat-sticker:hover,
+	.chat-sticker:focus-visible {
+		transform: rotate(-2deg) translateY(-3px) scale(1.03);
+	}
+	.chat-sticker svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+	.sticker-halo {
+		fill: none;
+		stroke: #fffaf0;
+		stroke-width: 12;
+		stroke-linejoin: round;
+		stroke-linecap: round;
+	}
+	.sticker-outline {
+		fill: url(#bubble-dots);
+		stroke: #568da5;
+		stroke-width: 3;
+		stroke-linejoin: round;
+	}
+	.chat-sticker-text {
+		position: absolute;
+		top: 0;
+		bottom: 1rem;
+		left: 0;
+		right: 0;
+		height: auto;
+		display: grid;
+		place-items: center;
+		padding-left: .12rem;
+		font-family: 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		font-size: 1.35rem;
+		line-height: 1;
+		text-align: center;
+		color: #31677d;
+		text-shadow: 0 1px 0 rgba(255,255,255,.7);
+		transform: translateY(.22rem);
+		pointer-events: none;
+	}
+
+	/* ── 인덱스 탭: 다이어리 위쪽에서 오가는 섹션 탭 ── */
+	.index-tabs {
+		display: flex;
+		gap: 0.35rem;
+		padding-left: 0.5rem;
+	}
+
+	.tab {
+		appearance: none;
+		border: 2px solid var(--card-border);
+		border-bottom: none;
+		background: var(--card);
+		border-radius: 0.8rem 0.8rem 0 0;
+		padding: 0.75rem 1rem 0.55rem;
+		font-family: 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		font-weight: 400;
+		font-size: 0.88rem;
+		color: var(--muted);
+		cursor: pointer;
+		opacity: 0.72;
+		transform: translateY(5px);
+		transition: transform 0.15s ease, opacity 0.15s ease;
+	}
+
+	.tab::before {
+		content: '';
+		display: block;
+		height: 0.32rem;
+		margin: -0.75rem -1rem 0.5rem;
+		border-radius: 0.8rem 0.8rem 0 0;
+		background: var(--tape);
+		opacity: 0.9;
+	}
+
+	.tab.active {
+		color: var(--ink);
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.tab:hover {
+		opacity: 0.9;
+	}
+
+	/* ── 펼쳐진 페이지: 활성 탭에 붙은 내용 ── */
+	.page {
+		border: 2px solid var(--card-border);
+		border-radius: 0 0.9rem 0.9rem 0.9rem;
+		background: var(--card);
+		padding: clamp(1.4rem, 4vw, 1.9rem) clamp(1.1rem, 4vw, 1.6rem);
+	}
+
+	/* ── 노트에 손으로 적은 목록: 포스트잇 상자 대신, 노트 위에 바로 쓴
+	   제목 + 소개글 한 줄에 이모지 스티커(아웃라인 있는 진짜 스티커
+	   모양)만 옆에 붙여 둔다. ── */
+	.entry-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+	}
+
+	.diary-entry {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.entry-sticker {
+		flex-shrink: 0;
+		position: relative;
+		width: 2.3rem;
+		height: 2.3rem;
+		transform: rotate(var(--tilt, -6deg));
+		filter: drop-shadow(1.5px 2.5px 0 var(--shadow));
+		transition: transform 0.15s ease;
+	}
+	.diary-entry:nth-child(3n + 1) .entry-sticker {
+		--tilt: -8deg;
+	}
+	.diary-entry:nth-child(3n + 2) .entry-sticker {
+		--tilt: 6deg;
+	}
+	.diary-entry:nth-child(3n) .entry-sticker {
+		--tilt: -3deg;
+	}
+	.diary-entry:hover .entry-sticker,
+	.diary-entry:focus-visible .entry-sticker {
+		transform: rotate(0deg) scale(1.08);
+	}
+
+	.entry-sticker svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+	.entry-sticker-halo {
+		fill: none;
+		stroke: var(--paper);
+		stroke-width: 9;
+	}
+	.entry-sticker-outline {
+		stroke: var(--ink);
+		stroke-width: 3.5;
+	}
+	.entry-sticker-emoji {
+		position: absolute;
+		inset: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: var(--bg);
-		padding: 2rem 1.25rem;
-		font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+		font-size: 1.15rem;
+		pointer-events: none;
 	}
 
-	.terminal {
-		width: 100%;
-		max-width: 40rem;
-		border-radius: 0.75rem;
-		border: 1px solid var(--border);
-		background: var(--window);
-		box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
-		overflow: hidden;
+	.entry-text {
+		min-width: 0;
 	}
 
-	.titlebar {
-		display: flex;
-		align-items: center;
-		gap: 0.6rem;
-		padding: 0.65rem 0.9rem;
-		background: var(--titlebar);
-		border-bottom: 1px solid var(--border);
-	}
-
-	.dots {
-		display: flex;
-		gap: 0.45rem;
-	}
-
-	.dot {
-		width: 0.7rem;
-		height: 0.7rem;
-		border-radius: 50%;
-	}
-
-	.dot.red {
-		background: var(--dot-red);
-	}
-	.dot.yellow {
-		background: var(--dot-yellow);
-	}
-	.dot.green {
-		background: var(--dot-green);
-	}
-
-	.titlebar-label {
-		flex: 1;
-		text-align: center;
-		font-size: 0.78rem;
-		color: var(--muted);
-		margin-inline-end: 2.5rem;
-	}
-
-	.screen {
-		padding: 1.5rem 1.25rem 2rem;
-		font-size: 0.9rem;
-		line-height: 1.7;
-		color: var(--text);
-		min-height: 14rem;
-	}
-
-	.line {
-		word-break: break-word;
-	}
-
-	.prompt .user {
-		color: var(--user);
-		font-weight: 600;
-	}
-
-	.prompt .sep {
-		color: var(--muted);
-	}
-
-	.prompt .path {
-		color: var(--path);
-		font-weight: 600;
-	}
-
-	.listing {
-		margin: 0.9rem 0 1.1rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.55rem;
-		opacity: 0;
-		transition: opacity 0.3s ease;
-	}
-
-	.listing.show {
-		opacity: 1;
-	}
-
-	.entry-row {
-		display: flex;
-		align-items: baseline;
-		gap: 0.6rem;
-	}
-
-	.entry .perms {
-		color: var(--muted);
-	}
-
-	.entry a,
-	.entry .dirname {
-		color: var(--dir);
-		font-weight: 700;
-		text-decoration: none;
-	}
-
-	.entry a:hover {
-		text-decoration: underline;
-	}
-
-	.entry .desc {
+	.entry-title {
 		display: block;
-		margin-top: 0.2rem;
-		padding-inline-start: 1.5rem;
-		color: var(--muted);
-	}
-
-	.entry .desc::before {
-		content: '# ';
-	}
-
-	.entry--nested {
-		margin-inline-start: 1.6rem;
-	}
-
-	.final-link {
-		color: var(--dir);
-		font-weight: 700;
-		text-decoration: none;
-	}
-
-	.final-link:hover {
+		font-family: 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		font-weight: 400;
+		font-size: 1.3rem;
+		color: var(--ink);
 		text-decoration: underline;
+		text-decoration-color: var(--card-border);
+		text-underline-offset: 0.2rem;
 	}
 
-	.cursor {
-		display: inline-block;
-		width: 0.55em;
-		height: 1em;
-		vertical-align: text-bottom;
-		background: var(--cursor);
-		margin-inline-start: 0.15em;
-		animation: blink 1s step-end infinite;
-	}
-
-	/* 디렉터리를 읽어오는 동안 잠깐 보여주는 픽셀 아트 로딩 스피너. 8개의
-	   각진 블록이 원을 그리며 순서대로 반짝인다 — giscus 위젯이 뜨기 전에
-	   보여주는 로딩 스피너에서 착안. */
-	.pixel-spinner {
-		position: relative;
-		display: none;
-		width: 1em;
-		height: 1em;
-		vertical-align: text-bottom;
-		margin-inline-start: 0.4em;
-	}
-
-	.pixel-spinner i {
-		position: absolute;
-		width: 0.22em;
-		height: 0.22em;
-		background: var(--cursor);
-		opacity: 0.25;
-		animation: pixel-chase 0.8s steps(1, end) infinite;
-	}
-
-	.pixel-spinner i:nth-child(1) {
-		top: 0;
-		left: 0.39em;
-		animation-delay: 0s;
-	}
-	.pixel-spinner i:nth-child(2) {
-		top: 0;
-		left: 0.78em;
-		animation-delay: 0.1s;
-	}
-	.pixel-spinner i:nth-child(3) {
-		top: 0.39em;
-		left: 0.78em;
-		animation-delay: 0.2s;
-	}
-	.pixel-spinner i:nth-child(4) {
-		top: 0.78em;
-		left: 0.78em;
-		animation-delay: 0.3s;
-	}
-	.pixel-spinner i:nth-child(5) {
-		top: 0.78em;
-		left: 0.39em;
-		animation-delay: 0.4s;
-	}
-	.pixel-spinner i:nth-child(6) {
-		top: 0.78em;
-		left: 0;
-		animation-delay: 0.5s;
-	}
-	.pixel-spinner i:nth-child(7) {
-		top: 0.39em;
-		left: 0;
-		animation-delay: 0.6s;
-	}
-	.pixel-spinner i:nth-child(8) {
-		top: 0;
-		left: 0;
-		animation-delay: 0.7s;
-	}
-
-	@keyframes pixel-chase {
-		0% {
-			opacity: 1;
-		}
-		12.5% {
-			opacity: 0.25;
-		}
-		100% {
-			opacity: 0.25;
-		}
+	.entry-desc {
+		display: block;
+		margin-top: 0.1rem;
+		font-family: 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		font-size: 1.02rem;
+		line-height: 1.35;
+		color: var(--muted);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.cursor {
-			animation: none;
-		}
-		.listing {
+		.tab,
+		.entry-sticker,
+		.chat-sticker {
 			transition: none;
 		}
-		.pixel-spinner {
-			display: none !important;
+	}
+
+	@media (max-width: 24rem) {
+		.index-tabs {
+			gap: 0.2rem;
 		}
-		.pixel-spinner i {
-			animation: none;
+		.tab {
+			padding: 0.65rem 0.6rem 0.5rem;
+			font-size: 0.78rem;
 		}
 	}
 
-	@keyframes blink {
-		0%,
-		50% {
-			opacity: 1;
-		}
-		50.01%,
-		100% {
-			opacity: 0;
-		}
+	/* ── 5공 레트로 바인더 ── */
+	body {
+		background-color: #d8c9b7;
+		background-image:
+			linear-gradient(rgba(255,255,255,.16) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px),
+			radial-gradient(rgba(94,64,42,.12) .8px, transparent .8px);
+		background-size: 22px 22px, 22px 22px, 5px 5px;
+		padding: clamp(1.4rem, 5vw, 3.5rem) clamp(1.3rem, 6vw, 4rem);
 	}
-
-	/* 무지개 꼬리를 끌고 날아다니는 픽셀 고양이. IDE 로딩 화면 느낌의
-	   장식 — 기능은 없고 그냥 귀엽자고 넣는다. */
-	.nyan-wrap {
+	.diary { max-width: 44rem; }
+	.vinyl-cover {
 		position: relative;
-		height: 2.4rem;
-		margin-top: 1.5rem;
-		overflow: hidden;
+		padding: clamp(1.15rem, 3.5vw, 2rem) clamp(1.35rem, 5vw, 2.8rem) clamp(1.5rem, 4vw, 2.2rem);
+		border: 2px solid rgba(106,77,104,.45);
+		border-radius: 1.65rem 1rem 1rem 1.65rem;
+		background: #e3b7cd;
+		box-shadow:
+			0 1.25rem 2.4rem rgba(72,47,65,.27),
+			inset 0 0 0 .38rem rgba(255,255,255,.18),
+			inset .55rem 0 1rem rgba(255,255,255,.22),
+			inset -.35rem -.45rem .8rem rgba(96,61,104,.18);
+		overflow: visible;
 	}
-
-	.nyan-trail {
+	.vinyl-cover::before {
+		content: '';
 		position: absolute;
-		inset-inline: 0;
-		top: 50%;
-		height: 0.5rem;
-		margin-top: -0.25rem;
-		background-image: repeating-linear-gradient(
-			90deg,
-			#ff5f57 0 8px,
-			#febc2e 8px 16px,
-			#fff44f 16px 24px,
-			#28c840 24px 32px,
-			#3ea7ff 32px 40px,
-			#7a5cff 40px 48px,
-			#ff5fd4 48px 56px
-		);
-		background-size: 56px 100%;
-		animation: nyan-trail-move 1.4s linear infinite;
+		inset: .5rem;
+		border: 1px dashed rgba(104,70,99,.34);
+		border-radius: 1.25rem .7rem .7rem 1.25rem;
+		pointer-events: none;
 	}
-
-	.nyan-cat {
+	.vinyl-cover::after {
+		content: '';
+		position: absolute;
+		top: 1rem;
+		bottom: 1rem;
+		left: .72rem;
+		width: .28rem;
+		border-radius: 99px;
+		background: rgba(101,66,94,.24);
+		box-shadow: .18rem 0 .18rem rgba(255,255,255,.25);
+	}
+	.cover-sticker {
+		position: absolute;
+		z-index: 9;
+		display: grid;
+		place-items: center;
+		filter: drop-shadow(1px 2px 1px rgba(66,42,49,.2));
+		user-select: none;
+	}
+	.cover-sticker--smile {
+		top: 1.2rem;
+		left: 1.5rem;
+		font-size: 2rem;
+		line-height: 1;
+		filter:
+			drop-shadow(-2px 0 #fffaf0) drop-shadow(2px 0 #fffaf0)
+			drop-shadow(0 -2px #fffaf0) drop-shadow(0 2px #fffaf0)
+			drop-shadow(2px 3px 1px rgba(66,42,49,.25));
+		transform: rotate(-10deg);
+	}
+	.cover-sticker--flower {
+		top: 5.2rem;
+		right: .85rem;
+		font-size: 2.2rem;
+		filter:
+			drop-shadow(-2px 0 #fffaf0) drop-shadow(2px 0 #fffaf0)
+			drop-shadow(0 -2px #fffaf0) drop-shadow(0 2px #fffaf0)
+			drop-shadow(2px 3px 1px rgba(66,42,49,.22));
+		transform: rotate(12deg);
+	}
+	.cover-sticker--label {
+		right: 1.1rem;
+		bottom: .8rem;
+		padding: .35rem .55rem;
+		border: 1px solid #46779a;
+		border-radius: .25rem;
+		background: #d7f0f1;
+		font: 400 .66rem/1.1 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		letter-spacing: .03em;
+		color: #355f7b;
+		text-align: center;
+		transform: rotate(-2deg);
+	}
+	.cover-sticker--label b { font-size: .72rem; }
+	.masthead {
+		z-index: 2;
+		width: min(88%, 27rem);
+		margin: 0 auto 1.5rem;
+		padding: 1.15rem 1rem 1rem;
+		border: 1px solid rgba(150,122,83,.35);
+		border-radius: .35rem;
+		background: rgba(255,250,232,.9);
+		box-shadow: .2rem .28rem 0 rgba(104,71,95,.15);
+		transform: rotate(-.7deg);
+	}
+	.masthead::after {
+		content: '';
+		position: absolute;
+		inset: .35rem;
+		border: 1px solid rgba(197,151,173,.45);
+		pointer-events: none;
+	}
+	.masthead-tape { top: -.62rem; }
+	.masthead-date {
+		margin: 0 0 .2rem;
+		font: 400 .75rem/1 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		letter-spacing: .06em;
+		color: #a06b83;
+	}
+	.masthead h1 {
+		display: inline;
+		margin: .25rem 0 0;
+		padding: 0 .12em;
+		background: linear-gradient(transparent 58%, rgba(255, 117, 160, .34) 58% 88%, transparent 88%);
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
+		color: #3a3128;
+	}
+	.masthead .subtitle { margin-top: .28rem; color: #8a7b64; }
+	.masthead .doodle--star { top: .5rem; left: 5%; }
+	.masthead .doodle--heart { top: .7rem; right: 6%; color: #e65f80; }
+	.book {
+		position: relative;
+		z-index: 3;
+		margin-left: clamp(.4rem, 2vw, 1rem);
+		margin-right: clamp(.6rem, 4vw, 2rem);
+	}
+	.paper-stack {
+		position: absolute;
+		inset: .45rem -.45rem -.45rem .55rem;
+		border: 1px solid #cabd9e;
+		border-radius: .3rem .8rem .8rem .35rem;
+		background: #e9deca;
+		box-shadow: .26rem .28rem 0 #d3c5a8, .48rem .5rem 0 rgba(93,69,49,.18);
+	}
+	.page {
+		position: relative;
+		z-index: 2;
+		min-height: 26rem;
+		padding: clamp(2rem, 5vw, 2.7rem) clamp(1.15rem, 4vw, 1.8rem) 2rem clamp(2.1rem, 6vw, 3.25rem);
+		border: 1px solid #d9caa8;
+		border-radius: .28rem .75rem .75rem .25rem;
+		background-color: #fffaf0;
+		background-image:
+			linear-gradient(rgba(94,139,178,.13) 1px, transparent 1px),
+			linear-gradient(90deg, transparent 0 2.1rem, rgba(226,112,128,.2) 2.1rem 2.18rem, transparent 2.18rem);
+		background-size: 100% 1.75rem, 100% 100%;
+		box-shadow: inset .55rem 0 .7rem rgba(109,82,47,.05), 0 .25rem .7rem rgba(79,54,39,.13);
+		color: #3a3128;
+	}
+	.page::before {
+		display: none;
+	}
+	.page-heading {
+		position: relative;
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 1rem;
+		margin: 0 0 1.35rem;
+		padding: 0 0 .45rem;
+		border-bottom: 0;
+	}
+	.page-heading h2 {
+		margin: 0;
+		display: inline;
+		padding: 0 .12em;
+		background: linear-gradient(transparent 54%, color-mix(in srgb, var(--page-accent, #c9b8e8) 58%, transparent) 54% 88%, transparent 88%);
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
+		font: 400 clamp(1.35rem, 4vw, 1.75rem)/1 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		color: #3a3128;
+	}
+	.page-heading span {
+		font: 400 .82rem/1 'SSRONET Handwritten', 'Noto Sans KR', sans-serif;
+		letter-spacing: .02em;
+		color: #8a7b64;
+	}
+	.index-tabs {
+		position: absolute;
+		z-index: 5;
+		top: 2rem;
+		right: -3.45rem;
+		display: flex;
+		flex-direction: column;
+		gap: .55rem;
+		padding: 0;
+	}
+	.tab {
+		width: 3.5rem;
+		min-height: 3.9rem;
+		padding: .6rem .35rem;
+		border: 1px solid color-mix(in srgb, var(--tape) 72%, #70586b);
+		border-left: 0;
+		border-radius: 0 .65rem .65rem 0;
+		background: color-mix(in srgb, var(--tape) 83%, white);
+		box-shadow: .18rem .2rem 0 rgba(74,49,68,.16), inset 0 0 0 2px rgba(255,255,255,.22);
+		font-size: .92rem;
+		line-height: 1.1;
+		color: #4b3f43;
+		opacity: .82;
+		transform: translateX(-.3rem);
+	}
+	.tab::before { display: none; }
+	.tab.active {
+		color: #3a3128;
+		opacity: 1;
+		transform: translateX(.12rem);
+		box-shadow: .28rem .24rem 0 rgba(74,49,68,.2), inset 0 0 0 2px rgba(255,255,255,.28);
+	}
+	.ring-spine {
+		position: absolute;
+		z-index: 7;
+		top: 1.75rem;
+		bottom: 1.75rem;
+		left: -1.18rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		pointer-events: none;
+	}
+	.ring-spine i {
+		position: relative;
+		display: block;
+		width: 2.25rem;
+		height: .68rem;
+		border: .18rem solid #a9a9ad;
+		border-right-color: #6f7076;
+		border-radius: 50%;
+		background: linear-gradient(180deg, #f4f4f6, #8c8d91 45%, #d8d8da 56%, #737478);
+		box-shadow: 0 .1rem .12rem rgba(52,45,48,.35), inset 0 0 .1rem white;
+		transform: rotate(-2deg);
+	}
+	.ring-spine i::after {
+		content: '';
 		position: absolute;
 		top: 50%;
-		right: 1.5rem;
-		width: 5.4rem;
-		height: 2.4rem;
-		margin-top: -1.2rem;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 8'%3E%3Crect x='2' y='0' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='1' y='1' width='3' height='1' fill='%23f2a65a'/%3E%3Crect x='5' y='0' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='5' y='1' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='2' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='3' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='4' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='16' y='4' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='5' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='16' y='3' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='17' y='2' width='1' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='6' width='16' height='1' fill='%23f2a65a'/%3E%3Crect x='1' y='7' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='5' y='7' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='9' y='7' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='13' y='7' width='2' height='1' fill='%23f2a65a'/%3E%3Crect x='0' y='3' width='1' height='1' fill='%23c65b3f'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%23000'/%3E%3C/svg%3E");
-		background-repeat: no-repeat;
-		background-size: 100% 100%;
-		image-rendering: pixelated;
-		animation: nyan-bob 0.5s steps(2) infinite;
+		right: -.28rem;
+		width: 1rem;
+		height: .13rem;
+		border-radius: 99px;
+		background: rgba(255,255,255,.7);
+		transform: translateY(-50%);
 	}
-
-	@keyframes nyan-trail-move {
-		from {
-			background-position-x: 0;
-		}
-		to {
-			background-position-x: 56px;
-		}
+	.ring-spine i::before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		right: .18rem;
+		width: .48rem;
+		height: .48rem;
+		border: .08rem solid #eee3cf;
+		border-radius: 50%;
+		background: #aa9c82;
+		box-shadow: inset 0 .08rem .1rem rgba(76,58,38,.32);
+		transform: translateY(-50%);
 	}
-
-	@keyframes nyan-bob {
-		0%,
-		100% {
-			transform: translateY(0);
-		}
-		50% {
-			transform: translateY(-0.2rem);
-		}
+	.chat-sticker { top: -1.3rem; right: -.4rem; z-index: 7; }
+	.entry-list { gap: 1.25rem; }
+	.diary-entry {
+		position: relative;
+		transform: rotate(var(--entry-tilt, -.25deg));
+		transform-origin: left center;
 	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.nyan-trail,
-		.nyan-cat {
-			animation: none;
-		}
+	.diary-entry:nth-child(3n + 2) { --entry-tilt: .4deg; margin-left: .35rem; }
+	.diary-entry:nth-child(3n) { --entry-tilt: -.55deg; margin-left: -.18rem; }
+	.diary-entry::after {
+		content: '';
+		position: absolute;
+		left: 3.05rem;
+		right: .35rem;
+		bottom: -.5rem;
+		height: 1px;
+		background: repeating-linear-gradient(90deg, rgba(116,91,66,.3) 0 .22rem, transparent .22rem .42rem);
+		transform: rotate(.2deg);
+	}
+	.entry-sticker {
+		width: 2.45rem;
+		height: 2.45rem;
+		display: grid;
+		place-items: center;
+		filter: none;
+	}
+	.entry-sticker svg { display: none; }
+	.entry-sticker-emoji {
+		position: static;
+		width: max-content;
+		font-size: 1.48rem;
+		line-height: 1;
+		filter:
+			drop-shadow(-2px 0 #fffaf0) drop-shadow(2px 0 #fffaf0)
+			drop-shadow(0 -2px #fffaf0) drop-shadow(0 2px #fffaf0)
+			drop-shadow(-1px -1px #fffaf0) drop-shadow(1px 1px #fffaf0)
+			drop-shadow(1.5px 2.5px 1px rgba(76,54,35,.26));
+	}
+	.entry-title {
+		display: inline;
+		padding: 0 .1em;
+		background: linear-gradient(transparent 56%, color-mix(in srgb, var(--tape) 62%, transparent) 56% 88%, transparent 88%);
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
+		color: #3a3128;
+		text-decoration: none;
+	}
+	.entry-desc { color: #796b57; }
+	@media (max-width: 38rem) {
+		.vinyl-cover { padding-inline: 1.15rem 2.8rem; }
+		.book { margin-left: .45rem; margin-right: 0; }
+		.index-tabs { right: -2.85rem; }
+		.tab { width: 2.9rem; font-size: .65rem; }
+		.cover-sticker--flower { top: 4.8rem; right: .25rem; font-size: 1.65rem; }
+		.cover-sticker--label { right: .5rem; }
+	}
+	@media (max-width: 27rem) {
+		body { padding-inline: .65rem; }
+		.vinyl-cover { padding: 1rem 2.45rem 1.25rem .95rem; border-radius: 1.15rem .7rem .7rem 1.15rem; }
+		.masthead { width: 92%; padding-inline: .55rem; }
+		.masthead h1 { font-size: 2rem; }
+		.masthead .subtitle { font-size: .76rem; white-space: nowrap; }
+		.cover-sticker--smile { top: .7rem; left: .45rem; font-size: 1.45rem; }
+		.cover-sticker--label { display: none; }
+		.page { padding: 2rem .85rem 1.6rem 2rem; }
+		.page-heading { align-items: flex-start; flex-direction: column; gap: .25rem; }
+		.ring-spine { left: -1rem; }
+		.ring-spine i { width: 1.85rem; }
 	}
 </style>
 </head>
 <body>
-	<div class="terminal">
-		<div class="titlebar">
-			<div class="dots">
-				<span class="dot red"></span>
-				<span class="dot yellow"></span>
-				<span class="dot green"></span>
+	<main class="diary">
+		<div class="vinyl-cover">
+			<span class="cover-sticker cover-sticker--smile" aria-hidden="true">🐶</span>
+			<span class="cover-sticker cover-sticker--flower" aria-hidden="true">👾</span>
+			<span class="cover-sticker cover-sticker--label" aria-hidden="true">이 다이어리의 주인<br><b>MEONMU437</b></span>
+
+			<header class="masthead">
+				<span class="doodle doodle--star" aria-hidden="true">🐾</span>
+				<span class="doodle doodle--heart" aria-hidden="true">💖</span>
+				<span class="masthead-tape" aria-hidden="true"></span>
+				<p class="masthead-date">WORLD DIARY · VOL. 01</p>
+				<h1>어딘가의 세계들</h1>
+				<p class="subtitle">여기저기 꾸며 둔 세계와 그 안의 사람들</p>
+			</header>
+
+			<div class="book">
+				<div class="ring-spine" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+				<a class="chat-sticker" href="jamdam/" aria-label="잡담 하러 가기">
+					<svg viewBox="0 0 120 64" aria-hidden="true">
+						<defs>
+							<pattern id="bubble-dots" width="10" height="10" patternUnits="userSpaceOnUse">
+								<rect width="10" height="10" fill="#ccecf4" />
+								<circle cx="2" cy="2" r="1.2" fill="#8ccbdc" opacity=".72" />
+							</pattern>
+							<path id="bubble-shape" d="M24,7 C16,7 10,12 10,19 C4,22 4,31 10,35 C8,42 15,48 24,47 L21,59 L38,48 H96 C107,48 114,41 112,33 C117,27 114,18 106,15 C103,7 92,5 85,9 C77,4 65,5 59,10 C49,5 37,6 31,10 C29,8 27,7 24,7 Z" />
+						</defs>
+						<use href="#bubble-shape" class="sticker-halo" />
+						<use href="#bubble-shape" class="sticker-outline" />
+					</svg>
+					<span class="chat-sticker-text" aria-hidden="true">잡담</span>
+				</a>
+				<span class="paper-stack" aria-hidden="true"></span>
+				<nav class="index-tabs" id="tabs" aria-label="세계관 인덱스"></nav>
+				<div class="page" id="page"></div>
 			</div>
-			<div class="titlebar-label">guest@meonmu437: ~/worlds</div>
 		</div>
-		<div class="screen">
-			<div class="line prompt">
-				<span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds</span><span class="sep">$</span>
-				<span id="typed"></span><span class="cursor" id="typing-cursor"></span><span class="pixel-spinner" id="pixel-spinner" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-			</div>
-			<div class="listing" id="listing"></div>
-			<div class="line prompt" id="final-prompt" style="opacity: 0">
-				<span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds</span><span class="sep">$</span>
-				<a href="jamdam/" class="final-link" id="final-typed"></a><span class="cursor" id="final-cursor"></span>
-			</div>
-			<div class="nyan-wrap" aria-hidden="true">
-				<div class="nyan-trail"></div>
-				<div class="nyan-cat"></div>
-			</div>
-		</div>
-	</div>
+	</main>
 
 	<script>
-		// 판타지 세계관은 최상위에 그대로 두고, 한국을 배경으로 하는
-		// 세계관들은 '어딘가의_대한민국' 디렉터리 아래 하위 항목으로 묶는다.
-		// 새로운 한국 배경 세계관을 추가할 때는 이 항목의 children에만 추가하면 된다.
-		var ENTRIES = [
+		// 새 세계관을 추가할 때는 이 배열에만 항목을 추가하면 된다.
+		// tape / doodle은 각 그룹의 워시테이프·스티커 색과 아이콘.
+		var GROUPS = [
 			{
-				name: 'colorground',
-				href: 'colorground/',
-				desc: '레인보우 빌리지를 지키는 컬러 히어로와 자율 로봇들의 이야기',
-			},
-			{
-				name: 'nighthighway',
-				href: 'nighthighway/',
-				desc: '재앙 이후 아날로그 기술만이 살아남은 밤의 고속도로 생존기',
-			},
-			{
-				name: 'anemoi',
-				href: 'anemoi/',
-				desc: '네 바람이 한곳에 모이는 땅, 아네모이 제국의 로맨스 판타지',
-			},
-			{
-				name: '어딘가의_대한민국',
-				children: [
-					{
-						name: 'yunhaesi',
-						href: 'yunhaesi/',
-						desc: '바닷바람에서 소금 냄새가 나는 작은 항구도시',
-					},
-					{
-						name: 'seungmin',
-						href: 'seungmin/',
-						desc: '무심한듯 다정한 백엔드 프로그래머',
-					},
-					{
-						name: '1997',
-						href: '1997/',
-						desc: '1997년, 첫사랑은 되감기 중',
-					},
-					{
-						name: '2004',
-						href: '2004/',
-						desc: '7년째, 짝사랑은 재생 중',
-					},
-					{
-						name: 'hanminwoo',
-						href: 'hanminwoo/',
-						desc: '장마와 푸른 베타',
-					},
+				name: '어딘가의 이야기',
+				tab: '이야기',
+				tape: '#c9b8e8',
+				items: [
+					{ name: '컬러그라운드', href: 'colorground/', desc: '레인보우 빌리지를 지키는 컬러 히어로와 자율 로봇들의 이야기', emoji: '🌈' },
+					{ name: '나이트하이웨이', href: 'nighthighway/', desc: '재앙 이후 아날로그 기술만이 살아남은 밤의 고속도로 생존기', emoji: '🏍️' },
+					{ name: '아네모이', href: 'anemoi/', desc: '네 바람이 한곳에 모이는 땅, 아네모이 제국의 로맨스 판타지', emoji: '🍃' },
 				],
 			},
 			{
-				name: '어딘가의_지구',
-				children: [
-					{
-						name: 'julian',
-						href: 'julian/',
-						desc: '완벽한 위장 신분, 완벽하지 않은 진심',
-					},
+				name: '어딘가의 대한민국',
+				tab: '대한민국',
+				tape: '#a8dcc7',
+				items: [
+					{ name: '윤해시', href: 'yunhaesi/', desc: '바닷바람에서 소금 냄새가 나는 작은 항구도시', emoji: '🌊🌟' },
+					{ name: '유승민', href: 'seungmin/', desc: '무심한듯 다정한 백엔드 프로그래머', emoji: '💻' },
+					{ name: '1997', href: '1997/', desc: '1997년, 첫사랑은 되감기 중', emoji: '📟' },
+					{ name: '2004', href: '2004/', desc: '7년째, 짝사랑은 재생 중', emoji: '💿' },
+					{ name: '한민우', href: 'hanminwoo/', desc: '장마와 푸른 베타', emoji: '☔️' },
+				],
+			},
+			{
+				name: '어딘가의 지구',
+				tab: '지구',
+				tape: '#f5c2a0',
+				items: [
+					{ name: '줄리안', href: 'julian/', desc: '완벽한 위장 신분, 완벽하지 않은 진심', emoji: '🕶️' },
 				],
 			},
 		];
 
-		var COMMAND = 'ls -la';
-		var FINAL_COMMAND = '잡담';
+		var activeIndex = 0;
 
-		var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-		function renderEntry(item, nested) {
-			var entry = document.createElement('div');
-			entry.className = nested ? 'entry entry--nested' : 'entry';
-			var name = item.href
-				? '<a href="' + item.href + '">' + item.name + '/</a>'
-				: '<span class="dirname">' + item.name + '/</span>';
-			entry.innerHTML =
-				'<div class="entry-row">' +
-				'<span class="perms">drwxr-xr-x</span>' +
-				name +
-				'</div>' +
-				(item.desc ? '<span class="desc">' + item.desc + '</span>' : '');
-			return entry;
+		function renderPage() {
+			var page = document.getElementById('page');
+			var group = GROUPS[activeIndex];
+			page.style.setProperty('--page-accent', group.tape);
+			var heading = document.createElement('div');
+			heading.className = 'page-heading';
+			heading.innerHTML = '<h2>' + group.name + '</h2><span>' + (activeIndex + 1) + '번째 인덱스 · ' + group.items.length + '개의 기록</span>';
+			var list = document.createElement('div');
+			list.className = 'entry-list';
+			group.items.forEach(function (item) {
+				var a = document.createElement('a');
+				a.className = 'diary-entry';
+				a.href = item.href;
+				a.style.setProperty('--tape', group.tape);
+				a.innerHTML =
+					'<span class="entry-sticker" aria-hidden="true">' +
+					'<span class="entry-sticker-emoji">' + item.emoji + '</span>' +
+					'</span>' +
+					'<span class="entry-text">' +
+					'<span class="entry-title">' + item.name + '</span>' +
+					'<span class="entry-desc">' + item.desc + '</span>' +
+					'</span>';
+				list.appendChild(a);
+			});
+			page.innerHTML = '';
+			page.appendChild(heading);
+			page.appendChild(list);
 		}
 
-		function renderListing() {
-			var listing = document.getElementById('listing');
-			ENTRIES.forEach(function (item) {
-				listing.appendChild(renderEntry(item, false));
-				(item.children || []).forEach(function (child) {
-					listing.appendChild(renderEntry(child, true));
+		function renderTabs() {
+			var tabs = document.getElementById('tabs');
+			tabs.innerHTML = '';
+			GROUPS.forEach(function (group, i) {
+				var btn = document.createElement('button');
+				btn.type = 'button';
+				btn.className = 'tab' + (i === activeIndex ? ' active' : '');
+				btn.style.setProperty('--tape', group.tape);
+				btn.textContent = group.tab || group.name;
+				btn.title = group.name;
+				btn.setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
+				btn.addEventListener('click', function () {
+					if (activeIndex === i) return;
+					activeIndex = i;
+					renderTabs();
+					renderPage();
 				});
+				tabs.appendChild(btn);
 			});
 		}
 
-		function typeFinalCommand() {
-			var finalTyped = document.getElementById('final-typed');
-			if (reduceMotion) {
-				finalTyped.textContent = FINAL_COMMAND;
-				return;
-			}
-			var j = 0;
-			var finalTyper = setInterval(function () {
-				finalTyped.textContent = FINAL_COMMAND.slice(0, ++j);
-				if (j >= FINAL_COMMAND.length) {
-					clearInterval(finalTyper);
-				}
-			}, 130);
-		}
-
-		function showRest() {
-			document.getElementById('typing-cursor').style.display = 'none';
-			document.getElementById('listing').classList.add('show');
-			document.getElementById('final-prompt').style.opacity = '1';
-			setTimeout(typeFinalCommand, 400);
-		}
-
-		renderListing();
-
-		if (reduceMotion) {
-			document.getElementById('typed').textContent = COMMAND;
-			showRest();
-		} else {
-			var typed = document.getElementById('typed');
-			var i = 0;
-			var typer = setInterval(function () {
-				typed.textContent = COMMAND.slice(0, ++i);
-				if (i >= COMMAND.length) {
-					clearInterval(typer);
-					document.getElementById('typing-cursor').style.display = 'none';
-					var spinner = document.getElementById('pixel-spinner');
-					spinner.style.display = 'inline-block';
-					setTimeout(function () {
-						spinner.style.display = 'none';
-						showRest();
-					}, 700);
-				}
-			}, 130);
-		}
+		renderTabs();
+		renderPage();
 	</script>
 </body>
 </html>

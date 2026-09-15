@@ -19,19 +19,6 @@
 		--dot-green: #28c840;
 	}
 
-	@media (prefers-color-scheme: light) {
-		:root {
-			--bg: #eef0f3;
-			--window: #ffffff;
-			--titlebar: #f6f8fa;
-			--border: #d8dce2;
-			--text: #24292f;
-			--muted: #6e7781;
-			--user: #1a7f37;
-			--path: #0969da;
-		}
-	}
-
 	* {
 		box-sizing: border-box;
 	}
@@ -230,21 +217,23 @@
 		font-size: 0.85rem;
 	}
 </style>
+<link rel="stylesheet" href="diary.css" />
 </head>
 <body>
 	<div class="terminal">
+		<span class="diary-sticker diary-sticker--dog" aria-hidden="true">🐶</span>
+		<span class="diary-sticker diary-sticker--alien" aria-hidden="true">👾</span>
 		<div class="titlebar">
 			<div class="dots">
 				<span class="dot red"></span>
 				<span class="dot yellow"></span>
 				<span class="dot green"></span>
 			</div>
-			<div class="titlebar-label">guest@meonmu437: ~/worlds/잡담</div>
+			<div class="titlebar-label">잡담 노트</div>
 		</div>
 		<div class="screen">
 			<div class="line prompt">
-				<span class="user">guest@meonmu437</span><span class="sep">:</span><span class="path">~/worlds</span><span class="sep">$</span>
-				cd 잡담/
+				오늘 떠오른 이야기와 메모를 모아 두는 페이지. ✎
 			</div>
 			<div class="toolbar">
 				<a href="../" class="back-link">&larr; 대문으로 돌아가기</a>
@@ -368,16 +357,13 @@
 						'<a class="post-row" href="post.html?id=' +
 						p.number +
 						'">' +
+						'<span class="post-category-sticker" aria-hidden="true">' +
+						(categoryEmoji(p.category.emoji) || '📌') +
+						'</span>' +
 						'<span class="post-title">' +
 						escapeHtml(p.title) +
 						'</span>' +
 						'<span class="post-meta">' +
-						'<span class="post-category">' +
-						categoryEmoji(p.category.emoji) +
-						' ' +
-						escapeHtml(p.category.name) +
-						'</span>' +
-						' · ' +
 						formatDate(p.created_at) +
 						' · 댓글 ' +
 						p.comments +
