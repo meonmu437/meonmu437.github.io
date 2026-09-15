@@ -2153,6 +2153,16 @@ html.jl-sidebar-expanded .sidebar-pane {
 	color: #fff !important;
 }
 
+.jl-outro-link-elyn {
+	background:
+		linear-gradient(120deg, rgba(255, 255, 255, 0.25), transparent 28%),
+		radial-gradient(circle at 82% 62%, rgba(255, 255, 255, 0.17), transparent 25%),
+		#7654bd;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+	filter: drop-shadow(0.22rem 0.28rem 0 #3f286f);
+	color: #fff !important;
+}
+
 .jl-outro-link-pending {
 	background:
 		linear-gradient(120deg, rgba(255, 255, 255, 0.1), transparent 28%),
