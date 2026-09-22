@@ -224,6 +224,40 @@
 		color: var(--muted);
 		font-size: 0.85rem;
 	}
+
+	.pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.9rem;
+		margin-top: 1.3rem;
+	}
+
+	.page-btn {
+		border: 1px solid var(--border);
+		background: transparent;
+		color: var(--text);
+		font-family: inherit;
+		font-size: 0.82rem;
+		padding: 0.3rem 0.7rem;
+		border-radius: 0.4rem;
+		cursor: pointer;
+	}
+
+	.page-btn:hover:not(:disabled) {
+		border-color: var(--path);
+		color: var(--path);
+	}
+
+	.page-btn:disabled {
+		opacity: 0.35;
+		cursor: default;
+	}
+
+	.page-status {
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
 </style>
 <link rel="stylesheet" href="diary.css" />
 </head>
@@ -257,6 +291,7 @@
 			</div>
 			<div id="category-tabs" class="category-tabs"></div>
 			<div id="post-list"></div>
+			<div id="pagination" class="pagination"></div>
 		</div>
 	</div>
 
@@ -300,6 +335,8 @@
 		}
 
 		var activeCategorySlug = null; // null = 전체
+		var currentPage = 1;
+		var PAGE_SIZE = 10;
 
 		function renderTabs(categories) {
 			var tabsEl = document.getElementById('category-tabs');
@@ -329,6 +366,7 @@
 			tabsEl.querySelectorAll('.category-tab').forEach(function (btn) {
 				btn.addEventListener('click', function () {
 					activeCategorySlug = btn.dataset.slug || null;
+					currentPage = 1;
 					renderTabs(categories);
 					renderList();
 					updateNewPostLink(categories);
@@ -353,6 +391,7 @@
 
 		function renderList() {
 			var listEl = document.getElementById('post-list');
+			var paginationEl = document.getElementById('pagination');
 			var posts = activeCategorySlug
 				? allPosts.filter(function (p) {
 						return p.category.slug === activeCategorySlug;
@@ -361,10 +400,16 @@
 
 			if (posts.length === 0) {
 				listEl.innerHTML = '<p class="state-msg">이 카테고리에는 아직 글이 없어요.</p>';
+				paginationEl.innerHTML = '';
 				return;
 			}
 
-			listEl.innerHTML = posts
+			var totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
+			if (currentPage > totalPages) currentPage = totalPages;
+			var start = (currentPage - 1) * PAGE_SIZE;
+			var pagePosts = posts.slice(start, start + PAGE_SIZE);
+
+			listEl.innerHTML = pagePosts
 				.map(function (p) {
 					var isPinned = PINNED_IDS.indexOf(p.number) !== -1;
 					return (
@@ -389,6 +434,50 @@
 					);
 				})
 				.join('');
+
+			renderPagination(totalPages);
+		}
+
+		function renderPagination(totalPages) {
+			var paginationEl = document.getElementById('pagination');
+			if (totalPages <= 1) {
+				paginationEl.innerHTML = '';
+				return;
+			}
+
+			paginationEl.innerHTML =
+				'<button type="button" class="page-btn" id="page-prev"' +
+				(currentPage === 1 ? ' disabled' : '') +
+				'>‹ 이전</button>' +
+				'<span class="page-status">' +
+				currentPage +
+				' / ' +
+				totalPages +
+				'</span>' +
+				'<button type="button" class="page-btn" id="page-next"' +
+				(currentPage === totalPages ? ' disabled' : '') +
+				'>다음 ›</button>';
+
+			var prevBtn = document.getElementById('page-prev');
+			var nextBtn = document.getElementById('page-next');
+			if (prevBtn) {
+				prevBtn.addEventListener('click', function () {
+					if (currentPage > 1) {
+						currentPage -= 1;
+						renderList();
+						document.getElementById('post-list').scrollIntoView({ block: 'start' });
+					}
+				});
+			}
+			if (nextBtn) {
+				nextBtn.addEventListener('click', function () {
+					if (currentPage < totalPages) {
+						currentPage += 1;
+						renderList();
+						document.getElementById('post-list').scrollIntoView({ block: 'start' });
+					}
+				});
+			}
 		}
 
 		async function loadPosts() {
