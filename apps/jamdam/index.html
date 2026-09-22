@@ -211,6 +211,14 @@
 		color: var(--muted);
 	}
 
+	.post-row.is-pinned {
+		background: color-mix(in srgb, var(--path) 7%, transparent);
+	}
+
+	.pin-icon {
+		margin-inline-end: 0.3rem;
+	}
+
 	.state-msg {
 		margin-top: 1.4rem;
 		color: var(--muted);
@@ -258,6 +266,11 @@
 		// 있다. 목록에는 소유자 계정이 쓴 글만 보여줘서 낯선 사람이 올린 글이
 		// 섞여 보이는 일을 막는다.
 		var OWNER_LOGIN = 'meonmu437';
+		// GitHub Discussions의 실제 "핀" 상태는 GraphQL로만 조회 가능하고 GraphQL은
+		// 토큰 인증이 필요해서, 정적 페이지에서 안전하게 가져올 방법이 없다. 대신
+		// 여기 번호만 적어두면 그 글이 목록 맨 위에 고정된다. discussion 번호는
+		// 글 URL(.../discussions/번호) 또는 "+ 새 글 쓰기"로 만든 뒤 주소창에서 확인.
+		var PINNED_IDS = [6];
 
 		function escapeHtml(s) {
 			var d = document.createElement('div');
@@ -353,14 +366,18 @@
 
 			listEl.innerHTML = posts
 				.map(function (p) {
+					var isPinned = PINNED_IDS.indexOf(p.number) !== -1;
 					return (
-						'<a class="post-row" href="post.html?id=' +
+						'<a class="post-row' +
+						(isPinned ? ' is-pinned' : '') +
+						'" href="post.html?id=' +
 						p.number +
 						'">' +
 						'<span class="post-category-sticker" aria-hidden="true">' +
 						(categoryEmoji(p.category.emoji) || '📌') +
 						'</span>' +
 						'<span class="post-title">' +
+						(isPinned ? '<span class="pin-icon" aria-label="고정된 글">📌</span>' : '') +
 						escapeHtml(p.title) +
 						'</span>' +
 						'<span class="post-meta">' +
@@ -385,6 +402,9 @@
 					return p.user && p.user.login === OWNER_LOGIN;
 				});
 				posts.sort(function (a, b) {
+					var aPinned = PINNED_IDS.indexOf(a.number) !== -1;
+					var bPinned = PINNED_IDS.indexOf(b.number) !== -1;
+					if (aPinned !== bPinned) return aPinned ? -1 : 1;
 					return new Date(b.created_at) - new Date(a.created_at);
 				});
 
