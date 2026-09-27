@@ -295,12 +295,27 @@
 			return 'jamdam-reacted-' + postId + '-' + reactionKey;
 		}
 
-		async function fetchCount(postId, reactionKey) {
+		function wait(ms) {
+			return new Promise(function (resolve) {
+				setTimeout(resolve, ms);
+			});
+		}
+
+		// 한 글에 반응 이모지가 8개라 페이지를 열 때마다 카운터 서버에 8번
+		// 요청을 보내는데, abacus가 짧은 시간에 몰린 요청은 429(Too Many
+		// Requests)로 막아버린다. 429는 진짜 실패가 아니라 순간적인 트래픽
+		// 문제라서 한 번 정도는 잠깐 쉬었다가 다시 시도해본다.
+		async function fetchCount(postId, reactionKey, retriesLeft) {
+			if (retriesLeft === undefined) retriesLeft = 2;
 			var url = 'https://abacus.jasoncameron.dev/get/' + COUNTER_NAMESPACE + '/' + postId + '-' + reactionKey;
 			var res = await fetch(url);
 			// 아직 한 번도 반응이 없었던 키는 404("Key not found")를 준다 —
 			// 진짜 오류가 아니라 카운트 0으로 취급한다.
 			if (res.status === 404) return 0;
+			if (res.status === 429 && retriesLeft > 0) {
+				await wait(500 + Math.random() * 500);
+				return fetchCount(postId, reactionKey, retriesLeft - 1);
+			}
 			if (!res.ok) throw new Error('HTTP ' + res.status);
 			var data = await res.json();
 			return data.value || 0;
@@ -331,7 +346,7 @@
 				}).join('') +
 				'</div>';
 
-			REACTIONS.forEach(function (r) {
+			REACTIONS.forEach(function (r, index) {
 				var alreadyReacted = !!localStorage.getItem(reactedStorageKey(postId, r.key));
 				var btn = mount.querySelector('.anon-reaction-btn[data-key="' + r.key + '"]');
 				var countEl = mount.querySelector('.anon-reaction-count[data-count-for="' + r.key + '"]');
@@ -341,7 +356,11 @@
 					btn.disabled = true;
 				}
 
-				fetchCount(postId, r.key)
+				// 8개를 한꺼번에 요청하면 429에 걸리기 쉬워서 조금씩 시차를 둔다.
+				wait(index * 120)
+					.then(function () {
+						return fetchCount(postId, r.key);
+					})
 					.then(function (count) {
 						countEl.textContent = count;
 					})
