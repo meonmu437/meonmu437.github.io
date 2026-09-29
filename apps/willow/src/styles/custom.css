@@ -1,5 +1,5 @@
 /* Willow Han — a rainy fall campus planner with one Halloween release. */
-html { overflow-x: hidden; scroll-behavior: smooth; }
+html { overflow-x: hidden; scroll-behavior: smooth; min-height:100%; background:var(--sl-color-bg); overscroll-behavior-y:none; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 :root {
@@ -13,7 +13,7 @@ html { overflow-x: hidden; scroll-behavior: smooth; }
   --sl-color-accent-low: #dce9df;
   --sl-color-accent: #17543d;
   --sl-color-accent-high: #092f22;
-  --sl-color-bg: #e8e2d4;
+  --sl-color-bg: #f4f5f0;
   --sl-color-bg-nav: #f5f0e4;
   --sl-color-bg-sidebar: #efe9dc;
   --wh-green: #123f30;
@@ -35,7 +35,7 @@ html { overflow-x: hidden; scroll-behavior: smooth; }
   --sl-color-accent-low: #17392d;
   --sl-color-accent: #e6b83e;
   --sl-color-accent-high: #f7e7a6;
-  --sl-color-bg: #19201d;
+  --sl-color-bg: #0d1310;
   --sl-color-bg-nav: #111916;
   --sl-color-bg-sidebar: #151d1a;
   --wh-paper: #e9dfc7;
@@ -47,9 +47,11 @@ html { overflow-x: hidden; scroll-behavior: smooth; }
 }
 
 body {
+  margin:0;
+  min-height:100dvh;
   background-color: var(--sl-color-bg);
-  background-image: linear-gradient(115deg, rgba(255,255,255,.18), transparent 38%), radial-gradient(circle at 80% 12%, rgba(209,165,74,.09), transparent 28%);
-  background-attachment: fixed;
+  background-image:none;
+  overscroll-behavior-y:none;
 }
 
 .site-title span { font-family: var(--wh-font-college); font-weight: 900; letter-spacing: -.03em; color: var(--sl-color-accent); }
@@ -451,9 +453,10 @@ main[data-pagefind-body] > .content-panel > .sl-container > footer { display: no
 .wh-weather-controls button:focus-visible { outline:2px solid #c89546; outline-offset:2px; }
 .wh-weather-card > p { padding:0 .4rem .6rem; color:var(--calendar-muted); text-align:center; font:.5rem var(--sl-font); }
 :root:not([data-theme='light']) .wh-weather-card { --calendar-paper:#202c25; --calendar-ink:#ead9ae; --calendar-muted:#a7b4aa; --calendar-line:#435448; --calendar-tab:#303e32; }
-.wh-rain-layer { position:fixed; inset:0; z-index:90; display:none; overflow:hidden; pointer-events:none; }
-.wh-rain-layer > span { position:absolute; top:-3rem; left:var(--x); margin:0!important; font-size:var(--size); line-height:1; opacity:.65; animation:wh-rain-fall var(--duration) var(--delay) linear infinite; }
+.wh-rain-layer,.wh-halloween-layer { position:fixed; inset:0; z-index:90; display:none; overflow:hidden; pointer-events:none; }
+.wh-rain-layer > span,.wh-halloween-layer > span { position:absolute; top:-3rem; left:var(--x); margin:0!important; font-size:var(--size); line-height:1; opacity:.65; animation:wh-rain-fall var(--duration) var(--delay) linear infinite; }
 .wh-app[data-weather-rain='true'] .wh-rain-layer { display:block; }
+.wh-app[data-halloween='true'] .wh-halloween-layer { display:block; }
 @keyframes wh-weather-live { 50% { opacity:.35; transform:scale(.75); } }
 @keyframes wh-weather-glow { 50% { opacity:.14; transform:scale(.94); } }
 @keyframes wh-weather-nudge { 0%,78%,100% { transform:translateY(0) rotate(0); } 84% { transform:translateY(-.13rem) rotate(-7deg); } 90% { transform:translateY(0) rotate(6deg); } }
@@ -933,6 +936,20 @@ main[data-pagefind-body] > .content-panel > .sl-container > footer { display: no
 /* Sidebar weather Easter eggs: decorations stay inside the header. */
 .wh-header-pumpkin { display:none; }
 .wh-dashboard-head { position:relative; }
+.wh-rain-banner { display:none; pointer-events:none; }
+.wh-app[data-weather-rain='true'] .wh-dashboard-head { background:radial-gradient(ellipse at 50% 0,#457b96,transparent 75%),#193d54; box-shadow:inset 0 -2px #87cddd; }
+.wh-app[data-weather-rain='true'] .wh-dashboard-brand strong { color:#d8f3ff; }
+.wh-app[data-weather-rain='true'] .wh-dashboard-brand small { color:#afcede; }
+.wh-app[data-weather-rain='true']:not([data-halloween='true']) .wh-dashboard-brand img { display:none; }
+.wh-app[data-weather-rain='true']:not([data-halloween='true']) .wh-dashboard-brand::before { content:'🌧️'; display:grid; place-items:center; flex:0 0 2.8rem; width:2.8rem; height:2.8rem; font-size:2.3rem; line-height:1; }
+.wh-app[data-weather-rain='true'] .wh-rain-banner { display:flex; align-items:center; gap:.8rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); white-space:nowrap; }
+.wh-rain-banner > div { display:flex; flex-direction:column; align-items:center; gap:.15rem; }
+.wh-rain-banner small { margin:0!important; color:#b7e1f0; font:.5rem var(--wh-font-mono); letter-spacing:.15em; }
+.wh-rain-banner strong { margin:0!important; color:#effbff; font:700 1.5rem/1.2 var(--wh-font-college); transform:rotate(-3deg); text-shadow:2px 2px #17384d; }
+.wh-rain-banner > span { font-size:1.3rem; }
+.wh-app[data-weather-rain='true']:not([data-halloween='true']) .wh-user-chip > span { font-size:0; background:#2d5e79; }
+.wh-app[data-weather-rain='true']:not([data-halloween='true']) .wh-user-chip > span::after { content:'☂️'; font-size:1.5rem; }
+.wh-app[data-halloween='true'] .wh-rain-banner { display:none; }
 .wh-app[data-halloween='true'] .wh-dashboard-head { background:radial-gradient(ellipse at 50% 0,#603065,transparent 70%),#24162d; box-shadow:inset 0 -2px #e88939; }
 .wh-app[data-halloween='true'] .wh-dashboard-brand img { display:none; }
 .wh-app[data-halloween='true'] .wh-header-pumpkin { display:grid; place-items:center; flex:0 0 2.8rem; width:2.8rem; height:2.8rem; font-style:normal; font-size:2.3rem; line-height:1; filter:drop-shadow(0 0 .45rem #f29b4055); }
@@ -954,14 +971,15 @@ main[data-pagefind-body] > .content-panel > .sl-container > footer { display: no
 .wh-halloween-title > i:last-child { font-size:1.25rem; transform:rotate(-12deg); }
 @keyframes wh-letter-pop { 0%,75%,100% { translate:0 0; } 83% { translate:0 -.18rem; } 91% { translate:0 .04rem; } }
 .wh-app[data-halloween='true'] .wh-weather-controls [data-weather-halloween] { border-color:#ff9b3d; background:#512647; color:#ffd264; }
-@media(max-width:50rem) { .wh-app[data-halloween='true'] .wh-halloween-title { display:none; } }
+@media(max-width:50rem) { .wh-app[data-halloween='true'] .wh-halloween-title,.wh-app[data-weather-rain='true'] .wh-rain-banner { display:none; } }
 @media (prefers-reduced-motion:reduce) {
   .wh-weather-card > header i,
   .wh-weather-controls button::before,
   .wh-weather-controls button > span,
   .wh-rain-layer > span,
+  .wh-halloween-layer > span,
   .wh-halloween-title strong span { animation:none; }
-  .wh-rain-layer > span { top:var(--rest); opacity:.3; }
+  .wh-rain-layer > span,.wh-halloween-layer > span { top:var(--rest); opacity:.3; }
 }
 .wh-my-facts .wh-locked-name,.wh-my-facts .wh-locked-record { align-items:center; }
 .wh-my-facts .wh-locked-record { grid-column:1/-1; }

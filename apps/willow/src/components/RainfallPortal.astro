@@ -54,6 +54,7 @@ import UmbrellaRegistration from './UmbrellaRegistration.astro';
   <section class="wh-dashboard" aria-label="레인폴 대학교 학생 포털">
     <div class="wh-mobile-weather-slot"></div>
     <header class="wh-dashboard-head">
+      <div class="wh-rain-banner" aria-hidden="true"><span>💧</span><div><small>SEATTLE FORECAST</small><strong>Rain check? ☂️</strong></div><span>💧</span></div>
       <div class="wh-dashboard-brand"><Image src={ruSeal} alt="" width={80} /><i class="wh-header-pumpkin" aria-hidden="true">🎃</i><span><strong>myRainfall</strong><small>STUDENT SERVICES</small></span></div>
       <div class="wh-halloween-title" aria-hidden="true"><i>👻</i><div><small>TRICK OR TREAT!</small><strong>{Array.from('HAPPY HALLOWEEN').map((letter, index) => <span style={`--letter:${index}`}>{letter === ' ' ? '\u00a0' : letter}</span>)}</strong></div><i>✦</i></div>
       <div class="wh-user-chip"><span>WH</span><div><strong>Will Han</strong><small>RU-20261031</small></div><button type="button" data-exit-portal aria-label="로그아웃">LOG OUT</button></div>
@@ -255,6 +256,9 @@ import UmbrellaRegistration from './UmbrellaRegistration.astro';
   <div class="wh-rain-layer" aria-hidden="true">
     {Array.from({ length: 24 }, (_, index) => <span style={`--x:${(index * 37 + 3) % 100}%;--duration:${7 + index % 6}s;--delay:-${(index * 1.7) % 12}s;--size:${.85 + (index % 4) * .2}rem;--drift:${index % 2 ? 28 : -28}px;--rest:${(index * 23) % 100}%`}>{index % 4 === 0 ? '☂️' : '💧'}</span>)}
   </div>
+  <div class="wh-halloween-layer" aria-hidden="true">
+    {Array.from({ length: 25 }, (_, index) => <span style={`--x:${(index * 37 + 9) % 100}%;--duration:${9 + index % 7}s;--delay:-${(index * 1.9) % 15}s;--size:${1 + (index % 4) * .2}rem;--drift:${index % 2 ? 45 : -45}px;--rest:${(index * 29) % 100}%`}>{['🎃', '👻', '🦇', '🕸️', '🍬'][index % 5]}</span>)}
+  </div>
 </div>
 
 <script>
@@ -389,20 +393,23 @@ import UmbrellaRegistration from './UmbrellaRegistration.astro';
     document.documentElement.dataset.theme = next;
     localStorage.setItem('starlight-theme', next);
   });
-  rainButton?.addEventListener('click', () => {
+  function setWeatherEffect(effect: 'rain' | 'halloween' | null) {
     if (!app) return;
-    const active = app.dataset.weatherRain !== 'true';
-    app.dataset.weatherRain = String(active);
-    rainButton.setAttribute('aria-pressed', String(active));
-    rainButton.setAttribute('aria-label', active ? '캠퍼스 비 효과 끄기' : '캠퍼스에 비 내리기');
+    const rain = effect === 'rain';
+    const halloween = effect === 'halloween';
+    app.dataset.weatherRain = String(rain);
+    app.dataset.halloween = String(halloween);
+    rainButton?.setAttribute('aria-pressed', String(rain));
+    rainButton?.setAttribute('aria-label', rain ? '캠퍼스 비 효과 끄기' : '캠퍼스에 비 내리기');
+    halloweenButton?.setAttribute('aria-pressed', String(halloween));
+    halloweenButton?.setAttribute('aria-label', halloween ? '할로윈 테마 끄기' : '할로윈 테마 켜기');
+    if (weatherCondition) weatherCondition.textContent = halloween ? 'FOG & MISCHIEF' : 'RAIN EXPECTED';
+  }
+  rainButton?.addEventListener('click', () => {
+    setWeatherEffect(app?.dataset.weatherRain === 'true' ? null : 'rain');
   });
   halloweenButton?.addEventListener('click', () => {
-    if (!app) return;
-    const active = app.dataset.halloween !== 'true';
-    app.dataset.halloween = String(active);
-    halloweenButton.setAttribute('aria-pressed', String(active));
-    halloweenButton.setAttribute('aria-label', active ? '할로윈 테마 끄기' : '할로윈 테마 켜기');
-    if (weatherCondition) weatherCondition.textContent = active ? 'FOG & MISCHIEF' : 'RAIN EXPECTED';
+    setWeatherEffect(app?.dataset.halloween === 'true' ? null : 'halloween');
   });
 
   const initial = location.hash.slice(1);
