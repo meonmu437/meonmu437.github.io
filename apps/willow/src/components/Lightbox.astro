@@ -49,7 +49,7 @@
 		const target = e.target;
 		if (!(target instanceof HTMLImageElement)) return;
 		if (!target.closest('.sl-markdown-content')) return;
-		openModal(target.currentSrc || target.src, target.alt);
+		openModal(target.dataset.lightboxSrc || target.currentSrc || target.src, target.alt);
 	});
 
 	document.addEventListener('keydown', (e) => {
