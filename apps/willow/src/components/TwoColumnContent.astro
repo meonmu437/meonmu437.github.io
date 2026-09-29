@@ -1,0 +1,14 @@
+---
+// 상세 목차 컬럼을 없앴으므로, 그 폭을 예약해 두던 기본 레이아웃 대신
+// 본문이 전체 폭을 그대로 사용하게 한다. 바 형태 목차는 position:fixed라
+// 별도 컬럼이 필요 없다.
+---
+
+<slot name="right-sidebar" />
+<div class="main-pane"><slot /></div>
+
+<style>
+	.main-pane {
+		width: 100%;
+	}
+</style>

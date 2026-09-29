@@ -1,0 +1,203 @@
+---
+import { Image } from 'astro:assets';
+import mascot from '../assets/willow/umbrella-beaver.png';
+import maple from '../assets/willow/maple-beaver.png';
+import cedar from '../assets/willow/cedar-beaver.png';
+import birch from '../assets/willow/birch-beaver.png';
+import rowan from '../assets/willow/rowan-beaver.png';
+const hallMascots = [
+  {key:'maple', image:maple, name:'메이플 홀'},
+  {key:'cedar', image:cedar, name:'시더 홀'},
+  {key:'birch', image:birch, name:'버치 홀'},
+  {key:'rowan', image:rowan, name:'로언 하우스'},
+];
+---
+<div class="umbrella-app">
+  <div class="umbrella-stage">
+    <div class="umbrella-content">
+      <small class="umbrella-eyebrow">THE BEAVER’S UMBRELLA</small>
+      <div data-umbrella-intro>
+        <h3>비버의 우산 배정식</h3>
+        <p>첫비가 내리기 시작했어요.<br />레인폴 비버가 당신에게 맞는 우산을 고르는 중입니다.</p>
+        <p><strong>어느 기숙사의 우산 아래에서 비를 피하게 될까요?</strong></p>
+        <button type="button" data-umbrella-start>내 우산 찾기 ☔</button>
+        <small class="umbrella-note">8개의 질문 · 학생회가 준비한 재미용 성향 테스트입니다.<br />실제 학기 등록 및 기숙사 배정과는 관계없습니다.</small>
+        <section class="umbrella-enroll" aria-labelledby="umbrella-direct-enroll-title">
+          <h4 id="umbrella-direct-enroll-title">바로 등록하기</h4>
+          <p class="umbrella-note">이미 기숙사를 배정받았다면 여기서 학기를 등록하세요.</p>
+          <div>{['유니챗', '엘린', '티팟'].map(name => <button type="button" disabled><small aria-hidden="true">RAINＦALL U.</small><strong>{name}</strong><span>등록 승인</span><i aria-hidden="true">✦</i></button>)}</div>
+        </section>
+      </div>
+      <div data-umbrella-quiz hidden>
+        <p data-umbrella-progress></p>
+        <progress max="8" value="0" aria-label="답변한 질문 수"></progress>
+        <h3 data-umbrella-question tabindex="-1"></h3>
+        <div class="umbrella-answers"></div>
+        <button type="button" class="umbrella-secondary" data-umbrella-back>이전 질문</button>
+      </div>
+      <div data-umbrella-loading hidden role="status"><span class="umbrella-folded" aria-hidden="true">🌂</span><h3>우산이 당신의 생활 패턴을 읽는 중…</h3></div>
+      <div data-umbrella-result hidden>
+        <div class="wh-housing-grid umbrella-hall-card" data-umbrella-card></div>
+        <h3 class="umbrella-result-title" tabindex="-1"><span data-umbrella-title></span></h3>
+        <aside class="umbrella-beaver-says"><small>🦫 비버의 한마디</small><p data-umbrella-quote></p></aside>
+        <p data-umbrella-description></p><p class="umbrella-tags" data-umbrella-tags></p>
+        <div class="umbrella-actions"><button type="button" data-umbrella-reset>다시 배정받기</button><button type="button" data-tab="residence">기숙사 지도 보기</button></div>
+        <section class="umbrella-enroll" aria-labelledby="umbrella-enroll-title">
+          <h4 id="umbrella-enroll-title">학기 등록하기</h4>
+          <div>{['유니챗', '엘린', '티팟'].map(name => <button type="button" disabled><small aria-hidden="true">RAINＦALL U.</small><strong>{name}</strong><span>등록 승인</span><i aria-hidden="true">✦</i></button>)}</div>
+        </section>
+      </div>
+    </div>
+    <figure>
+      <Image src={mascot} data-hall-mascot="default" alt="네 기숙사의 색과 식물 문양이 있는 우산을 든 레인폴 비버" width={440} />
+      {hallMascots.map(hall => <Image src={hall.image} data-hall-mascot={hall.key} alt={hall.name + ' 비버 마스코트'} width={440} hidden />)}
+      <figcaption>STUDENT UNION · FALL WELCOME EVENT</figcaption>
+    </figure>
+  </div>
+  <footer><strong>Every Beav needs somewhere to weather the storm.</strong><span>모든 비버에게는 비를 견딜 자기만의 자리가 필요하니까.</span></footer>
+</div>
+<script>
+  import data from './umbrella-data.json';
+  const root = document.querySelector<HTMLElement>('.umbrella-app');
+  if (root) {
+    const get = (name: string) => root.querySelector<HTMLElement>('[data-umbrella-' + name + ']')!;
+    let answers: string[] = [];
+    let index = 0;
+    let tied: string[] = [];
+    let result = data.results[0];
+    const show = (name: string) => {
+      for (const view of ['intro', 'quiz', 'loading', 'result']) get(view).hidden = view !== name;
+      root.querySelectorAll<HTMLElement>('[data-hall-mascot]').forEach(image => {
+        image.hidden = image.dataset.hallMascot !== (name === 'result' ? result.key : 'default');
+      });
+    };
+    const tieAnswers = ['사람들이 오가는 라운지', '가장 조용한 창가 자리', '지금 가장 시끄러운 곳', '아무도 모르는 나만의 장소'];
+    function question() {
+      show('quiz');
+      const tie = tied.length > 0;
+      get('progress').textContent = tie ? '동점! 마지막 선택으로 우산을 골라주세요.' : '첫비 관찰 중 · ' + (index + 1) + ' / 8';
+      root!.querySelector('progress')!.value = tie ? 8 : index;
+      get('question').textContent = tie ? '마지막으로 하나만. 갑자기 한 시간의 자유 시간이 생겼다. 어디로 갈까?' : data.questions[index].title;
+      const options = tie ? data.results.map((hall, i) => ({ key: hall.key, text: tieAnswers[i] })).filter(a => tied.includes(a.key)) : data.questions[index].answers;
+      const list = root!.querySelector('.umbrella-answers')!;
+      list.replaceChildren();
+      options.forEach(option => {
+        const button = document.createElement('button');
+        button.type = 'button'; button.textContent = option.text;
+        button.addEventListener('click', () => {
+          if (tie) { reveal(option.key); return; }
+          answers[index] = option.key;
+          if (index < 7) { index++; question(); return; }
+          const scores = data.results.map(hall => ({ key: hall.key, score: answers.filter(a => a === hall.key).length }));
+          const high = Math.max(...scores.map(s => s.score));
+          tied = scores.filter(s => s.score === high).map(s => s.key);
+          if (tied.length === 1) reveal(tied[0]); else question();
+        });
+        list.append(button);
+      });
+      (get('back') as HTMLButtonElement).disabled = index === 0 && !tie;
+      sizeQuiz();
+      get('question').focus({ preventScroll: true });
+    }
+    function reveal(key: string) {
+      show('loading');
+      result = data.results.find(hall => hall.key === key)!;
+      window.setTimeout(() => {
+        root!.style.setProperty('--hall-color', result.color);
+        for (const [field, value] of Object.entries({ title:result.title, quote:result.quote, description:result.description, tags:result.tags })) get(field).textContent = value;
+        const card = document.querySelectorAll('#panel-residence .wh-housing-grid article')[data.results.findIndex(hall => hall.key === key)];
+        get('card').replaceChildren(card.cloneNode(true));
+        show('result'); get('title').parentElement!.focus({ preventScroll:true });
+      }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 900);
+    }
+    get('start').addEventListener('click', () => { answers=[]; index=0; tied=[]; question(); });
+    get('back').addEventListener('click', () => { if(tied.length) { tied=[]; index=7; } else index--; answers=answers.slice(0,index); question(); });
+    get('reset').addEventListener('click', () => { answers=[]; index=0; tied=[]; show('intro'); get('start').focus({preventScroll:true}); });
+    // Measure every possible label at the current width, reserving identical slots.
+    function sizeQuiz() {
+      if (get('quiz').hidden) return;
+      const measure = (source: HTMLElement, texts: string[]) => {
+        const probe = source.cloneNode(false) as HTMLElement;
+        probe.removeAttribute('id'); probe.removeAttribute('tabindex');
+        probe.setAttribute('aria-hidden', 'true');
+        Object.assign(probe.style, {position:'fixed', visibility:'hidden', pointerEvents:'none', width:source.getBoundingClientRect().width+'px', height:'auto', minHeight:'0'});
+        source.parentElement!.append(probe);
+        let height = 0;
+        for (const text of texts) { probe.textContent=text; height=Math.max(height,probe.getBoundingClientRect().height); }
+        probe.remove();
+        return Math.ceil(height);
+      };
+      root!.style.setProperty('--question-height', measure(get('question'), [...data.questions.map(q => q.title), '마지막으로 하나만. 갑자기 한 시간의 자유 시간이 생겼다. 어디로 갈까?'])+'px');
+      const button = root!.querySelector<HTMLElement>('.umbrella-answers button')!;
+      root!.style.setProperty('--answer-height', measure(button, [...data.questions.flatMap(q => q.answers.map(a => a.text)), ...tieAnswers])+'px');
+    }
+    new ResizeObserver(sizeQuiz).observe(root);
+    document.fonts.ready.then(sizeQuiz);
+  }
+</script>
+<style>
+.umbrella-app { --paper:#edf1e8; --ink:#234b39; --muted:#617465; --edge:#ccd5c7; --hall-color:#b85c32; color:var(--ink); }
+:global(:root:not([data-theme='light'])) .umbrella-app { --paper:#1d2c23; --ink:#e5eadf; --muted:#b2bfaf; --edge:#425648; }
+.umbrella-app [hidden] { display:none!important; }
+.umbrella-stage { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); align-items:center; gap:2rem; padding:clamp(1rem,3vw,2.5rem); background:var(--paper); border-radius:1rem; }
+.umbrella-content { min-width:0; }
+.umbrella-eyebrow { display:block; color:var(--muted); font:700 .65rem var(--wh-font-mono); letter-spacing:.12em; margin-bottom:1.2rem!important; }
+.umbrella-app h3 { font:800 clamp(1.3rem,3vw,2rem)/1.5 var(--sl-font); color:var(--ink); margin:.5rem 0 1rem!important; word-break:keep-all; }
+.umbrella-app p { font-size:.85rem; line-height:1.9; }
+.umbrella-app button { padding:.8rem 1rem; border:1px solid transparent; border-radius:.5rem; background:#edb92f; color:#193b2a; font:700 .8rem/1.6 var(--sl-font); cursor:pointer; }
+.umbrella-app button:focus-visible { outline:3px solid #c78330; outline-offset:3px; }
+.umbrella-app button:hover { filter:brightness(.95); }
+.umbrella-note { display:block; margin-top:1rem!important; font-size:.7rem; line-height:1.8; color:var(--muted); }
+.umbrella-stage figure { margin:0!important; }
+.umbrella-stage img { width:100%; max-height:30rem; object-fit:contain; cursor:default; }
+.umbrella-stage figcaption { text-align:center; font:.5rem var(--wh-font-mono); color:var(--muted); }
+.umbrella-answers { display:grid; grid-template-rows:repeat(4,var(--answer-height,auto)); gap:.6rem; margin:1rem 0!important; }
+.umbrella-app [data-umbrella-question] { min-height:var(--question-height,0); }
+.umbrella-app [data-umbrella-progress] { margin:0!important; min-height:3.8em; display:flex; align-items:end; }
+.umbrella-app [data-umbrella-back]:disabled { opacity:.35; cursor:default; }
+.umbrella-answers :global(button) { margin:0!important; padding:.8rem 1rem; border:1px solid var(--edge); border-radius:.5rem; background:transparent; color:var(--ink); text-align:left; font:600 .8rem/1.6 var(--sl-font); cursor:pointer; }
+.umbrella-answers :global(button:hover) { background:color-mix(in srgb,var(--paper),#edb92f 15%); }
+.umbrella-answers :global(button:focus-visible) { outline:3px solid #c78330; outline-offset:3px; }
+.umbrella-app progress { width:100%; height:.45rem; accent-color:#bd9024; }
+.umbrella-app .umbrella-secondary { background:transparent; color:var(--ink); border-color:var(--edge); }
+.umbrella-actions { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:1.5rem!important; }
+.umbrella-actions > * { margin:0!important; }
+.umbrella-hall-card { grid-template-columns:1fr; margin:1rem 0 1.5rem!important; --housing-line:var(--edge); --housing-heading:var(--ink); --housing-muted:var(--muted); }
+.umbrella-beaver-says { position:relative; margin:1.5rem 0!important; padding:1.25rem 1.4rem; border-radius:1.2rem 1.2rem 1.2rem .2rem; background:color-mix(in srgb,var(--paper),white 55%); box-shadow:0 3px 0 var(--edge); }
+:global(:root:not([data-theme='light'])) .umbrella-beaver-says { background:#304437; }
+.umbrella-beaver-says small { display:block; font-size:.8rem; font-weight:700; color:var(--muted); }
+.umbrella-beaver-says p { margin:.6rem 0 0!important; font-size:1.15rem; font-weight:700; line-height:1.85; word-break:keep-all; overflow-wrap:anywhere; }
+.umbrella-app [data-umbrella-description] { font-size:1rem; }
+.umbrella-enroll { margin-top:2rem!important; padding-top:1.25rem; border-top:1px solid var(--edge); }
+.umbrella-enroll h4 { margin:0 0 .8rem!important; color:var(--ink); font-size:1.1rem; }
+.umbrella-enroll > div { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.8rem; margin:0!important; padding:.65rem .2rem; }
+.umbrella-enroll button:disabled { position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:.25rem; width:100%; max-width:9rem; aspect-ratio:1; justify-self:center; margin:0!important; padding:.7rem .25rem; background:transparent; color:#7c827e; border:4px double currentColor; border-radius:50%; cursor:not-allowed; filter:none; transform:rotate(-6deg); }
+.umbrella-enroll button:nth-child(2) { transform:rotate(3deg); }
+.umbrella-enroll button:nth-child(3) { transform:rotate(-3deg); }
+.umbrella-enroll button::before { content:''; position:absolute; inset:4px; border:1px dashed currentColor; border-radius:50%; opacity:.55; pointer-events:none; }
+.umbrella-enroll button::after { content:''; position:absolute; inset:-4px; border-radius:50%; pointer-events:none; opacity:.65; background-image:radial-gradient(var(--paper) .7px,transparent 1px),radial-gradient(var(--paper) .5px,transparent .9px); background-size:7px 9px,11px 6px; background-position:0 0,3px 4px; }
+.umbrella-enroll button > * { margin:0!important; line-height:1.3; }
+.umbrella-enroll button strong { font-size:clamp(.95rem,2vw,1.35rem); letter-spacing:.04em; }
+.umbrella-enroll button small { font:700 clamp(.38rem,1vw,.55rem)/1.5 var(--wh-font-mono); letter-spacing:.06em; }
+.umbrella-enroll button span { padding-top:.25rem; border-top:1px solid currentColor; font-size:clamp(.6rem,1.2vw,.75rem); letter-spacing:.08em; }
+.umbrella-enroll button i { font-size:.65rem; font-style:normal; }
+:global(:root:not([data-theme='light'])) .umbrella-enroll button:disabled { color:#a0a7a1; }
+.umbrella-tags { color:var(--muted); font-size:.75rem!important; }
+.umbrella-result-title span { padding:.04em .15em; background:linear-gradient(177deg,transparent 42%,color-mix(in srgb,var(--hall-color) 70%,transparent) 43% 89%,transparent 90%); box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+.umbrella-app .umbrella-result-title { line-height:1.7; }
+.umbrella-result-title:focus { outline:none; }
+.umbrella-app :global(button) { --button-depth:color-mix(in srgb,var(--edge),var(--ink) 25%); box-shadow:inset 0 1px 0 #ffffff50,0 4px 0 var(--button-depth),0 6px 9px #00000012; transition:transform .12s ease,box-shadow .12s ease; }
+.umbrella-app :global(button:hover:not(:disabled)) { transform:translateY(-1px); }
+.umbrella-app :global(button:active:not(:disabled)) { transform:translateY(3px); box-shadow:inset 0 1px 3px #00000012,0 1px 0 var(--button-depth); }
+.umbrella-app .umbrella-secondary { background:color-mix(in srgb,var(--paper),var(--ink) 5%); }
+.umbrella-answers :global(button) { background:var(--paper); }
+.umbrella-app [data-umbrella-start], .umbrella-actions button { --button-depth:#a27a17; }
+.umbrella-enroll button:disabled { box-shadow:none; }
+.umbrella-folded { display:block; font-size:4rem; animation:umbrella-wiggle .4s ease-in-out infinite alternate; }
+.umbrella-app > footer { display:flex; align-items:center; flex-direction:column; gap:.4rem; padding:1.5rem .5rem; text-align:center; color:var(--muted); }
+.umbrella-app > footer strong { font:700 .8rem var(--wh-font-college); }
+.umbrella-app > footer span { font-size:.7rem; }
+@keyframes umbrella-wiggle { to {transform:rotate(10deg);} }
+@media(max-width:44rem) { .umbrella-stage { grid-template-columns:1fr; gap:1rem; } .umbrella-stage figure { order:-1; } .umbrella-stage img { max-height:12rem; } }
+@media(prefers-reduced-motion:reduce) { .umbrella-folded { animation:none; } .umbrella-app :global(button) { transition:none; } }
+</style>

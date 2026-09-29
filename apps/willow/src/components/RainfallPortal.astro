@@ -1,0 +1,420 @@
+---
+import { Image } from 'astro:assets';
+import studentPhoto from '../assets/willow/student-id.webp';
+import campusMap from '../assets/willow/campus-map.png';
+import dormMap from '../assets/willow/dorm-map.png';
+import beavs from '../assets/willow/beavs.png';
+import ruSeal from '../assets/willow/ru-seal.png';
+import UmbrellaRegistration from './UmbrellaRegistration.astro';
+---
+
+<div class="wh-app" data-portal-state="locked">
+  <header class="wh-global-bar">
+    <a href="/" class="wh-global-home" aria-label="대문으로 이동">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10" /></svg>
+      <span>PORTAL HOME</span>
+    </a>
+    <details class="wh-related-sites">
+      <summary><span>RELATED SITES</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+      <div class="wh-related-menu">
+        <p>WORLD INDEX</p>
+        <a href="/colorground/">컬러그라운드</a><a href="/nighthighway/">NIGHT HIGHWAY</a><a href="/anemoi/">ANEMOI</a>
+        <p>어딘가의 대한민국</p>
+        <a href="/yunhaesi/">윤해시</a><a href="/seungmin/">유승민</a><a href="/1997/">윤성민 (1997)</a><a href="/2004/">윤성민 (2004)</a><a href="/hanminwoo/">한민우</a>
+        <p>어딘가의 지구</p>
+        <a href="/julian/">줄리안</a><span aria-current="page">윌로우</span>
+      </div>
+    </details>
+    <span class="wh-global-spacer"></span>
+    <span class="wh-system-state">RU SYSTEMS · ONLINE</span>
+    <button type="button" class="wh-portal-theme" data-portal-theme aria-label="라이트·다크 테마 전환">
+      <span class="wh-theme-sun"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" /></svg></span>
+      <i></i>
+      <span class="wh-theme-moon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.2A8.3 8.3 0 0 1 8.8 4a8.3 8.3 0 1 0 11.2 11.2Z" /></svg></span>
+    </button>
+  </header>
+  <section class="wh-login-view" aria-labelledby="portal-welcome">
+    <header class="wh-login-head">
+      <div><Image src={ruSeal} alt="레인폴 대학교 비버 교표" width={100} /><span><strong>RAINFALL UNIVERSITY</strong><small>STUDENT PORTAL</small></span></div>
+      <span class="wh-login-secure">● SECURE CONNECTION</span>
+    </header>
+    <main class="wh-login-main">
+      <div class="wh-login-copy">
+        <p class="wh-login-term">FALL SEMESTER</p>
+        <h1 id="portal-welcome">Welcome to<br />myRainfall.</h1>
+        <p>수업, 기숙사, 학생 기록과 캠퍼스 생활을 한곳에서 확인하세요.</p>
+        <button type="button" class="wh-enter-button" data-enter-portal><span>포털에 접속하기</span><b>→</b></button>
+        <small class="wh-login-last">System status: normal · 1 scheduled update</small>
+      </div>
+      <div class="wh-login-side"><Image src={beavs} alt="노란 우비를 입은 레인폴 대학교 비버 마스코트" width={320} /><p>BUILD WHAT LASTS.</p><span>SEATTLE, WA</span></div>
+    </main>
+    <footer class="wh-login-footer"><span>RAIN EXPECTED · 54°F</span><span>RU NET ID SERVICES</span><span>© RAINFALL UNIVERSITY</span></footer>
+  </section>
+
+  <section class="wh-dashboard" aria-label="레인폴 대학교 학생 포털">
+    <div class="wh-mobile-weather-slot"></div>
+    <header class="wh-dashboard-head">
+      <div class="wh-dashboard-brand"><Image src={ruSeal} alt="" width={80} /><i class="wh-header-pumpkin" aria-hidden="true">🎃</i><span><strong>myRainfall</strong><small>STUDENT SERVICES</small></span></div>
+      <div class="wh-halloween-title" aria-hidden="true"><i>👻</i><div><small>TRICK OR TREAT!</small><strong>{Array.from('HAPPY HALLOWEEN').map((letter, index) => <span style={`--letter:${index}`}>{letter === ' ' ? '\u00a0' : letter}</span>)}</strong></div><i>✦</i></div>
+      <div class="wh-user-chip"><span>WH</span><div><strong>Will Han</strong><small>RU-20261031</small></div><button type="button" data-exit-portal aria-label="로그아웃">LOG OUT</button></div>
+    </header>
+
+    <nav class="wh-tabbar" aria-label="포털 메뉴" role="tablist">
+      <button type="button" role="tab" aria-selected="true" aria-controls="panel-campus" data-tab="campus"><span>01</span>캠퍼스</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="panel-residence" data-tab="residence"><span>02</span>기숙사</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="panel-profile" data-tab="profile"><span>03</span>학생 기록</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="panel-registration" data-tab="registration"><span>04</span>학기 등록</button>
+    </nav>
+
+    <div class="wh-dashboard-body">
+      <aside class="wh-portal-sidebar" aria-label="포털 메뉴">
+        <p>STUDENT SERVICES</p>
+        <button type="button" data-tab="campus">캠퍼스 안내</button>
+        <button type="button" data-tab="residence">기숙사 생활</button>
+        <button type="button" data-tab="profile">학생 기록</button>
+        <button type="button" data-tab="registration">학기 등록</button>
+        <section class="wh-weather-card" aria-label="캠퍼스 달력과 날씨">
+          <header><small>OCTOBER</small><span>FALL TERM</span></header>
+          <div class="wh-calendar-date"><b>31</b><span>Halloween on campus</span></div>
+          <div class="wh-weather-reading"><b>54°F</b><strong data-weather-condition>RAIN EXPECTED</strong></div>
+          <div class="wh-weather-controls">
+            <button type="button" data-weather-rain aria-pressed="false" aria-label="캠퍼스에 비 내리기"><span aria-hidden="true">☂</span><small>RAIN</small></button>
+            <button type="button" data-weather-halloween aria-pressed="false" aria-label="할로윈 테마 켜기"><span aria-hidden="true">🎃</span><small>OCT 31</small></button>
+          </div>
+          <p>아이콘을 누르지 마세요</p>
+        </section>
+      </aside>
+
+      <main class="wh-panels">
+        <section class="wh-panel" id="panel-registration" role="tabpanel" data-panel="registration" hidden>
+          <header class="wh-panel-title"><div><small>TERM REGISTRATION · STUDENT UNION</small><h2>학기 등록</h2></div><span class="wh-page-code">WELCOME, BEAV</span></header>
+          <UmbrellaRegistration />
+        </section>
+        <section class="wh-panel is-active" id="panel-campus" role="tabpanel" data-panel="campus">
+          <header class="wh-panel-title"><div><small>CAMPUS OVERVIEW</small><h2>레인폴 대학교</h2></div><span class="wh-page-code">RU / CAMPUS</span></header>
+          <div class="wh-campus-intro"><div><p>시애틀에 자리한 중형 사립 종합대학교. 붉은 벽돌 건물과 짙은 녹색 나무, 비에 젖은 보도와 단풍이 어우러진 차분한 캠퍼스다. 컴퓨터공학, 자연과학, 디자인과 경영 분야가 강하며 공대와 창작 계열 학생 문화가 특히 활발하다.</p><p>우산보다 후드와 방수 재킷에 익숙한 학생들은 오래 남을 것을 만들라는 교훈, <b>“Build What Lasts.”</b>를 학업과 공동체 모두에 적용한다.</p></div></div>
+          <section class="wh-school-identity" aria-label="레인폴 대학교 상징">
+            <header><small>SCHOOL IDENTITY</small></header>
+            <div class="wh-identity-grid">
+              <article class="wh-school-colors">
+                <div class="wh-color-swatch wh-color-forest"><span>DEEP FOREST</span><b>#123F30</b></div>
+                <div class="wh-color-swatch wh-color-gold"><span>WARM GOLD</span><b>#EDB92F</b></div>
+                <div class="wh-identity-copy"><small>OFFICIAL COLORS</small><strong>비 내리는 숲과 캠퍼스의 불빛</strong><p>딥 포레스트 그린과 웜 골드가 교표, 유니폼과 캠퍼스 안내물 전반에 사용된다.</p></div>
+              </article>
+              <article class="wh-mascot-card">
+                <Image src={ruSeal} alt="레인폴 비버가 그려진 레인폴 대학교 교표" width={220} />
+                <div><small>OFFICIAL MASCOT</small><strong>Rainfall Beaver</strong><span>학생들은 “Beavs”라고 부른다.</span><p>초록 RU 후드와 노란 우비가 기본 복장. 우산이나 공구를 든 변형 굿즈도 자주 등장한다.</p></div>
+              </article>
+            </div>
+          </section>
+          <figure class="wh-folded-map"><Image src={campusMap} alt="레인폴 대학교 캠퍼스 지도" class="wh-full-img" /><figcaption>CAMPUS MAP · 레인폴 대학교 시설 안내</figcaption></figure>
+          <section class="wh-directory"><header><div><h3>주요 시설</h3></div><span>8 LOCATIONS</span></header><div class="wh-directory-grid"><article><b>01</b><div><h4>앨더 스퀘어</h4><p>시계탑과 오래된 오리나무, 청동 비버가 있는 중앙광장. 푸드트럭과 동아리 행사가 모인다.</p></div></article><article><b>02</b><div><h4>학생회관</h4><p>푸드코트, 편의점과 공용 라운지가 있는 생활 중심지. 1층 카페는 Beaver Brew.</p></div></article><article><b>03</b><div><h4>공학관 · The Dam</h4><p>컴퓨터실, 프로젝트룸과 메이커 스페이스가 밤늦게까지 켜져 있는 공대생의 댐.</p></div></article><article><b>04</b><div><h4>중앙도서관</h4><p>4층 규모. 1층은 24시간, 위층으로 갈수록 조용하다. 비 내리는 창가 자리가 인기다.</p></div></article><article><b>05</b><div><h4>과학관</h4><p>자연과학 실험실과 연구실. 공학관 사이 1층 휴게 공간은 학생들이 ‘The Spot’이라 부른다.</p></div></article><article><b>06</b><div><h4>인문·예술관</h4><p>작업실, 연습실과 전시 공간. 복도까지 작품과 공연 포스터로 늘 복잡하고 활기차다.</p></div></article><article><b>07</b><div><h4>애슬레틱스 콤플렉스</h4><p>비버 필드와 실내 체육관, 레인폴 비버스의 훈련 시설이 모인 스포츠 구역.</p></div></article><article><b>08</b><div><h4>Rainy Day Diner</h4><p>후문 밖 University Row의 오래된 미국식 다이너. 밤샘 과제를 끝낸 학생들이 팬케이크와 밀크셰이크를 먹으러 모인다.</p></div></article></div></section>
+          <div class="wh-campus-life"><article class="wh-beaver-board"><h3>비버에게 물어봐</h3><ul><li><b>시험운</b><span>오른쪽 앞발을 한 번 문지른다.</span></li><li><b>연애운</b><span>비 오는 날 두 사람이 코를 동시에 만진다.</span></li><li><b>졸업 후 인연</b><span>꼬리를 두드리며 교훈을 말한다.</span></li></ul><p>누구도 진지하게 믿지는 않지만, 시험과 연애 이야기가 나오면 모두가 아는 척한다.</p></article></div>
+        </section>
+
+        <section class="wh-panel" id="panel-residence" role="tabpanel" data-panel="residence" hidden>
+          <header class="wh-panel-title"><div><small>RESIDENCE LIFE</small><h2>기숙사 생활</h2></div><span class="wh-page-code">RU / HOUSING</span></header>
+          <p class="wh-housing-intro">캠퍼스 남쪽, 네 개의 기숙사가 작은 중앙마당을 둘러싸고 있다. 강의동까지 걸어서 오갈 수 있는 거리. 같은 캠퍼스 안에서도 어느 건물에 사느냐에 따라 하루의 소음과 생활 리듬이 조금씩 달라진다.</p>
+          <figure class="wh-folded-map"><Image src={dormMap} alt="레인폴 대학교 기숙사 구역과 캠퍼스 지도" class="wh-full-img" /><figcaption>RESIDENCE MAP · 기숙사 구역에서 공학관까지 레인워크를 따라 이동</figcaption></figure>
+          <section class="wh-housing-community" aria-label="기숙사 공동생활"><article><small>만나는 곳</small><h3>중앙마당</h3><p>작은 잔디마당과 벤치, 자전거 거치대와 택배 보관소. 서로 다른 홀의 학생들이 쉬거나 택배를 찾다가 자연스럽게 마주치는 공용 구역이다.</p></article><article><small>학생들의 전통</small><h3>Hall Cup</h3><p>기숙사 대항전이 열리면 티셔츠, 깃발과 리본이 각 홀의 색으로 물든다. 학생들이 이어온 색과 식물 상징으로 비버 동상을 꾸미는 장난스러운 신경전도 빠지지 않는다.</p></article></section>
+          <section class="wh-housing-halls" aria-labelledby="housing-halls"><h3 id="housing-halls">네 개의 홀, 네 가지 생활</h3><div class="wh-housing-grid">
+            <article style="--hall-color: #c75e28"><header><span aria-hidden="true">🍁</span><div><h4>Maple Hall</h4><small>메이플 홀</small></div></header><p class="wh-hall-meta">4층 · 1~2학년 중심 · 대부분 2인실</p><p>조용하지도 지나치게 시끄럽지도 않은 곳. 공용 주방에서의 식사와 밤샘 대화, 룸메이트 사이의 소소한 사건들이 일상이 된다.</p><footer><i></i>번트 오렌지 · 단풍잎</footer></article>
+            <article style="--hall-color: #265a43"><header><span aria-hidden="true">🌲</span><div><h4>Cedar Hall</h4><small>시더 홀</small></div></header><p class="wh-hall-meta">5층 · 3~4학년 중심 · 1·2인실</p><p>“도서관에 침대가 붙어 있는 곳.” 개인 공간이 조금 더 넓고, 서로 친하지 않아도 생활 리듬을 존중하는 조용한 분위기다.</p><footer><i></i>딥 그린 · 삼나무</footer></article>
+            <article style="--hall-color: #e1b62f"><header><span aria-hidden="true">🌿</span><div><h4>Birch Hall</h4><small>버치 홀</small></div></header><p class="wh-hall-meta">4층 · 신입생 중심 · 대부분 2인실</p><p>네 곳 중 가장 활기찬 ‘신입생 소굴’. 영화의 밤과 피자 파티, 할로윈 장식 대회가 열리고, 주말이면 복도에서도 모임이 이어진다.</p><footer><i></i>밝은 옐로 · 자작나무 잎</footer></article>
+            <article style="--hall-color: #813747"><header><span aria-hidden="true">🍒</span><div><h4>Rowan House</h4><small>로언 하우스</small></div></header><p class="wh-hall-meta">3층 · 상급생에게 인기 · 2~4인 스위트</p><p>거실과 욕실, 간이 주방을 공유하는 작은 공동주택. 친구를 불러 저녁을 만들기 좋다. 방이 적어 거주 이력이나 추첨으로 배정된다.</p><footer><i></i>버건디 · 마가목 잎과 열매</footer></article>
+          </div></section>
+        </section>
+
+        <section class="wh-panel" id="panel-profile" role="tabpanel" data-panel="profile" hidden>
+          <div data-record-public>
+          <header class="wh-panel-title"><div><small>STUDENT RECORD</small><h2>학생 기록</h2></div><span class="wh-page-code">MY PAGE</span></header>
+          <section class="wh-my-summary" aria-label="학생 기본 정보">
+            <div class="wh-my-photo"><Image src={studentPhoto} alt="윌로우 한의 학생 프로필 사진" width={240} /></div>
+            <div><small>RAINFALL UNIVERSITY · 재학</small><h3>Willow Han <span>윌로우 한</span></h3><p class="wh-profile-injection"><span>user_override://preferred_name</span><b>“Call me Will.”</b><i>PATCHED BY WH</i></p><p>Computer Science · Sophomore · RU-20261031</p></div>
+          </section>
+          <section class="wh-my-section wh-official-record"><header class="wh-record-section-title"><div><small>OFFICIAL RECORD</small><h3>학적·개인 정보</h3></div><span>VERIFIED · RU SIS</span></header><dl class="wh-my-facts">
+            <div><dt>전공 / 학년</dt><dd>컴퓨터공학 / 2학년</dd></div><div><dt>개발 분야</dt><dd>백엔드 · Python / TypeScript</dd></div>
+            <div><dt>거주</dt><dd>Maple Hall 317 · 3층 2인실</dd></div><div><dt>생일 / 나이</dt><dd>10월 31일 · 20세, 생일 이후 21세</dd></div>
+            <div><dt>국적 / 배경</dt><dd>미국 · 한국계 이민 3세대</dd></div><div><dt>출신</dt><dd>오리건주 포틀랜드</dd></div>
+            <div class="wh-locked-name"><dt>한국 이름</dt><dd><code>sha256:7f3a9c1e2b8d44c6</code><button type="button" data-hack-button="identity" aria-haspopup="dialog" disabled>이름 해킹하기 ↗</button></dd></div>
+            <div><dt>한국어 수준</dt><dd>초급</dd></div>
+            <div class="wh-locked-record"><dt>연애 이력</dt><dd><code>sha256:31a7f8c90d4e1031</code><button type="button" data-hack-button="dating" aria-haspopup="dialog" disabled>이력 해킹하기 ↗</button></dd></div>
+          </dl></section>
+          <section class="wh-my-section wh-official-record"><header class="wh-record-section-title"><div><small>EMERGENCY CONTACTS</small><h3>가족 정보</h3></div><span>STUDENT SUBMITTED</span></header><div class="wh-my-family">
+            <article><small>아버지</small><h4>Daniel Han</h4><p>프리랜서 개발자이자 디지털 노마드. 치앙마이에서 클레어를 만나 결혼했다. 코딩과 “필요하면 직접 만들면 된다”는 사고방식을 가르쳤다.</p></article>
+            <article><small>어머니</small><h4>Claire Morgan</h4><p>다정하고 표현이 솔직한 요가 강사. 윌로우의 감정 변화를 가장 빨리 알아챈다.</p></article>
+            <article><small>여동생</small><h4>Iris Han</h4><p>레인폴대 커뮤니케이션학 1학년이자 치어리딩 팀원. 오빠와 달리 사교적이고 솔직하다.</p></article>
+            <article><small>친조부모</small><h4>할머니·할아버지</h4><p>한국계 이민 1세대. 가까이 지내며 한국 음식과 짧은 한국어 표현을 익혔다. 친할머니는 한국 이름을 지어준 사람이다.</p></article>
+          </div></section>
+          <section class="wh-guestbook" aria-labelledby="willow-guestbook-title">
+            <header><span class="wh-forum-mark" aria-hidden="true">w/</span><div><small>RAINNET COMMUNITY</small><h3 id="willow-guestbook-title">r/WillHan</h3></div><nav aria-label="방명록 정렬"><b>HOT</b><span>NEW</span><span>TOP</span></nav></header>
+            <div class="wh-subreddit-info"><div><strong>Will의 방명록</strong></div><b>8 members · 3 online</b></div>
+            <div class="wh-reddit-feed">
+              <article class="wh-reddit-post">
+                <aside><span aria-hidden="true">▲</span><b>182</b><span aria-hidden="true">▼</span></aside>
+                <div class="wh-reddit-main"><header><small>Posted by <b>u/maple317</b> · 2h</small><h4>외모 정보 공유 스레드</h4><span>APPEARANCE</span></header><div class="wh-reddit-comments">
+                  <article><header><b>u/maple317</b><time>2h</time></header><p>182cm에 길고 늘씬한 편. 나른해 보여도 자세는 의외로 반듯함.</p></article>
+                  <article><header><b>u/iris_not_anon</b><time>1h</time></header><p>요약: 소년기가 조금 남은 나른한 고양이상의 미남. 본인만 모름 ㅋㅋ</p></article>
+                  <article><header><b>u/rainwatcher</b><time>1h</time></header><p>검은 머리는 비 맞으면 끝이 곱슬거리고, 올리브색 눈은 햇빛에서 헤이즐빛 남.</p></article>
+                  <article><header><b>u/iris_not_anon</b><time>58m</time></header><p>그 예쁜 눈 좀 똑바로 뜨자. 맨날 반쯤 감고 다니지 말고 🙄</p></article>
+                  <article><header><b>u/lab_seat_01</b><time>48m</time></header><p>짙은 후드와 편한 옷만 입고, 안경은 코딩하거나 과제할 때만 씀.</p></article>
+                  <article class="wh-willow-comment"><header><b>u/Will_H</b><span>본인</span><time>12m</time></header><p>비 맞은 머리까지 기록할 필요는 없지 않아?</p></article>
+                </div><footer><span>▱ 5 comments</span><span>share</span><span>save</span></footer></div>
+              </article>
+              <article class="wh-reddit-post">
+                <aside><span aria-hidden="true">▲</span><b>317</b><span aria-hidden="true">▼</span></aside>
+                <div class="wh-reddit-main"><header><small>Posted by <b>u/iris_not_anon</b> · 1h</small><h4>성격에 관한 증언을 받습니다</h4><span>PERSONALITY</span></header><div class="wh-reddit-comments">
+                  <article><header><b>u/iris_not_anon</b><time>1h</time></header><p>느긋한 척하지만 은근히 까칠하고 예민함. 감정도 원인과 결과로 분석하려고 함.</p></article>
+                  <article><header><b>u/roommate</b><time>53m</time></header><p>위로가 필요할 때 해결책부터 내놓고 투덜거리지만, 결국 직접 도와줌.</p></article>
+                  <article><header><b>u/iris_not_anon</b><time>51m</time></header><p>공들인 걸 오해받으면 엄청 억울해하고 생각보다 잘 울어요. 들키면 눈 비볐다고 함 🙄</p></article>
+                  <article class="wh-willow-comment"><header><b>u/Will_H</b><span>본인</span><time>10m</time></header><p>마지막 두 문장은 근거 부족으로 삭제 요청합니다.</p></article>
+                </div><footer><span>▱ 4 comments</span><span>share</span><span>save</span></footer></div>
+              </article>
+              <article class="wh-reddit-post">
+                <aside><span aria-hidden="true">▲</span><b>256</b><span aria-hidden="true">▼</span></aside>
+                <div class="wh-reddit-main"><header><small>Posted by <b>u/compile_friend</b> · 31m</small><h4>취향과 습관 정리본</h4><span>LIKES & HABITS</span></header><div class="wh-reddit-comments">
+                  <article><header><b>u/compile_friend</b><time>31m</time></header><p>필요한 프로그램은 직접 만들고, 답 뻔한 과제보다 개인 프로젝트에 오래 매달림.</p></article>
+                  <article><header><b>u/lab_seat_01</b><time>24m</time></header><p>아이스커피와 젤리를 좋아하고, 가방은 충전기·케이블·보조배터리로 가득함.</p></article>
+                  <article><header><b>u/roommate</b><time>21m</time></header><p>수업 없는 날에는 해가 중천에 뜰 때까지 자는 늦잠을 제일 좋아함.</p></article>
+                  <article><header><b>u/buffer_witness</b><time>18m</time></header><p>햄스터 말랑이 Buffer를 디버깅 도구라고 주장하는데 그냥 좋아하는 것 같음.</p></article>
+                  <article><header><b>u/roommate</b><time>9m</time></header><p>의외로 뛰는 걸 좋아하더라. 복잡한 날이면 혼자 조깅하러 나감.</p></article>
+                  <article class="wh-willow-comment"><header><b>u/Will_H</b><span>본인</span><time>just now</time></header><p>Buffer는 디버깅 장비고, 아이스 아메리카노는 계절을 타는 음료가 아니야.</p></article>
+                </div><footer><span>▱ 6 comments</span><span>share</span><span>save</span></footer></div>
+              </article>
+            </div>
+          </section>
+          </div>
+          <dialog class="wh-record-terminal wh-hack-modal" data-hack-modal="identity" aria-labelledby="identity-modal-title">
+            <header class="wh-terminal-bar"><span id="identity-modal-title"><i></i> ru-db / identity_vault / WH</span><button type="button" data-close-hack>연결 종료 ×</button></header>
+            <div class="wh-terminal-body">
+              <div class="wh-terminal-boot" aria-label="데이터베이스 연결 과정" aria-live="polite"><p><span>01</span><b data-terminal-typing data-terminal-text="connecting to identity_vault … OK"></b></p><p><span>02</span><b data-terminal-typing data-terminal-text="decrypting korean_name … OK"></b></p></div>
+              <h2 class="wh-terminal-heading" data-terminal-heading hidden>identity_vault<span> / decrypted</span></h2>
+              <p class="wh-terminal-query"><span data-terminal-query data-terminal-text="SELECT korean_name, family_alias FROM identity_vault WHERE student_id = 'RU-20261031';"></span><span class="wh-terminal-caret" aria-hidden="true">▌</span></p>
+              <div data-terminal-results hidden>
+                <div class="wh-decrypted-identity" aria-live="polite"><small>Query OK · 1 row returned</small><dl class="wh-query-row"><div><dt>korean_name</dt><dd>한그루</dd></div><div><dt>mother_only_name</dt><dd>헤이즐</dd></div></dl><span>1 row in set · decrypted · read-only</span></div>
+                <p class="wh-terminal-status">session active · read-only <span aria-hidden="true">●</span></p>
+              </div>
+            </div>
+          </dialog>
+          <dialog class="wh-record-terminal wh-hack-modal" data-hack-modal="dating" aria-labelledby="dating-modal-title">
+            <header class="wh-terminal-bar"><span id="dating-modal-title"><i></i> ru-db / relationship_history / WH</span><button type="button" data-close-hack>연결 종료 ×</button></header>
+            <div class="wh-terminal-body">
+              <div class="wh-terminal-boot" aria-label="데이터베이스 연결 과정" aria-live="polite"><p><span>01</span><b data-terminal-typing data-terminal-text="connecting to relationship_history … OK"></b></p><p><span>02</span><b data-terminal-typing data-terminal-text="decrypting emotional_errors … OK"></b></p></div>
+              <h2 class="wh-terminal-heading" data-terminal-heading hidden>exception.log</h2>
+              <div data-terminal-results hidden>
+                <div class="wh-exception-log"><pre class="wh-code-log"><code>
+                  <span class="wh-code-command">$ npx ts-node src/relationship.ts</span>
+                  <span class="wh-code-info">[INFO]  dating_history.ts:3   프롬, 홈커밍 파트너 매칭 완료. 소요 시간 짧음.</span>
+                  <span class="wh-code-info">[INFO]  dating_history.ts:7   데이트 기록 있음. 단기 연애 기록 있음.</span>
+                  <span class="wh-code-warn">[WARN]  dating_history.ts:12  연락 빈도 불일치 감지. 무시하고 진행.</span>
+                  <span class="wh-code-path">/home/will/relationship/src/dating_history.ts:14</span>
+                  <span class="wh-code-source">    const meaning = message.subtext;</span>
+                  <span class="wh-code-source">                            ^</span>
+                  <span class="wh-code-error">RelationshipException: 관계 오래 유지 못함, 진도 못 나감</span>
+                  <span class="wh-code-stack">    at 숨은_의미_파악하기 (dating_history.ts:14:29)</span>
+                  <span class="wh-code-stack">    at 위로할_타이밍_찾기 (dating_history.ts:18:12)</span>
+                  <span class="wh-code-stack">    at 연애_유지하기 (dating_history.ts:22:5) {'{'}</span>
+                  <span class="wh-code-cause">  cause: [</span>
+                  <span class="wh-code-string">    '상대가 원하는 걸 문자 그대로만 받아들임',</span>
+                  <span class="wh-code-string">    '관계가 어긋나면 고치기보다 그냥 종료함'</span>
+                  <span class="wh-code-cause">  ]</span>
+                  <span class="wh-code-stack">{'}'}</span>
+                  <span class="wh-code-exit">Process exited with code 1.</span>
+                  <span class="wh-code-command">$ npx ts-node src/first_love.ts</span>
+                  <span class="wh-code-warn">[WARN]  first_love.ts:24  원인 불명의 짜증 감지. 재현 조건: {'{{user}}'}</span>
+                  <span class="wh-code-error">FirstLoveException: 이전 방식으로 처리할 수 없음</span>
+                  <span class="wh-code-stack">    at 아무렇지_않은_척하기 (first_love.ts:31:11)</span>
+                  <span class="wh-code-stack">    at 관계_종료하기 (first_love.ts:39:1)</span>
+                  <span class="wh-code-cause">  [cause]: 대체 불가능한 대상 감지. terminate() 실행 거부.</span>
+                  <span class="wh-code-comment">// first_love.ts: 현재 핸들러</span>
+                  <span class="wh-code-keyword">async function 다시_시도하기() {'{'}</span>
+                  <span>  while (true) {'{'}</span>
+                  <span>    try {'{'}</span>
+                  <span>      await 원인_찾기();</span>
+                  <span>      await 잘못한_부분_고치기();</span>
+                  <span>      await 솔직하게_말하기();</span>
+                  <span class="wh-code-return">      return await {'{{user}}'}.review();</span>
+                  <span>    {'}'} catch (error) {'{'}</span>
+                  <span>      if (error instanceof FirstLoveException) {'{'}</span>
+                  <span class="wh-code-continue">        continue;  <i>// 종료 대신 retry</i></span>
+                  <span>      {'}'}</span>
+                  <span>      throw error;</span>
+                  <span>    {'}'}</span>
+                  <span>  {'}'}</span>
+                  <span>{'}'}</span>
+                </code></pre></div>
+                <p class="wh-terminal-status">session active · read-only <span aria-hidden="true">●</span></p>
+              </div>
+            </div>
+          </dialog>
+        </section>
+      </main>
+    </div>
+    <footer class="wh-dashboard-footer"><span>myRainfall v4.8.2</span><span data-session-label>SESSION · STANDARD</span><span>HELP DESK 24/7</span></footer>
+  </section>
+  <div class="wh-rain-layer" aria-hidden="true">
+    {Array.from({ length: 24 }, (_, index) => <span style={`--x:${(index * 37 + 3) % 100}%;--duration:${7 + index % 6}s;--delay:-${(index * 1.7) % 12}s;--size:${.85 + (index % 4) * .2}rem;--drift:${index % 2 ? 28 : -28}px;--rest:${(index * 23) % 100}%`}>{index % 4 === 0 ? '☂️' : '💧'}</span>)}
+  </div>
+</div>
+
+<script>
+  const app = document.querySelector<HTMLElement>('.wh-app');
+  const enterButton = app?.querySelector<HTMLButtonElement>('[data-enter-portal]');
+  const exitButton = app?.querySelector<HTMLButtonElement>('[data-exit-portal]');
+  const themeButton = app?.querySelector<HTMLButtonElement>('[data-portal-theme]');
+  const rainButton = app?.querySelector<HTMLButtonElement>('[data-weather-rain]');
+  const halloweenButton = app?.querySelector<HTMLButtonElement>('[data-weather-halloween]');
+  const weatherCondition = app?.querySelector<HTMLElement>('[data-weather-condition]');
+  const weatherCard = app?.querySelector<HTMLElement>('.wh-weather-card');
+  const weatherSidebar = app?.querySelector<HTMLElement>('.wh-portal-sidebar');
+  const mobileWeatherSlot = app?.querySelector<HTMLElement>('.wh-mobile-weather-slot');
+  const mobileWeatherQuery = window.matchMedia('(max-width: 44rem)');
+  function placeWeatherCard() {
+    const target = mobileWeatherQuery.matches ? mobileWeatherSlot : weatherSidebar;
+    if (weatherCard && target) target.append(weatherCard);
+  }
+  placeWeatherCard();
+  mobileWeatherQuery.addEventListener('change', placeWeatherCard);
+
+  function selectTab(name: string) {
+    if (!app) return;
+    if (name !== 'profile') restoreRecord();
+    app.querySelectorAll<HTMLElement>('[data-panel]').forEach((panel) => {
+      const active = panel.dataset.panel === name;
+      panel.hidden = !active;
+      panel.classList.toggle('is-active', active);
+    });
+    let activeTab: HTMLButtonElement | undefined;
+    app.querySelectorAll<HTMLButtonElement>(`[data-tab]`).forEach((button) => {
+      const active = button.dataset.tab === name;
+      button.setAttribute('aria-selected', String(active));
+      if (active && button.closest('.wh-tabbar')) activeTab = button;
+    });
+    history.replaceState(null, '', `#${name}`);
+    app.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    activeTab?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  enterButton?.addEventListener('click', () => {
+    if (!app) return;
+    app.dataset.portalState = 'open';
+    selectTab('campus');
+  });
+  exitButton?.addEventListener('click', () => {
+    if (!app) return;
+    restoreRecord();
+    app.dataset.portalState = 'locked';
+    history.replaceState(null, '', location.pathname);
+    app.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  app?.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach((button) => button.addEventListener('click', () => selectTab(button.dataset.tab || 'campus')));
+  const hackModals = [...(app?.querySelectorAll<HTMLDialogElement>('[data-hack-modal]') || [])];
+  let activeHackButton: HTMLButtonElement | undefined;
+  let previousOverflow = '';
+  let terminalRun = 0;
+  const terminalDelay = (duration: number) => new Promise<void>((resolve) => window.setTimeout(resolve, duration));
+  async function typeTerminalLine(element: HTMLElement, run: number, delay = 12) {
+    const content = element.dataset.terminalText || '';
+    element.textContent = '';
+    for (const character of content) {
+      if (run !== terminalRun || app?.dataset.secretUnlocked !== 'true') return false;
+      element.textContent += character;
+      await terminalDelay(character === ' ' ? Math.max(4, delay - 5) : delay);
+    }
+    return true;
+  }
+  async function playTerminalIntro(modal: HTMLDialogElement) {
+    if (!app) return;
+    const run = ++terminalRun;
+    const lines = [...modal.querySelectorAll<HTMLElement>('[data-terminal-typing]')];
+    const query = modal.querySelector<HTMLElement>('[data-terminal-query]');
+    const heading = modal.querySelector<HTMLElement>('[data-terminal-heading]');
+    const results = modal.querySelector<HTMLElement>('[data-terminal-results]');
+    lines.forEach((line) => { line.textContent = ''; });
+    if (query) query.textContent = '';
+    if (heading) heading.hidden = true;
+    if (results) results.hidden = true;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      lines.forEach((line) => { line.textContent = line.dataset.terminalText || ''; });
+      if (query) query.textContent = query.dataset.terminalText || '';
+      if (heading) heading.hidden = false;
+      if (results) results.hidden = false;
+      return;
+    }
+    for (const line of lines) {
+      if (!(await typeTerminalLine(line, run))) return;
+      await terminalDelay(65);
+    }
+    if (run !== terminalRun) return;
+    if (heading) heading.hidden = false;
+    await terminalDelay(120);
+    if (query && !(await typeTerminalLine(query, run, 10))) return;
+    await terminalDelay(120);
+    if (run !== terminalRun) return;
+    if (results) results.hidden = false;
+  }
+  function restoreRecord() {
+    if (!app) return;
+    terminalRun += 1;
+    app.dataset.secretUnlocked = 'false';
+    hackModals.forEach((modal) => { if (modal.open) modal.close(); });
+  }
+  hackModals.forEach((modal) => {
+    modal.querySelector('[data-close-hack]')?.addEventListener('click', restoreRecord);
+    modal.addEventListener('cancel', (event) => { event.preventDefault(); restoreRecord(); });
+    modal.addEventListener('close', () => {
+      terminalRun += 1;
+      const anotherModalOpen = hackModals.some((candidate) => candidate.open);
+      if (app && !anotherModalOpen) app.dataset.secretUnlocked = 'false';
+      if (!anotherModalOpen) document.body.style.overflow = previousOverflow;
+      activeHackButton?.focus({ preventScroll:true });
+    });
+  });
+  app?.querySelectorAll<HTMLButtonElement>('[data-hack-button]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const modal = app.querySelector<HTMLDialogElement>(`[data-hack-modal="${button.dataset.hackButton}"]`);
+      if (!modal || modal.open) return;
+      activeHackButton = button;
+      app.dataset.secretUnlocked = 'true';
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      modal.showModal();
+      modal.scrollTop = 0;
+      playTerminalIntro(modal);
+    });
+  });
+  themeButton?.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+    const next = current === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('starlight-theme', next);
+  });
+  rainButton?.addEventListener('click', () => {
+    if (!app) return;
+    const active = app.dataset.weatherRain !== 'true';
+    app.dataset.weatherRain = String(active);
+    rainButton.setAttribute('aria-pressed', String(active));
+    rainButton.setAttribute('aria-label', active ? '캠퍼스 비 효과 끄기' : '캠퍼스에 비 내리기');
+  });
+  halloweenButton?.addEventListener('click', () => {
+    if (!app) return;
+    const active = app.dataset.halloween !== 'true';
+    app.dataset.halloween = String(active);
+    halloweenButton.setAttribute('aria-pressed', String(active));
+    halloweenButton.setAttribute('aria-label', active ? '할로윈 테마 끄기' : '할로윈 테마 켜기');
+    if (weatherCondition) weatherCondition.textContent = active ? 'FOG & MISCHIEF' : 'RAIN EXPECTED';
+  });
+
+  const initial = location.hash.slice(1);
+  if (['campus', 'residence', 'profile', 'registration'].includes(initial) && app) {
+    app.dataset.portalState = 'open';
+    selectTab(initial);
+  }
+  window.addEventListener('hashchange', () => {
+    const target = location.hash.slice(1);
+    if (['campus', 'residence', 'profile', 'registration'].includes(target) && app) {
+      app.dataset.portalState = 'open';
+      selectTab(target);
+    }
+  });
+</script>

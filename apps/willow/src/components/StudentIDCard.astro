@@ -1,0 +1,315 @@
+---
+import { Image } from 'astro:assets';
+import studentId from '../assets/willow/student-id.webp';
+---
+
+<div class="wh-id-wrap">
+	<button type="button" class="wh-id-card" id="wh-id-card" aria-pressed="false" aria-label="학생증 뒤집어서 상태창 보기">
+		<span class="wh-id-inner">
+			<span class="wh-id-face wh-id-front">
+				<span class="wh-id-band">
+					<span class="wh-id-crest">RU</span>
+					<span class="wh-id-band-text">
+						<span class="wh-id-school">RAINFALL UNIVERSITY</span>
+						<span class="wh-id-school-sub">STUDENT IDENTIFICATION</span>
+					</span>
+				</span>
+				<span class="wh-id-body">
+					<span class="wh-id-photo">
+						<Image src={studentId} alt="윌로우 한 학생증 사진" width={340} />
+					</span>
+					<span class="wh-id-fields">
+						<span class="wh-id-field"><span class="wh-id-label">NAME</span><span class="wh-id-value">Willow Han</span></span>
+						<span class="wh-id-field"><span class="wh-id-label">MAJOR</span><span class="wh-id-value">Computer Science</span></span>
+						<span class="wh-id-field"><span class="wh-id-label">YEAR</span><span class="wh-id-value">Sophomore</span></span>
+						<span class="wh-id-field"><span class="wh-id-label">RESIDENCE</span><span class="wh-id-value">Maple Hall 317</span></span>
+						<span class="wh-id-field"><span class="wh-id-label">ID NO.</span><span class="wh-id-value">RU-20261031</span></span>
+					</span>
+				</span>
+				<span class="wh-id-barcode" aria-hidden="true"></span>
+				<span class="wh-id-hint">탭해서 상태창 보기 ↻</span>
+			</span>
+			<span class="wh-id-face wh-id-back">
+				<span class="wh-id-terminal-head">
+					<span class="wh-id-dot wh-id-dot-red"></span>
+					<span class="wh-id-dot wh-id-dot-yellow"></span>
+					<span class="wh-id-dot wh-id-dot-green"></span>
+					<span class="wh-id-terminal-title">will status --check</span>
+				</span>
+				<span class="wh-id-log">status: <b class="wh-id-accent">error_overflow</b></span>
+				<span class="wh-id-log">mood: 무심다정츤데레</span>
+				<span class="wh-id-log">stack: 첫사랑_예외처리중</span>
+				<span class="wh-id-log wh-id-log-muted">age: 20 -&gt; 21 (10월 31일부로 버전업 예정)</span>
+				<span class="wh-id-log wh-id-log-muted">uptime: 대학교 2학년, 2년째 기숙사 생활</span>
+				<span class="wh-id-cursor" aria-hidden="true"></span>
+				<span class="wh-id-hint wh-id-hint-back">탭해서 학생증으로 돌아가기 ↺</span>
+			</span>
+		</span>
+	</button>
+</div>
+
+<script>
+	const card = document.getElementById('wh-id-card');
+	card?.addEventListener('click', () => {
+		const flipped = card.classList.toggle('is-flipped');
+		card.setAttribute('aria-pressed', String(flipped));
+	});
+</script>
+
+<style>
+	.wh-id-wrap {
+		display: flex;
+		justify-content: center;
+		padding-block: clamp(1.5rem, 4vw, 2.5rem);
+	}
+
+	.wh-id-card {
+		display: block;
+		width: min(100%, 22rem);
+		height: 30rem;
+		margin: 0;
+		padding: 0;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		perspective: 100rem;
+	}
+
+	.wh-id-inner {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		transition: transform 0.7s cubic-bezier(0.2, 0.75, 0.25, 1);
+		transform-style: preserve-3d;
+	}
+
+	.wh-id-card.is-flipped .wh-id-inner {
+		transform: rotateY(180deg);
+	}
+
+	.wh-id-face {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		border-radius: 1rem;
+		box-shadow: 0.4rem 0.6rem 0 rgba(20, 30, 20, 0.18);
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+		overflow: hidden;
+		text-align: left;
+	}
+
+	/*
+		실제 카드 재질처럼 라이트/다크 테마와 무관하게 아이보리 카드지
+		색을 고정한다 (1997의 카세트 케이스와 같은 원칙).
+	*/
+	.wh-id-front {
+		border: 1px solid #cdbf9e;
+		background: #fbf6e8;
+	}
+
+	.wh-id-band {
+		display: flex;
+		align-items: center;
+		gap: 0.7rem;
+		padding: 0.75rem 1rem;
+		background: var(--sl-color-accent);
+	}
+
+	.wh-id-crest {
+		display: grid;
+		place-items: center;
+		width: 2.1rem;
+		height: 2.1rem;
+		flex-shrink: 0;
+		border: 2px solid rgba(255, 255, 255, 0.75);
+		border-radius: 50%;
+		font-family: var(--wh-font-display);
+		font-size: 0.85rem;
+		letter-spacing: 0.02em;
+		color: #fff;
+	}
+
+	.wh-id-band-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.1rem;
+		min-width: 0;
+	}
+
+	.wh-id-school {
+		font-family: var(--wh-font-display);
+		font-size: 0.95rem;
+		letter-spacing: 0.02em;
+		color: #fff;
+	}
+
+	.wh-id-school-sub {
+		font-family: var(--wh-font-mono);
+		font-size: 0.58rem;
+		letter-spacing: 0.1em;
+		color: rgba(255, 255, 255, 0.82);
+	}
+
+	.wh-id-body {
+		display: flex;
+		gap: 1rem;
+		padding: 1rem 1rem 0.6rem;
+	}
+
+	.wh-id-photo {
+		flex-shrink: 0;
+		width: 6rem;
+		border: 1px solid #cdbf9e;
+		border-radius: 0.35rem;
+		overflow: hidden;
+	}
+
+	.wh-id-photo :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.wh-id-fields {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+		min-width: 0;
+	}
+
+	.wh-id-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.05rem;
+	}
+
+	.wh-id-label {
+		font-family: var(--wh-font-mono);
+		font-size: 0.58rem;
+		letter-spacing: 0.08em;
+		color: var(--sl-color-gray-3);
+	}
+
+	.wh-id-value {
+		font-family: var(--sl-font);
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: #221a12;
+	}
+
+	.wh-id-barcode {
+		margin: auto 1rem 0.6rem;
+		height: 1.6rem;
+		background: repeating-linear-gradient(
+			90deg,
+			#221a12 0 2px,
+			transparent 2px 4px,
+			#221a12 4px 5px,
+			transparent 5px 9px
+		);
+		opacity: 0.85;
+	}
+
+	.wh-id-hint {
+		padding: 0 1rem 0.85rem;
+		font-family: var(--wh-font-mono);
+		font-size: 0.62rem;
+		letter-spacing: 0.04em;
+		color: var(--sl-color-gray-3);
+		text-align: right;
+	}
+
+	.wh-id-back {
+		border: 1px solid #2c3630;
+		background: #12160f;
+		transform: rotateY(180deg);
+		padding: 1.1rem 1.2rem;
+		gap: 0.55rem;
+	}
+
+	.wh-id-terminal-head {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding-bottom: 0.7rem;
+		margin-bottom: 0.3rem;
+		border-bottom: 1px solid #2c3630;
+	}
+
+	.wh-id-dot {
+		width: 0.55rem;
+		height: 0.55rem;
+		border-radius: 50%;
+	}
+
+	.wh-id-dot-red {
+		background: #ff5f57;
+	}
+	.wh-id-dot-yellow {
+		background: #febc2e;
+	}
+	.wh-id-dot-green {
+		background: #28c840;
+	}
+
+	.wh-id-terminal-title {
+		margin-inline-start: 0.4rem;
+		font-family: var(--wh-font-mono);
+		font-size: 0.68rem;
+		color: #7c8a7a;
+	}
+
+	.wh-id-log {
+		font-family: var(--wh-font-mono);
+		font-size: 0.78rem;
+		line-height: 1.7;
+		color: #cfe8d4;
+	}
+
+	.wh-id-log-muted {
+		color: #7c8a7a;
+	}
+
+	.wh-id-accent {
+		color: var(--wh-orange);
+	}
+
+	.wh-id-cursor {
+		display: inline-block;
+		width: 0.5rem;
+		height: 0.95rem;
+		margin-top: 0.3rem;
+		background: #cfe8d4;
+		animation: wh-id-blink 1.1s step-end infinite;
+	}
+
+	.wh-id-hint-back {
+		margin-top: auto;
+		padding: 0;
+		text-align: left;
+		color: #5f6c5d;
+	}
+
+	@keyframes wh-id-blink {
+		0%,
+		50% {
+			opacity: 1;
+		}
+		50.01%,
+		100% {
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.wh-id-inner {
+			transition: none;
+		}
+		.wh-id-cursor {
+			animation: none;
+		}
+	}
+</style>

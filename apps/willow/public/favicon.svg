@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="29" fill="#123f30" stroke="#edb92f" stroke-width="5"/>
+  <path d="M15 30c0-12 7-19 17-19s17 7 17 19v10c0 9-7 15-17 15S15 49 15 40Z" fill="#a86635"/>
+  <circle cx="18" cy="19" r="7" fill="#a86635" stroke="#402719" stroke-width="3"/>
+  <circle cx="46" cy="19" r="7" fill="#a86635" stroke="#402719" stroke-width="3"/>
+  <ellipse cx="32" cy="37" rx="15" ry="12" fill="#d69b62"/>
+  <circle cx="25" cy="29" r="3" fill="#17130f"/>
+  <circle cx="39" cy="29" r="3" fill="#17130f"/>
+  <path d="M28 36q4-4 8 0-1 5-4 5t-4-5Z" fill="#17130f"/>
+  <path d="M25 43q7 5 14 0" fill="none" stroke="#402719" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M28 44v8h4v-7m4-1v8h-4" fill="#fff7df" stroke="#402719" stroke-width="1.5"/>
+  <path d="M10 48q22-9 44 0v10H10Z" fill="#edb92f"/>
+  <text x="32" y="57" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="900" fill="#123f30">RU</text>
+</svg>
