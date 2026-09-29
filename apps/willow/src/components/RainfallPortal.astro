@@ -190,7 +190,7 @@ import UmbrellaRegistration from './UmbrellaRegistration.astro';
             <div class="wh-terminal-body">
               <div class="wh-terminal-boot" aria-label="데이터베이스 연결 과정" aria-live="polite"><p><span>01</span><b data-terminal-typing data-terminal-text="connecting to identity_vault … OK"></b></p><p><span>02</span><b data-terminal-typing data-terminal-text="decrypting korean_name … OK"></b></p></div>
               <h2 class="wh-terminal-heading" data-terminal-heading hidden>identity_vault<span> / decrypted</span></h2>
-              <p class="wh-terminal-query"><span data-terminal-query data-terminal-text="SELECT korean_name, family_alias FROM identity_vault WHERE student_id = 'RU-20261031';"></span><span class="wh-terminal-caret" aria-hidden="true">▌</span></p>
+              <p class="wh-terminal-query"><span data-terminal-query data-terminal-text="SELECT korean_name, mother_only_name FROM identity_vault WHERE student_id = 'RU-20261031';"></span><span class="wh-terminal-caret" aria-hidden="true">▌</span></p>
               <div data-terminal-results hidden>
                 <div class="wh-decrypted-identity" aria-live="polite"><small>Query OK · 1 row returned</small><dl class="wh-query-row"><div><dt>korean_name</dt><dd>한그루</dd></div><div><dt>mother_only_name</dt><dd>헤이즐</dd></div></dl><span>1 row in set · decrypted · read-only</span></div>
                 <p class="wh-terminal-status">session active · read-only <span aria-hidden="true">●</span></p>
