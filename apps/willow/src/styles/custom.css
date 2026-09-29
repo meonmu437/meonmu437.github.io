@@ -227,7 +227,7 @@ html.wh-sidebar-expanded .sidebar-pane { display: block; }
 .wh-identity-copy { display: flex; flex-direction: column; justify-content: center; padding: 1.3rem; }
 .wh-identity-copy strong,.wh-mascot-card strong { display: block; margin: .35rem 0; font: 800 1rem var(--sl-font); color: var(--wh-green); }
 .wh-identity-copy p,.wh-mascot-card p { margin: .4rem 0 0!important; font-size: .7rem; line-height: 1.75; color: #68736b; }
-.wh-mascot-card { display: grid; grid-template-columns: 9rem minmax(0,1fr); align-items: center; gap: 1rem; overflow: hidden; padding: 1.3rem; background: #f1e6bd; }
+.wh-mascot-card { display: grid; grid-template-columns: 9rem minmax(0,1fr); align-items: center; gap: 1rem; overflow: hidden; padding: 1.3rem; background: #edf0e9; }
 .wh-mascot-card img { align-self: center; width: 9rem; height: auto; max-height: 11rem; object-fit: contain; cursor: default; filter: drop-shadow(.2rem .35rem .25rem rgba(35,48,39,.18)); }
 .wh-mascot-card span { display: block; font-size: .68rem; color: #756b4d; }
 .wh-campus-facts { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); margin: 1.5rem 0 2rem; border-block: 1px solid #d7ddd6; }
@@ -548,7 +548,7 @@ main[data-pagefind-body] > .content-panel > .sl-container > footer { display: no
 :root:not([data-theme='light']) .wh-identity-copy strong,
 :root:not([data-theme='light']) .wh-mascot-card strong { color: #efc14f; }
 :root:not([data-theme='light']) .wh-school-colors { background: #1b2620; }
-:root:not([data-theme='light']) .wh-mascot-card { background: #292719; }
+:root:not([data-theme='light']) .wh-mascot-card { background: #1b2620; }
 :root:not([data-theme='light']) .wh-identity-copy p,
 :root:not([data-theme='light']) .wh-mascot-card p,
 :root:not([data-theme='light']) .wh-mascot-card span { color: #a8b5ad; }
@@ -818,7 +818,7 @@ main[data-pagefind-body] > .content-panel > .sl-container > footer { display: no
 :root:not([data-theme='light']) .wh-reddit-main > footer { color:#91a198; }
 @media(max-width:44rem) {
  .wh-my-summary { gap:1rem; padding:1rem; align-items:flex-start; }
- .wh-my-photo { flex-basis:4.8rem; width:4.8rem; height:6.7rem; }
+ .wh-my-photo { flex-basis:7rem; width:7rem; height:9.7rem; }
  .wh-my-summary h3 { font-size:1.3rem; }
  .wh-my-summary h3 span { display:block; }
  .wh-my-facts,.wh-my-columns,.wh-my-family,.wh-private-fields { grid-template-columns:1fr; }
