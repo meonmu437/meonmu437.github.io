@@ -5,6 +5,11 @@ import maple from '../assets/willow/maple-beaver.png';
 import cedar from '../assets/willow/cedar-beaver.png';
 import birch from '../assets/willow/birch-beaver.png';
 import rowan from '../assets/willow/rowan-beaver.png';
+const platforms = [
+  {name:'유니챗', key:'univers', href:'https://www.univers.chat/character/97bdf6f4-a3b7-489f-9368-4dbd97f5f0f0'},
+  {name:'엘린', key:'elyn', href:'https://elyn.ai/characters/62884269-6e14-4841-aaa4-2e022f8b4a25?ref=user_share'},
+  {name:'티팟', key:'teapot', href:'https://teapotchat.com/character/50mQoiuYZYCa9G8nZgiH'},
+];
 const hallMascots = [
   {key:'maple', image:maple, name:'메이플 홀'},
   {key:'cedar', image:cedar, name:'시더 홀'},
@@ -25,7 +30,7 @@ const hallMascots = [
         <section class="umbrella-enroll" aria-labelledby="umbrella-direct-enroll-title">
           <h4 id="umbrella-direct-enroll-title">바로 등록하기</h4>
           <p class="umbrella-note">이미 기숙사를 배정받았다면 여기서 학기를 등록하세요.</p>
-          <div>{['유니챗', '엘린', '티팟'].map(name => <button type="button" disabled><small aria-hidden="true">RAINＦALL U.</small><strong>{name}</strong><span>등록 승인</span><i aria-hidden="true">✦</i></button>)}</div>
+          <div>{platforms.map(({name,key,href}) => <a href={href} class={`umbrella-platform umbrella-platform--${key}`} target="_blank" rel="noopener noreferrer"><small aria-hidden="true">RAINＦALL U.</small><strong>{name}</strong><span>등록 승인</span><i aria-hidden="true">✦</i></a>)}</div>
         </section>
       </div>
       <div data-umbrella-quiz hidden>
@@ -44,7 +49,7 @@ const hallMascots = [
         <div class="umbrella-actions"><button type="button" data-umbrella-reset>다시 배정받기</button><button type="button" data-tab="residence">기숙사 지도 보기</button></div>
         <section class="umbrella-enroll" aria-labelledby="umbrella-enroll-title">
           <h4 id="umbrella-enroll-title">학기 등록하기</h4>
-          <div>{['유니챗', '엘린', '티팟'].map(name => <button type="button" disabled><small aria-hidden="true">RAINＦALL U.</small><strong>{name}</strong><span>등록 승인</span><i aria-hidden="true">✦</i></button>)}</div>
+          <div>{platforms.map(({name,key,href}) => <a href={href} class={`umbrella-platform umbrella-platform--${key}`} target="_blank" rel="noopener noreferrer"><small aria-hidden="true">RAINＦALL U.</small><strong>{name}</strong><span>등록 승인</span><i aria-hidden="true">✦</i></a>)}</div>
         </section>
       </div>
     </div>
@@ -171,17 +176,24 @@ const hallMascots = [
 .umbrella-enroll { margin-top:2rem!important; padding-top:1.25rem; border-top:1px solid var(--edge); }
 .umbrella-enroll h4 { margin:0 0 .8rem!important; color:var(--ink); font-size:1.1rem; }
 .umbrella-enroll > div { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.8rem; margin:0!important; padding:.65rem .2rem; }
-.umbrella-enroll button:disabled { position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:.25rem; width:100%; max-width:9rem; aspect-ratio:1; justify-self:center; margin:0!important; padding:.7rem .25rem; background:transparent; color:#7c827e; border:4px double currentColor; border-radius:50%; cursor:not-allowed; filter:none; transform:rotate(-6deg); }
-.umbrella-enroll button:nth-child(2) { transform:rotate(3deg); }
-.umbrella-enroll button:nth-child(3) { transform:rotate(-3deg); }
-.umbrella-enroll button::before { content:''; position:absolute; inset:4px; border:1px dashed currentColor; border-radius:50%; opacity:.55; pointer-events:none; }
-.umbrella-enroll button::after { content:''; position:absolute; inset:-4px; border-radius:50%; pointer-events:none; opacity:.65; background-image:radial-gradient(var(--paper) .7px,transparent 1px),radial-gradient(var(--paper) .5px,transparent .9px); background-size:7px 9px,11px 6px; background-position:0 0,3px 4px; }
-.umbrella-enroll button > * { margin:0!important; line-height:1.3; }
-.umbrella-enroll button strong { font-size:clamp(.95rem,2vw,1.35rem); letter-spacing:.04em; }
-.umbrella-enroll button small { font:700 clamp(.38rem,1vw,.55rem)/1.5 var(--wh-font-mono); letter-spacing:.06em; }
-.umbrella-enroll button span { padding-top:.25rem; border-top:1px solid currentColor; font-size:clamp(.6rem,1.2vw,.75rem); letter-spacing:.08em; }
-.umbrella-enroll button i { font-size:.65rem; font-style:normal; }
-:global(:root:not([data-theme='light'])) .umbrella-enroll button:disabled { color:#a0a7a1; }
+.umbrella-platform { position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:.25rem; width:100%; max-width:9rem; aspect-ratio:1; justify-self:center; margin:0!important; padding:.7rem .25rem; background:transparent; color:var(--stamp-color); border:4px double currentColor; border-radius:50%; cursor:pointer; text-decoration:none; filter:none; transform:rotate(-6deg); transition:background .15s ease; }
+.umbrella-platform--univers { --stamp-color:#bc326e; }
+.umbrella-platform--elyn { --stamp-color:#7d46b7; }
+.umbrella-platform--teapot { --stamp-color:#287a4b; }
+:global(:root:not([data-theme='light'])) .umbrella-platform--univers { --stamp-color:#f38bb8; }
+:global(:root:not([data-theme='light'])) .umbrella-platform--elyn { --stamp-color:#c49af0; }
+:global(:root:not([data-theme='light'])) .umbrella-platform--teapot { --stamp-color:#79d3a0; }
+.umbrella-platform:hover { background:color-mix(in srgb,var(--stamp-color) 10%,transparent); text-decoration:none; }
+.umbrella-platform:focus-visible { outline:2px solid currentColor; outline-offset:5px; }
+.umbrella-platform:nth-child(2) { transform:rotate(3deg); }
+.umbrella-platform:nth-child(3) { transform:rotate(-3deg); }
+.umbrella-platform::before { content:''; position:absolute; inset:4px; border:1px dashed currentColor; border-radius:50%; opacity:.55; pointer-events:none; }
+.umbrella-platform::after { content:''; position:absolute; inset:-4px; border-radius:50%; pointer-events:none; opacity:.65; background-image:radial-gradient(var(--paper) .7px,transparent 1px),radial-gradient(var(--paper) .5px,transparent .9px); background-size:7px 9px,11px 6px; background-position:0 0,3px 4px; }
+.umbrella-platform > * { margin:0!important; line-height:1.3; }
+.umbrella-platform strong { font-size:clamp(.95rem,2vw,1.35rem); letter-spacing:.04em; }
+.umbrella-platform small { font:700 clamp(.38rem,1vw,.55rem)/1.5 var(--wh-font-mono); letter-spacing:.06em; }
+.umbrella-platform span { padding-top:.25rem; border-top:1px solid currentColor; font-size:clamp(.6rem,1.2vw,.75rem); letter-spacing:.08em; }
+.umbrella-platform i { font-size:.65rem; font-style:normal; }
 .umbrella-tags { color:var(--muted); font-size:.75rem!important; }
 .umbrella-result-title span { padding:0 .15em .32em; background:linear-gradient(var(--hall-color),var(--hall-color)) left bottom / 100% .24em no-repeat; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
 .umbrella-app .umbrella-result-title { line-height:1.7; }
@@ -192,7 +204,6 @@ const hallMascots = [
 .umbrella-app .umbrella-secondary { background:color-mix(in srgb,var(--paper),var(--ink) 5%); }
 .umbrella-answers :global(button) { background:var(--paper); }
 .umbrella-app [data-umbrella-start], .umbrella-actions button { --button-depth:#a27a17; }
-.umbrella-enroll button:disabled { box-shadow:none; }
 .umbrella-folded { display:block; font-size:4rem; animation:umbrella-wiggle .4s ease-in-out infinite alternate; }
 .umbrella-app > footer { display:flex; align-items:center; flex-direction:column; gap:.4rem; padding:1.5rem .5rem; text-align:center; color:var(--muted); }
 .umbrella-app > footer strong { font:700 .8rem var(--wh-font-college); }
