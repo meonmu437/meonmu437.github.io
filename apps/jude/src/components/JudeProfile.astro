@@ -1,0 +1,205 @@
+---
+import { Image } from 'astro:assets';
+import hotelPhoto from '../assets/hotel-profile.webp';
+import FBIRecords from './FBIRecords.astro';
+import hotel from '../assets/hotel.png';
+
+const spaces = [
+  {no:'01', name:'로비 & 프런트', en:'THE FRONT DESK', text:'카드키 발급기, 황동 종, 인수인계 메모와 식은 차. 야간에는 주드가 체크인부터 소음 항의까지 혼자 처리한다.', note:'직원이 안 보이면 종을 눌러주세요.'},
+  {no:'02', name:'라운지 바', en:'AFTER THE LAST DRINK', text:'로비에서 몇 계단 내려가면 만나는 작은 바. 영업이 끝난 깊은 밤에는 창가의 업라이트 피아노 앞에 주드가 앉기도 한다.'},
+  {no:'03', name:'객실층 & 계단', en:'PLEASE MIND THE DOOR', text:'작지만 깨끗한 객실 48개. 난방과 수압에는 조금씩 운이 필요하다. 느린 엘리베이터 대신 주드는 계단을 자주 쓴다.'},
+  {no:'04', name:'후문 & 서비스 골목', en:'A LITTLE FRESH AIR', text:'빈 상자와 수거함이 놓인 좁은 골목. 인근에는 종종 짙은 회색 바이크가 세워져 있다.'},
+];
+const facts = [['나이', '31세'], ['키', '187cm'], ['출신', '오하이오 · 영국계 미국인'], ['근무', '벨윅 호텔 야간 프런트']];
+const preferences = [
+  ['🧩', '복잡한 문제', '정답보다 즉흥적인 돌파구.'],
+  ['💋', '가벼운 플러팅', '사생활 질문은 별도입니다.'],
+  ['🗝️', '손에 익은 물건', '새것보다 익숙한 쪽.'],
+  ['🫖', '홍차', '까다로운 척은 서비스.'],
+  ['🥃', '테킬라 & 럼', '술은 독한 쪽으로.'],
+  ['🎹', '재즈 & 피아노', '여기는 시카고잖아요.'],
+];
+---
+    <div class="jd-content">
+      <section class="hero wrap" id="front-desk" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="neon-sign">
+            <span class="neon-mount neon-mount-left" aria-hidden="true"></span><span class="neon-mount neon-mount-right" aria-hidden="true"></span>
+            <h1 id="hero-title" aria-label="The Bellwick Hotel"><span class="neon-the">THE</span><span class="neon-name">B<span class="neon-fault-secondary">E</span>LL<span class="neon-fault">W</span>I<span class="neon-dead">C</span>K</span><span class="neon-hotel">HOTEL</span></h1>
+          </div>
+          <p class="hero-korean">어서오세요.<br />늦은 밤에도, 프런트에는 불이 켜져 있습니다.</p>
+          <div class="bell-service">
+            <button class="service-bell" id="service-bell" type="button" aria-label="프런트 호출 종 누르기" aria-haspopup="dialog" aria-controls="bell-dialog"><span class="bell-knob"></span><span class="bell-dome"></span><span class="bell-base"></span></button>
+            <p>직원을 부르려면 종을 눌러주세요.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="clerk-section wrap section-space" id="night-clerk" aria-labelledby="clerk-title">
+        <article class="night-roster" aria-labelledby="roster-name">
+          <header class="roster-header"><h2 id="clerk-title">야간 근무표</h2><span class="roster-status">근무 중</span></header>
+          <div class="roster-person">
+            <figure class="roster-photo"><button class="image-button" type="button" data-image-src={hotelPhoto.src} data-image-alt="벨윅 호텔 근무복 차림의 주드 홀러웨이" aria-label="주드 프로필 사진 크게 보기"><Image src={hotelPhoto} alt="갈색 머리와 녹색 눈, 조끼 차림으로 웃는 주드 홀러웨이" widths={[360,600,900]} sizes="(max-width: 640px) 65vw, 220px" /></button><figcaption>담당 직원 / NIGHT CLERK</figcaption></figure>
+            <div class="roster-details"><span class="micro">NIGHT FRONT DESK</span><h3 id="roster-name">Jude <em>Holloway</em></h3><p class="roster-korean">주드 홀러웨이</p><dl class="roster-facts">{facts.map(([label,value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}</dl><div class="roster-duties"><span>담당 업무</span><p>체크인 · 카드키 발급 · 전화 응대 · 투숙객 요청</p></div></div>
+          </div>
+          <div class="roster-timeline roster-characteristics"><div><span>외모</span><p>부드럽게 흐트러진 갈색 머리와 선명한 녹색 눈. 콧등과 볼 위에는 옅은 주근깨가 흩어져 있다. 길쭉한 체형에 나른한 눈매, 웃으면 나이보다 조금 어려 보이는 얼굴.</p></div><div><span>성격</span><p>말재주가 좋고 손님 응대는 정확하다. 까다로운 요청에도 웃으며 애칭을 건네고, 한가해지면 넥타이와 셔츠 윗단추부터 푼다. 누가 들어오면 언제 그랬냐는 듯 다시 정돈한다.</p></div></div>
+          <div class="roster-clock-strip" aria-label="출근 기록: 야간 근무. 퇴근 기록은 비어 있음."><div><span>출근</span><strong>NIGHT SHIFT</strong></div><div><span>퇴근</span><i aria-hidden="true">— — : — —</i></div></div>
+          <div class="roster-notes-row">
+          <aside class="roster-manager-note"><span class="manager-note-tape" aria-hidden="true"></span><p>취급 주의. 직원도 포함.</p><p>안 보이면 <strong>‘STAFF ONLY’</strong>부터 찾아볼 것.</p><span class="manager-note-signature">— 호텔 관리인</span></aside>
+          <div class="roster-review"><div class="guest-review"><div class="guest-review-meta"><span class="guest-review-stars" aria-label="별점 5점 만점에 5점">★★★★★</span><span>투숙객 후기</span></div><p>“아무에게나 다정한 애칭을 건네는 남자.”</p></div></div>
+          </div>
+        </article>
+        <section class="handover carbon-handover" aria-labelledby="handover-title">
+          <span class="carbon-clip" aria-hidden="true"></span>
+          <header class="carbon-heading"><h3 id="handover-title">야간 인수인계</h3><span>다음 근무자에게</span></header>
+          <ul class="preference-stamps">{preferences.map(([icon,title,text]) => <li><span class="preference-icon" aria-hidden="true">{icon}</span><div><h4>{title}</h4><p>{text}</p></div><span class="preference-check" aria-hidden="true">✓</span></li>)}</ul>
+          <footer class="carbon-signature"><span>인계</span><b>J. Holloway</b></footer>
+        </section>
+      </section>
+
+      <section class="hotel-section section-space" id="hotel-guide" aria-labelledby="hotel-title">
+        <div class="wrap">
+          <header class="section-heading"><span class="section-number">02 / THE PREMISES</span><h2 id="hotel-title">A hotel with <em>character.</em></h2><p>시설은 조금 오래됐지만, 서비스에는 자신이 있습니다.</p></header>
+          <div class="hotel-intro"><p>시카고의 벨윅 호텔. 오래된 벽돌 건물, 앰버색 네온과 황동 명판. 한때 근사했던 호텔은 지금도 청결과 서비스로 품위를 지킨다. 문이 열리면 찬바람이 들어오고, 낮은 재즈가 대화 사이의 정적을 채운다.</p><div class="hotel-facts"><span><b>06</b> 층 규모</span><span><b>48</b> 객실</span><span><b>24H</b> 프런트 운영</span></div></div>
+          <div class="hotel-brochure">
+          <header class="brochure-heading"><span>THE BELLWICK HOTEL</span><h3>손님을 위한 작은 안내</h3><span class="brochure-ornament" aria-hidden="true">✦</span></header>
+          <figure class="hotel-poster"><button class="image-button" type="button" data-image-src={hotel.src} data-image-alt="벨윅 호텔 외관과 주요 공간 안내" aria-label="벨윅 호텔 안내 이미지 크게 보기"><Image src={hotel} alt="벨윅 호텔의 외관, 로비, 직원 전용실, 라운지 바와 서비스 골목을 담은 빈티지 안내 포스터" widths={[480,800,1200]} sizes="(max-width: 700px) 90vw, 740px" /></button></figure>
+          <div class="space-directory">{spaces.map(space => <article><span class="room-no">{space.no}</span><div><small class="micro">{space.en}</small><h3>{space.name}</h3><p>{space.text}</p>{space.note && <span class="space-note">{space.note}</span>}</div></article>)}</div>
+          <div class="maintenance-note"><span class="micro">MANAGEMENT NOTICE</span><p>이곳은 정상 영업 중인 호텔입니다.<br /><small>프런트 직원의 농담까지 호텔이 보증하지는 않습니다.</small></p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="staff-gate wrap section-space" id="staff-door" aria-labelledby="door-title">
+        <div class="gate-copy"><span class="section-number">03 / BEHIND THE DESK</span><h2 id="door-title">프런트 뒤에는<br />문이 하나 있습니다.</h2><p>근무표와 전기포트, 낡은 2인용 소파.<br />직원들이 쉬고, 가끔은 설명이 필요한 일이 생기는 곳.</p><p class="gate-whisper">종이 울리면, 그도 결국 나와야 하니까.</p></div>
+        <button class="staff-door" id="open-staff" type="button" aria-expanded="false" aria-controls="restricted-area"><span class="door-inset" aria-hidden="true"></span><span class="brass-sign"><small>THE BELLWICK HOTEL</small><strong>STAFF<br />ONLY</strong><span>관계자 외 출입금지</span></span><span class="door-handle" aria-hidden="true"></span><span class="door-invite">손잡이를 눌러 들어가기 ↗</span></button>
+      </section>
+
+      <FBIRecords />
+
+      <section class="checkout wrap" aria-labelledby="checkout-title"><span class="micro">UNTIL YOUR NEXT VISIT</span><h2 id="checkout-title">Stay a little <em>longer.</em></h2><p>주드의 이야기를 만날 곳.</p><div class="keycard-links" aria-label="캐릭터 채팅 링크"><a class="keycard keycard-unichat" href="https://www.univers.chat/character/b352a34f-7cd5-4628-8fe1-04108ea8cd5f"><span class="micro">THE BELLWICK</span><strong>유니챗</strong><span>체크인하기 ↗</span><i aria-hidden="true">01</i></a>{['엘린','티팟'].map((name,index) => <button type="button" disabled class="keycard"><span class="micro">THE BELLWICK</span><strong>{name}</strong><span>체크인 준비 중</span><i aria-hidden="true">0{index+2}</i></button>)}</div></section>
+    <dialog class="bell-dialog" id="bell-dialog" aria-labelledby="bell-dialog-title" aria-describedby="bell-en bell-ko">
+      <div class="bell-dialog-top"><span class="micro" id="bell-dialog-title">JUDE / NIGHT FRONT DESK</span><button type="button" class="bell-dialog-close" aria-label="대사 닫기" autofocus>×</button></div>
+      <span class="bell-dialog-ornament" aria-hidden="true">✦</span>
+      <p lang="en" id="bell-en"></p><p id="bell-ko"></p>
+      <button type="button" class="bell-dialog-dismiss">고마워요, 주드.</button>
+    </dialog>
+    <dialog class="image-viewer" aria-label="이미지 크게 보기"><button class="viewer-close" type="button" aria-label="이미지 닫기">닫기 ×</button><img src="" alt="" /></dialog>
+    </div>
+    <script>
+      const bell = document.querySelector<HTMLButtonElement>('#service-bell');
+      const bellDialog = document.querySelector<HTMLDialogElement>('#bell-dialog');
+      const replies = [
+        ['“Your key, love. Try not to lose it. I’d hate to become useful twice in one night.”', '“열쇠요, 자기. 잃어버리지 말아요. 하룻밤에 두 번이나 쓸모 있어지긴 싫으니까.”'],
+        ['“One moment, love. …There. Perfectly professional. What can I do for you?”', '“잠깐만요, 자기. …됐네. 아주 단정하죠. 뭘 도와드릴까요?”'],
+        ['“If it’s the heating, darling, I can offer sympathy. A miracle costs extra.”', '“난방 문제라면, 달링, 위로는 해드릴 수 있어요. 기적은 추가 요금이고요.”'],
+      ];
+      let replyIndex = 0;
+      bell?.addEventListener('click', () => {
+        const reply = replies[replyIndex++ % replies.length];
+        document.querySelector('#bell-en')!.textContent = reply[0];
+        document.querySelector('#bell-ko')!.textContent = reply[1];
+        bell.classList.remove('is-ringing');
+        void bell.offsetWidth;
+        bell.classList.add('is-ringing');
+        if (bellDialog && !bellDialog.open) bellDialog.showModal();
+      });
+      let bellClosing = false;
+      async function closeBellDialog() {
+        if (!bellDialog?.open || bellClosing) return;
+        bellClosing = true;
+        bellDialog.classList.add('is-closing');
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          await bellDialog.animate([
+            {opacity: 1, transform: 'translateY(0) scale(1)'},
+            {opacity: 0, transform: 'translateY(8px) scale(.985)'},
+          ], {duration: 180, easing: 'ease-in', fill: 'forwards'}).finished.catch(() => {});
+        }
+        bellDialog.close();
+        bellDialog.getAnimations().forEach(animation => animation.cancel());
+        bellDialog.classList.remove('is-closing');
+        bellClosing = false;
+      }
+      bellDialog?.querySelectorAll('button').forEach(button => button.addEventListener('click', closeBellDialog));
+      bellDialog?.addEventListener('cancel', event => { event.preventDefault(); closeBellDialog(); });
+      bellDialog?.addEventListener('click', event => { if (event.target === bellDialog) {
+        const rect = bellDialog.getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeBellDialog();
+      }});
+
+      const door = document.querySelector<HTMLButtonElement>('#open-staff');
+      const restricted = document.querySelector<HTMLElement>('#restricted-area');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let doorClosing = false;
+      door?.addEventListener('click', async () => {
+        if (!restricted || doorClosing) return;
+        if (!restricted.hidden) {
+          doorClosing = true;
+          door.setAttribute('aria-expanded', 'false');
+          door.classList.remove('is-open');
+          door.querySelector('.door-invite')!.textContent = '손잡이를 눌러 들어가기 ↗';
+          if (!reduceMotion.matches) {
+            const fade = restricted.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'ease-out', fill: 'forwards' });
+            await fade.finished;
+            const collapse = restricted.animate(
+              [{ height: `${restricted.offsetHeight}px`, overflow: 'hidden' }, { height: '0px', overflow: 'hidden' }],
+              { duration: 420, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' }
+            );
+            await collapse.finished;
+            restricted.hidden = true;
+            fade.cancel();
+            collapse.cancel();
+          } else {
+            restricted.hidden = true;
+          }
+          doorClosing = false;
+          return;
+        }
+        restricted.hidden = false;
+        door.setAttribute('aria-expanded', 'true');
+        door.classList.add('is-open');
+        door.querySelector('.door-invite')!.innerHTML = '문이 열려 있습니다<span class="door-close-hint">문을 닫아주세요 ↗</span>';
+        const heading = document.querySelector<HTMLElement>('#agent-title');
+        heading?.focus({preventScroll:true});
+        restricted.scrollIntoView({behavior: reduceMotion.matches ? 'instant' : 'smooth',block:'start'});
+      });
+      // 공통 목차에서 비공개 영역으로 이동할 때도 먼저 문을 연다.
+      const privateTargets = new Set(['agent-title', 'team-title', 'classmate-title', 'room-3a']);
+      const revealForAnchor = (hash: string) => {
+        if (!privateTargets.has(hash) || !restricted || !door) return;
+        restricted.hidden = false;
+        door.setAttribute('aria-expanded', 'true');
+        door.classList.add('is-open');
+        door.querySelector('.door-invite')!.innerHTML = '문이 열려 있습니다<span class="door-close-hint">문을 닫아주세요 ↗</span>';
+      };
+      const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('#starlight__sidebar a[href*="#"]')];
+      tocLinks.forEach(link => link.addEventListener('click', () => revealForAnchor(link.hash.slice(1))));
+      revealForAnchor(location.hash.slice(1));
+      window.addEventListener('hashchange', () => revealForAnchor(location.hash.slice(1)));
+      document.fonts.ready.then(() => {
+        const hash = decodeURIComponent(location.hash.slice(1));
+        if (hash) document.getElementById(hash)?.scrollIntoView();
+      });
+      const currentLabel = document.querySelector('#jl-toggle-current');
+      const observer = new IntersectionObserver(entries => {
+        const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        tocLinks.forEach(link => link.classList.toggle('jl-sidebar-active', link.hash === `#${visible.target.id}`));
+        const activeLink = tocLinks.find(link => link.hash === `#${visible.target.id}`);
+        if (activeLink && currentLabel) currentLabel.textContent = activeLink.textContent?.trim() || '주드';
+      }, {rootMargin:'-15% 0px -65% 0px',threshold:0});
+      document.querySelectorAll('.jd-content section[id], .jd-content h2[id], .jd-content #room-3a').forEach(section => observer.observe(section));
+
+      const viewer = document.querySelector<HTMLDialogElement>('.image-viewer');
+      const viewerImage = viewer?.querySelector('img');
+      document.querySelectorAll<HTMLButtonElement>('[data-image-src]').forEach(button => button.addEventListener('click', () => {
+        if (!viewer || !viewerImage) return;
+        viewerImage.src = button.dataset.imageSrc!;
+        viewerImage.alt = button.dataset.imageAlt || '';
+        viewer.showModal();
+      }));
+      viewer?.querySelector('button')?.addEventListener('click', () => viewer.close());
+      viewer?.addEventListener('click', event => {if(event.target === viewer) viewer.close();});
+      viewer?.addEventListener('close', () => {if(viewerImage) viewerImage.removeAttribute('src');});
+    </script>

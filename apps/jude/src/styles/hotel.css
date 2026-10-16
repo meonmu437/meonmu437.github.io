@@ -1,0 +1,647 @@
+@import './profile.css';
+@import './fbi.css';
+@import '../../../shared/AgentClassmate.css';
+
+/* 공통 소개 페이지 형식: Starlight 헤더 + 접이식 목차 + 단일 본문. */
+:root {
+  --sl-font: 'Noto Sans KR', var(--sl-font-system);
+  --sl-content-width: 54rem;
+  --sl-color-bg: #142322;
+  --sl-color-bg-nav: #172a27;
+  --sl-color-bg-sidebar: #172a27;
+  --sl-color-accent-low: #3c3627;
+  --sl-color-accent: #ddc08a;
+  --sl-color-accent-high: #f0dfbb;
+  --jd-text: #d8ded1;
+  --jd-muted: #aab7a9;
+  --jd-rule: #8c95654d;
+  --jd-panel: #21312c;
+  --jd-highlight: #e2c899;
+  --jd-heading: #eee5d2;
+  --sl-mobile-toc-height: 0rem;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--sl-nav-height) + 1.5rem);
+  overflow-x: clip;
+}
+body { background: var(--sl-color-bg); overflow-x: clip; }
+.site-title span { display: block; padding: .15rem .35rem .2rem; overflow: visible; font: 400 2.45rem/1.25 'Kristi',cursive; color: var(--sl-color-accent); transform: none; }
+.jl-site-switch .site-title { flex-shrink: 0; min-width: 4.8rem; overflow: visible; }
+.header .title-wrapper { flex-shrink: 0; min-height: 3rem; }
+.jd-content .guest-review {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+  margin: 1.2rem 0 0;
+  padding: .65rem .9rem .8rem;
+  border: 0;
+  background: #e0d5b9;
+  box-shadow: .2rem .3rem 0 #080e0c55;
+  color: #34423a;
+  transform: rotate(-1deg);
+  clip-path: polygon(0 0,100% 0,100% calc(100% - 17px),calc(100% - 17px) 100%,0 100%);
+}
+.jd-content .guest-review::after { content: ''; position: absolute; right: 0; bottom: 0; width: 17px; height: 17px; background: linear-gradient(135deg,#b4a17b 50%,transparent 51%); }
+.jd-content .guest-review-meta { display: flex; align-items: center; justify-content: space-between; gap: 1.2rem; padding-bottom: .45rem; border-bottom: 1px dashed #7d725a66; }
+.jd-content .guest-review-stars { display: inline-block; padding: .25rem .45rem; border: 1px solid #98563f88; color: #98563f; font-size: .72rem; letter-spacing: .12em; transform: rotate(-5deg); }
+.jd-content .guest-review-meta>span:last-child { color: #6f6856; font-size: .62rem; letter-spacing: .08em; }
+.jd-content .guest-review p { margin-top: .55rem; font: italic 700 .85rem/1.8 'Gowun Batang',serif; color: #354237; text-align: center; }
+@media(max-width:40rem) { .jd-content .guest-review { padding: .65rem .9rem .8rem; margin-top: 1.2rem; } }
+.content-panel:has(#_top) { display: none; }
+.content-panel + .content-panel { border-top: 0; }
+.sl-anchor-link { display: none !important; }
+.header .right-group { display: flex !important; gap: .5rem; }
+.header .social-icons, .mobile-preferences { display: none !important; }
+[data-has-sidebar] { --sl-content-inline-start: 0rem !important; }
+[data-has-sidebar] .header { padding-inline-end: var(--sl-nav-pad-x); }
+.sidebar-pane {
+  display: none;
+  visibility: visible;
+  position: fixed;
+  inset-block-start: var(--sl-nav-height);
+  inset-inline: 0;
+  width: 100%;
+  height: auto;
+  max-height: calc(100dvh - var(--sl-nav-height));
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--sl-color-bg-sidebar);
+  border-bottom: 1px solid var(--sl-color-hairline-shade);
+  box-shadow: var(--sl-shadow-md);
+}
+html.jl-sidebar-expanded .sidebar-pane { display: block; }
+.sidebar-content { height: auto; min-height: 0; }
+.jl-sidebar-active { color: var(--sl-color-text-accent) !important; font-weight: 600; }
+main[data-pagefind-body] > .content-panel > .sl-container > footer { display: none; }
+
+.jd-content { color: var(--jd-text); font-family: var(--sans); }
+.sl-markdown-content .jd-content :where(p,figure,blockquote,dl,dd,h1,h2,h3,h4,div,span,section,aside,header,article,button,a) { margin-block: 0; }
+.jd-content .wrap { width: 100%; margin-inline: 0; }
+.jd-content .section-space { padding-block: 3.5rem; }
+.jd-content section[id], .jd-content [id$='title'] { scroll-margin-top: calc(var(--sl-nav-height) + 1.5rem); }
+.jd-content .hero { gap: 2.5rem; padding-top: 2.5rem; padding-bottom: 3.5rem; }
+.jd-content .hero-copy { padding-top: 0; }
+.jd-content .hero h1 { font-size: clamp(3.5rem, 7vw, 5.5rem); color: var(--jd-heading); margin: 1.4rem 0; }
+.jd-content .hero h1 em, .jd-content .hero-korean { color: var(--jd-highlight); }
+.jd-content .hero-intro, .jd-content .bell-service p, .jd-content .bell-reply p:last-child { color: var(--jd-muted); }
+.jd-content .eyebrow, .jd-content .bell-service .micro, .jd-content .bell-reply p:first-child { color: var(--jd-highlight); }
+.jd-content .hero-rule { margin-block: 1.5rem; }
+.jd-content .hero-bottom { padding-top: 1.2rem; border-color: var(--jd-rule); color: var(--jd-muted); }
+.jd-content .bell-service { margin-top: 1.5rem; }
+.jd-content .bell-reply { margin-top: 1rem; }
+.jd-content .hero-portrait { margin-top: 1.5rem; }
+.jd-content .hero-portrait figcaption strong { font-size: 1.7rem; }
+.jd-content .hero-portrait figcaption small { font-size: .5rem; }
+.jd-content .hotel-strip { margin: 0; padding: .85rem 1rem; font-size: .5rem; letter-spacing: .09em; gap: 1rem; }
+.jd-content .hotel-strip span:last-child, .jd-content .hotel-strip i:last-of-type { display: none; }
+.jd-content .clerk-section, .jd-content .hotel-section, .jd-content .staff-gate,
+.jd-content .safehouse-section, .jd-content .checkout { background: transparent; box-shadow: none; clip-path: none; color: var(--jd-text); }
+.jd-content .clerk-section:before { content: none; }
+.jd-content .hotel-section, .jd-content .staff-gate, .jd-content .team-section,
+.jd-content .safehouse-section, .jd-content .stay-section, .jd-content .checkout { border-top: 1px solid var(--jd-rule); }
+.jd-content .section-heading { margin-bottom: 2rem; }
+.jd-content .section-heading h2 { font-size: clamp(2.3rem,5vw,3.3rem); color: var(--jd-heading); }
+.jd-content .section-heading h2 em, .jd-content .restricted-area .section-heading h2 em { color: var(--jd-highlight); }
+.jd-content .section-heading>p, .jd-content .restricted-area .section-heading>p { color: var(--jd-muted); margin-top: .8rem; }
+.jd-content .section-number { display: none; }
+.jd-content .clerk-layout { grid-template-columns: 16rem minmax(0,1fr); gap: 2rem; }
+.jd-content .clerk-copy>.lead { margin-bottom: 1.3rem; }
+.jd-content .clerk-copy>p+p { margin-top: 1rem; }
+.jd-content .clerk-copy>.lead em { color: var(--jd-highlight); }
+.jd-content .dialogue { margin-block: 1.7rem; border-color: var(--jd-rule); padding-block: 1.2rem; }
+.jd-content .dialogue p:first-child { color: var(--jd-highlight); font-size: 1.7rem; }
+.jd-content .dialogue p:last-child { color: var(--jd-muted); margin-top: .7rem; }
+.jd-content .employee-pass .micro { margin-bottom: 1rem; }
+.jd-content .employee-pass h3 { margin: 1.5rem 0 1rem; font-size: 3.1rem; }
+.jd-content .employee-pass h3 em { white-space: nowrap; }
+.jd-content .dialogue { border-inline: 0; padding-inline: 0; }
+.jd-content .employee-pass .pass-job { margin: 1rem 0 .5rem; }
+.jd-content .employee-pass dl { margin-top: .7rem; }
+.jd-content .employee-pass .pass-bottom { margin-top: 1rem; }
+.jd-content .handover { margin-top: 2.5rem; border-color: var(--jd-rule); }
+.jd-content .habit-grid { margin-top: 1.5rem; }
+.jd-content .habit-grid h4 { margin: .7rem 0 .5rem; }
+.jd-content .habit-grid p, .jd-content .habit-grid small, .jd-content .handover-heading>.micro { color: var(--jd-muted); }
+.jd-content .habit-grid article { border-color: var(--jd-rule); }
+.jd-content .hotel-intro { gap: 2rem; margin-bottom: 2rem; }
+.jd-content .hotel-facts { border-color: var(--jd-rule); }
+.jd-content .hotel-facts b { color: var(--jd-highlight); }
+.jd-content .hotel-facts span { color: var(--jd-muted); font: 500 .9rem/1.6 'Noto Sans KR',sans-serif; letter-spacing: 0; }
+.jd-content .hotel-poster { max-width: 36rem; margin: 0 auto 2rem; }
+.jd-content .hotel-brochure { position: relative; padding: 2.4rem 2rem 1.8rem; color: #373b32; background: linear-gradient(90deg,transparent 49.7%,#89765016 50%,transparent 50.3%),repeating-linear-gradient(0deg,#ffffff09 0 2px,#8c785b08 2px 3px),#e9dfc7; box-shadow: 0 12px 25px #0003, inset 0 0 35px #90765018; }
+.jd-content .brochure-heading { position: relative; text-align: center; padding-bottom: 1.6rem; margin-bottom: 1.6rem; border-bottom: 3px double #9a845c; }
+.jd-content .brochure-heading>span:first-child { font: 600 clamp(1.2rem,4vw,1.8rem)/1.4 var(--serif); letter-spacing: .12em; color: #51452e; }
+.jd-content .brochure-heading h3 { margin: .7rem 0 0; font: 700 1rem/1.6 'Gowun Batang',serif; color: #4e4b3c; }
+.jd-content .brochure-ornament { position: absolute; bottom: -.8rem; left: 50%; transform: translateX(-50%); padding: 0 .8rem; color: #967343; background: #e9dfc7; }
+.jd-content .hotel-brochure .hotel-poster { max-width: 100%; margin-bottom: 1.4rem; box-shadow: none; }
+.jd-content .hotel-brochure .space-directory article { border-color: #9a845c66; }
+.jd-content .hotel-brochure .space-directory h3 { color: #333e35; font-family: 'Gowun Batang',serif; }
+.jd-content .hotel-brochure .space-directory p { color: #565443; }
+.jd-content .hotel-brochure .space-directory .micro { color: #7e6846; font-size: .6rem; }
+.jd-content .hotel-brochure .space-note { color: #854d3b; font-size: .78rem; }
+.jd-content .hotel-brochure .maintenance-note { border: 0; border-top: 3px double #9a845c; max-width: none; padding: 1.4rem 0 0; color: #454536; }
+.jd-content .hotel-brochure .maintenance-note .micro { color: #7c6141; }
+.jd-content .hotel-brochure .maintenance-note small { color: #716451; }
+@media(max-width: 600px) {
+  .jd-content .hotel-brochure { padding: 1.6rem 1.1rem; }
+  .jd-content .hotel-brochure .space-directory { grid-template-columns: 1fr; }
+  .jd-content .hotel-brochure .space-directory article { gap: .6rem; padding: 1.3rem 0; }
+}
+.jd-content .space-directory { gap: 0 2rem; }
+.jd-content .space-directory article { border-color: var(--jd-rule); }
+.jd-content .space-directory h3 { margin: .6rem 0 .8rem; }
+.jd-content .space-directory p, .jd-content .space-directory .micro { color: var(--jd-muted); }
+.jd-content .space-note { margin-top: .8rem; color: var(--jd-highlight); }
+.jd-content .maintenance-note { margin: 1rem auto 0; border-color: var(--jd-rule); }
+.jd-content .maintenance-note p { margin-top: .6rem; }
+.jd-content .maintenance-note small { color: var(--jd-muted); }
+.jd-content .staff-gate { gap: 2.5rem; }
+.jd-content .gate-copy>p { margin-top: 1.2rem; color: var(--jd-muted); }
+.jd-content .gate-copy>.gate-whisper { color: var(--jd-highlight); }
+.jd-content .staff-door { max-width: 260px; height: 350px; }
+.jd-content .door-close-hint { display: block; margin-top: .4rem; font-size: .8rem; font-weight: 600; color: #ffe3a6; text-decoration: underline; text-underline-offset: .2em; }
+@media (prefers-reduced-motion: no-preference) {
+  html, body, .page, header.header, .sidebar-pane { transition: background-color .55s ease; }
+}
+.jd-content .brass-sign { top: 30px; padding: 20px 10px; gap: 12px; }
+.jd-content .brass-sign strong { font-size: 2.2rem; }
+.jd-content .door-handle { bottom: 75px; }
+.jd-content .restricted-area { background: transparent; color: var(--jd-text); }
+.jd-content .restricted-top { border-block: 1px solid var(--jd-rule); background: var(--jd-panel); padding-inline: 1rem; }
+.jd-content .restricted-top>.wrap { padding-block: .9rem; }
+.jd-content .restricted-top button, .jd-content .restricted-top span { color: var(--jd-highlight); }
+.jd-content .agent-file { padding-inline: 1.3rem; }
+.jd-content .agent-layout { grid-template-columns: 11rem minmax(0,1fr); gap: 1.8rem; }
+.jd-content .agent-layout h3 { font-size: 2.5rem; margin: 1rem 0 .5rem; }
+.jd-content .agent-facts { margin-top: 1.2rem; }
+.jd-content .file-summary { margin-top: .6rem; }
+.jd-content .incident-note blockquote p:last-child { margin-top: .6rem; }
+.jd-content .field-notes { gap: 2rem; margin-top: 2rem; }
+.jd-content .field-notes h3 { margin: 1rem 0; }
+.jd-content .field-notes p, .jd-content .team-intro, .jd-content .colleague-grid article>p:not(.colleague-role) { color: var(--jd-muted); }
+.jd-content .field-notes h3 em { color: var(--jd-highlight); }
+.jd-content .team-intro { margin-bottom: 2rem; }
+.jd-content .colleague-grid h3 { margin: 1rem 0 .4rem; }
+.jd-content .colleague-role { color: var(--jd-highlight); margin-bottom: 1rem; }
+.jd-content .colleague-grid .micro { color: var(--jd-muted); }
+.jd-content .colleague-grid .colleague-foot { color: var(--jd-highlight)!important; margin-top: 1rem; }
+.jd-content .text-link { color: var(--jd-highlight); }
+.jd-content .colleague-grid .text-link { margin-top: 1rem; }
+.jd-content .safehouse-intro { gap: 2rem; margin-bottom: 2rem; }
+.jd-content .safehouse-intro p, .jd-content .room-notes p { color: var(--jd-muted); }
+.jd-content .safehouse-plan { max-width: 36rem; margin-inline: auto; background: #142827; }
+.jd-content .room-notes { gap: 1.5rem; margin-top: 2rem; }
+.jd-content .room-notes h3 { margin: 1rem 0 .7rem; }
+.jd-content .stay-section { grid-template-columns: 165px minmax(0,1fr); gap: 3.5rem; }
+.jd-content .stay-copy h2 { color: var(--jd-heading); font-size: 2.9rem; margin-bottom: 1.5rem; }
+.jd-content .stay-copy h2 em, .jd-content .stay-copy .dialogue p:first-child { color: var(--jd-highlight); }
+.jd-content .stay-copy>p, .jd-content .stay-copy .dialogue p:last-child { color: var(--jd-muted); }
+.jd-content .door-hanger { min-height: 300px; padding-top: 85px; box-shadow: 5px 6px 0 #0002; }
+.jd-content .door-hanger strong { font-size: 1.9rem; margin-block: 1.1rem; }
+.jd-content .return-row { padding-bottom: 2rem; }
+.jd-content .return-row>span { color: var(--jd-muted); }
+.jd-content .checkout { padding-block: 3rem 1rem; }
+.jd-content .checkout h2 { font-size: 3.2rem; color: var(--jd-heading); margin: 1rem 0; }
+.jd-content .checkout h2 em { color: var(--jd-highlight); }
+.jd-content .checkout>p { color: var(--jd-muted); }
+.jd-content .keycard-links { gap: .8rem; margin-top: 1.8rem; }
+.jd-content .keycard { padding: 1.2rem 1.2rem 3.1rem; min-height: 135px; background: repeating-linear-gradient(0deg,#ffffff07 0 1px,transparent 1px 3px),linear-gradient(125deg,#aa8249,#dfc28b 40%,#c4a064 68%,#ad854c); border: 1px solid #b7955f; color: #30271c; box-shadow: inset 0 1px 0 #f7dfae,0 4px 9px #0003; }
+.jd-content .keycard:after { background: #534b40; }
+.jd-content .keycard-unichat:after { background: #e56b9e; }
+.jd-content a.keycard:hover { text-decoration: none; filter: brightness(1.07); }
+.jd-content a.keycard:focus-visible { outline: 2px solid #e56b9e; outline-offset: 4px; }
+@media(max-width:49.9375rem) {
+  .header div:has(> #jl-toc-toggle) { flex: 1; min-width: 0; }
+  #jl-toggle-current { max-width: 9rem; }
+}
+@media(max-width:40rem) {
+  .jd-content .hero { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 1.5rem; }
+  .jd-content .hero h1 { font-size: 4.5rem; }
+  .jd-content .hero-portrait { max-width: 19rem; width: 80%; }
+  .jd-content .hero-portrait figcaption { grid-template-columns: 1fr; }
+  .jd-content .clerk-layout, .jd-content .hotel-intro, .jd-content .space-directory,
+  .jd-content .staff-gate, .jd-content .agent-layout, .jd-content .field-notes,
+  .jd-content .colleague-grid, .jd-content .safehouse-intro, .jd-content .room-notes,
+  .jd-content .stay-section { grid-template-columns: 1fr; gap: 1.8rem; }
+  .jd-content .section-space { padding-block: 2.8rem; }
+  .jd-content .employee-pass { width: min(17rem,90%); }
+  .jd-content .agent-layout figure { width: 65%; }
+  .jd-content .incident-note { grid-template-columns: 1fr; }
+  .jd-content .colleague-grid article { padding-inline: 0; }
+  .jd-content .colleague-grid article+article { padding: 1.5rem 0 0; border-left: 0; border-top: 1px solid var(--jd-rule); }
+  .jd-content .stay-copy h2 { font-size: 2.5rem; }
+  .jd-content .keycard-links { grid-template-columns: 1fr; max-width: 19rem; margin-inline: auto; }
+  .jd-content .keycard { aspect-ratio: 2.1; }
+}
+@media(prefers-reduced-motion:reduce) { :root { scroll-behavior: auto; } }
+
+/* 야간 전용 인트로와 직원 근무표. */
+:root { color-scheme: dark; }
+.jd-content .hero {
+  display: block;
+  padding-block: 3.5rem 2.5rem;
+  text-align: center;
+}
+.jd-content .hero-copy { max-width: 39rem; margin-inline: auto; }
+.jd-content .eyebrow { justify-content: center; }
+.jd-content .hero h1 { font-size: clamp(3.6rem, 7vw, 5.4rem); margin-block: 1.6rem 1.2rem; }
+.jd-content .hero-rule { margin: 1.6rem auto; max-width: 16rem; }
+.jd-content .hero-rule::before { content: ''; flex: 1; height: 1px; background: #c8a56c50; }
+.jd-content .bell-service { justify-content: center; text-align: left; margin-top: 1.6rem; }
+.jd-content .bell-reply { max-width: 34rem; margin: 1.1rem auto 0; padding: 0; border-left: 0; min-height: 6.5rem; }
+.jd-content .hero-bottom { margin-top: 1.8rem; text-align: left; }
+.jd-content .clerk-layout { display: block; margin-top: 2.7rem; }
+.jd-content .clerk-copy-title { font-size: 1rem; font-weight: 600; color: var(--jd-highlight); margin-bottom: 1.2rem; }
+.jd-content .night-roster {
+  position: relative;
+  padding: 1.7rem 1.8rem 1.2rem;
+  background: #29332e;
+  border: 1px solid #bca6755e;
+  box-shadow: .35rem .45rem 0 #0c191870;
+  color: #dedfcd;
+}
+.jd-content .night-roster::before {
+  content: '';
+  position: absolute;
+  top: -.8rem;
+  left: 2rem;
+  width: 1.2rem;
+  height: 2.9rem;
+  border: 3px solid #a79f87;
+  border-radius: .65rem .65rem .3rem .3rem;
+  box-shadow: 2px 0 0 #101c1888, inset 2px 0 0 #101c1888;
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+.jd-content .roster-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: 1.2rem; border-bottom: 3px double #bba77d6b; }
+.jd-content .roster-header .micro { color: #b5ac8f; font-size: .48rem; }
+.jd-content .roster-header h3 { font-size: 1.35rem; font-weight: 500; letter-spacing: .1em; color: #e1cc9e; margin-top: .4rem; }
+.jd-content .roster-header h2 { font: 500 1.35rem/1.6 var(--sans); letter-spacing: .1em; color: #e1cc9e; }
+.jd-content .roster-review { display: flex; justify-content: flex-end; padding: .2rem .2rem .3rem; }
+.jd-content .roster-review .guest-review { position: relative; margin-top: 1.2rem; }
+.jd-content .roster-review .guest-review::before { content: ''; position: absolute; top: 0; left: 39%; width: 3.6rem; height: .7rem; background: #c9b780a6; transform: rotate(3deg); }
+.jd-content .roster-status { display: inline-flex; align-items: center; gap: .45rem; flex-shrink: 0; border: 1px solid #a9b69070; padding: .4rem .65rem; font-size: .65rem; color: #c2cdb0; transform: rotate(3deg); }
+.jd-content .roster-status i { width: .35rem; height: .35rem; background: #b8c28f; border-radius: 50%; }
+.jd-content .roster-person { display: grid; grid-template-columns: 12rem minmax(0,1fr); gap: 2rem; align-items: center; padding-block: 1.6rem; }
+.jd-content .roster-photo { padding: .4rem .4rem 0; border: 1px solid #aaa1816b; background: #1c2823; transform: rotate(-1.5deg); }
+.jd-content .roster-photo img { width: 100%; height: auto; }
+.jd-content .roster-photo figcaption { padding: .55rem .2rem; font: .46rem/1.5 var(--mono); letter-spacing: .05em; color: #b3b49d; text-align: center; }
+.jd-content .roster-details { min-width: 0; }
+.jd-content .roster-details>.micro { color: #a8ad91; font-size: .52rem; }
+.jd-content .roster-details h3 { font: 500 clamp(2.3rem,4.5vw,3.5rem)/1.1 var(--serif); color: #efe4cd; margin: .6rem 0 .35rem; }
+.jd-content .roster-details h3 em { color: #d3b47f; }
+.jd-content .roster-korean { font-size: .78rem; letter-spacing: .12em; color: #b7bea9; }
+.jd-content .roster-facts { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.2rem; margin-top: 1.2rem; }
+.jd-content .roster-facts>div { display: flex; flex-direction: column; gap: .3rem; padding-block: .65rem; border-top: 1px solid #aeb19533; min-width: 0; }
+.jd-content .roster-facts dt { font-size: .6rem; color: #a9b29a; }
+.jd-content .roster-facts dd { font-size: .79rem; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; }
+.jd-content .roster-duties { margin-top: .7rem; padding-top: .85rem; border-top: 1px solid #aeb19566; }
+.jd-content .roster-duties>span { font-size: .6rem; color: #b9bd9c; }
+.jd-content .roster-duties p { margin-top: .35rem; font-size: .76rem; line-height: 1.9; }
+.jd-content .roster-timeline { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border-block: 1px solid #aeb19555; }
+.jd-content .roster-timeline>div { padding: 1rem; border-right: 1px solid #aeb19533; }
+.jd-content .roster-timeline>div:first-child { padding-left: 0; }
+.jd-content .roster-timeline>div:last-child { border-right: 0; padding-right: 0; }
+.jd-content .roster-timeline span { display: block; font-size: .62rem; color: #c9b482; margin-bottom: .5rem; }
+.jd-content .roster-timeline strong { font-size: .85rem; font-weight: 500; }
+.jd-content .roster-timeline p { font-size: .67rem; line-height: 1.8; margin-top: .4rem; color: #adb49e; }
+.jd-content .roster-footer { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 1rem; font-size: .65rem; color: #aab09c; }
+.jd-content .roster-scribble { color: #c9b18b; transform: rotate(-2deg); font-style: italic; }
+@media(max-width:40rem) {
+  .jd-content .hero { padding-block: 2.2rem 2rem; }
+  .jd-content .hero h1 { font-size: clamp(3.2rem,13vw,4.5rem); }
+  .jd-content .hero-korean { font-size: .72rem; }
+  .jd-content .hero-intro { font-size: .8rem; }
+  .jd-content .bell-reply { min-height: 7rem; }
+  .jd-content .bell-reply p:first-child { font-size: 1.25rem; }
+  .jd-content .night-roster { padding: 1.3rem 1rem 1rem; }
+  .jd-content .roster-header { gap: .6rem; }
+  .jd-content .roster-header .micro { font-size: .4rem; }
+  .jd-content .roster-header h3 { font-size: 1.12rem; }
+  .jd-content .roster-header h2 { font-size: 1.12rem; }
+  .jd-content .roster-status { font-size: .58rem; padding: .35rem .5rem; }
+  .jd-content .roster-person { grid-template-columns: 1fr; gap: 1.3rem; padding-block: 1.4rem; }
+  .jd-content .roster-photo { width: 65%; max-width: 13rem; justify-self: center; }
+  .jd-content .roster-details h3 { font-size: clamp(2.4rem,9vw,3.3rem); }
+  .jd-content .roster-facts { gap: 0 1rem; }
+  .jd-content .roster-facts dd { font-size: .76rem; }
+  .jd-content .roster-timeline { grid-template-columns: 1fr; }
+  .jd-content .roster-timeline>div, .jd-content .roster-timeline>div:first-child, .jd-content .roster-timeline>div:last-child { display: grid; grid-template-columns: 4.5rem 1fr; gap: .3rem .6rem; padding: .8rem 0; border-right: 0; border-bottom: 1px solid #aeb19533; }
+  .jd-content .roster-timeline>div:last-child { border-bottom: 0; }
+  .jd-content .roster-timeline span { grid-row: 1/3; margin: 0; align-self: center; }
+  .jd-content .roster-timeline strong { font-size: .8rem; }
+  .jd-content .roster-timeline p { margin: 0; }
+  .jd-content .roster-footer { flex-direction: column; align-items: flex-start; gap: .6rem; }
+}
+
+/* 짙은 벽돌 외벽에 걸린, 조금 오래된 앰버색 네온 간판. */
+.jd-content .hero { padding-block: 3.6rem 3rem; }
+.jd-content .hero-copy { max-width: 44rem; }
+.jd-content .neon-sign {
+  position: relative;
+  isolation: isolate;
+  padding: 2.5rem 1.5rem 2.2rem;
+  margin: 0 auto 2rem;
+  border: 1px solid #806841;
+  border-radius: 7rem 7rem .5rem .5rem / 2rem 2rem .5rem .5rem;
+  background: radial-gradient(ellipse at 50% 55%,#553c2029,transparent 75%),linear-gradient(120deg,#151c18,#1c2420 50%,#101c19);
+  box-shadow: inset 0 0 0 6px #131b17,inset 0 0 0 7px #9a774051,0 12px 28px #0005,0 0 55px #d28c3212;
+}
+.jd-content .neon-sign::before {
+  content: '';
+  position: absolute;
+  inset: 15px;
+  border: 2px solid #bc8648;
+  border-radius: 6rem 6rem .2rem .2rem / 1.5rem 1.5rem .2rem .2rem;
+  box-shadow: 0 0 3px #eab477,0 0 11px #a65a2e55,inset 0 0 10px #bd773f25;
+  opacity: .75;
+  z-index: -1;
+}
+.jd-content .neon-sign::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-radial-gradient(circle at 18% 35%,#f7dfaa12 0 .5px,transparent .8px 3px);
+  background-size: 5px 7px;
+  mix-blend-mode: soft-light;
+  opacity: .3;
+  pointer-events: none;
+}
+.jd-content .neon-mount { position: absolute; top: -2rem; width: 5px; height: 2rem; background: linear-gradient(90deg,#060e0b,#627063,#142119); z-index: -2; }
+.jd-content .neon-mount-left { left: 19%; }
+.jd-content .neon-mount-right { right: 19%; }
+.jd-content .hero .neon-sign h1 { margin: 0; color: #ffe3b3; text-shadow: 0 0 2px #fff1d4,0 0 8px #efba75aa,0 0 24px #e9a55388,0 0 55px #c576263d; font-weight: 500; line-height: 1; }
+.jd-content .neon-the { display: block; font-size: .95rem; letter-spacing: .5em; padding-left: .5em; color: #dbb27b; }
+.jd-content .neon-name { display: block; font-size: clamp(2.7rem,7.7vw,5.6rem); letter-spacing: .06em; padding-left: .06em; margin-block: .8rem!important; }
+.jd-content .neon-hotel { display: inline-block; font-family: var(--mono); font-size: 1.1rem; font-weight: 400; letter-spacing: .65em; padding-left: .65em; color: #f2c185; }
+.jd-content .neon-fault { animation: neon-contact 4s linear infinite; }
+.jd-content .neon-fault-secondary { animation: neon-contact-secondary 6s linear -2s infinite; }
+.jd-content .neon-dead { color: #514333; text-shadow: none; -webkit-text-stroke: .5px #826442; }
+@keyframes neon-contact-secondary {
+  0%,18%,20%,22%,64%,66%,100% { opacity: 1; }
+  19% { opacity: .58; text-shadow: 0 0 2px #b97c42; }
+  21% { opacity: .78; text-shadow: 0 0 5px #d99248; }
+  65% { opacity: .68; text-shadow: 0 0 3px #b97c42; }
+}
+.jd-content .hero-korean { font: italic 700 1rem/2 'Gowun Batang',serif; color: #d8c8a5; letter-spacing: .02em; }
+.jd-content .hero .bell-service { flex-direction: column; gap: .6rem; text-align: center; margin-top: 1.7rem; }
+.jd-content .hero .bell-service p { font-size: .73rem; margin: 0; color: var(--jd-muted); }
+.jd-content .bell-dialog {
+  position: fixed;
+  inset: 0;
+  width: min(33rem,calc(100% - 2.5rem));
+  max-height: calc(100dvh - 3rem);
+  overflow: auto;
+  margin: auto;
+  padding: 1.3rem 2rem 1.7rem;
+  background: #1d2b27;
+  color: #e9ddc2;
+  border: 1px solid #b8a06b;
+  box-shadow: 0 0 0 5px #12211d,0 0 0 6px #90774b55,0 20px 80px #0008;
+  text-align: center;
+}
+.jd-content .bell-dialog::backdrop { background: #070f0de0; backdrop-filter: blur(5px); }
+.jd-content .bell-dialog-top { display: flex; align-items: center; justify-content: space-between; gap: .7rem; padding-bottom: .8rem; border-bottom: 1px solid #b8a06b44; }
+.jd-content .bell-dialog-top .micro { color: #b9a477; font-size: .52rem; letter-spacing: .1em; }
+.jd-content .bell-dialog-close { display: grid; place-items: center; flex-shrink: 0; width: 2rem; height: 2rem; border: 0; background: transparent; color: #c7b58d; font-size: 1.6rem; line-height: 1; padding: 0; }
+.jd-content .bell-dialog-ornament { display: block; margin: 1.5rem 0 1rem; font-size: .8rem; color: #c8a56c; }
+.jd-content .bell-dialog #bell-en { font: italic 1.9rem/1.3 var(--serif); color: #e7c995; text-wrap: pretty; }
+.jd-content .bell-dialog #bell-ko { margin-top: 1.1rem; color: #b8c1ae; font-size: .85rem; line-height: 1.9; }
+.jd-content .bell-dialog-dismiss { display: block; margin: 1.8rem auto 0; padding: .65rem 1rem; border: 1px solid #a28b5d77; background: transparent; color: #d4bc8f; font-size: .72rem; }
+.jd-content .bell-dialog-dismiss:hover, .jd-content .bell-dialog-close:hover { background: #d3b07412; }
+body:has(.bell-dialog[open]) { overflow: hidden; }
+@keyframes neon-contact {
+  0%,35%,37%,39%,78%,80%,100% { opacity: 1; }
+  36%,38% { opacity: .65; text-shadow: 0 0 3px #b97c42; }
+  79% { opacity: .82; }
+}
+@media(max-width:40rem) {
+  .jd-content .hero { padding-block: 3rem 2.4rem; }
+  .jd-content .neon-sign { padding: 2rem 1.1rem 1.8rem; margin-bottom: 1.6rem; }
+  .jd-content .neon-sign::before { inset: 11px; }
+  .jd-content .neon-name { font-size: clamp(2.35rem,10.5vw,4rem); letter-spacing: .035em; padding-left: .035em; }
+  .jd-content .neon-the { font-size: .7rem; }
+  .jd-content .neon-hotel { font-size: .8rem; }
+  .jd-content .hero-korean { font-size: .88rem; }
+  .jd-content .hero .bell-service p { font-size: .68rem; }
+  .jd-content .bell-dialog { padding: 1rem 1.3rem 1.4rem; }
+  .jd-content .bell-dialog #bell-en { font-size: 1.65rem; }
+  .jd-content .bell-dialog #bell-ko { font-size: .79rem; }
+}
+@media(prefers-reduced-motion:reduce) { .jd-content :is(.neon-fault,.neon-fault-secondary) { animation: none; } }
+
+/* 구역 경계: 두 줄의 황동 레일과 양끝의 작은 고정 나사. */
+.jd-content :is(.clerk-section,.hotel-section,.staff-gate,.agent-section,.team-section,.safehouse-section,.stay-section,.checkout) {
+  position: relative;
+  border-top: 0;
+}
+.jd-content :is(.clerk-section,.hotel-section,.staff-gate,.agent-section,.team-section,.safehouse-section,.stay-section,.checkout)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  z-index: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+  background:
+    radial-gradient(circle,#4d432e 0 1px,#b6a075 1.5px 3px,#655132 3.5px 4px,transparent 4.5px) left center / 12px 12px no-repeat,
+    radial-gradient(circle,#4d432e 0 1px,#b6a075 1.5px 3px,#655132 3.5px 4px,transparent 4.5px) right center / 12px 12px no-repeat,
+    linear-gradient(to bottom,transparent 3px,#a18a59 3px,#b6a071 4px,transparent 4px 8px,#685839 8px,#95805b 9px,transparent 9px) center / calc(100% - 28px) 100% no-repeat;
+  opacity: .78;
+}
+.jd-content .staff-gate::after {
+  content: 'STAFF ONLY';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%,-50%) rotate(-1deg);
+  padding: .4rem 1.25rem;
+  border: 3px double #b49a68;
+  background: linear-gradient(120deg,#aa8e5a,#ccb483 45%,#b59a66);
+  color: #29342a;
+  box-shadow: 0 2px 5px #0005;
+  font: 600 .57rem/1.4 var(--mono);
+  letter-spacing: .18em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.jd-content .hero { padding-bottom: 3.5rem; }
+.jd-content .bell-dialog[open] { animation: bell-modal-in 300ms cubic-bezier(.2,.75,.25,1) both; }
+.jd-content .bell-dialog[open]::backdrop { animation: bell-backdrop-in 250ms ease-out both; }
+.jd-content .bell-dialog.is-closing { animation: none; }
+.jd-content .bell-dialog.is-closing::backdrop { animation: bell-backdrop-out 180ms ease-in both; }
+@keyframes bell-modal-in { from { opacity: 0; transform: translateY(16px) scale(.975); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes bell-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bell-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@media(prefers-reduced-motion:reduce) { .jd-content .bell-dialog::backdrop { animation: none!important; } }
+@media(max-width:40rem) {
+  .jd-content .hero { padding-bottom: 2.8rem; }
+  .jd-content .staff-gate::after { font-size: .5rem; padding: .35rem .9rem; }
+}
+
+/* 타임레코더에 끼워 넣는 낡은 종이 출근 카드. */
+.jd-content .night-roster {
+  max-width: 42rem;
+  margin-inline: auto;
+  padding: 1.7rem 2.4rem 1.3rem;
+  border: 0;
+  border-radius: .2rem;
+  background:
+    radial-gradient(ellipse at 0 0,#8e704326,transparent 55%),
+    repeating-radial-gradient(circle at 30% 20%,#806e4610 0 .5px,transparent .9px 3px) 0 0 / 7px 9px,
+    #dfd4b5;
+  box-shadow: .25rem .4rem 0 #0003,0 12px 28px #0003;
+  color: #3e4435;
+  clip-path: polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);
+}
+.jd-content .night-roster::before,
+.jd-content .night-roster::after {
+  content: '';
+  position: absolute;
+  top: 1.2rem;
+  bottom: 1.2rem;
+  left: .5rem;
+  width: .8rem;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: radial-gradient(circle,var(--sl-color-bg) 0 3px,#aa987755 3.4px 4px,transparent 4.4px) center top / .8rem 1.4rem repeat-y;
+  box-shadow: none;
+  transform: none;
+  pointer-events: none;
+}
+.jd-content .night-roster::after { left: auto; right: .5rem; }
+.jd-content .roster-header { padding-block: .2rem 1rem; border-bottom: 3px double #756c4f; }
+.jd-content .roster-header h2 { color: #424832; font: 700 1.4rem/1.6 'Gowun Batang',serif; letter-spacing: .18em; }
+.jd-content .roster-status { border: 2px solid #8c3729; border-radius: 0; padding: .25rem .6rem; color: #8c3729; font-size: .75rem; font-weight: 700; letter-spacing: .12em; transform: rotate(-7deg); opacity: 1; }
+.jd-content .roster-person { grid-template-columns: 13rem minmax(0,1fr); gap: 1.5rem; padding-block: 1.5rem; }
+.jd-content .roster-photo { padding: .25rem .25rem 0; border: 1px solid #a79a77; background: #ede5ce; box-shadow: .1rem .15rem .2rem #58482b33; transform: rotate(-2deg); }
+.jd-content .roster-photo figcaption { color: #514934; font-size: .64rem; font-weight: 600; line-height: 1.65; }
+.jd-content .roster-details>.micro { color: #645034; font-size: .65rem; font-weight: 600; }
+.jd-content .roster-details h3 { font: 700 clamp(1.7rem,3.6vw,2.25rem)/1.15 'Courier Prime',monospace; color: #354033; }
+.jd-content .roster-details h3 em { color: inherit; font-style: normal; font-weight: inherit; }
+.jd-content .roster-korean { color: #414a35; font-size: .9rem; font-weight: 500; }
+.jd-content .roster-facts { margin-top: 1rem; column-gap: .8rem; }
+.jd-content .roster-facts>div { border-top: 0; border-bottom: 1px solid #9c947366; padding-block: .5rem; }
+.jd-content .roster-facts dt { color: #5d5139; font-size: .7rem; font-weight: 700; }
+.jd-content .roster-facts dd { color: #283424; font-size: .94rem; font-weight: 600; line-height: 1.65; }
+.jd-content .roster-duties { border: 0; padding-top: .2rem; }
+.jd-content .roster-duties>span { color: #5d5139; font-size: .7rem; font-weight: 700; }
+.jd-content .roster-duties p { color: #35412c; font-size: .88rem; font-weight: 500; }
+.jd-content .roster-timeline { display: block; border-block: 2px solid #7e795c; }
+.jd-content .roster-timeline>div,
+.jd-content .roster-timeline>div:first-child,
+.jd-content .roster-timeline>div:last-child { display: grid; grid-template-columns: 5rem 1fr; gap: .3rem 1rem; padding: .7rem .4rem; border-right: 0; border-bottom: 1px solid #9c947377; }
+.jd-content .roster-timeline>div:last-child { border-bottom: 0; }
+.jd-content .roster-timeline span { grid-row: 1/3; align-self: center; margin: 0; color: #833c2c; font: 700 .8rem/1.5 'Gowun Batang',serif; }
+.jd-content .roster-timeline strong { color: #2d3926; font-size: .94rem; }
+.jd-content .roster-timeline p { color: #57543d; font-size: .8rem; margin: 0; }
+.jd-content .roster-clock-strip { display: grid; grid-template-columns: 1fr 1fr; margin-top: 1.3rem; padding: .3rem; border: 3px double #756144; background: #d7c59f; box-shadow: inset 0 0 0 1px #9c855955; }
+.jd-content .roster-clock-strip>div { position: relative; display: grid; grid-template-rows: auto minmax(4.5rem,auto); align-items: center; min-height: 6.8rem; padding: 0; background: #e5d8b7; text-align: center; }
+.jd-content .roster-clock-strip>div+div { border-left: 1px dashed #876f4e; }
+.jd-content .roster-clock-strip span { display: block; margin: 0; padding: .45rem .3rem; border-bottom: 2px solid #756144; background: #bda77b; font: 700 .88rem/1.5 'Gowun Batang',serif; letter-spacing: .35em; text-indent: .35em; color: #3d3d2a; }
+.jd-content .roster-clock-strip strong { display: inline-block; justify-self: center; margin: .85rem .3rem; padding: .35rem .55rem .25rem; border: 3px double #963d2c; color: #963d2c; font: 700 1.1rem/1.3 'Courier Prime',monospace; letter-spacing: -.04em; transform: rotate(-7deg); text-shadow: 1px 0 #99463633; box-shadow: 1px 1px 0 #963d2c22; }
+.jd-content .roster-clock-strip i { justify-self: center; margin: .85rem .3rem; padding: .3rem .1rem; border-bottom: 1px dotted #907b55; color: #706147; font: 1rem/1.5 'Courier Prime',monospace; letter-spacing: .04em; }
+.jd-content .roster-review { padding-bottom: .1rem; }
+.jd-content .roster-review .guest-review { background: #eeeadc; box-shadow: .12rem .2rem 0 #64573c33; transform: rotate(1.5deg); }
+.jd-content .roster-review .guest-review p { font-size: .9rem; color: #2b382c; }
+.jd-content .roster-review .guest-review-meta>span:last-child { font-size: .7rem; color: #534b38; }
+.jd-content .roster-characteristics>div { align-items: start; }
+.jd-content .roster-characteristics>div>span { grid-row: auto; align-self: start; padding-top: .2rem; }
+.jd-content .roster-characteristics>div>p { color: #38432e; font-size: .88rem; font-weight: 500; line-height: 1.9; }
+.jd-content .roster-manager-note { position: relative; width: fit-content; max-width: 100%; margin: 1.5rem 0 .3rem; padding: 1rem 1.1rem .7rem; background: #d2d9bb; color: #354537; box-shadow: .12rem .2rem .3rem #50472a33; transform: rotate(-1.4deg); }
+.jd-content .manager-note-tape { position: absolute; top: -.4rem; left: 35%; width: 4rem; height: .9rem; background: #ede6c7a6; transform: rotate(4deg); }
+.jd-content .roster-manager-note p { font: 400 1.3rem/1.6 'Nanum Pen Script','Noto Sans KR',sans-serif; color: #344733; }
+.jd-content .roster-manager-note strong { font-weight: 400; text-decoration: underline; text-decoration-color: #8a473e99; text-underline-offset: .15em; }
+.jd-content .manager-note-signature { display: block; margin-top: .5rem; text-align: right; color: #5b6851; font-size: .65rem; }
+.jd-content .roster-notes-row { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 1rem; margin-top: 1.5rem; padding-bottom: .3rem; }
+.jd-content .roster-notes-row .roster-manager-note { width: 100%; min-width: 0; margin: 0; }
+.jd-content .roster-notes-row .roster-review { min-width: 0; padding: 0; }
+.jd-content .roster-notes-row .guest-review { width: 100%; margin: 0; }
+@media(max-width:40rem) { .jd-content .roster-notes-row { grid-template-columns: 1fr; gap: 1.3rem; } }
+.jd-content .handover-sheet { margin-top: 2.5rem; padding: 1.3rem; border: 1px solid #a49b7c; background: #d7d6c1; color: #354338; box-shadow: .2rem .3rem 0 #0003; }
+.jd-content .handover-sheet-header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1rem; padding-bottom: 1rem; }
+.jd-content .handover-sheet-header h3 { font: 700 1.15rem/1.6 'Gowun Batang',serif; letter-spacing: .08em; color: #344435; }
+.jd-content .handover-sheet-header>span { font-size: .7rem; color: #5b6651; }
+.jd-content .handover-table-scroll { overflow-x: auto; }
+.jd-content .handover-table { display: table; width: 100%; margin: 0; border-collapse: collapse; table-layout: fixed; font-size: .83rem; line-height: 1.8; }
+.jd-content .handover-table tr { background: transparent; }
+.jd-content .handover-table :is(th,td) { padding: .85rem .7rem; border: 1px solid #87907a; text-align: left; vertical-align: middle; color: #344034; }
+.jd-content .handover-table thead th { padding-block: .5rem; background: #bbc2a9; font-size: .72rem; font-weight: 700; letter-spacing: .04em; }
+.jd-content .handover-table th:first-child { width: 16%; }
+.jd-content .handover-table th:nth-child(2) { width: 27%; }
+.jd-content .handover-table th:last-child { width: 10%; text-align: center; }
+.jd-content .handover-table tbody th { font-size: .76rem; font-weight: 500; background: #cbd0b84d; }
+.jd-content .handover-table td:last-child { text-align: center; }
+.jd-content .handover-check { display: inline-block; color: #7d4939; font: 400 1.5rem/1 'Nanum Pen Script',cursive; transform: rotate(-10deg); }
+.jd-content .handover-sheet-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .8rem 2rem; padding-top: 1rem; font-size: .7rem; color: #53604b; }
+.jd-content .handover-sheet-footer>span { display: inline-flex; align-items: baseline; gap: .7rem; }
+.jd-content .handover-sheet-footer b { font: 400 1.6rem/1 'Kristi',cursive; color: #34493a; }
+.jd-content .handover-sheet-footer i { display: inline-block; width: 5rem; border-bottom: 1px solid #7c856f; }
+@media(max-width:40rem) {
+  .jd-content .handover-sheet { padding: 1rem .7rem; }
+  .jd-content .handover-table :is(th,td) { padding: .65rem .4rem; font-size: .77rem; overflow-wrap: anywhere; }
+  .jd-content .handover-table thead th { font-size: .65rem; }
+  .jd-content .handover-table th:first-child { width: 19%; }
+  .jd-content .handover-table th:nth-child(2) { width: 28%; }
+  .jd-content .handover-table th:last-child { width: 12%; }
+}
+
+/* 뜯어 쓰는 연청색 복사지 인수인계장. */
+.jd-content .carbon-handover { position: relative; max-width: 42rem; margin: 2.7rem auto 0; padding: 2.2rem 1.8rem 1.2rem; border: 0; background: repeating-radial-gradient(circle at 20% 30%,#6d58380b 0 .5px,transparent .8px 3px) 0 0 / 7px 9px,#ebe2ce; box-shadow: .2rem .3rem 0 #b5a484, .3rem .45rem 0 #0003; color: #403b30; transform: rotate(.25deg); }
+.jd-content .carbon-handover::before { content: ''; position: absolute; top: .65rem; left: .5rem; right: .5rem; border-top: 1px dashed #9a886699; }
+.jd-content .carbon-clip { position: absolute; top: -.75rem; left: 1.6rem; width: 1.05rem; height: 2.8rem; border: 2px solid #8b8d7e; border-radius: .6rem .6rem .35rem .35rem; background: transparent; box-shadow: 1px 1px 1px #3c352c55; transform: rotate(-9deg); pointer-events: none; }
+.jd-content .carbon-clip::after { content: ''; position: absolute; top: .45rem; left: .2rem; width: .5rem; height: 1.9rem; border: 2px solid #a5a793; border-top: 0; border-radius: 0 0 .35rem .35rem; }
+.jd-content .carbon-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-bottom: .9rem; border-bottom: 2px solid #9d8a66; }
+.jd-content .carbon-heading h3 { font: 700 1.12rem/1.6 'Gowun Batang',serif; color: #49442e; letter-spacing: .06em; }
+.jd-content .carbon-heading>span { font-size: .7rem; color: #76674e; }
+.jd-content .carbon-notes>div { display: grid; grid-template-columns: 4.3rem minmax(0,1fr); gap: 1rem; padding: .95rem .1rem; border-bottom: 1px solid #a18c6766; }
+.jd-content .carbon-notes dt { padding-top: .1rem; font: 700 .76rem/1.9 'Courier Prime','Nanum Gothic Coding',monospace; color: #66543b; }
+.jd-content .carbon-notes dd { position: relative; padding-right: 1.6rem; font: 400 .9rem/1.95 'Courier Prime','Nanum Gothic Coding',monospace; color: #37392b; word-break: keep-all; overflow-wrap: anywhere; }
+.jd-content .carbon-check { position: absolute; right: 0; top: .1rem; font: 400 1.6rem/1 'Nanum Pen Script',cursive; color: #73594b; transform: rotate(-13deg); }
+.jd-content .carbon-notes>div:nth-child(2n) .carbon-check { transform: rotate(8deg); }
+.jd-content .carbon-signature { display: flex; align-items: baseline; justify-content: flex-end; gap: 1rem; padding-top: 1.2rem; }
+.jd-content .carbon-signature>span { font-size: .65rem; color: #76674e; }
+.jd-content .carbon-signature b { font: 400 2rem/1 'Kristi',cursive; color: #51472e; transform: rotate(-6deg); }
+.jd-content .preference-stamps { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 1.5rem; list-style: none; padding: 0; margin: 0; }
+.jd-content .preference-stamps li { position: relative; display: grid; grid-template-columns: 2rem minmax(0,1fr); align-items: center; gap: .65rem; min-width: 0; margin: 0; padding: 1.1rem 1rem 1.1rem 0; border-bottom: 1px solid #a18c6766; }
+.jd-content .preference-icon { display: inline-block; font-size: 1.65rem; line-height: 1.3; transform: rotate(-9deg); filter: saturate(.65); }
+.jd-content .preference-stamps li:nth-child(2n) .preference-icon { transform: rotate(7deg); }
+.jd-content .preference-stamps h4 { font: 700 1rem/1.6 'Gowun Batang',serif; color: #3a3b29; }
+.jd-content .preference-stamps p { margin-top: .35rem; font: 400 .85rem/1.8 'Noto Sans KR',sans-serif; color: #62583f; }
+.jd-content .preference-check { position: absolute; right: 0; top: 1rem; color: #8b352c; font: 700 1.55rem/1 Arial,sans-serif; transform: rotate(-12deg); }
+@media(max-width:40rem) {
+  .jd-content .preference-stamps { gap: 0 .8rem; }
+  .jd-content .preference-stamps li { grid-template-columns: 1fr; gap: .45rem; align-content: start; padding-block: .9rem; }
+  .jd-content .preference-icon { width: fit-content; font-size: 1.6rem; }
+  .jd-content .preference-stamps h4 { font-size: .93rem; }
+  .jd-content .preference-stamps p { font-size: .82rem; }
+}
+@media(max-width:40rem) {
+  .jd-content .carbon-handover { padding: 1.8rem 1rem 1rem; }
+  .jd-content .carbon-heading { gap: .6rem; }
+  .jd-content .carbon-heading h3 { font-size: 1rem; }
+  .jd-content .carbon-heading>span { font-size: .65rem; }
+  .jd-content .carbon-notes>div { grid-template-columns: 3.1rem minmax(0,1fr); gap: .65rem; }
+  .jd-content .carbon-notes dt { font-size: .7rem; }
+  .jd-content .carbon-notes dd { font-size: .87rem; padding-right: 1.2rem; }
+}
+@media(max-width:40rem) {
+  .jd-content .night-roster { padding: 1.2rem 1.6rem 1rem; }
+  .jd-content .night-roster::before { left: .25rem; }
+  .jd-content .night-roster::after { right: .25rem; }
+  .jd-content .roster-header h2 { font-size: 1.15rem; letter-spacing: .1em; }
+  .jd-content .roster-person { grid-template-columns: 1fr; gap: 1.1rem; }
+  .jd-content .roster-photo { width: 85%; max-width: 16rem; }
+  .jd-content .roster-details h3 { font-size: 1.85rem; }
+  .jd-content .roster-timeline>div,
+  .jd-content .roster-timeline>div:first-child,
+  .jd-content .roster-timeline>div:last-child { grid-template-columns: 4.3rem 1fr; gap: .25rem .5rem; }
+  .jd-content .roster-facts dd { font-size: .9rem; }
+  .jd-content .roster-clock-strip>div { padding: 0; }
+  .jd-content .roster-clock-strip strong { font-size: .94rem; padding-inline: .3rem; }
+  .jd-content .roster-clock-strip i { font-size: .88rem; }
+}
