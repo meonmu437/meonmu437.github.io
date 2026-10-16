@@ -11,6 +11,7 @@ import TrailerIntro from '../../components/TrailerIntro.astro';
 import ReceiptReveal from '../../components/ReceiptReveal.astro';
 import martProfile from '../../assets/julian/mart-profile.webp';
 import fbiProfile from '../../assets/julian/fbi-profile.webp';
+import judeFbiProfile from '../../../../jude/src/assets/fbi-profile.webp';
 import villageMap from '../../assets/julian/village-map.png';
 import martMap from '../../assets/julian/mart-map-v2.png';
 import safehouse from '../../assets/julian/safehouse.png';
@@ -277,10 +278,13 @@ Backroom은 줄리안이 소속된 FBI 소규모 현장팀의 비공식 별칭�
 
 ## 🗃️ ACADEMY CLASSMATE
 
-<div class="jl-file-card" data-tab="Academy File">
+<div class="jl-file-card jl-classmate-card" data-tab="Academy File">
+	<div class="jl-classmate-photo"><Image src={judeFbiProfile} alt="주드 홀러웨이 FBI 증명사진" widths={[160, 320, 480]} sizes="136px" data-full-src={judeFbiProfile.src} /></div>
+	<div class="jl-classmate-copy">
 	<p class="jl-file-card-name">Jude Holloway</p>
 	<p class="jl-file-card-role">31세 · Special Agent</p>
 	<p class="jl-file-card-bio">영국계 미국인으로 시카고 지부 소속, 줄리안의 FBI 아카데미 동기이자 라이벌. 결과를 위해 자기 몸도 아끼지 않는 무모함 때문에 줄리안과 자주 충돌했다. 현재 호텔 프런트 직원으로 위장 근무 중이지만, 잦은 사고로 임시 가옥을 전전하고 있다.</p>
+	</div>
 </div>
 
 </div>

@@ -1,0 +1,10 @@
+/* 서로의 아카데미 동기 카드에 사용하는 공통 증명사진 배치. */
+.jl-file-card.jl-classmate-card { display: grid; grid-template-columns: 8rem minmax(0,1fr); align-items: start; gap: 1.3rem; }
+.jl-classmate-card .jl-classmate-photo { position: relative; width: 8rem; max-width: 100%; padding: .3rem; background: #eeeae0; box-shadow: .15rem .2rem .35rem #0005; transform: rotate(-1deg); }
+.jl-classmate-card .jl-classmate-photo img { display: block; width: 100%; height: auto; margin: 0; cursor: zoom-in; }
+.jl-classmate-card .jl-classmate-photo button { display: block; width: 100%; padding: 0; border: 0; background: transparent; }
+.jl-classmate-card .jl-classmate-copy { min-width: 0; }
+@media(max-width:40rem) {
+  .jl-file-card.jl-classmate-card { grid-template-columns: 1fr; gap: 1.1rem; }
+  .jl-classmate-card .jl-classmate-photo { justify-self: center; width: 8.5rem; }
+}
