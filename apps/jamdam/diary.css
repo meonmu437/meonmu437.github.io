@@ -262,6 +262,23 @@ body {
 .post-body a { color: #397b88; }
 .post-body img { max-width: 100%; border-radius: .25rem; box-shadow: .15rem .2rem 0 var(--shadow); }
 .post-body pre { overflow-x: auto; padding: .8rem; border: 1px solid #ded0b4; border-radius: .2rem; background: #f5ecd9; }
+.post-body { min-width: 0; overflow-x: auto; }
+.post-body table {
+	width: 100%;
+	margin: 1rem 0;
+	border-collapse: collapse;
+	border: 1px solid #a38b6b;
+	background: var(--paper);
+	font: inherit;
+}
+.post-body th,
+.post-body td {
+	border: 1px solid #a38b6b;
+	padding: .55rem .75rem;
+	vertical-align: middle;
+	overflow-wrap: anywhere;
+}
+.post-body th { background: #eee3cd; font-weight: 600; }
 
 .anon-reactions { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px dashed rgba(116,91,66,.34); }
 .anon-reactions-row { display: flex; flex-wrap: wrap; gap: .55rem; }
