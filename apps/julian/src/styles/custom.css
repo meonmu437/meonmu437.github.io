@@ -1962,6 +1962,20 @@ html.jl-sidebar-expanded .sidebar-pane {
 	color: var(--jl-file-red);
 }
 
+.jl-classmate-card a.jl-jude-checkin {
+	display: inline-block;
+	margin-top: 1rem;
+	padding: .55rem .85rem;
+	border: 1px solid #a3834f;
+	background: #c3a36c;
+	color: #30271c;
+	box-shadow: 0 2px 0 #725737;
+	font: 500 .78rem/1.6 'Noto Sans KR',sans-serif;
+	text-decoration: none;
+}
+.jl-classmate-card a.jl-jude-checkin:hover { background: #d2b781; }
+.jl-classmate-card a.jl-jude-checkin:focus-visible { outline: 2px solid #e3c995; outline-offset: 3px; }
+
 .jl-file-card-bio {
 	margin: 0;
 	font-size: 0.82rem;
