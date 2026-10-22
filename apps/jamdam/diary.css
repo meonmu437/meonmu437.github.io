@@ -39,7 +39,8 @@ body { min-height: 100vh; display: block; margin: 0; padding: 50px 22px 65px; ba
 .post-row:hover .post-title { color: #b74030; background: none; text-decoration: none; }
 .post-meta { display: block; margin: 17px 0 0; padding-top: 10px; border-top: 1px dashed #b9a27b88; color: var(--muted); font-size: 11px; }
 .post-row.is-pinned { background: #fff7d8; }
-.post-row.is-pinned::after { content: '필독!'; display: block; position: absolute; top: -13px; right: 8px; padding: 3px 9px; border: 2px solid #b74030; border-radius: 50%; color: #b74030; background: #fff7d8; font: 400 20px/1.3 'SSRONET Handwritten',sans-serif; transform: rotate(10deg); }
+.post-row.is-pinned::before { width: 17px; height: 17px; top: -7px; left: 50%; border: 1px solid #8f2b23; border-radius: 50%; background: #bb4334; box-shadow: inset 3px 3px 0 #e9876b,inset -2px -2px 0 #942e25,2px 5px 3px #4d352544; transform: translateX(-50%); }
+.post-row.is-pinned::after { content: ''; display: block; position: absolute; z-index: 2; top: -3px; left: calc(50% - 4px); width: 5px; height: 4px; border-radius: 50%; background: #ffdcc7; transform: rotate(-25deg); pointer-events: none; }
 .pin-icon { display: none; }
 .state-msg { grid-column: 1/-1; color: var(--muted); font: 400 20px/1.7 'SSRONET Handwritten',sans-serif; }
 #pagination { margin-top: 25px; }
