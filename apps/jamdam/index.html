@@ -261,24 +261,24 @@
 </style>
 <link rel="stylesheet" href="diary.css" />
 </head>
-<body>
+<body class="post-index">
 	<div class="terminal">
-		<span class="diary-sticker diary-sticker--dog" aria-hidden="true">🐶</span>
-		<span class="diary-sticker diary-sticker--alien" aria-hidden="true">👾</span>
+
+
 		<div class="titlebar">
 			<div class="dots">
 				<span class="dot red"></span>
 				<span class="dot yellow"></span>
 				<span class="dot green"></span>
 			</div>
-			<div class="titlebar-label">잡담 노트</div>
+			<div class="titlebar-label">식당 알림판</div>
 		</div>
 		<div class="screen">
 			<div class="line prompt">
-				오늘 떠오른 이야기와 메모를 모아 두는 페이지. ✎
+				주인장이 그때그때 써 붙이는 이야기.
 			</div>
 			<div class="toolbar">
-				<a href="../" class="back-link">&larr; 대문으로 돌아가기</a>
+				<a href="../" class="back-link">&larr; 차림표로 돌아가기</a>
 				<a
 					href="https://github.com/meonmu437/meonmu437.github.io/discussions/new?category=%EC%9E%A1%EB%8B%B4"
 					id="new-post-link"
@@ -286,7 +286,7 @@
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					+ 새 글 쓰기
+					+ 알림 붙이기
 				</a>
 			</div>
 			<div id="category-tabs" class="category-tabs"></div>
@@ -304,7 +304,7 @@
 		// GitHub Discussions의 실제 "핀" 상태는 GraphQL로만 조회 가능하고 GraphQL은
 		// 토큰 인증이 필요해서, 정적 페이지에서 안전하게 가져올 방법이 없다. 대신
 		// 여기 번호만 적어두면 그 글이 목록 맨 위에 고정된다. discussion 번호는
-		// 글 URL(.../discussions/번호) 또는 "+ 새 글 쓰기"로 만든 뒤 주소창에서 확인.
+		// 글 URL(.../discussions/번호) 또는 "+ 알림 붙이기"로 만든 뒤 주소창에서 확인.
 		var PINNED_IDS = [6, 12];
 
 		function escapeHtml(s) {
@@ -353,8 +353,7 @@
 						'" data-slug="' +
 						escapeHtml(c.slug) +
 						'">' +
-						categoryEmoji(c.emoji) +
-						' ' +
+						'<span class="laminated-emoji" aria-hidden="true">' + categoryEmoji(c.emoji) + '</span> ' +
 						escapeHtml(c.name) +
 						'</button>'
 					);
@@ -418,8 +417,8 @@
 						'" href="post.html?id=' +
 						p.number +
 						'">' +
-						'<span class="post-category-sticker" aria-hidden="true">' +
-						(categoryEmoji(p.category.emoji) || '📌') +
+						'<span class="post-category-sticker">' +
+						'<span class="laminated-emoji" aria-hidden="true">' + (categoryEmoji(p.category.emoji) || '📌') + '</span> ' + escapeHtml(p.category.name) +
 						'</span>' +
 						'<span class="post-title">' +
 						(isPinned ? '<span class="pin-icon" aria-label="고정된 글">📌</span>' : '') +
@@ -427,9 +426,7 @@
 						'</span>' +
 						'<span class="post-meta">' +
 						formatDate(p.created_at) +
-						' · 댓글 ' +
-						p.comments +
-						'개</span>' +
+						'</span>' +
 						'</a>'
 					);
 				})
@@ -498,7 +495,7 @@
 				});
 
 				if (posts.length === 0) {
-					listEl.innerHTML = '<p class="state-msg">아직 글이 없어요. "+ 새 글 쓰기"로 첫 글을 남겨보세요.</p>';
+					listEl.innerHTML = '<p class="state-msg">아직 글이 없어요. "+ 알림 붙이기"로 첫 글을 남겨보세요.</p>';
 					return;
 				}
 

@@ -227,21 +227,21 @@
 </style>
 <link rel="stylesheet" href="diary.css" />
 </head>
-<body>
+<body class="post-detail">
 	<div class="terminal">
-		<span class="diary-sticker diary-sticker--dog" aria-hidden="true">🐶</span>
-		<span class="diary-sticker diary-sticker--alien" aria-hidden="true">👾</span>
+
+
 		<div class="titlebar">
 			<div class="dots">
 				<span class="dot red"></span>
 				<span class="dot yellow"></span>
 				<span class="dot green"></span>
 			</div>
-			<div class="titlebar-label">잡담 노트</div>
+			<div class="titlebar-label">식당 알림판</div>
 		</div>
 		<div class="screen">
 			<div class="line prompt">
-				<a href="index.html" class="prompt-path-link"><span class="path">잡담 노트</span></a><span class="sep"> / </span>
+				<a href="index.html" class="prompt-path-link"><span class="path">식당 알림판</span></a><span class="sep"> / </span>
 				<span id="post-command"></span>
 			</div>
 
@@ -337,7 +337,7 @@
 					return (
 						'<button type="button" class="anon-reaction-btn" data-key="' +
 						r.key +
-						'"><span>' +
+						'"><span class="laminated-emoji">' +
 						r.emoji +
 						'</span><span class="anon-reaction-count" data-count-for="' +
 						r.key +
