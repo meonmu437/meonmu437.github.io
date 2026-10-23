@@ -258,9 +258,11 @@ main[data-pagefind-body] > .content-panel > .sl-container > footer { display: no
 .jd-content .keycard:after { background: #534b40; }
 .jd-content .keycard-unichat:after { background: #e56b9e; }
 .jd-content .keycard-elyn:after { background: #9870cf; }
+.jd-content .keycard-teapot:after { background: #5b9c70; }
 .jd-content a.keycard:hover { text-decoration: none; filter: brightness(1.07); }
 .jd-content a.keycard:focus-visible { outline: 2px solid #e56b9e; outline-offset: 4px; }
 .jd-content a.keycard-elyn:focus-visible { outline-color: #9870cf; }
+.jd-content a.keycard-teapot:focus-visible { outline-color: #5b9c70; }
 @media(max-width:49.9375rem) {
   .header div:has(> #jl-toc-toggle) { flex: 1; min-width: 0; }
   #jl-toggle-current { max-width: 9rem; }
