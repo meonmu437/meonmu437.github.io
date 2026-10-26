@@ -129,8 +129,18 @@ function renderSelectionLayer(lines,top,lineHeight,size,font,height){
 }
 function readCardSelection(){
  const selection=window.getSelection();if(!selection?.rangeCount||selection.isCollapsed)return null;const range=selection.getRangeAt(0);
- const endpoint=(node,offset)=>{const span=(node.nodeType===Node.TEXT_NODE?node.parentElement:node)?.closest('[data-start]');if(!span||!$('selection-layer').contains(span))return null;return Number(span.dataset.start)+(node.nodeType===Node.TEXT_NODE?offset:(offset?span.textContent.length:0));};
- const start=endpoint(range.startContainer,range.startOffset),end=endpoint(range.endContainer,range.endOffset);return start!==null&&end!==null&&end>start?{start,end}:null;
+ let start=null,end=null;
+ for(const span of $('selection-layer').querySelectorAll('[data-start]')){
+  const text=span.firstChild;if(!text||!range.intersectsNode(text))continue;
+  let from=Number(span.dataset.start),to=Number(span.dataset.end);
+  if(range.startContainer===text)from+=range.startOffset;
+  else if(range.startContainer===span&&range.startOffset>=span.childNodes.length)continue;
+  if(range.endContainer===text)to=Number(span.dataset.start)+range.endOffset;
+  else if(range.endContainer===span&&range.endOffset===0)continue;
+  if(to<=from)continue;
+  if(start===null)start=from;end=to;
+ }
+ return start!==null&&end>start?{start,end}:null;
 }
 document.addEventListener('selectionchange',()=>{const source=$('source');if(document.activeElement===source&&source.selectionEnd>source.selectionStart){selectedRange={start:source.selectionStart,end:source.selectionEnd};}else{const range=readCardSelection();if(range)selectedRange=range;}updateSelectionButtons();});
 for(const [id,dialogue] of [['mark-dialogue',true],['mark-narration',false]]){
