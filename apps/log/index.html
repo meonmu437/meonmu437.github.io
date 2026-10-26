@@ -180,10 +180,14 @@ async function generate(){
   ctx.fillStyle=subtitle?palette.decoration:$('dialogue').value;ctx.font=headingFont;titleLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,titleTop+i*58));ctx.fillStyle=$('narration').value;ctx.font='400 24px "Noto Sans KR"';captionLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,captionTop+i*38));
   ctx.textAlign='left';ctx.font=`400 ${size}px "${font}"`;
   lines.forEach((line,i)=>{
-   const top=bodyTop+i*lineHeight;let stroke=null;
+   const top=bodyTop+i*lineHeight;
+   const descent=ctx.measureText(line.map(unit=>unit.char).join('')).actualBoundingBoxDescent;
+   const inkBottom=Number.isFinite(descent)?descent:size*1.2;
+   let stroke=null;
    const flush=()=>{
     if(!stroke)return;
-    const thickness=Math.max(5,size*.22),x=margin+stroke.x,y=top+size*1.18;
+    const thickness=Math.max(5,size*.22),x=margin+stroke.x;
+    const y=top+Math.max(size*1.18,inkBottom+Math.max(3,size*.1)+thickness/2+1);
     ctx.save();ctx.strokeStyle=stroke.color;ctx.globalAlpha=.82;ctx.lineWidth=thickness;ctx.lineCap='round';
     ctx.beginPath();ctx.moveTo(x+thickness/2,y);ctx.bezierCurveTo(x+stroke.width*.3,y-.6,x+stroke.width*.72,y+.8,x+Math.max(thickness/2,stroke.width-thickness/2),y+.3);ctx.stroke();
     ctx.globalAlpha=.18;ctx.lineWidth=Math.max(1,thickness*.22);ctx.beginPath();ctx.moveTo(x+thickness/2,y+thickness*.22);ctx.lineTo(x+Math.max(thickness/2,stroke.width-thickness/2),y+thickness*.22+.3);ctx.stroke();ctx.restore();stroke=null;
@@ -219,15 +223,18 @@ function showPhoto(file){
 async function sharePhoto(file){
  if(!canSharePhoto(file)){showPhoto(file);return;}
  try{await navigator.share({files:[file]});}
- catch(error){if(error.name!=='AbortError')showPhoto(file);}
+ catch(error){if(error.name!=='AbortError'){alert('사진 저장 창을 열지 못했어요. 이미지를 길게 눌러 저장하거나 PNG로 저장해 주세요.');showPhoto(file);}}
 }
 $('save-photo').addEventListener('click',async()=>{
- if(photoFile&&!previewDirty){sharePhoto(photoFile);return;}
- if(previewDirty)await generate();if(previewDirty||$('card').hidden)return;
- const token=generation,file=await photoPromise;
- if(token!==generation||previewDirty)return;
- if(file)showPhoto(file);else $('copy-status').textContent='사진을 준비하지 못했어요. 다시 시도해 주세요.';
+ try{
+  if(photoFile&&!previewDirty){await sharePhoto(photoFile);return;}
+  if(previewDirty)await generate();if(previewDirty||$('card').hidden)throw new Error('Photo not ready');
+  const token=generation,file=await photoPromise;
+  if(token!==generation||previewDirty)return;
+  if(file)showPhoto(file);else throw new Error('Photo unavailable');
+ }catch(error){$('status').textContent='';$('copy-status').textContent='';alert('사진을 준비하지 못했어요. 다시 시도하거나 PNG로 저장해 주세요.');}
 });
+$('photo-image').addEventListener('error',()=>{if(photoUrl)alert('사진을 불러오지 못했어요. 창을 닫고 다시 시도하거나 PNG로 저장해 주세요.');});
 $('photo-share').addEventListener('click',()=>{if(dialogPhoto)sharePhoto(dialogPhoto);});
 $('photo-close').addEventListener('click',()=>$('photo-dialog').close());
 $('photo-dialog').addEventListener('close',()=>{if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl=null;dialogPhoto=null;$('photo-image').removeAttribute('src');});
