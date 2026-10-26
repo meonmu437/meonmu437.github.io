@@ -20,6 +20,7 @@
 .header-options{display:flex;flex-wrap:wrap;gap:9px 18px;border:1px solid #d5c6ad;border-radius:3px;margin:16px 0 0;padding:10px 12px}.header-options legend{font-size:12px;color:#615f4c;padding:0 5px}.header-options label{display:inline-flex;align-items:center;gap:5px;margin:0}.header-options input{accent-color:#2c6147}
 .header-toggle-row{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:12px}.header-toggle-row .header-switch{gap:4px;font-size:clamp(10px,1.5vw,12px);white-space:nowrap}.header-toggle-row input{margin:0;flex-shrink:0}.header-toggle-row .header-switch span{font-size:9px}
 .source-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px}.source-actions button{font-size:12px;padding:6px 12px;flex-shrink:0}.source-count{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.photo-dialog{width:min(760px,calc(100% - 24px));max-height:90dvh;overflow:auto;border:1px solid #b4a48b;padding:18px;background:#fffaf0;color:#293e32}.photo-dialog::backdrop{background:#18251fd1}.photo-dialog img{display:block;width:100%;height:auto;margin-top:14px;user-select:auto;-webkit-touch-callout:default}.photo-dialog .actions{margin-top:12px}.photo-dialog p{font-size:13px;line-height:1.7}
 .theme-toggle{display:inline-flex;gap:3px;padding:3px;border:1px solid #d5c6ad;border-radius:5px;background:#f1e9d8}.theme-toggle button{border:0;padding:6px 18px;border-radius:3px;background:transparent;color:#80715b}.theme-toggle button[aria-pressed=true]{background:#2c6147;color:#fffaf0}
 input[type=range]{width:100%;height:30px;margin:0;accent-color:#2c6147;cursor:pointer}output{display:inline-block;min-width:26px;margin-left:6px;padding:0 5px;color:#2c6147;background:#e5ecd9;text-align:center;border-radius:3px}
 @font-face{font-family:'SSRONET Handwritten';src:url('https://cdn.jsdelivr.net/gh/sweetherofonts/fontshero_pack4/ssronethandwritten/ssronethandwritten-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
@@ -75,9 +76,10 @@ main{max-width:1320px;width:min(1320px,100% - 36px)}
 <fieldset class="tool-group"><legend>글자색</legend><button type="button" class="secondary" id="mark-dialogue" disabled>대사색 적용</button><button type="button" class="secondary" id="mark-narration" disabled>지문색 적용</button></fieldset>
 <fieldset class="tool-group"><legend>밑줄</legend><label class="highlight-picker" for="highlight-color">색상 <input type="color" id="highlight-color" value="#ffe16b"></label><button type="button" class="secondary" id="mark-highlight" disabled>밑줄 긋기</button><button type="button" class="secondary" id="remove-highlight" disabled>밑줄 지우기</button></fieldset>
 <fieldset class="tool-group"><legend>지우기</legend><button type="button" class="secondary" id="erase-selection" disabled>선택 부분 지우개</button><button type="button" class="secondary" id="reset-marks" disabled>전체 초기화</button></fieldset>
-</div><p class="help" id="selection-status" role="status">먼저 문장을 드래그해 선택해 주세요.</p><p class="help">카드 본문에서 문장을 드래그한 뒤 글자색이나 밑줄을 적용하세요. 입력창에서도 선택할 수 있어요.</p><div class="actions"><button type="button" class="primary" id="save" disabled>WebP로 저장</button><button type="button" class="secondary" id="save-png" disabled>PNG로 저장</button><button type="button" class="secondary" id="copy" disabled>이미지 복사</button></div><p class="status" id="copy-status" role="status"></p></fieldset><p class="help" id="preview-note">텍스트와 설정을 바꾸면 미리보기에 자동으로 반영됩니다.</p></section>
+</div><p class="help" id="selection-status" role="status">먼저 문장을 드래그해 선택해 주세요.</p><p class="help">카드 본문에서 문장을 드래그한 뒤 글자색이나 밑줄을 적용하세요. 입력창에서도 선택할 수 있어요.</p><div class="actions"><button type="button" class="primary" id="save" disabled>WebP로 저장</button><button type="button" class="primary" id="save-png" disabled>PNG로 저장</button><button type="button" class="primary" id="save-photo" disabled>사진으로 저장</button><button type="button" class="primary" id="copy" disabled>이미지 복사</button></div><p class="status" id="copy-status" role="status"></p></fieldset><p class="help" id="preview-note">텍스트와 설정을 바꾸면 미리보기에 자동으로 반영됩니다.</p></section>
  </div>
 </main>
+<dialog id="photo-dialog" class="photo-dialog" aria-labelledby="photo-heading"><h2 id="photo-heading">사진으로 저장</h2><p id="photo-help">이미지를 길게 눌러 ‘사진에 저장’ 또는 ‘이미지 저장’을 선택하세요. 컴퓨터에서는 마우스 오른쪽 버튼으로 저장할 수 있어요.</p><div class="actions"><button type="button" class="primary" id="photo-share" hidden>공유창 열기</button><button type="button" class="secondary" id="photo-close">닫기</button></div><img id="photo-image" alt="사진으로 저장할 발췌 카드"></dialog>
 <script src="themes.js"></script>
 <script>
 const $=id=>document.getElementById(id);
@@ -95,7 +97,7 @@ const presets=[
  {description:"바닷바람에서 소금 냄새가 나는 작은 항구도시",theme:'yunhaesi',name:'윤해시',title:'윤해시',icon:'🌊',accent:'#3e7b91',paper:'#f4f5eb',ink:'#4a5659'},
  {description:'',theme:'plain',name:'기본 카드',title:'',icon:'📝',paper:'#ffffff',accent:'#30343b',ink:'#50545c'},
 ];
-let selected=presets[0],generation=0,previewTimer,previewDirty=false,themeMode='dark',manualRanges=[],highlights=[],selectedRange=null;
+let selected=presets[0],generation=0,previewTimer,previewDirty=false,themeMode='dark',manualRanges=[],highlights=[],selectedRange=null,photoFile=null,photoPromise=null,photoUrl=null,dialogPhoto=null;
 presets.forEach((p,index)=>{const button=document.createElement('button');button.type='button';button.className='character';button.setAttribute('aria-pressed',String(index===0));const name=document.createElement('span');name.textContent=p.icon+' '+p.name;button.append(name);button.addEventListener('click',()=>{generation++;selected=p;$('card-title').value=p.title;applyPalette();document.querySelectorAll('.character').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));markDirty();});$('characters').appendChild(button);});
 function currentPalette(){return themePalette(selected.theme==='plain'?{...selected,paper:$('background').value,shadow:$('show-shadow').checked?$('shadow-color').value:null,divider:$('divider-style').value}:selected,themeMode);}
 function applyPalette(){const palette=currentPalette();$('background-options').hidden=selected.theme!=='plain';$('dialogue').value=palette.accent;$('narration').value=palette.ink;}
@@ -104,8 +106,9 @@ $('background').addEventListener('input',()=>{generation++;applyPalette();markDi
 $('theme-switch').addEventListener('change',()=>{themeMode=$('theme-switch').checked?'dark':'light';generation++;applyPalette();markDirty();});
 applyPalette();
 function updateSourceCount(){$('source-count').textContent=$('source').value.length.toLocaleString('ko-KR')+'자 / 최대 5,000자';}
-function resetPreview(){updateSourceCount();previewDirty=false;const canvas=$('card');canvas.width=1;canvas.height=1;canvas.hidden=true;$('card-wrap').hidden=true;$('selection-layer').replaceChildren();manualRanges=[];highlights=[];selectedRange=null;updateSelectionButtons();$('empty').hidden=false;$('save').disabled=true;$('save-png').disabled=true;$('copy').disabled=true;}
+function resetPreview(){updateSourceCount();previewDirty=false;photoFile=null;photoPromise=null;const canvas=$('card');canvas.width=1;canvas.height=1;canvas.hidden=true;$('card-wrap').hidden=true;$('selection-layer').replaceChildren();manualRanges=[];highlights=[];selectedRange=null;updateSelectionButtons();$('empty').hidden=false;$('save').disabled=true;$('save-png').disabled=true;$('save-photo').disabled=true;$('copy').disabled=true;}
 function markDirty(){
+ photoFile=null;
  updateSourceCount();
  $('design-state').textContent=$('show-design').checked?'ON':'OFF';
  for(const [toggle,input,state] of [['show-name','card-title','name-state'],['show-memo','caption','memo-state']]){const on=$(toggle).checked;$(state).textContent=on?'ON':'OFF';$(input).disabled=!on;}$('copy-status').textContent='';
@@ -193,19 +196,41 @@ async function generate(){
    });flush();
    line.forEach(unit=>{ctx.fillStyle=$(unit.dialogue?'dialogue':'narration').value;ctx.fillText(unit.char,margin+unit.x,top);});
   });
-  const preview=$('card');preview.width=1080;preview.height=height;preview.getContext('2d').drawImage(canvas,0,0);previewDirty=false;preview.hidden=false;$('card-wrap').hidden=false;renderSelectionLayer(lines,bodyTop,lineHeight,size,font,height);$('empty').hidden=true;$('save').disabled=false;$('save-png').disabled=false;$('copy').disabled=false;$('status').textContent='';$('preview-note').textContent='현재 미리보기와 동일한 이미지를 WebP 또는 PNG로 저장합니다.';
+  const preview=$('card');preview.width=1080;preview.height=height;preview.getContext('2d').drawImage(canvas,0,0);previewDirty=false;preview.hidden=false;$('card-wrap').hidden=false;renderSelectionLayer(lines,bodyTop,lineHeight,size,font,height);$('empty').hidden=true;$('save').disabled=false;$('save-png').disabled=false;$('save-photo').disabled=false;$('copy').disabled=false;$('status').textContent='';$('preview-note').textContent='현재 미리보기와 동일한 이미지를 WebP 또는 PNG로 저장합니다.';
+  photoFile=null;photoPromise=new Promise(resolve=>preview.toBlob(blob=>{const file=blob?new File([blob],'excerpt.png',{type:'image/png'}):null;if(token===generation&&!previewDirty)photoFile=file;resolve(file);},'image/png'));
  }catch(error){if(token===generation)$('status').textContent=error.message||'카드를 만들지 못했어요.';}
 }
 $('clear').addEventListener('click',()=>{clearTimeout(previewTimer);generation++;$('source').value='';resetPreview();$('status').textContent='입력과 생성된 카드를 비웠어요.';$('regex-status').textContent='';$('source').focus();});
 $('copy').addEventListener('click',async()=>{
- if(!navigator.clipboard?.write||!window.ClipboardItem){$('copy-status').textContent='이 브라우저는 이미지 복사를 지원하지 않아요. WebP로 저장해 주세요.';return;}
+ if(!navigator.clipboard?.write||!window.ClipboardItem){$('copy-status').textContent='이 브라우저는 이미지 복사를 지원하지 않아요. PNG 또는 사진으로 저장해 주세요.';return;}
  try{
-  const image=(async()=>{if(previewDirty)await generate();if(previewDirty||$('card').hidden)throw new Error('이미지를 준비하지 못했어요.');return new Promise((resolve,reject)=>$('card').toBlob(blob=>blob?resolve(blob):reject(new Error('이미지를 준비하지 못했어요.')),'image/png'));})();
-  await navigator.clipboard.write([new ClipboardItem({'image/png':image})]);
-  $('copy-status').textContent='이미지를 복사했어요. 원하는 곳에 붙여 넣으세요.';
- }catch(error){$('copy-status').textContent='이미지를 복사하지 못했어요. 클립보드 권한을 확인하거나 WebP로 저장해 주세요.';}
- finally{$('copy').disabled=$('save').disabled;}
+  const image=(async()=>{
+   if(previewDirty)await generate();if(previewDirty||$('card').hidden)throw new Error('이미지를 준비하지 못했어요.');
+   const token=generation,file=photoFile||await photoPromise;if(!file||token!==generation||previewDirty)throw new Error('이미지가 변경되었어요. 다시 복사해 주세요.');return file;
+  })();
+  await navigator.clipboard.write([new ClipboardItem({'image/png':image})]);$('copy-status').textContent='이미지를 복사했어요. 원하는 곳에 붙여 넣으세요.';
+ }catch(error){$('copy-status').textContent='이미지를 복사하지 못했어요. 클립보드 권한을 확인하거나 PNG로 저장해 주세요.';}
 });
+function canSharePhoto(file){try{return !!(navigator.share&&navigator.canShare?.({files:[file]}));}catch{return false;}}
+function showPhoto(file){
+ if(photoUrl)URL.revokeObjectURL(photoUrl);dialogPhoto=file;photoUrl=URL.createObjectURL(file);$('photo-image').src=photoUrl;$('photo-share').hidden=!canSharePhoto(file);
+ if(!$('photo-dialog').open)$('photo-dialog').showModal();
+}
+async function sharePhoto(file){
+ if(!canSharePhoto(file)){showPhoto(file);return;}
+ try{await navigator.share({files:[file]});}
+ catch(error){if(error.name!=='AbortError')showPhoto(file);}
+}
+$('save-photo').addEventListener('click',async()=>{
+ if(photoFile&&!previewDirty){sharePhoto(photoFile);return;}
+ if(previewDirty)await generate();if(previewDirty||$('card').hidden)return;
+ const token=generation,file=await photoPromise;
+ if(token!==generation||previewDirty)return;
+ if(file)showPhoto(file);else $('copy-status').textContent='사진을 준비하지 못했어요. 다시 시도해 주세요.';
+});
+$('photo-share').addEventListener('click',()=>{if(dialogPhoto)sharePhoto(dialogPhoto);});
+$('photo-close').addEventListener('click',()=>$('photo-dialog').close());
+$('photo-dialog').addEventListener('close',()=>{if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl=null;dialogPhoto=null;$('photo-image').removeAttribute('src');});
 async function downloadCard(format){
  if(previewDirty)await generate();if(previewDirty||$('card').hidden)return;
  $('card').toBlob(blob=>{
