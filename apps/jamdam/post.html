@@ -241,7 +241,7 @@
 		</div>
 		<div class="screen">
 			<div class="line prompt">
-				<a href="index.html" class="prompt-path-link"><span class="path">식당 알림판</span></a><span class="sep"> / </span>
+				<a href="index.html" class="prompt-path-link"><span class="path" id="post-category">카테고리</span></a><span class="sep"> / </span>
 				<span id="post-command"></span>
 			</div>
 
@@ -420,6 +420,7 @@
 				});
 				if (!res.ok) throw new Error('HTTP ' + res.status);
 				var post = await res.json();
+				document.getElementById('post-category').textContent = post.category?.name || '미분류';
 
 				document.title = post.title + ' — 잡담';
 				mount.innerHTML =

@@ -8,7 +8,7 @@ const dist = `${root}dist`;
 // 빌드 없이 그대로 복사하는 정적 사이트. landing만 대문(루트)으로 바로
 // 병합되고, 나머지는 자기 이름의 하위 폴더로 복사된다.
 const staticApps = ['landing'];
-const staticSubApps = ['jamdam'];
+const staticSubApps = ['jamdam', 'log'];
 
 // 자체 빌드 스텝이 있는 세계관(Astro 등). 새 세계관을 추가할 때는
 // apps/ 아래 폴더를 만들고 여기 한 줄만 추가하면 된다.

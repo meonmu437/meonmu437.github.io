@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f1e9d8">
+<title>문장 카드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&family=Noto+Serif+KR:wght@400;600&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+.mode-switch{position:relative;display:inline-flex;align-items:center;gap:10px;margin:0;cursor:pointer;color:#304235;font-size:12px}.mode-switch input{position:absolute;left:43px;width:48px;height:28px;margin:0;opacity:0;cursor:pointer}.mode-track{position:relative;width:48px;height:28px;border:1px solid #b6baa6;border-radius:20px;background:#e3dfcc;transition:background .18s}.mode-track::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fffdf4;box-shadow:0 1px 3px #0003;transition:transform .18s}.mode-switch input:checked+.mode-track{background:#2c6147;border-color:#2c6147}.mode-switch input:checked+.mode-track::after{transform:translateX(20px)}.mode-switch input:focus-visible+.mode-track{outline:2px solid #b74030;outline-offset:3px}@media(prefers-reduced-motion:reduce){.mode-track,.mode-track::after{transition:none}}
+.indent-option{display:flex;align-items:center;gap:7px;margin-top:14px}.indent-option input{accent-color:#2c6147}
+.tool-groups{display:flex;flex-wrap:wrap;align-items:stretch;gap:9px}.tool-group{display:flex;flex:1 1 130px;align-content:flex-start;align-items:center;flex-wrap:wrap;gap:6px;min-width:0;margin:0;padding:9px;border:1px solid #d5c6ad;border-radius:3px}.tool-group legend{font-size:11px}.tool-group .highlight-picker{width:100%;margin:0 0 3px}
+.card-edit-box{margin:20px 0 0;padding:13px;border:1px solid #d5c6ad;border-radius:3px;min-width:0}.card-edit-box legend{padding:0 7px;font-size:12px;color:#615f4c}.card-edit-box .actions{margin-top:14px;border-top:1px dashed #d5c6ad;padding-top:14px}.card-edit-box .status{margin-bottom:0}.card-edit-box .help{margin-bottom:0}
+.highlight-picker{display:flex;align-items:center;gap:8px;width:fit-content;margin:8px 0}.highlight-picker input[type=color]{width:46px;height:28px;padding:2px}
+.manual-toolbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}.manual-toolbar button{font-size:11px;padding:6px 9px}.preview-surface{margin-top:12px}.card-wrap{position:relative;width:100%;container-type:inline-size}#selection-layer{position:absolute;inset:0;overflow:hidden;color:transparent;cursor:text;user-select:text;-webkit-user-select:text}#selection-layer .selectable-line{position:absolute;white-space:pre;line-height:1}#selection-layer span{display:inline-block;white-space:pre}#selection-layer span::selection{background:#7facdc99;color:transparent}
+.header-fields{border:1px solid #d5c6ad;border-radius:3px;padding:10px 13px 14px;margin:18px 0 0}.header-fields legend{padding:0 7px}.header-switch{display:flex;align-items:center;gap:7px;margin:0;color:#304235;cursor:pointer}.header-switch input{accent-color:#2c6147}.header-switch span{font-size:10px;color:#2c6147}.header-fields .row{margin-top:0}
+.header-options{display:flex;flex-wrap:wrap;gap:9px 18px;border:1px solid #d5c6ad;border-radius:3px;margin:16px 0 0;padding:10px 12px}.header-options legend{font-size:12px;color:#615f4c;padding:0 5px}.header-options label{display:inline-flex;align-items:center;gap:5px;margin:0}.header-options input{accent-color:#2c6147}
+.header-toggle-row{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:12px}.header-toggle-row .header-switch{gap:4px;font-size:clamp(10px,1.5vw,12px);white-space:nowrap}.header-toggle-row input{margin:0;flex-shrink:0}.header-toggle-row .header-switch span{font-size:9px}
+.theme-toggle{display:inline-flex;gap:3px;padding:3px;border:1px solid #d5c6ad;border-radius:5px;background:#f1e9d8}.theme-toggle button{border:0;padding:6px 18px;border-radius:3px;background:transparent;color:#80715b}.theme-toggle button[aria-pressed=true]{background:#2c6147;color:#fffaf0}
+input[type=range]{width:100%;height:30px;margin:0;accent-color:#2c6147;cursor:pointer}output{display:inline-block;min-width:26px;margin-left:6px;padding:0 5px;color:#2c6147;background:#e5ecd9;text-align:center;border-radius:3px}
+@font-face{font-family:'SSRONET Handwritten';src:url('https://cdn.jsdelivr.net/gh/sweetherofonts/fontshero_pack4/ssronethandwritten/ssronethandwritten-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+*{box-sizing:border-box} :root{color-scheme:light;--ink:#304235;--muted:#80715b;--line:#d5c6ad;--green:#2c6147;--paper:#fffcf3}
+body{margin:0;background:#f1e9d8;color:var(--ink);font:14px/1.7 'Noto Sans KR',sans-serif}button,input,select,textarea{font:inherit}button,a,input,select,textarea{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:default;opacity:.45}a{color:var(--green)}
+main{width:min(1160px,100% - 36px);margin:35px auto 60px}header{border-bottom:3px double var(--green);padding-bottom:22px;margin-bottom:25px}header a{font-size:12px;text-decoration:none}h1{font:700 clamp(27px,5vw,38px)/1.4 'Gowun Batang',serif;margin:15px 0 7px}header p{margin:0;color:var(--muted)}.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}.panel{min-width:0;background:var(--paper);border:1px solid var(--line);padding:24px;box-shadow:3px 4px 0 #c7b89744}h2{font-size:17px;margin:0 0 13px}h3{font-size:14px;margin:22px 0 9px}label{display:block;font-size:12px;color:#615f4c;margin-bottom:6px}textarea,input[type=text],select,input[type=number]{width:100%;border:1px solid var(--line);border-radius:3px;background:#fffefa;color:var(--ink);padding:10px}textarea{resize:vertical;min-height:225px;line-height:1.9}input[type=color]{width:100%;height:38px;border:1px solid var(--line);padding:3px;background:transparent}.help{font-size:11px;color:var(--muted);margin:7px 0 0}.character-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.character{min-width:0;text-align:left;border:1px solid var(--line);background:#f6efdf;padding:9px 10px;color:var(--ink);border-radius:3px}.character[aria-pressed=true]{border:2px solid var(--green);padding:8px 9px;background:#e5ecd9}.character small{display:block;font-size:10px;color:var(--muted)}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:13px}.colors{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:13px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}button.primary{border:1px solid #244e3a;background:var(--green);color:#fffdf3;padding:11px 20px;border-radius:3px;box-shadow:0 2px 0 #193b2b}button.secondary{border:1px solid var(--line);background:#f2e8d0;color:#4e503b;padding:9px 14px;border-radius:3px}.status{font-size:12px;min-height:21px;color:#8e3d2f;margin:12px 0 0}details{margin-top:21px;border-top:1px dashed var(--line);padding-top:14px}summary{cursor:pointer;font-size:13px;color:var(--green)}.regex-options{display:flex;align-items:center;gap:12px;margin-top:10px}.regex-options label{display:flex;align-items:center;gap:5px;margin:0}.regex-options input{accent-color:var(--green)}.preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.preview-head h2{margin:0}.preview-head span{font-size:10px;color:var(--muted)}.preview-surface{min-height:330px;display:grid;place-items:center;background:#e5dccb;padding:18px;border:1px dashed #bcad92}.preview-surface canvas{display:block;width:100%;height:auto;box-shadow:0 4px 14px #3c34202b}.empty{text-align:center;color:#8a7b62;font:400 18px/1.9 'Gowun Batang',serif}.preview-panel{position:sticky;top:20px}.privacy{font-size:11px;color:var(--muted);margin-top:15px}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid #b74030;outline-offset:3px}input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--green);outline-offset:2px}[hidden]{display:none!important}
+@media(max-width:800px){.workspace{grid-template-columns:1fr}.preview-panel{position:static}main{margin-top:22px}.panel{padding:19px}.character-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:360px){main{width:calc(100% - 24px)}.character-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.row{gap:8px}}
+</style>
+</head>
+<body>
+<main>
+ <header><a href="/">← 차림표로 돌아가기</a><h1>마음에 드는 문장, 한 장.</h1><p>이야기의 한 조각을 골라 나만의 발췌 카드로 남겨보세요.</p></header>
+ <div class="workspace">
+  <section class="panel" aria-labelledby="editor-heading">
+   <h2 id="editor-heading">01. 문장 담기</h2>
+   <label for="source">발췌할 텍스트</label><textarea id="source" maxlength="12000" placeholder="지문과 대사를 여기에 붙여 넣으세요.&#10;&#10;“이렇게 따옴표로 감싼 문장은 대사 색상으로 표시됩니다.”" spellcheck="false"></textarea>
+   <p class="help">대사는 “ ”, " ", 「 」, 『 』로 구분해요. 줄바꿈은 그대로 반영됩니다. 최대 12,000자.</p>
+   <h3>02. 캐릭터 · 세계관 카드 고르기</h3><div class="character-grid" id="characters" role="group" aria-label="캐릭터 또는 세계관 선택"></div>
+   <fieldset id="background-options" class="header-fields" hidden><legend>배경 수정</legend>
+    <div class="row"><div><label for="background">배경색</label><input id="background" type="color" value="#ffffff"></div><div><label for="shadow-color">그림자 색상</label><input id="shadow-color" type="color" value="#315e95"><label class="indent-option"><input id="show-shadow" type="checkbox"> 그림자 사용</label></div></div>
+    <label for="divider-style">구분선</label><select id="divider-style">
+     <option value="none">없음</option><option value="julian">무지개 마스킹 테이프</option><option value="jude">펀치 테이프</option><option value="seungmin">코드 주석</option><option value="willow">기본 선</option><option value="1997">연필 선</option><option value="2004">윈도우 입체 선</option><option value="hanminwoo">슬레이트 선</option><option value="colorground">무지개 물결</option><option value="nighthighway">여행 경로</option><option value="anemoi">편지 장식</option><option value="yunhaesi-light">바다 물결</option><option value="yunhaesi-dark">별 장식</option>
+    </select>
+   </fieldset>
+   <fieldset class="header-fields"><legend>헤더 표시</legend>
+    <div class="header-toggle-row">
+     <label class="header-switch"><input type="checkbox" id="show-design" checked role="switch"> 디자인+부제 <span id="design-state">ON</span></label>
+     <label class="header-switch"><input type="checkbox" id="show-name" checked role="switch"> 카드 이름 <span id="name-state">ON</span></label>
+     <label class="header-switch"><input type="checkbox" id="show-memo" checked role="switch"> 메모 <span id="memo-state">ON</span></label>
+    </div>
+    <div class="row"><div><label for="card-title">카드 이름</label><input id="card-title" aria-label="카드 이름" type="text" maxlength="40" value="Julian Valenti"></div><div><label for="caption">메모</label><input id="caption" aria-label="작은 메모" type="text" maxlength="70" placeholder="장면 제목이나 날짜"></div></div>
+   </fieldset>
+   <h3>03. 글꼴과 색상</h3>
+   <label class="mode-switch"><span>라이트</span><input type="checkbox" id="theme-switch" role="switch" aria-label="다크 테마" checked><span class="mode-track" aria-hidden="true"></span><span>다크</span></label>
+   <div class="row"><div><label for="font">폰트</label><select id="font"><option value="Noto Serif KR">본명조</option><option value="Gowun Batang" selected>고운바탕</option><option value="Noto Sans KR">본고딕</option><option value="Pretendard">프리텐다드</option><option value="SSRONET Handwritten">스스로넷 손글씨체</option></select></div><div><label for="size">글자 크기 <output id="size-value" for="size">16</output></label><input id="size" type="range" min="10" max="18" step="1" value="16" aria-describedby="size-help"><span class="help" id="size-help">10–18 사이로 조절하세요.</span></div></div>
+   <label class="indent-option"><input type="checkbox" id="indent" checked role="switch"> 문단 첫 줄 들여쓰기</label><div class="colors"><div><label for="narration">지문 색상</label><input id="narration" type="color" value="#b9bcc4"></div><div><label for="dialogue">대사 색상</label><input id="dialogue" type="color" value="#f5f4f0"></div></div>
+   <details><summary>정규식으로 단어 바꾸기</summary><div class="row"><div><label for="pattern">찾을 패턴 · / 없이 입력</label><input id="pattern" type="text" placeholder="\{\{user\}\}" spellcheck="false"></div><div><label for="replacement">바꿀 내용</label><input id="replacement" type="text" placeholder="원하는 이름" spellcheck="false"></div></div><div class="regex-options"><label><input id="ignore-case" type="checkbox">대소문자 무시</label><button class="secondary" type="button" id="replace">치환 적용</button></div><p class="help">전체 일치 항목을 바꿉니다. $1 같은 캡처 그룹도 사용 가능해요. 적용하면 입력창의 내용이 변경됩니다.</p><p class="status" id="regex-status" role="status"></p></details>
+   <p class="status" id="status" role="status"></p>
+   <p class="privacy">텍스트와 카드는 현재 탭에서만 처리합니다. 서버 전송·자동 저장·브라우저 저장소 기록을 하지 않으며, 새로고침하면 사라집니다.</p>
+  </section>
+  <section class="panel preview-panel" aria-labelledby="preview-heading"><div class="preview-head"><h2 id="preview-heading">발췌 카드</h2><span>WEBP · 가로 1080px</span></div><div class="preview-surface"><p class="empty" id="empty">오래 간직하고 싶은 문장을<br>여기에 담아드릴게요.</p><div class="card-wrap" id="card-wrap" hidden><canvas id="card" hidden aria-label="생성된 발췌 카드 미리보기"></canvas><div id="selection-layer" aria-label="드래그하여 색상을 지정할 카드 본문"></div></div></div><fieldset class="card-edit-box"><legend>카드 수정 · 저장</legend><div class="manual-toolbar tool-groups">
+<fieldset class="tool-group"><legend>글자색</legend><button type="button" class="secondary" id="mark-dialogue" disabled>대사색 적용</button><button type="button" class="secondary" id="mark-narration" disabled>지문색 적용</button></fieldset>
+<fieldset class="tool-group"><legend>밑줄</legend><label class="highlight-picker" for="highlight-color">색상 <input type="color" id="highlight-color" value="#ffe16b"></label><button type="button" class="secondary" id="mark-highlight" disabled>밑줄 긋기</button><button type="button" class="secondary" id="remove-highlight" disabled>밑줄 지우기</button></fieldset>
+<fieldset class="tool-group"><legend>지우기</legend><button type="button" class="secondary" id="erase-selection" disabled>선택 부분 지우개</button><button type="button" class="secondary" id="reset-marks" disabled>전체 초기화</button></fieldset>
+</div><p class="help" id="selection-status" role="status">먼저 문장을 드래그해 선택해 주세요.</p><p class="help">카드 본문에서 문장을 드래그한 뒤 글자색이나 밑줄을 적용하세요. 입력창에서도 선택할 수 있어요.</p><div class="actions"><button type="button" class="primary" id="save" disabled>WebP로 저장</button><button type="button" class="secondary" id="copy" disabled>이미지 복사</button><button type="button" class="secondary" id="clear">입력 비우기</button></div><p class="status" id="copy-status" role="status"></p></fieldset><p class="help" id="preview-note">텍스트와 설정을 바꾸면 미리보기에 자동으로 반영됩니다.</p></section>
+ </div>
+</main>
+<script src="themes.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const presets=[
+ {description:"완벽한 위장 신분, 완벽하지 않은 진심",theme:'julian',name:'줄리안',title:'Julian Valenti',icon:'🕶️',accent:'#f5f4f0',paper:'#14151a',ink:'#b9bcc4'},
+ {description:"숨기지 않는 정체, 숨겨둔 진심",theme:'jude',name:'주드',title:'Jude Holloway',icon:'🗝️',accent:'#d5b67b',paper:'#182321',ink:'#d8d6cc'},
+ {description:"무심한듯 다정한 백엔드 프로그래머",theme:'seungmin',name:'유승민',title:'유승민',icon:'💻',accent:'#456957',paper:'#f5f6ef',ink:'#50564c'},
+ {description:"첫사랑 예외처리 중인 컴공생",theme:'willow',name:'윌로우',title:'Willow Han',icon:'🌳',accent:'#2c6147',paper:'#fffaf0',ink:'#534d43'},
+ {description:"1997년, 첫사랑은 되감기 중",theme:'1997',name:'1997',title:'윤성민',icon:'📟',accent:'#87516c',paper:'#fcf3e8',ink:'#5e5148'},
+ {description:"7년째, 짝사랑은 재생 중",theme:'2004',name:'2004',title:'윤성민',icon:'💿',accent:'#587a99',paper:'#f4f5ed',ink:'#535953'},
+ {description:"장마와 푸른 베타",theme:'hanminwoo',name:'한민우',title:'한민우',icon:'☔️',accent:'#8bacbd',paper:'#18232b',ink:'#d0d8d9'},
+ {description:"레인보우 빌리지를 지키는 컬러 히어로와 자율 로봇들의 이야기",theme:'colorground',name:'컬러그라운드',title:'COLORGROUND',icon:'🌈',accent:'#c14566',paper:'#fff8ec',ink:'#4c4850'},
+ {description:"재앙 이후 살아남은 밤의 고속도로 생존기",theme:'nighthighway',name:'나이트하이웨이',title:'Noé Valenti',icon:'🏍️',accent:'#dfae62',paper:'#181e23',ink:'#d7d3c9'},
+ {description:"네 바람이 한곳에 모이는 땅, 아네모이 제국",theme:'anemoi',name:'아네모이',title:'Raphael Erden',icon:'🍃',accent:'#677755',paper:'#faf5e9',ink:'#585143'},
+ {description:"바닷바람에서 소금 냄새가 나는 작은 항구도시",theme:'yunhaesi',name:'윤해시',title:'윤해시',icon:'🌊',accent:'#3e7b91',paper:'#f4f5eb',ink:'#4a5659'},
+ {description:'',theme:'plain',name:'기본 카드',title:'',icon:'📝',paper:'#ffffff',accent:'#30343b',ink:'#50545c'},
+];
+let selected=presets[0],generation=0,previewTimer,previewDirty=false,themeMode='dark',manualRanges=[],highlights=[],selectedRange=null;
+presets.forEach((p,index)=>{const button=document.createElement('button');button.type='button';button.className='character';button.setAttribute('aria-pressed',String(index===0));const name=document.createElement('span');name.textContent=p.icon+' '+p.name;button.append(name);button.addEventListener('click',()=>{generation++;selected=p;$('card-title').value=p.title;applyPalette();document.querySelectorAll('.character').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));markDirty();});$('characters').appendChild(button);});
+function currentPalette(){return themePalette(selected.theme==='plain'?{...selected,paper:$('background').value,shadow:$('show-shadow').checked?$('shadow-color').value:null,divider:$('divider-style').value}:selected,themeMode);}
+function applyPalette(){const palette=currentPalette();$('background-options').hidden=selected.theme!=='plain';$('dialogue').value=palette.accent;$('narration').value=palette.ink;}
+$('background').addEventListener('input',()=>{generation++;applyPalette();markDirty();});
+['show-shadow','shadow-color','divider-style'].forEach(id=>$(id).addEventListener('input',()=>{generation++;markDirty();}));
+$('theme-switch').addEventListener('change',()=>{themeMode=$('theme-switch').checked?'dark':'light';generation++;applyPalette();markDirty();});
+applyPalette();
+function resetPreview(){previewDirty=false;const canvas=$('card');canvas.width=1;canvas.height=1;canvas.hidden=true;$('card-wrap').hidden=true;$('selection-layer').replaceChildren();manualRanges=[];highlights=[];selectedRange=null;updateSelectionButtons();$('empty').hidden=false;$('save').disabled=true;$('copy').disabled=true;}
+function markDirty(){
+ $('design-state').textContent=$('show-design').checked?'ON':'OFF';
+ for(const [toggle,input,state] of [['show-name','card-title','name-state'],['show-memo','caption','memo-state']]){const on=$(toggle).checked;$(state).textContent=on?'ON':'OFF';$(input).disabled=!on;}$('copy-status').textContent='';
+ clearTimeout(previewTimer);previewDirty=true;$('size-value').value=$('size').value;
+ if(!$('source').value.trim()){resetPreview();$('status').textContent='';return;}
+ $('preview-note').textContent='변경 내용을 미리보기에 반영하고 있어요.';
+ previewTimer=setTimeout(generate,180);
+}
+['source','card-title','caption','font','size','narration','dialogue','show-design','show-name','show-memo','indent'].forEach(id=>$(id).addEventListener('input',()=>{if(id==='source'){manualRanges=[];highlights=[];selectedRange=null;updateSelectionButtons();}generation++;markDirty();}));
+const segmenter=new Intl.Segmenter('ko',{granularity:'grapheme'});
+function segments(text){return [...segmenter.segment(text)].map(x=>x.segment);}
+function splitDialogue(text){const pattern=/“[^”]*”|「[^」]*」|『[^』]*』|"[^"]*"/gu;let parts=[],start=0;for(const match of text.matchAll(pattern)){if(match.index>start)parts.push({text:text.slice(start,match.index),dialogue:false});parts.push({text:match[0],dialogue:true});start=match.index+match[0].length;}if(start<text.length)parts.push({text:text.slice(start),dialogue:false});return parts;}
+function fitLines(ctx,text,maxWidth){const lines=[];let line='';for(const char of segments(text)){if(ctx.measureText(line+char).width>maxWidth&&line){lines.push(line);line=char;}else line+=char;}if(line)lines.push(line);return lines;}
+function updateSelectionButtons(){const disabled=!selectedRange||selectedRange.start===selectedRange.end;$('mark-dialogue').disabled=disabled;$('mark-narration').disabled=disabled;$('mark-highlight').disabled=disabled;$('remove-highlight').disabled=disabled;$('erase-selection').disabled=disabled;$('reset-marks').disabled=manualRanges.length===0&&highlights.length===0;$('selection-status').textContent=disabled?'먼저 문장을 드래그해 선택해 주세요.':(selectedRange.end-selectedRange.start)+'자 선택됨 · 같은 부분에 도구를 연이어 적용할 수 있어요.';}
+function renderSelectionLayer(lines,top,lineHeight,size,font,height){
+ const layer=$('selection-layer');layer.replaceChildren();layer.style.fontFamily='"'+font+'"';layer.style.fontSize=(size/10.8)+'cqw';
+ const fragment=document.createDocumentFragment();
+ lines.forEach((line,i)=>{const row=document.createElement('div');row.className='selectable-line';row.style.top=((top+i*lineHeight)/height*100)+'%';row.style.left=((90+(line[0]?.x||0))/1080*100)+'%';
+  line.forEach(unit=>{const span=document.createElement('span');span.textContent=unit.char;span.dataset.start=unit.start;span.dataset.end=unit.end;span.style.width=(unit.charWidth/10.8)+'cqw';row.append(span);});fragment.append(row);
+ });layer.append(fragment);updateSelectionButtons();
+}
+function readCardSelection(){
+ const selection=window.getSelection();if(!selection?.rangeCount||selection.isCollapsed)return null;const range=selection.getRangeAt(0);
+ const endpoint=(node,offset)=>{const span=(node.nodeType===Node.TEXT_NODE?node.parentElement:node)?.closest('[data-start]');if(!span||!$('selection-layer').contains(span))return null;return Number(span.dataset.start)+(node.nodeType===Node.TEXT_NODE?offset:(offset?span.textContent.length:0));};
+ const start=endpoint(range.startContainer,range.startOffset),end=endpoint(range.endContainer,range.endOffset);return start!==null&&end!==null&&end>start?{start,end}:null;
+}
+document.addEventListener('selectionchange',()=>{const source=$('source');if(document.activeElement===source&&source.selectionEnd>source.selectionStart){selectedRange={start:source.selectionStart,end:source.selectionEnd};}else{const range=readCardSelection();if(range)selectedRange=range;}updateSelectionButtons();});
+for(const [id,dialogue] of [['mark-dialogue',true],['mark-narration',false]]){
+ $(id).addEventListener('mousedown',event=>event.preventDefault());
+ $(id).addEventListener('click',()=>{if(!selectedRange)return;manualRanges.push({...selectedRange,dialogue});window.getSelection()?.removeAllRanges();generation++;markDirty();updateSelectionButtons();});
+}
+for(const [id,remove] of [['mark-highlight',false],['remove-highlight',true]]){
+ $(id).addEventListener('mousedown',event=>event.preventDefault());
+ $(id).addEventListener('click',()=>{if(!selectedRange)return;highlights.push({...selectedRange,color:remove?null:$('highlight-color').value});window.getSelection()?.removeAllRanges();generation++;markDirty();updateSelectionButtons();});
+}
+$('erase-selection').addEventListener('mousedown',event=>event.preventDefault());
+$('erase-selection').addEventListener('click',()=>{if(!selectedRange)return;manualRanges.push({...selectedRange,dialogue:null});highlights.push({...selectedRange,color:null});window.getSelection()?.removeAllRanges();generation++;markDirty();updateSelectionButtons();});
+$('reset-marks').addEventListener('click',()=>{manualRanges=[];highlights=[];generation++;markDirty();updateSelectionButtons();});
+async function generate(){
+ clearTimeout(previewTimer);
+ const text=$('source').value.replace(/\r\n?/g,'\n');if(!text.trim()){$('status').textContent='먼저 발췌할 문장을 넣어 주세요.';$('source').focus();return;}
+ const token=++generation;previewDirty=true;$('status').textContent='문장을 종이에 옮기는 중…';
+ try{
+  const font=$('font').value,size=(Number($('size').value)+(font==='SSRONET Handwritten'?3:0))*2;await Promise.all([document.fonts.load(`400 ${size}px "${font}"`,text),document.fonts.load('600 42px "Noto Serif KR"',$('card-title').value||selected.title),document.fonts.load('400 20px "Noto Sans KR"',selected.description+$('caption').value)]);
+  if(token!==generation)return;
+  const canvas=document.createElement('canvas');canvas.width=1080;let ctx=canvas.getContext('2d');ctx.font=`400 ${size}px "${font}"`;const margin=90,width=900,lineHeight=size*1.95,lines=[[]],indent=$('indent').checked?size:0;let x=indent,sourceIndex=0;
+  for(const part of splitDialogue(text)){for(const char of segments(part.text)){
+   if(char==='\n'){sourceIndex++;lines.push([]);x=indent;continue;}const charWidth=ctx.measureText(char).width;if(x+charWidth>width&&lines.at(-1).length){lines.push([]);x=0;}const override=manualRanges.findLast(range=>sourceIndex<range.end&&sourceIndex+char.length>range.start);lines.at(-1).push({char,x,charWidth,start:sourceIndex,end:sourceIndex+char.length,dialogue:override?.dialogue!=null?override.dialogue:part.dialogue});sourceIndex+=char.length;x+=charWidth;
+  }}
+  const headingFont='600 42px '+cardThemes[selected.theme].heading;ctx.font=headingFont;const titleLines=$('show-name').checked?fitLines(ctx,$('card-title').value.trim()||selected.title,width):[];ctx.font='400 24px "Noto Sans KR"';const captionLines=$('show-memo').checked?fitLines(ctx,$('caption').value.trim(),width):[];
+  const showDesign=$('show-design').checked;
+  const fixedHeaderTop={'2004':134,seungmin:112,...(showDesign?{nighthighway:158}:{})}[selected.theme];
+  ctx.font='400 20px "Noto Sans KR"';const introLines=showDesign?fitLines(ctx,selected.description,width):[],introTop=fixedHeaderTop||(showDesign?({jude:164,willow:143}[selected.theme]||76):76),titleTop=introTop+(introLines.length?introLines.length*32+22:0),captionTop=titleTop+titleLines.length*58+(titleLines.length&&captionLines.length?8:0),hasHeader=!!(introLines.length||titleLines.length||captionLines.length);
+  const fixedBodyTop={'2004':160,seungmin:145,hanminwoo:120}[selected.theme];
+  const bodyTop=(hasHeader?captionTop+captionLines.length*38+40:(fixedBodyTop||(showDesign?({willow:170,jude:180}[selected.theme]||80):80)))+24,height=Math.max(500,Math.ceil(bodyTop+lines.length*lineHeight+80));
+  if(height>24000)throw new Error('카드가 너무 길어요. 텍스트를 나눠서 만들어 주세요.');canvas.height=height;ctx=canvas.getContext('2d');
+  const palette=currentPalette();drawCardTheme(ctx,palette,height,bodyTop-24,$('dialogue').value,showDesign);
+  const subtitle=selected.theme==='julian';ctx.textBaseline='top';ctx.textAlign=subtitle?'center':'left';ctx.fillStyle=subtitle?palette.ink:$('dialogue').value;ctx.font='400 20px "Noto Sans KR"';introLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,introTop+i*32));
+  ctx.fillStyle=subtitle?palette.decoration:$('dialogue').value;ctx.font=headingFont;titleLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,titleTop+i*58));ctx.fillStyle=$('narration').value;ctx.font='400 24px "Noto Sans KR"';captionLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,captionTop+i*38));
+  ctx.textAlign='left';ctx.font=`400 ${size}px "${font}"`;lines.forEach((line,i)=>{const offset=margin;line.forEach(unit=>{const highlight=highlights.findLast(range=>unit.start<range.end&&unit.end>range.start);if(highlight?.color){ctx.save();ctx.fillStyle=highlight.color;ctx.fillRect(offset+unit.x,bodyTop+i*lineHeight+size*1.16,unit.charWidth+.5,Math.max(2,size*.07));ctx.restore();}ctx.fillStyle=$(unit.dialogue?'dialogue':'narration').value;ctx.fillText(unit.char,offset+unit.x,bodyTop+i*lineHeight);});});
+  const preview=$('card');preview.width=1080;preview.height=height;preview.getContext('2d').drawImage(canvas,0,0);previewDirty=false;preview.hidden=false;$('card-wrap').hidden=false;renderSelectionLayer(lines,bodyTop,lineHeight,size,font,height);$('empty').hidden=true;$('save').disabled=false;$('copy').disabled=false;$('status').textContent='';$('preview-note').textContent='현재 미리보기와 동일한 이미지를 WebP로 저장합니다.';
+ }catch(error){if(token===generation)$('status').textContent=error.message||'카드를 만들지 못했어요.';}
+}
+$('clear').addEventListener('click',()=>{clearTimeout(previewTimer);generation++;$('source').value='';resetPreview();$('status').textContent='입력과 생성된 카드를 비웠어요.';$('regex-status').textContent='';$('source').focus();});
+$('copy').addEventListener('click',async()=>{
+ if(!navigator.clipboard?.write||!window.ClipboardItem){$('copy-status').textContent='이 브라우저는 이미지 복사를 지원하지 않아요. WebP로 저장해 주세요.';return;}
+ try{
+  const image=(async()=>{if(previewDirty)await generate();if(previewDirty||$('card').hidden)throw new Error('이미지를 준비하지 못했어요.');return new Promise((resolve,reject)=>$('card').toBlob(blob=>blob?resolve(blob):reject(new Error('이미지를 준비하지 못했어요.')),'image/png'));})();
+  await navigator.clipboard.write([new ClipboardItem({'image/png':image})]);
+  $('copy-status').textContent='이미지를 복사했어요. 원하는 곳에 붙여 넣으세요.';
+ }catch(error){$('copy-status').textContent='이미지를 복사하지 못했어요. 클립보드 권한을 확인하거나 WebP로 저장해 주세요.';}
+ finally{$('copy').disabled=$('save').disabled;}
+});
+$('save').addEventListener('click',async()=>{if(previewDirty)await generate();if(previewDirty||$('card').hidden)return;$('card').toBlob(blob=>{if(!blob||blob.type!=='image/webp'){$('status').textContent='이 브라우저는 WebP 저장을 지원하지 않아요. 최신 크롬이나 사파리에서 시도해 주세요.';return;}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='excerpt.webp';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},'image/webp',.95);});
+$('replace').addEventListener('click',async()=>{
+ const pattern=$('pattern').value;if(!pattern){$('regex-status').textContent='찾을 패턴을 입력해 주세요.';return;}
+ const before=$('source').value;const code=`onmessage=e=>{try{const {text,pattern,replacement,flags}=e.data;const output=text.replace(new RegExp(pattern,flags),replacement);postMessage({output});}catch(error){postMessage({error:error.message});}}`;
+ const url=URL.createObjectURL(new Blob([code],{type:'text/javascript'}));const worker=new Worker(url);$('replace').disabled=true;
+ try{const result=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('처리가 오래 걸려 중단했어요. 패턴을 더 단순하게 바꿔 주세요.')),1200);worker.onmessage=e=>{clearTimeout(timer);e.data.error?reject(new Error('정규식 오류: '+e.data.error)):resolve(e.data.output);};worker.onerror=()=>{clearTimeout(timer);reject(new Error('치환을 실행하지 못했어요.'));};worker.postMessage({text:before,pattern,replacement:$('replacement').value,flags:$('ignore-case').checked?'giu':'gu'});});if(result.length>12000)throw new Error('치환 결과가 12,000자를 넘어요.');if($('source').value!==before)throw new Error('입력이 바뀌어 치환하지 않았어요. 다시 적용해 주세요.');$('source').value=result;manualRanges=[];highlights=[];selectedRange=null;updateSelectionButtons();generation++;markDirty();$('regex-status').textContent=result===before?'일치하거나 변경된 내용이 없어요.':'치환을 적용했어요.';
+ }catch(error){$('regex-status').textContent=error.message;}finally{worker.terminate();URL.revokeObjectURL(url);$('replace').disabled=false;}
+});
+$('source').value=`다아시는 잠시 침묵했다. 이윽고 엘리자베스에게 다가가, 격앙된 목소리로 말을 꺼냈다.
+
+“소용없군요. 제 감정을 억누를 수가 없습니다. 당신을 얼마나 열렬히 사랑하는지 말씀드리게 해 주십시오.”
+
+엘리자베스의 놀라움은 이루 말할 수 없었다. 그녀는 얼굴을 붉히고, 의심하고, 아무 말 없이 그를 바라보았다.`;
+markDirty();
+</script>
+</body>
+</html>

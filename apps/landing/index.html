@@ -31,6 +31,22 @@ h1 { margin: 0; font: 400 clamp(42px,7.5vw,78px)/1.25 'Jua',sans-serif; letter-s
 .recipe-link strong { font: 400 27px/1.1 'Jua',sans-serif; letter-spacing: -.04em; }
 .recipe-link>span { margin-top: 4px; font: 400 17px/1.3 'SSRONET',sans-serif; }
 .recipe-link:hover { background: #ffe278; transform: rotate(-6deg) translateY(-2px); }
+.menu-stickers { position:absolute;z-index:3;right:190px;top:-108px;display:flex;align-items:center;gap:20px; }
+.menu-stickers .recipe-link { position:relative;right:auto;top:auto; }
+.excerpt-link { display:flex;flex-direction:column;align-items:center;justify-content:center;width:138px;min-height:54px;padding:8px 7px;border:1px solid #c1b69c;border-top:3px solid #b74030;border-radius:2px;background:#fffdf3;color:#9f392d;text-align:center;text-decoration:none;box-shadow:1px 2px 2px #5d4a2826;transform:rotate(3deg); }
+.excerpt-link strong { font:400 18px/1.2 'Jua',sans-serif; }
+.excerpt-link>span { margin-top:4px;padding-top:3px;border-top:1px dotted #c7bda8;font:400 9px/1.3 'Noto Sans KR',sans-serif;color:#756b56; }
+.excerpt-link:hover { background:#fff4dc;transform:rotate(1deg) translateY(-1px); }
+@media(max-width:700px) {
+ .menu-board .chef-puppy { width:96px;right:4px;top:-86px; }
+ .menu-stickers { left:10px;right:112px;top:-100px;gap:9px; }
+ .menu-stickers .recipe-link { flex:1;min-width:0;width:auto;min-height:78px;padding:8px 5px;border-width:3px; }
+ .excerpt-link { flex:1;min-width:0;width:auto;min-height:54px;padding:6px 4px; }
+ .menu-stickers .recipe-link strong { font-size:19px; }
+ .excerpt-link strong { font-size:15px; }
+ .menu-stickers .recipe-link>span { font-size:13px; }
+ .excerpt-link>span { font-size:8px; }
+}
 .menu-board { position: relative; background: var(--paper); border: 1px solid var(--rule); padding: 25px 28px 8px; box-shadow: 4px 5px 0 #d8cbb4; }
 .menu-board::before { content: ''; position: absolute; inset: 6px; border: 1px solid #c4b79c; pointer-events: none; }
 .menu-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-bottom: 18px; border-bottom: 2px solid var(--green); }
@@ -182,7 +198,7 @@ h1 { margin: 0; font: 400 clamp(42px,7.5vw,78px)/1.25 'Jua',sans-serif; letter-s
   <div class="shop-body">
     <section class="menu-board" aria-labelledby="menu-title">
       <img class="chef-puppy" src="assets/chef-puppy.png" alt="차림표 위에 앞발을 올리고 웃는 셰프 강아지" width="1254" height="1254" />
-      <a class="recipe-link" href="jamdam/"><strong>레시피</strong><span>보러 가기 <span aria-hidden="true">↗</span></span></a>
+      <div class="menu-stickers"><a class="recipe-link" href="/jamdam/"><strong>레시피</strong><span>보러 가기 <span aria-hidden="true">↗</span></span></a><a class="excerpt-link" href="/log/"><strong>한 입 포장하기</strong><span>문장 발췌 카드 ↗</span></a></div>
       <header class="menu-heading"><div><span class="menu-overline">골라 먹는 재미!</span><h2 id="menu-title">차림표</h2></div><span class="menu-special">같이<br><b>먹어요!</b></span></header>
       <div id="menu-categories"></div>
     </section>
