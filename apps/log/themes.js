@@ -50,6 +50,7 @@ function drawCardTheme(ctx,p,height,bodyTop,accent,showHeader=true){
  case 'julian':
   ctx.fillStyle=p.decoration;ctx.beginPath();ctx.roundRect(35,39,1010,h-63,17);ctx.fill();
   ctx.fillStyle=p.paper;ctx.beginPath();ctx.roundRect(20,20,1010,h-63,17);ctx.fill();
+  if(p.mode==='light'){ctx.strokeStyle='#d3dce6';ctx.lineWidth=2;ctx.stroke();}
   break;
  case 'jude':
   {
