@@ -75,7 +75,7 @@ main{max-width:1320px;width:min(1320px,100% - 36px)}
 <fieldset class="tool-group"><legend>글자색</legend><button type="button" class="secondary" id="mark-dialogue" disabled>대사색 적용</button><button type="button" class="secondary" id="mark-narration" disabled>지문색 적용</button></fieldset>
 <fieldset class="tool-group"><legend>밑줄</legend><label class="highlight-picker" for="highlight-color">색상 <input type="color" id="highlight-color" value="#ffe16b"></label><button type="button" class="secondary" id="mark-highlight" disabled>밑줄 긋기</button><button type="button" class="secondary" id="remove-highlight" disabled>밑줄 지우기</button></fieldset>
 <fieldset class="tool-group"><legend>지우기</legend><button type="button" class="secondary" id="erase-selection" disabled>선택 부분 지우개</button><button type="button" class="secondary" id="reset-marks" disabled>전체 초기화</button></fieldset>
-</div><p class="help" id="selection-status" role="status">먼저 문장을 드래그해 선택해 주세요.</p><p class="help">카드 본문에서 문장을 드래그한 뒤 글자색이나 밑줄을 적용하세요. 입력창에서도 선택할 수 있어요.</p><div class="actions"><button type="button" class="primary" id="save" disabled>WebP로 저장</button><button type="button" class="secondary" id="copy" disabled>이미지 복사</button></div><p class="status" id="copy-status" role="status"></p></fieldset><p class="help" id="preview-note">텍스트와 설정을 바꾸면 미리보기에 자동으로 반영됩니다.</p></section>
+</div><p class="help" id="selection-status" role="status">먼저 문장을 드래그해 선택해 주세요.</p><p class="help">카드 본문에서 문장을 드래그한 뒤 글자색이나 밑줄을 적용하세요. 입력창에서도 선택할 수 있어요.</p><div class="actions"><button type="button" class="primary" id="save" disabled>WebP로 저장</button><button type="button" class="secondary" id="save-png" disabled>PNG로 저장</button><button type="button" class="secondary" id="copy" disabled>이미지 복사</button></div><p class="status" id="copy-status" role="status"></p></fieldset><p class="help" id="preview-note">텍스트와 설정을 바꾸면 미리보기에 자동으로 반영됩니다.</p></section>
  </div>
 </main>
 <script src="themes.js"></script>
@@ -104,7 +104,7 @@ $('background').addEventListener('input',()=>{generation++;applyPalette();markDi
 $('theme-switch').addEventListener('change',()=>{themeMode=$('theme-switch').checked?'dark':'light';generation++;applyPalette();markDirty();});
 applyPalette();
 function updateSourceCount(){$('source-count').textContent=$('source').value.length.toLocaleString('ko-KR')+'자 / 최대 5,000자';}
-function resetPreview(){updateSourceCount();previewDirty=false;const canvas=$('card');canvas.width=1;canvas.height=1;canvas.hidden=true;$('card-wrap').hidden=true;$('selection-layer').replaceChildren();manualRanges=[];highlights=[];selectedRange=null;updateSelectionButtons();$('empty').hidden=false;$('save').disabled=true;$('copy').disabled=true;}
+function resetPreview(){updateSourceCount();previewDirty=false;const canvas=$('card');canvas.width=1;canvas.height=1;canvas.hidden=true;$('card-wrap').hidden=true;$('selection-layer').replaceChildren();manualRanges=[];highlights=[];selectedRange=null;updateSelectionButtons();$('empty').hidden=false;$('save').disabled=true;$('save-png').disabled=true;$('copy').disabled=true;}
 function markDirty(){
  updateSourceCount();
  $('design-state').textContent=$('show-design').checked?'ON':'OFF';
@@ -193,7 +193,7 @@ async function generate(){
    });flush();
    line.forEach(unit=>{ctx.fillStyle=$(unit.dialogue?'dialogue':'narration').value;ctx.fillText(unit.char,margin+unit.x,top);});
   });
-  const preview=$('card');preview.width=1080;preview.height=height;preview.getContext('2d').drawImage(canvas,0,0);previewDirty=false;preview.hidden=false;$('card-wrap').hidden=false;renderSelectionLayer(lines,bodyTop,lineHeight,size,font,height);$('empty').hidden=true;$('save').disabled=false;$('copy').disabled=false;$('status').textContent='';$('preview-note').textContent='현재 미리보기와 동일한 이미지를 WebP로 저장합니다.';
+  const preview=$('card');preview.width=1080;preview.height=height;preview.getContext('2d').drawImage(canvas,0,0);previewDirty=false;preview.hidden=false;$('card-wrap').hidden=false;renderSelectionLayer(lines,bodyTop,lineHeight,size,font,height);$('empty').hidden=true;$('save').disabled=false;$('save-png').disabled=false;$('copy').disabled=false;$('status').textContent='';$('preview-note').textContent='현재 미리보기와 동일한 이미지를 WebP 또는 PNG로 저장합니다.';
  }catch(error){if(token===generation)$('status').textContent=error.message||'카드를 만들지 못했어요.';}
 }
 $('clear').addEventListener('click',()=>{clearTimeout(previewTimer);generation++;$('source').value='';resetPreview();$('status').textContent='입력과 생성된 카드를 비웠어요.';$('regex-status').textContent='';$('source').focus();});
@@ -206,7 +206,15 @@ $('copy').addEventListener('click',async()=>{
  }catch(error){$('copy-status').textContent='이미지를 복사하지 못했어요. 클립보드 권한을 확인하거나 WebP로 저장해 주세요.';}
  finally{$('copy').disabled=$('save').disabled;}
 });
-$('save').addEventListener('click',async()=>{if(previewDirty)await generate();if(previewDirty||$('card').hidden)return;$('card').toBlob(blob=>{if(!blob||blob.type!=='image/webp'){$('status').textContent='이 브라우저는 WebP 저장을 지원하지 않아요. 최신 크롬이나 사파리에서 시도해 주세요.';return;}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='excerpt.webp';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},'image/webp',.95);});
+async function downloadCard(format){
+ if(previewDirty)await generate();if(previewDirty||$('card').hidden)return;
+ $('card').toBlob(blob=>{
+  if(!blob||blob.type!=='image/'+format){$('status').textContent=format==='webp'?'이 브라우저는 WebP 저장을 지원하지 않아요. PNG로 저장해 주세요.':'이미지를 준비하지 못했어요. 다시 시도해 주세요.';return;}
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='excerpt.'+format;a.hidden=true;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+ },'image/'+format,.95);
+}
+$('save').addEventListener('click',()=>downloadCard('webp'));
+$('save-png').addEventListener('click',()=>downloadCard('png'));
 $('replace').addEventListener('click',async()=>{
  const pattern=$('pattern').value;if(!pattern){$('regex-status').textContent='찾을 패턴을 입력해 주세요.';return;}
  const before=$('source').value;const code=`onmessage=e=>{try{const {text,pattern,replacement,flags}=e.data;const output=text.replace(new RegExp(pattern,flags),replacement);postMessage({output});}catch(error){postMessage({error:error.message});}}`;
