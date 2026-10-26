@@ -161,7 +161,24 @@ async function generate(){
   const palette=currentPalette();drawCardTheme(ctx,palette,height,bodyTop-24,$('dialogue').value,showDesign);
   const subtitle=selected.theme==='julian';ctx.textBaseline='top';ctx.textAlign=subtitle?'center':'left';ctx.fillStyle=subtitle?palette.ink:$('dialogue').value;ctx.font='400 20px "Noto Sans KR"';introLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,introTop+i*32));
   ctx.fillStyle=subtitle?palette.decoration:$('dialogue').value;ctx.font=headingFont;titleLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,titleTop+i*58));ctx.fillStyle=$('narration').value;ctx.font='400 24px "Noto Sans KR"';captionLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,captionTop+i*38));
-  ctx.textAlign='left';ctx.font=`400 ${size}px "${font}"`;lines.forEach((line,i)=>{const offset=margin;line.forEach(unit=>{const highlight=highlights.findLast(range=>unit.start<range.end&&unit.end>range.start);if(highlight?.color){ctx.save();ctx.fillStyle=highlight.color;ctx.fillRect(offset+unit.x,bodyTop+i*lineHeight+size*1.16,unit.charWidth+.5,Math.max(2,size*.07));ctx.restore();}ctx.fillStyle=$(unit.dialogue?'dialogue':'narration').value;ctx.fillText(unit.char,offset+unit.x,bodyTop+i*lineHeight);});});
+  ctx.textAlign='left';ctx.font=`400 ${size}px "${font}"`;
+  lines.forEach((line,i)=>{
+   const top=bodyTop+i*lineHeight;let stroke=null;
+   const flush=()=>{
+    if(!stroke)return;
+    const thickness=Math.max(5,size*.22),x=margin+stroke.x,y=top+size*1.18;
+    ctx.save();ctx.strokeStyle=stroke.color;ctx.globalAlpha=.82;ctx.lineWidth=thickness;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(x+thickness/2,y);ctx.bezierCurveTo(x+stroke.width*.3,y-.6,x+stroke.width*.72,y+.8,x+Math.max(thickness/2,stroke.width-thickness/2),y+.3);ctx.stroke();
+    ctx.globalAlpha=.18;ctx.lineWidth=Math.max(1,thickness*.22);ctx.beginPath();ctx.moveTo(x+thickness/2,y+thickness*.22);ctx.lineTo(x+Math.max(thickness/2,stroke.width-thickness/2),y+thickness*.22+.3);ctx.stroke();ctx.restore();stroke=null;
+   };
+   line.forEach(unit=>{
+    const color=highlights.findLast(range=>unit.start<range.end&&unit.end>range.start)?.color;
+    if(!color){flush();return;}
+    if(stroke&&stroke.color===color)stroke.width=unit.x+unit.charWidth-stroke.x;
+    else{flush();stroke={x:unit.x,width:unit.charWidth,color};}
+   });flush();
+   line.forEach(unit=>{ctx.fillStyle=$(unit.dialogue?'dialogue':'narration').value;ctx.fillText(unit.char,margin+unit.x,top);});
+  });
   const preview=$('card');preview.width=1080;preview.height=height;preview.getContext('2d').drawImage(canvas,0,0);previewDirty=false;preview.hidden=false;$('card-wrap').hidden=false;renderSelectionLayer(lines,bodyTop,lineHeight,size,font,height);$('empty').hidden=true;$('save').disabled=false;$('copy').disabled=false;$('status').textContent='';$('preview-note').textContent='현재 미리보기와 동일한 이미지를 WebP로 저장합니다.';
  }catch(error){if(token===generation)$('status').textContent=error.message||'카드를 만들지 못했어요.';}
 }
