@@ -59,6 +59,8 @@ body { min-height: 100vh; display: block; margin: 0; padding: 50px 22px 65px; ba
 .post-body { margin-top: 23px; padding-top: 20px; min-width: 0; overflow-x: auto; border-top: 1px dashed #b6a17b; color: #4b4234; font-size: 15px; line-height: 1.95; overflow-wrap: anywhere; }
 .post-body a { color: #2c6147; }
 .post-body img { max-width: 100%; height: auto; border-radius: 0; box-shadow: none; }
+/* GitHub가 긴 첨부 이미지에 넣는 2,000px 높이 기준의 축소 크기를 해제한다. */
+.post-body img.js-gh-image-fallback { width: auto !important; height: auto !important; max-height: none !important; aspect-ratio: auto !important; }
 .post-body pre { padding: 14px; overflow-x: auto; background: #f1e7d3; border: 1px solid #c9b48e; border-radius: 0; }
 .post-body blockquote { margin-inline: 0; padding: 12px 17px; background: #f4ebcf; border: 0; }
 .post-body table { width: 100%; margin: 16px 0; border-collapse: collapse; border: 1px solid #a38b6b; background: #fffaf0; font: inherit; }
