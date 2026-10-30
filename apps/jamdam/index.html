@@ -331,7 +331,8 @@
 			':ballot_box:': '🗳️'
 		};
 
-		function categoryEmoji(shortcode) {
+		function categoryEmoji(shortcode, name) {
+			if (name === '내캐먹리뷰') return '✍️';
 			return EMOJI_SHORTCODE_MAP[shortcode] || '';
 		}
 
@@ -354,7 +355,7 @@
 						'" data-slug="' +
 						escapeHtml(c.slug) +
 						'">' +
-						'<span class="laminated-emoji" aria-hidden="true">' + categoryEmoji(c.emoji) + '</span> ' +
+						'<span class="laminated-emoji" aria-hidden="true">' + categoryEmoji(c.emoji, c.name) + '</span> ' +
 						escapeHtml(c.name) +
 						'</button>'
 					);
@@ -419,7 +420,7 @@
 						p.number +
 						'">' +
 						'<span class="post-category-sticker">' +
-						'<span class="laminated-emoji" aria-hidden="true">' + (categoryEmoji(p.category.emoji) || '📌') + '</span> ' + escapeHtml(p.category.name) +
+						'<span class="laminated-emoji" aria-hidden="true">' + (categoryEmoji(p.category.emoji, p.category.name) || '📌') + '</span> ' + escapeHtml(p.category.name) +
 						'</span>' +
 						'<span class="post-title">' +
 						(isPinned ? '<span class="pin-icon" aria-label="고정된 글">📌</span>' : '') +
