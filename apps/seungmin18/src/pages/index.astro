@@ -1,0 +1,124 @@
+---
+import { Image, getImage } from 'astro:assets';
+import campus from '../assets/campus.png';
+import schoolFront from '../assets/school-front.png';
+import student from '../assets/student.webp';
+import whale from '../assets/whale.png';
+import home from '../assets/home.png';
+import pine from '../assets/pine.png';
+import camellia from '../assets/camellia.png';
+import uniform from '../assets/uniform.png';
+import '../styles/school.css';
+
+const campusLarge = await getImage({ src: campus, width: 1672, format: 'webp' });
+const homeLarge = await getImage({ src: home, width: 1448, format: 'webp' });
+const uniformLarge = await getImage({ src: uniform, width: uniform.width, format: 'webp', quality: 90 });
+const menus = [{id:'home',name:'학교홈'},{id:'school',name:'학교소개'},{id:'life',name:'학교생활'},{id:'student',name:'학생마당'},{id:'guide',name:'방과 후'}];
+const sites = [{name:'컬러그라운드',href:'/colorground/'},{name:'나이트 하이웨이',href:'/nighthighway/'},{name:'아네모이',href:'/anemoi/'},{name:'윤해시',href:'/yunhaesi/'},{name:'유승민',href:'/seungmin/'},{name:'윤성민 (1997)',href:'/1997/'},{name:'윤성민 (2004)',href:'/2004/'},{name:'한민우',href:'/hanminwoo/'},{name:'줄리안',href:'/julian/'},{name:'주드',href:'/jude/'},{name:'윌로우',href:'/willow/'}];
+const facilities = [
+ {name:'정문',text:'해울학원 네 학교가 공동으로 사용하는 캠퍼스 출입구입니다. 학생들의 등하교와 방문객 출입이 이루어지며, 등교 시간에는 학생생활지도 활동을 통해 안전한 학교생활을 지원합니다.'},
+ {name:'운동장',text:'캠퍼스 중앙에 위치한 공동 체육 공간입니다. 남·여 중학교와 고등학교의 체육 수업 및 학교 행사를 위해 운영되며, 가장자리에는 학생들이 쉴 수 있는 그늘과 벤치가 마련되어 있습니다.'},
+ {name:'급식실',text:'운동장 끝에 위치한 공동 급식 시설입니다. 학년별로 이용 시간을 나누어 운영하며, 급식 순서는 매주 변경됩니다. 학생들은 학교별 지정 구역에서 식사합니다.'},
+ {name:'공용관',text:'학생들의 학습과 일상을 함께 지원하는 복합 교육 공간입니다. 아래층에는 매점과 도서관이, 위층에는 음악실·과학실·미술실·가정실·컴퓨터실이 있습니다. 특별실은 학교별 수업 일정에 따라 공동으로 사용합니다.'},
+ {name:'해울관',text:'입학식과 졸업식, 전체 조회, 축제 등 주요 학교 행사가 열리는 공동 강당입니다. 공용관 옆에 위치하며, 우천 시에는 실내 체육 활동 공간으로도 활용합니다.'},
+ {name:'해울남고',text:'남자 고등학교 학생들의 교과 수업과 학급 활동이 이루어지는 교사동입니다. 1층 현관에는 학년별 신발장이 마련되어 있으며, 위층에는 운동장과 캠퍼스를 바라보는 교실이 배치되어 있습니다.'},
+];
+const notices = [
+ {type:'학생부',title:'타 학교 교사동 출입 및 공용시설 이용 안내',text:'학생 여러분께 안내합니다.\n\n정문, 운동장, 급식실, 공용관 및 해울관은 네 학교가 공동으로 이용하는 시설입니다. 다만 특별한 사유 없이 이성 학교 교사동에 출입하는 행위는 교칙 위반에 해당합니다.\n\n행사 준비 또는 공식 업무로 출입이 필요한 학생은 사전에 허가를 받아 주시기 바랍니다. 공용시설에서도 서로 배려하며 질서를 지켜 주세요.\n\n학생생활지도부'},
+ {type:'급식실',title:'학년별 급식 순서 및 지정 좌석 이용 안내',text:'학생 여러분, 급식실 이용 안내입니다.\n\n학년별 식사 순서는 매주 바뀝니다. 지난주 순서와 혼동하지 않도록 확인한 뒤 이동해 주세요. 같은 학년의 남학교와 여학교 학생들이 함께 이용하므로 배식 줄과 퇴식구에서는 차례를 지켜 주시기 바랍니다.\n\n식사는 학교별로 정해진 구역에서 해 주세요. 맛있게 먹고, 사용한 자리는 다음 친구를 위해 정리해 주세요.\n\n급식실'},
+ {type:'교무실',title:'해울학원 공동 학사 운영 안내',text:'학생 및 학부모님께 안내드립니다.\n\n해울남중·해울남고·해울여중·해울여고는 시험 기간, 방학 및 개학 일정을 공동으로 운영합니다. 소풍, 수학여행, 축제, 운동회 등 주요 행사도 함께 진행합니다.\n\n행사 준비를 위해 타 학교 건물 출입이 필요한 학생은 담당 선생님께 먼저 문의해 주세요.\n\n교무실'},
+ {type:'시설안내',title:'공용관 특별실 사용 후 정리 정돈 부탁드립니다',text:'공용관 위층의 음악실, 과학실, 미술실, 가정실, 컴퓨터실은 네 학교가 함께 사용하는 공간입니다.\n\n수업이 끝난 뒤에는 개인 물품을 챙기고 책상과 의자를 정리해 주세요. 다음 수업 학생들이 복도에서 기다리고 있으니 출입구 앞에 모여 있지 않도록 부탁드립니다.\n\n특별실 담당'},
+];
+const news = [
+ {type:'고래고침',title:'컴퓨터실 분실물 찾아가 주시기 바랍니다 (쫌)',text:'안녕하십니까. 컴퓨터 동아리 고래고침입니다.\n\n공용관 컴퓨터실 사용 후 개인 물품을 꼭 챙겨 가 주시기 바랍니다. 저희가 네 학교 필통을 다 보관하고 있습니다. 이게 맞나 싶습니다.\n\n누구 건지 물어보면 다 자기 거 아니라 카는데, 그라면 필통이 혼자 걸어왔나. 주인 분께서는 조속히… 아니 니 거 맞으면 쫌 가져가라 ㅠㅠ\n\n읽어 주셔서 감사합니다. 자리 정리도 부탁드립니다. 이거는 진짜 정중하게 부탁드립니다.\n\n고래고침 부원 일동'},
+ {type:'학생글',title:'쪽지 배달 신청 양식 지켜 주시면 감사하겠습니다',text:'쪽지 전달을 부탁하시는 학우 여러분께 안내드립니다.\n\n받는 사람의 학교, 학년, 이름을 적어 주시기 바랍니다. “니 그 잘생긴 애 알제”라고만 쓰시면 제가 우째 압니까. 네 학교 중에 어딘데요 일단.\n\n그리고 “매점에 자주 오는 애”도 안 됩니다. 저희 다 매점 갑니다.\n\n다시 물어보러 다니는 동안 제 점심시간이 사라지고 있습니다. 협조 부탁드립니다. 밥 식는다 쫌…\n\n이름 없는 쪽지 들고 다니는 배달부 올림'},
+ {type:'학생글',title:'2학년 신발장 앞 통행로 확보에 협조 부탁드립니다',text:'남고 현관 2학년 신발장에 편지 넣으시는 분들께 안내드립니다.\n\n다들 어떻게 넣고 가시는 건지는 모르겠는데, 문 열면 편지가 우수수 떨어집니다. 정성은 알겠는데 저희 반도 실내화는 꺼내 신어야 안 되겠습니까.\n\n본인은 그거 다 주워서 가방에 넣고 그냥 올라갑니다. 읽는지는 저도 모릅니다. 친구라고 그런 거까지 우째 압니까.\n\n아무튼 편지 밟히면 서로 속상하니까 쪼매만 여유 있게 넣어 주세요. 통행로 확보 부탁드립니다. 이래 쓰면 공지 같나.\n\n지나가던 같은 반 학생'},
+ {type:'질문',title:'남고 2학년 안경 쓴 선배 성함 여쭤봐도 됩니까',text:'안녕하십니까. 질문 하나만 드리겠습니다.\n\n공용관에서 본 남고 선배인데 2학년 남색 넥타이에, 검은 머리 쪼매 길고 키 큽니다. 안경 썼고 엄청 졸려 보이는데 잘생겼습니다. 설명이 이거밖에 안 돼서 죄송합니다.\n\n혹시 어느 반 누구신지 아시는 분 계십니까. 친구가 궁금하다 캐서 대신 올립니다.\n\n진짜 친구가 물어보라 캤습니다. 자꾸 제 반 물어보지 마세요. 아 쫌 ㅠㅠ\n\n익명의 후배 드림'},
+];
+---
+<!doctype html>
+<html lang="ko" data-theme="light">
+ <head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#1c4266" />
+  <title>해울고등학교</title><meta name="description" content="배움은 깊게, 마음은 넓게. 부산의 언덕 위 해울남고, 열여덟 유승민과 함께하는 학교생활." />
+  <meta property="og:title" content="해울고등학교 · 유승민, 열여덟" /><meta property="og:description" content="부산의 언덕 위, 교실 맨 뒷자리의 유승민. 같은 학교에서 시작하는 이야기." /><meta property="og:image" content={new URL(campusLarge.src, Astro.site).href} /><meta property="og:type" content="website" />
+  <link rel="icon" href="/seungmin18/favicon.svg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" />
+ </head>
+ <body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+  <div class="utility"><div class="container utility-inner"><span>학교법인 해울학원</span><div><a href="/">전체 이야기</a><a href="/seungmin/">졸업생 사이트 ↗</a><details class="related"><summary>관련 사이트 <span class="related-chevron" aria-hidden="true"></span></summary><div class="related-menu">{sites.map(site=><a href={site.href}>{site.name}</a>)}</div></details></div></div></div>
+  <header class="school-header container">
+   <a href="#home" class="brand" data-go="home"><Image src={whale} alt="" width={58} height={58} /><span><strong>해울고등학교</strong><small>HAEUL HIGH SCHOOL</small></span></a>
+   <p class="header-motto">배움은 깊게, 마음은 넓게.</p>
+  </header>
+  <div class="nav-shell"><nav class="container main-nav" aria-label="학교 메뉴">{menus.map((menu,i)=><a href={`#${menu.id}`} data-go={menu.id} aria-current={i===0?'page':undefined}>{menu.name}</a>)}</nav></div>
+  <main id="main" tabindex="-1">
+   <section class="page home-page" id="home" aria-label="학교홈">
+    <div class="home-band"><div class="container hero">
+     <div class="hero-photo"><Image src={schoolFront} alt="바다가 내려다보이는 언덕길을 따라 해울학원 정문으로 등교하는 학생들의 수채화 풍경" widths={[640,1000,1400]} sizes="(max-width: 760px) 100vw, 70vw" loading="eager" fetchpriority="high" /></div>
+     <div class="hero-copy"><p>함께 배우고, 함께 자라는</p><h1>우리의 하루,<br />해울에서.</h1><a href="#school" data-go="school" class="text-link">해울을 소개합니다 <span aria-hidden="true">→</span></a></div>
+    </div></div>
+    <div class="container">
+     <div class="home-content">
+      <section class="notice-board"><div class="board-head"><div role="tablist" aria-label="학교 소식"><button type="button" role="tab" id="notices-tab" aria-selected="true" aria-controls="notice-list" data-news="notices">공지사항</button><button type="button" role="tab" id="news-tab" aria-selected="false" aria-controls="news-list" data-news="news">학교소식</button></div><a href="#life" data-go="life" aria-label="학교생활 더보기">＋</a></div>
+       <ul id="notice-list" role="tabpanel" aria-labelledby="notices-tab">{notices.map((notice,i)=><li><button type="button" data-notice={`notice-${i}`}><span>{notice.type}</span><strong>{notice.title}</strong><b aria-hidden="true">›</b></button></li>)}</ul>
+       <ul id="news-list" role="tabpanel" aria-labelledby="news-tab" hidden>{news.map((notice,i)=><li><button type="button" data-notice={`news-${i}`}><span>{notice.type}</span><strong>{notice.title}</strong><b aria-hidden="true">›</b></button></li>)}</ul>
+      </section>
+     </div>
+    </div>
+   </section>
+
+   <section class="page inner-page container" id="school" aria-labelledby="school-title" hidden>
+    <div class="page-heading"><p>학교홈 <span aria-hidden="true">›</span> 학교소개</p><h1 id="school-title" tabindex="-1">해울을 소개합니다</h1><span>배움은 깊게, 마음은 넓게.</span></div>
+    <div class="intro-copy"><h2>하나의 교문, 네 개의 학교.</h2><p>해울고등학교는 부산 서구의 언덕 중턱, 바다가 내려다보이는 해울학원 캠퍼스에 자리하고 있습니다. 같은 재단의 남·여 중학교와 고등학교가 운동장을 중심으로 하나의 교문을 함께 사용합니다.</p><p>학교별 교육과정과 생활을 이어가면서도, 학사일정과 학교 행사는 함께합니다. 교실 안의 배움부터 운동장과 공용관에서의 만남까지, 서로를 존중하며 함께 성장하는 학교를 만들어 갑니다.</p></div>
+    <h2 class="section-title">학교의 상징</h2><div class="identity-grid">{[{image:camellia,name:'교화',title:'동백꽃'},{image:pine,name:'교목',title:'해송'},{image:whale,name:'마스코트',title:'혹등고래'}].map(item=><article><Image src={item.image} alt={item.title} width={200} /><div><span>{item.name}</span><h3>{item.title}</h3></div></article>)}</div>
+    <section id="campus-map" class="campus-section"><div class="section-heading"><h2>캠퍼스 안내</h2><span>사진을 누르면 크게 볼 수 있습니다.</span></div><button type="button" class="image-button campus-image" data-image={campusLarge.src} data-image-alt="해울학원 캠퍼스 지도" aria-label="캠퍼스 지도 크게 보기"><Image src={campus} alt="해울남고·남중·여고·여중과 공용 시설을 표시한 캠퍼스 지도" widths={[640,1100,1672]} sizes="(max-width: 1200px) 95vw, 1160px" /></button><div class="facility-grid">{facilities.map((facility,i)=><article><div class="facility-heading"><span>{String(i+1).padStart(2,'0')}</span><h3>{facility.name}</h3></div><p>{facility.text}</p></article>)}</div></section>
+   </section>
+
+   <section class="page inner-page container" id="life" aria-labelledby="life-title" hidden>
+    <div class="page-heading"><p>학교홈 <span aria-hidden="true">›</span> 학교생활</p><h1 id="life-title" tabindex="-1">학교생활 안내</h1><span>교복 착용, 교내 시설 이용 및 동아리 활동 안내입니다.</span></div>
+    <section class="uniform-section"><h2>교복 착용 안내</h2><p>해울학원 고등학교 학생은 검은색 교복을, 중학교 학생은 회색 교복을 착용합니다. 교복은 마이·셔츠·조끼·가디건으로 구성되며, 남녀 학생 모두 학년별 지정 색상의 넥타이를 착용합니다.</p><figure class="uniform-figure"><button type="button" class="image-button" data-image={uniformLarge.src} data-image-alt="해울학원 중학교·고등학교 남녀 교복 안내" aria-label="교복 안내 이미지 크게 보기"><Image src={uniform} alt="회색 해울남중·해울여중 교복과 검은색 해울남고·해울여고 교복, 가디건과 조끼 안내" widths={[640,1100,1774]} sizes="(max-width: 1100px) 95vw, 1100px" /></button><figcaption>해울학원 교복 안내 · 이미지를 누르면 크게 볼 수 있습니다.</figcaption></figure><div class="tie-row">{[{year:'1학년',color:'#38725b',name:'초록색'},{year:'2학년',color:'#263f70',name:'남색'},{year:'3학년',color:'#793b51',name:'자주색'}].map(item=><div><i class="tie" style={`--tie-color:${item.color}`} aria-hidden="true"></i><span><strong>{item.year}</strong><small>{item.name} 넥타이</small></span></div>)}</div><p class="muted">학년별 넥타이 색상은 중학교와 고등학교에 동일하게 적용됩니다.</p></section>
+    <div class="life-grid"><article class="rule-panel"><h2>교사동 출입 안내</h2><p>학생의 안전과 원활한 수업 운영을 위해 이성 학교 교사동의 무단 출입을 제한합니다. 행사 준비 및 공식 업무로 출입이 필요한 경우 사전에 허가를 받아 주시기 바랍니다.</p><p>정문, 운동장, 급식실, 공용관 및 해울관은 공동 이용 시설입니다. 시설별 이용 안내와 담당 교사의 지도에 따라 이용해 주세요.</p></article><article id="meal" class="rule-panel"><h2>급식실 이용 안내</h2><p>공동 급식실은 학년별 이용 시간을 구분하여 운영하며, 급식 순서는 매주 변경됩니다. 같은 학년의 남학교와 여학교 학생이 동일한 시간대에 이용합니다.</p><p>식사는 학교별 지정 구역에서 해 주시기 바랍니다. 배식 및 퇴식 시에는 차례를 지키고 이동 통로를 확보하여 원활한 급식 운영에 협조해 주세요.</p></article></div>
+    <section id="club" class="club-directory-section"><h2>동아리 활동 안내</h2><p>학생들이 자신의 흥미와 적성을 발견하고 함께 배우며 성장할 수 있도록 다양한 동아리 활동을 운영합니다. 문화·예술, 체육, 학술·탐구, 정보·기술 등 여러 분야의 동아리 가운데 관심 있는 활동에 참여할 수 있습니다.</p><h3 class="club-examples-title">주요 동아리 소개</h3><p class="muted">아래는 교내에서 활동하는 동아리 중 일부입니다. 이 밖에도 다양한 동아리가 운영되고 있습니다.</p><div class="club-directory">
+     <article><h3>신문부</h3><p>교내 행사와 학생들의 이야기를 취재하고 학교 소식을 기사로 전하는 활동을 합니다.</p></article>
+     <article><h3>방송부</h3><p>교내 안내 방송과 학교 행사 진행에 참여하며 방송 제작 및 음향 운영을 배웁니다.</p></article>
+     <article><h3>도서부</h3><p>도서관 이용을 돕고 독서 활동과 책 소개를 통해 교내 독서 문화를 함께 만들어 갑니다.</p></article>
+     <article><h3>컴퓨터 동아리 ‘고래고침’</h3><p>컴퓨터 활용과 프로그래밍에 관심 있는 학생들이 모여 정보·기술 분야를 탐구합니다.</p></article>
+    </div><p class="muted">공용관 특별실은 학교별 수업 및 활동 일정에 따라 공동으로 이용합니다.</p></section>
+   </section>
+
+   <section class="page inner-page container" id="student" aria-labelledby="student-title" hidden>
+    <div class="page-heading student-page-heading"><p>학교홈 <span aria-hidden="true">›</span> 학생마당</p><h1 id="student-title" class="sr-only" tabindex="-1">유승민 학생생활기록부</h1></div>
+    <article class="student-file" aria-labelledby="file-title">
+     <header class="file-head"><div><p>해울고등학교</p><h2 id="file-title">학생생활기록부</h2></div><span class="file-status">재학</span></header>
+     <section class="student-record" aria-label="인적 및 학적 사항"><div class="student-photo"><button type="button" class="image-button" data-image={student.src} data-image-alt="유승민 학생증 사진" aria-label="유승민 학생증 사진 크게 보기"><img src={student.src} width={student.width} height={student.height} alt="검은 교복을 입은 유승민의 학생증 사진" loading="eager" decoding="async" /></button></div><div class="student-info"><div class="record-title"><span>인적·학적 사항</span><h3>유승민 <small>18세</small></h3><p>해울남고 2학년 1반, 이과</p></div><dl><div><dt>생일</dt><dd>10월 13일</dd></div><div><dt>동아리</dt><dd>컴퓨터 동아리 ‘고래고침’</dd></div><div><dt>키</dt><dd>179cm <small class="growth-note">아직 조금씩 크는 중</small></dd></div><div><dt>사는 곳</dt><dd>부산 서구 송도 언덕, 청록 대문 집<small class="school-distance">학교까지 버스로 두 정거장, 도보 15~20분</small></dd></div></dl></div></section>
+     <aside class="teacher-note" aria-labelledby="teacher-note-title"><div class="teacher-note-head"><h3 id="teacher-note-title">담임교사의 한마디</h3></div><blockquote>피부가 희고 눈매가 나른하여 다소 졸려 보이는 인상이나, 용모가 단정하고 눈에 띄는 학생임. 교실 뒷자리에 조용히 앉아 있는 경우가 많아 먼저 말을 걸기 어렵다는 평이 있으나, 친분을 맺고 싶어 하는 또래들의 관심이 꾸준함.</blockquote></aside>
+     <section class="record-section" aria-labelledby="observations-title"><div class="record-section-head"><span>01</span><h3 id="observations-title">학교생활 관찰 기록</h3></div><div class="profile-grid"><section><h4>용모 및 복장</h4><dl class="appearance-list"><div><dt>머리</dt><dd>검은 생머리로 앞머리가 눈을 반쯤 가림. 두발 지도를 받으면 대충 넘기는 편임.</dd></div><div><dt>눈</dt><dd>쌍꺼풀이 짙은 큰 갈색 눈. 1교시에는 늘 반쯤 감겨 있음.</dd></div><div><dt>교복</dt><dd>남색 넥타이를 느슨하게 매고 가디건을 착용함. 수업 시간에는 안경을 씀.</dd></div></dl></section><section class="preferences"><h4>관심 및 생활 습관</h4><h5>선호하는 활동</h5><ul><li>수학, 물리</li><li>단것</li><li>요즘 푹 빠진 판타지 소설</li><li>늦잠, 낮잠</li></ul><h5>참여가 소극적인 활동</h5><ul class="dislikes"><li>아침 기상</li><li>체육, 쉬는 시간의 공놀이</li></ul></section></div></section>
+     <section class="record-section family-section" aria-labelledby="family-title"><div class="record-section-head"><span>02</span><h3 id="family-title">가족 사항</h3></div><div class="family-list"><article><span>부</span><div><h3>유승철 <small>자동차 기업 엔지니어</small></h3><p>말수는 적으나 다정하고 책임감이 강함. 집의 고장 난 물건을 수리하고, 귀가가 늦은 가족을 데리러 가며, 자녀들이 좋아하는 간식을 말없이 챙기는 편임.</p></div></article><article><span>모</span><div><h3>김미희 <small>백반집 ‘바다식당’ 운영</small></h3><p>자갈치시장 골목에서 식당을 운영함. 자녀에 대한 자부심이 높으며 성적과 장부 프로그램, 요리 솜씨 등을 손님들에게 자주 이야기함.</p></div></article><article><span>제</span><div><h3>유경민 <small>해울남중 3학년</small></h3><p>형보다 말이 많고 잘 웃는 서글서글한 성격으로, 동네에서 인기가 많음. 해울남고 진학을 희망하나 성적이 다소 간당간당한 편임.</p></div></article></div></section>
+     <section class="record-section home-section" aria-labelledby="housing-title"><div class="record-section-head"><span>03</span><h3 id="housing-title">주거 환경 참고</h3></div><div class="record-housing"><div class="home-grid"><button type="button" class="image-button" data-image={homeLarge.src} data-image-alt="송도 언덕의 청록 대문 집" aria-label="승민이네 집 크게 보기"><Image src={home} alt="송도 언덕에 자리한 유승민 가족의 2층 집" widths={[600,1000,1448]} sizes="(max-width: 760px) 90vw, 55vw" /></button><div><p>부산 서구 송도 언덕의 청록 대문 집. 차 한 대가 겨우 오르는 골목 끝에 위치한, 낡았으나 관리가 잘 된 2층 주택임.</p><dl><div><dt>청록 대문</dt><dd>아버지가 매년 봄 같은 청록색으로 덧칠함. 모서리마다 지난해의 색이 비침.</dd></div><div><dt>주방</dt><dd>어머니 가게의 반찬과 학생이 직접 만든 반찬을 함께 보관함.</dd></div><div><dt>2층의 방</dt><dd>아버지에게 물려받은 오래된 데스크톱이 있음. 맑은 날에는 지붕 사이로 바다가 보임.</dd></div><div><dt>옥상</dt><dd>빨래 건조대, 상추 화분, 평상이 놓여 있음.</dd></div></dl></div></div><p class="hideout-note">교외 생활 메모: 머리가 복잡한 날에는 동네 어딘가의 비밀 아지트에 혼자 머무는 편임.</p></div></section>
+    </article>
+   </section>
+
+   <section class="page inner-page container" id="guide" aria-labelledby="guide-title" hidden>
+    <div class="page-heading"><p>학교홈 <span aria-hidden="true">›</span> 방과 후</p></div>
+    <article class="after-school-letter" aria-labelledby="guide-title">
+     <header class="letter-head"><span>해울고등학교</span><strong>가정통신문</strong><span>방과 후 활동 안내</span></header>
+     <div class="letter-body"><p class="letter-subject">참가 희망자에게</p><h1 id="guide-title" tabindex="-1">방과 후 활동 신청서</h1><p class="letter-message">방과 후 활동 참가 신청을 아래와 같이 안내드립니다.<br />참가를 희망하는 학생은 아래 신청권 중 한 곳을 선택하여 신청해 주시기 바랍니다.</p><div class="letter-sign">해울고등학교장 <span aria-hidden="true">해울<br />고등학교</span></div></div>
+     <div class="tear-caption"><span aria-hidden="true">✂</span> 희망하는 곳의 신청권을 선택해 주세요</div>
+     <div class="application-slips">
+      <a class="application-slip slip-active" href="https://www.univers.chat/character/8e8d9f33-5a94-4dad-bf5e-256bad238ca6" target="_blank" rel="noopener noreferrer" aria-label="유니챗에서 방과 후 활동 신청하기 (새 창)"><span class="slip-check" aria-hidden="true">✓</span><strong>유니챗</strong><span class="slip-action">신청하러 가기 ↗</span></a>
+      <button class="application-slip" type="button" disabled><span class="slip-check" aria-hidden="true"></span><strong>엘린</strong><span class="slip-action">준비 중</span></button>
+      <button class="application-slip" type="button" disabled><span class="slip-check" aria-hidden="true"></span><strong>티팟</strong><span class="slip-action">준비 중</span></button>
+     </div>
+    </article>
+   </section>
+  </main>
+  <footer class="school-footer"><div class="container"><div class="footer-info"><strong>해울고등학교</strong><div><p>부산광역시 서구 송도 언덕 중턱 · 학교법인 해울학원</p><p>학교는 가상입니다. 오르막과 첫사랑의 난이도는 현실적일 수 있습니다.</p><small>© HAEUL HIGH SCHOOL. ALL RIGHTS RESERVED.</small></div></div></div></footer>
+  <dialog id="content-dialog" aria-labelledby="dialog-title"><div class="dialog-head"><span>해울고등학교</span><button type="button" data-close aria-label="창 닫기">×</button></div><h2 id="dialog-title"></h2><div id="dialog-body"></div><button type="button" class="button" data-close>확인</button></dialog>
+  <dialog id="image-dialog" aria-label="이미지 크게 보기"><button type="button" data-close aria-label="이미지 닫기">닫기 ×</button><img id="large-image" alt="" /></dialog>
+  <script type="application/json" id="notice-data" set:html={JSON.stringify(Object.fromEntries([...notices.map((n,i)=>[`notice-${i}`,n]),...news.map((n,i)=>[`news-${i}`,n])]))}></script>
+  <script src="/seungmin18/school.js" is:inline type="module"></script>
+ </body>
+</html>

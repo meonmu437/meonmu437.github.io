@@ -18,6 +18,7 @@ const buildApps = [
 	{ dir: 'anemoi', outPath: 'anemoi' },
 	{ dir: 'yunhaesi', outPath: 'yunhaesi' },
 	{ dir: 'seungmin', outPath: 'seungmin' },
+	{ dir: 'seungmin18', outPath: 'seungmin18' },
 	{ dir: '1997', outPath: '1997' },
 	{ dir: '2004', outPath: '2004' },
 	{ dir: 'hanminwoo', outPath: 'hanminwoo' },

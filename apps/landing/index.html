@@ -185,6 +185,11 @@ h1 { margin: 0; font: 400 clamp(42px,7.5vw,78px)/1.25 'Jua',sans-serif; letter-s
 .taste-assorted { background: #e3d5ba; color: #6c5637; }
 @media(max-width: 700px) { .flavor-header { gap: 9px; } .menu-category .flavor-name { font-size: 27px; } .taste-sticker { font-size: 13px; padding-inline: 6px; } }
 @media(prefers-reduced-motion: reduce) { .menu-item:hover .item-arrow { transform: none; } }
+.menu-appendix { display:table; position:relative; max-width:calc(100% - 40px); margin:-3px 0 17px 40px; padding:10px 18px 11px 0; border:0; border-bottom:2px dotted #bc9872; background:transparent; color:#2c6147; font:400 20px/1.5 'SSRONET',sans-serif; text-decoration:none; }
+.menu-appendix::before { content:'↳'; display:inline-block; margin-right:7px; color:#b74030; font:400 20px/1 sans-serif; }
+.menu-appendix::after { content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(35deg,transparent 35%,#d97479 36% 65%,transparent 66%) 12% 0/8px 7px,linear-gradient(115deg,transparent 35%,#d6a733 36% 65%,transparent 66%) 40% 1px/8px 7px,linear-gradient(50deg,transparent 35%,#6f9a7b 36% 65%,transparent 66%) 72% 0/8px 7px,linear-gradient(125deg,transparent 35%,#7a9db1 36% 65%,transparent 66%) 100% 30%/8px 7px,linear-gradient(30deg,transparent 35%,#c393ad 36% 65%,transparent 66%) 96% 85%/8px 7px,linear-gradient(120deg,transparent 35%,#d6a733 36% 65%,transparent 66%) 61% 100%/8px 7px,linear-gradient(45deg,transparent 35%,#7a9db1 36% 65%,transparent 66%) 25% 100%/8px 7px; background-repeat:no-repeat; }
+.menu-appendix:hover { color:#b74030; border-bottom-color:#b74030; }
+.menu-appendix:focus-visible { outline:2px solid #2c6147; outline-offset:4px; }
 </style>
 </head>
 <body>
@@ -215,7 +220,7 @@ var GROUPS = [
     { name: '주드', href: 'jude/', desc: '숨기지 않는 정체, 숨겨둔 진심', emoji: '🗝️' },
   ]},
   { name: '츤데레맛', note: '툴툴대도 속은 따뜻하게', badge: '겉바속촉', items: [
-    { name: '유승민', href: 'seungmin/', desc: '무심한듯 다정한 백엔드 프로그래머', emoji: '💻' },
+    { name: '유승민', href: 'seungmin/', desc: '무심한듯 다정한 백엔드 프로그래머', emoji: '💻', appendix: { name: '곁들임 · 유승민의 열여덟', href: 'seungmin18/' } },
     { name: '윌로우', href: 'willow/', desc: '첫사랑 예외처리 중인 컴공생', emoji: '🌳' },
   ]},
   { name: '순정맛', note: '오래 묵힌 마음으로 깊은 맛', badge: '그때 그 맛', items: [
@@ -264,6 +269,13 @@ GROUPS.forEach(function(group,index) {
     var tasteLabel = taste ? '<span class="taste-sticker taste-' + taste[1] + '">' + taste[0] + '</span>' : '';
     link.innerHTML = '<span class="item-icon' + (item.href === 'yunhaesi/' ? ' item-icon-pair' : '') + '" aria-hidden="true">' + item.emoji + '</span><span><span class="item-name-row"><span class="item-name">' + item.name + '</span>' + tasteLabel + '</span><span class="item-description">' + item.desc + '</span></span><span class="item-arrow" aria-hidden="true">↗</span>';
     items.appendChild(link);
+    if (item.appendix) {
+      var appendix = document.createElement('a');
+      appendix.className = 'menu-appendix';
+      appendix.href = item.appendix.href;
+      appendix.textContent = item.appendix.name;
+      items.appendChild(appendix);
+    }
   });
   section.appendChild(items);
   mount.appendChild(section);
