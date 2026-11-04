@@ -215,6 +215,16 @@ function drawCardTheme(ctx,p,height,bodyTop,accent,showHeader=true){
   }
   break;
  }
+ // White cards retain a quiet edge when embedded on a white page.
+ if(p.mode==='light'){
+  const edge={jude:'#ded5c5',seungmin:'#cbd9d0',hanminwoo:'#ccd9e0'}[p.theme];
+  if(edge)frame(1,edge,2);
+  if(p.theme==='plain'&&p.paper.toLowerCase()==='#ffffff'){
+   ctx.strokeStyle='#d3dce6';ctx.lineWidth=2;
+   if(p.shadow){ctx.beginPath();ctx.roundRect(20,20,1010,h-63,17);ctx.stroke();}
+   else ctx.strokeRect(1,1,w-2,h-2);
+  }
+ }
  if(p.theme==='plain'&&p.divider&&p.divider!=='none'){
   const theme=p.divider.startsWith('yunhaesi-')?'yunhaesi':p.divider,mode=p.divider.startsWith('yunhaesi-')?p.divider.slice(9):p.mode;
   const palette=themePalette({...p,theme},mode);
