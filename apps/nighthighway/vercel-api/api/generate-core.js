@@ -91,21 +91,59 @@ ${shapeLine}
 class UpstreamOverloadedError extends Error {}
 class QuotaExhaustedError extends Error {}
 
-async function callGemini(prompt) {
+// 생각(thinking) 단계를 줄이면 응답이 훨씬 빨라진다. 모델마다 설정 방식이 달라서
+// 400으로 거부당하면 다음 설정으로 넘어가고, 통하는 설정은 인스턴스가 살아 있는
+// 동안 기억해 둔다. 마지막(null)은 설정 없이 보내는 기본 동작이다.
+const THINKING_OPTIONS = [{ thinkingBudget: 0 }, { thinkingLevel: 'minimal' }, null];
+let thinkingIndex = 0;
+
+const MAX_BUSY_RETRIES = 1;
+const BUSY_RETRY_DELAY_MS = 1500;
+const BUSY_RETRY_MIN_REMAINING_MS = 8000;
+
+async function callGemini(prompt, deadline) {
 	const model = process.env.GEMINI_MODEL || 'gemini-flash-latest';
 	const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
-	const res = await fetch(url, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({
-			contents: [{ parts: [{ text: prompt }] }],
-			generationConfig: {
-				responseMimeType: 'application/json',
-				responseSchema: CORE_SCHEMA,
-				temperature: 1,
-			},
-		}),
-	});
+
+	let res;
+	let busyRetries = 0;
+	for (;;) {
+		const thinking = THINKING_OPTIONS[thinkingIndex];
+		try {
+			res = await fetch(url, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					contents: [{ parts: [{ text: prompt }] }],
+					generationConfig: {
+						responseMimeType: 'application/json',
+						responseSchema: CORE_SCHEMA,
+						temperature: 1,
+						...(thinking ? { thinkingConfig: thinking } : {}),
+					},
+				}),
+				// 함수 제한 시간(20초)을 넘겨 응답 없이 끊기지 않도록 먼저 끊는다.
+				signal: AbortSignal.timeout(Math.max(1000, deadline - Date.now())),
+			});
+		} catch (err) {
+			if (err?.name === 'TimeoutError' || err?.name === 'AbortError') {
+				throw new UpstreamOverloadedError('Gemini API timed out');
+			}
+			throw err;
+		}
+		// 일시적 과부하(503)는 잠깐 쉬었다가 다시 시도한다. 남은 시간이 부족하면 포기한다.
+		if (res.status === 503 && busyRetries < MAX_BUSY_RETRIES && deadline - Date.now() > BUSY_RETRY_MIN_REMAINING_MS) {
+			busyRetries += 1;
+			await res.body?.cancel().catch(() => {});
+			await new Promise((resolve) => setTimeout(resolve, BUSY_RETRY_DELAY_MS));
+			continue;
+		}
+		if (res.status === 400 && thinkingIndex < THINKING_OPTIONS.length - 1) {
+			thinkingIndex += 1;
+			continue;
+		}
+		break;
+	}
 
 	if (!res.ok) {
 		const errText = await res.text();
@@ -132,7 +170,11 @@ async function callGemini(prompt) {
 }
 
 async function generateAppraisal(input) {
-	return callGemini(buildPrompt(input));
+	const startedAt = Date.now();
+	const deadline = startedAt + Number(process.env.GEMINI_DEADLINE_MS || 18000);
+	const appraisal = await callGemini(buildPrompt(input), deadline);
+	console.log(JSON.stringify({ event: 'generate-core', ms: Date.now() - startedAt, thinking: THINKING_OPTIONS[thinkingIndex] }));
+	return appraisal;
 }
 
 async function upstash(command) {
@@ -189,12 +231,13 @@ export default async function handler(req, res) {
 	// 5회 한도를 서로 갉아먹지 않게 하기 위해서다.
 	const dailyLimit = Number(process.env.DAILY_LIMIT || '5');
 	let newCount = 0;
+	let rateLimitKey = '';
 
 	if (!isBypassed) {
 		const forwardedFor = req.headers['x-forwarded-for'];
 		const ip = (Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor || '').split(',')[0].trim() || 'unknown';
 		const ipHash = hashIp(ip, process.env.RATE_LIMIT_SALT || '');
-		const rateLimitKey = `rl:core:${ipHash}:${todayUtc()}`;
+		rateLimitKey = `rl:core:${ipHash}:${todayUtc()}`;
 
 		try {
 			newCount = Number(await upstash(['INCR', rateLimitKey]));
@@ -216,6 +259,9 @@ export default async function handler(req, res) {
 		const appraisal = await generateAppraisal(input);
 		res.status(200).json({ ok: true, appraisal, remaining: isBypassed ? null : Math.max(0, dailyLimit - newCount) });
 	} catch (err) {
+		// 결과를 못 받았다면 오늘 횟수도 쓴 것으로 치지 않는다.
+		if (rateLimitKey) await upstash(['DECR', rateLimitKey]).catch(() => {});
+		console.error('generate-core failed:', err);
 		if (err instanceof QuotaExhaustedError) {
 			res.status(429).json({
 				ok: false,

@@ -1,0 +1,21 @@
+---
+import { Image } from 'astro:assets';
+import minyul from '../assets/minyul.webp';
+---
+<article class="fox-frontispiece" aria-label="구민율 인물 소개">
+ <div class="fox-portrait-row">
+  <figure class="portrait fox-portrait">
+   <button type="button" class="image-open" data-image={minyul.src} data-alt="구민율 프로필 사진" aria-label="구민율 사진 크게 보기"><Image src={minyul} alt="적갈색 머리와 여우 귀, 금빛 눈을 가진 구민율" widths={[240,480,832]} sizes="(max-width:650px) 190px, 210px"/></button>
+   <figcaption>사진에는 은폐 술법이 적용되지 않습니다.</figcaption>
+  </figure>
+  <div class="fox-biography">
+   <div class="fox-name"><h3><span lang="zh-Hant">九旻栗</span><small>구민율</small></h3><span class="fox-name-seal" aria-hidden="true">狐</span></div>
+   <p class="fox-identification">구미호. 다만, 꼬리는 아직 여덟 개.</p>
+   <dl class="fox-facts"><div><dt>나이</dt><dd>120세 <small>외견 20대 초반</small></dd></div><div><dt>신장</dt><dd>183cm</dd></div><div><dt>하는 일</dt><dd>주식회사 무탈 퇴마 담당</dd></div><div><dt>머무는 곳</dt><dd>회사 안쪽 휴게실 <small>본인 주장: 임시 거처</small></dd></div><div class="fox-ambition"><dt>바라는 것</dt><dd>아홉 번째 꼬리를 완성하고 등선하기</dd></div></dl>
+  </div>
+ </div>
+ <div class="fox-observations">
+  <section><span class="handling-number">하나</span><h4>겉모습만으로 짐작하지 말 것.</h4><p>붉은 기가 도는 적갈색 머리와 세로로 좁아지는 금빛 눈. 웃으면 송곳니가 드러나는 앳된 얼굴이지만, 무표정할 때는 선뜻 말을 걸기 어려울 만큼 인상이 날카롭다.</p><p class="fox-excuse">어려 보여도, 백 년 넘게 산 여우다.</p></section>
+  <section><span class="handling-number">둘</span><h4>호의는 천천히 건넬 것.</h4><p>경계심이 강하고 의심이 많아 이유 없는 친절에는 꿍꿍이부터 묻는다. 말보다 행동이 쌓이는 것을 보고서야 마음을 연다. 약속과 업무 지침은 꼼꼼하게 지키는 모범생.</p><p>말은 까칠해도 곤란한 사람은 결국 돕는다. 뒤늦게 붙이는 핑계까지 들어주면 된다.</p><p class="fox-excuse">그냥 두자니 거슬려서.<br/>나중에 일이 더 늘어나는 게 싫어서.</p></section>
+ </div>
+</article>

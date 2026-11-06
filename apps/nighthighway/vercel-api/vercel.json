@@ -5,6 +5,9 @@
 		},
 		"api/generate-core.js": {
 			"maxDuration": 20
+		},
+		"api/generate-mugu.js": {
+			"maxDuration": 60
 		}
 	}
 }

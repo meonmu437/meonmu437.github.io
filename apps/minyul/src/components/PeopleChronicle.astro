@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import cheongrin from '../assets/cheongrin.webp';
+import minho from '../assets/minho.webp';
+---
+<div class="people-chronicles">
+ <article class="chronicle-entry" aria-labelledby="gibok-name">
+  <header class="chronicle-heading"><h3 id="gibok-name">두기복 <small>약 480세</small></h3><span class="chronicle-relation">대표</span></header>
+  <p class="chronicle-identity">두꺼비 터줏신</p>
+  <div class="chronicle-body"><div><p>금테안경에 조끼 차림. 재개발로 더 좋은 터에 옮겨 앉은 운 좋은 두꺼비.</p><p>자리를 잃은 영물에게 일거리를 주고, 현실적인 조언과 생색을 함께 건넨다.</p></div></div>
+ </article>
+ <article class="chronicle-entry" aria-labelledby="sapsal-name">
+  <header class="chronicle-heading"><h3 id="sapsal-name">삽살이</h3><span class="chronicle-relation">상주</span></header>
+  <p class="chronicle-identity">무탈의 삽살개 · 이름은 따로 없음</p>
+  <div class="chronicle-body"><div><p>사람 말을 알아듣는 듯 눈치가 빠르고, 귀신의 기척에 민감하다.</p><p>허공을 향해 으르렁거리면 직원들도 주의를 기울인다.</p></div></div>
+ </article>
+ <article class="chronicle-entry" aria-labelledby="cheongrin-name">
+  <header class="chronicle-heading"><h3 id="cheongrin-name">서청린 <small>천 년 가까이</small></h3><span class="chronicle-relation">동료</span></header>
+  <p class="chronicle-identity">구렁이 영물 · 자칭 무탈 부장</p>
+  <div class="chronicle-body chronicle-illustrated"><div><p>언제든 선계로 오를 수 있지만, 은혜를 갚지 못한 선비의 환생을 기다린다.</p><p>민율의 꼬리 수를 세며 놀리는, 느긋하고 짓궂은 동료.</p></div><button type="button" class="chronicle-photo image-open" data-image={cheongrin.src} data-alt="서청린 프로필 사진" aria-label="서청린 사진 크게 보기"><Image src={cheongrin} alt="무탈 부장을 자칭하는 구렁이 영물 서청린" widths={[240,480]} sizes="120px"/></button></div>
+ </article>
+ <article class="chronicle-entry" aria-labelledby="minho-name">
+  <header class="chronicle-heading"><h3 id="minho-name">구민호</h3><span class="chronicle-relation">형</span></header>
+  <p class="chronicle-identity">떠돌이 구미호 · 민율의 형</p>
+  <div class="chronicle-body chronicle-illustrated"><div><p>사근사근한 웃음 뒤로 속내를 감춘 떠돌이 구미호. “열심히 살아봤자 밀어버리면 끝”이라며, 적당히 일하고 적당히 얻어먹는다.</p><p>터도 거처도 정하지 않아 동생조차 지금 어디 있는지 모른다.</p></div><button type="button" class="chronicle-photo image-open" data-image={minho.src} data-alt="구민호 프로필 사진" aria-label="구민호 사진 크게 보기"><Image src={minho} alt="민율의 형 구민호" widths={[240,480]} sizes="120px"/></button></div>
+ </article>
+</div>

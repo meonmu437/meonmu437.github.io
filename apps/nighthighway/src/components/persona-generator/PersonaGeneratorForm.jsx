@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 const API_URL = import.meta.env.PUBLIC_CHARACTER_API_URL || 'https://meonmeo437.vercel.app/api/generate';
+// 서버가 20초 안에 응답하도록 만들어져 있어서, 그보다 조금 길게 기다린 뒤 안내한다.
+const REQUEST_TIMEOUT_MS = 25000;
 const MIN_AGE = 20;
 
 function getAdminToken() {
@@ -144,11 +146,15 @@ export default function PersonaGeneratorForm() {
 			adminToken: getAdminToken(),
 		};
 
+		const controller = new AbortController();
+		const timer = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
 		try {
 			const res = await fetch(API_URL, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(payload),
+				signal: controller.signal,
 			});
 			const data = await res.json();
 
@@ -160,9 +166,15 @@ export default function PersonaGeneratorForm() {
 
 			setCharacter(data.character);
 			setStatus('done');
-		} catch {
+		} catch (error) {
 			setStatus('error');
-			setErrorMessage('서버에 연결할 수 없어요. 잠시 후 다시 시도해주세요.');
+			setErrorMessage(
+				error?.name === 'AbortError'
+					? '응답이 너무 늦어지고 있어요. 잠시 후 다시 시도해주세요.'
+					: '서버에 연결할 수 없어요. 잠시 후 다시 시도해주세요.',
+			);
+		} finally {
+			window.clearTimeout(timer);
 		}
 	}
 

@@ -1,0 +1,1051 @@
+---
+import CloudMotif from './CloudMotif.astro';
+import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
+---
+
+<div class="chapter-rule" aria-hidden="true"><span>巫</span></div>
+<section class="chapter mugu" id="sec-mugu" aria-labelledby="mugu-title">
+	<header class="chapter-heading">
+		<div class="chapter-title-row">
+			<h2 id="mugu-title" class="book-chapter-title"><span lang="zh-Hant">巫具支給</span><small>무구 지급</small></h2>
+			<div class="chapter-cloud"><CloudMotif /></div>
+		</div>
+		<p class="chapter-intro">신입 퇴마사에게는 업무용 무구 1점을 지급합니다. 아래 신청서를 작성하여 제출하시면, 대표실 검토 후 적합한 무구를 <span class="mugu-closing-phrase">배정해 드립니다.</span></p>
+	</header>
+
+	<form class="mugu-sheet" id="mugu-form" novalidate>
+		<div class="mugu-document-meta"><span>무탈 · 총무 서식 제01호</span><span>사내 비품 / 신입 지급용</span></div>
+		<div class="mugu-sheet-head">
+			<div>
+				<p class="mugu-sheet-kicker">주식회사 무탈 · 대표실</p>
+				<h3>무구 지급 신청서</h3>
+			</div>
+			<div class="mugu-approval" aria-label="결재란">
+				<span class="mugu-approval-label">결재</span>
+				<div><span>담당</span><strong>접수</strong></div>
+				<div><span>대표</span><strong class="mugu-approval-seal">검토</strong></div>
+			</div>
+		</div>
+
+		<div class="mugu-fields">
+			<div class="mugu-field">
+				<label class="mugu-label" for="mugu-element">기운</label>
+				<div class="mugu-control mugu-select">
+					<select id="mugu-element" name="element" aria-describedby="mugu-element-hint">
+						<option value="random" selected>랜덤</option>
+						{ELEMENTS.map((item) => <option value={item.id}>{item.name}({item.hanja}) · {item.trait}</option>)}
+					</select>
+				</div>
+				<p class="mugu-hint" id="mugu-element-hint"></p>
+			</div>
+
+			<div class="mugu-field">
+				<label class="mugu-label" for="mugu-spirit">모시는 신</label>
+				<div class="mugu-control mugu-select">
+					<select id="mugu-spirit" name="spirit" aria-describedby="mugu-spirit-hint">
+						<option value="random" selected>랜덤</option>
+						{SPIRITS.map((item) => <option value={item.id}>{item.name}{item.hanja ? `(${item.hanja})` : ''}</option>)}
+					</select>
+				</div>
+				<p class="mugu-hint" id="mugu-spirit-hint"></p>
+			</div>
+
+			<div class="mugu-field">
+				<label class="mugu-label" for="mugu-tool">무구</label>
+				<div class="mugu-control mugu-select">
+					<select id="mugu-tool" name="tool" aria-describedby="mugu-tool-hint">
+						<option value="random" selected>랜덤</option>
+						{TOOLS.map((item) => <option value={item.id}>{item.label || item.name}</option>)}
+						<option value="custom">직접 입력</option>
+					</select>
+				</div>
+				<p class="mugu-hint" id="mugu-tool-hint"></p>
+			</div>
+
+			<div class="mugu-field mugu-field--full" id="mugu-custom-wrap" hidden>
+				<label class="mugu-label" for="mugu-custom">직접 적는 무구</label>
+				<div class="mugu-control">
+					<input id="mugu-custom" name="customTool" type="text" maxlength="20" autocomplete="off" placeholder="예: 먹통, 장도, 단소" />
+				</div>
+			</div>
+
+			<div class="mugu-field">
+				<label class="mugu-label" for="mugu-concept">컨셉 <em>선택</em></label>
+				<div class="mugu-control">
+					<input id="mugu-concept" name="concept" type="text" maxlength="40" autocomplete="off" placeholder="예: 맑고 푸른 기운, 오래 묵어 조금 삐딱한 성미" />
+				</div>
+			</div>
+
+			<div class="mugu-field mugu-field--half">
+				<label class="mugu-label" for="mugu-material">재질 · 형태 <em>선택</em></label>
+				<div class="mugu-control">
+					<input id="mugu-material" name="material" type="text" maxlength="30" autocomplete="off" placeholder="예: 오동나무, 놋쇠 (비우면 알아서 정해 준다)" />
+				</div>
+			</div>
+
+			<div class="mugu-field mugu-field--half">
+				<label class="mugu-label" for="mugu-detail">바라는 쓰임 <em>선택</em></label>
+				<div class="mugu-control">
+					<input id="mugu-detail" name="detail" type="text" maxlength="40" autocomplete="off" placeholder="예: 길 찾기, 잡귀 쫓기" />
+				</div>
+			</div>
+		</div>
+
+		<p class="mugu-error" id="mugu-error" role="alert" hidden></p>
+		<p class="mugu-status" id="mugu-status" role="status" hidden>대표실에서 어울리는 무구를 고르는 중이에요. 길게는 1분쯤 걸릴 수 있어요.</p>
+
+		<div class="mugu-actions">
+			<button type="button" class="mugu-btn mugu-btn-ghost" id="mugu-shuffle">랜덤 뽑기</button>
+			<button type="submit" class="mugu-btn mugu-btn-main" id="mugu-submit">무구 받기</button>
+		</div>
+	</form>
+
+	<p class="mugu-caption">Gemini Flash Lite 모델을 사용, 하루 5회 생성 횟수 제한</p>
+	<p class="mugu-caption">무속 소재를 빌려온 재미용 허구입니다. 현실의 신앙이나 의례와는 관계가 없습니다.</p>
+
+	<article class="mugu-receipt" id="mugu-receipt" tabindex="-1" aria-labelledby="mugu-deity" hidden>
+		<div class="mugu-receipt-top">
+			<p class="mugu-receipt-kicker">무구 지급 확인서</p>
+			<span class="stamp mugu-stamp" id="mugu-stamp">수령</span>
+		</div>
+		<h3 class="mugu-deity"><span id="mugu-deity"></span><span class="mugu-deity-hanja" id="mugu-deity-hanja" lang="zh-Hant" hidden></span></h3>
+		<p class="mugu-meaning" id="mugu-meaning" hidden></p>
+		<p class="mugu-item"><span id="mugu-item"></span><span class="mugu-item-hanja" id="mugu-item-hanja" lang="zh-Hant" hidden></span></p>
+		<ul class="mugu-chips" id="mugu-chips"></ul>
+
+		<div class="mugu-blocks">
+			<section>
+				<h4>형태</h4>
+				<ul id="mugu-form-list"></ul>
+			</section>
+			<section>
+				<h4>권능</h4>
+				<ul id="mugu-ability-list"></ul>
+			</section>
+			<section>
+				<h4>기술</h4>
+				<ul class="mugu-skills" id="mugu-skill-list"></ul>
+				<div class="mugu-ultimate" id="mugu-ultimate"></div>
+			</section>
+			<section>
+				<h4>금기와 대가</h4>
+				<ul id="mugu-taboo-list"></ul>
+			</section>
+		</div>
+
+		<div class="mugu-receipt-foot">
+			<span class="handwritten" id="mugu-note"></span>
+			<div class="mugu-actions">
+				<button type="button" class="mugu-btn mugu-btn-ghost" id="mugu-copy">문구 복사</button>
+				<button type="button" class="mugu-btn mugu-btn-ghost" id="mugu-again">다시 받기</button>
+			</div>
+		</div>
+	</article>
+</section>
+
+<script>
+	import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
+
+	const API_URL = import.meta.env.PUBLIC_MUGU_API_URL || 'https://meonmeo437.vercel.app/api/generate-mugu';
+	const REQUEST_TIMEOUT_MS = 58000;
+	const NOTES = ['반납은 퇴사할 때만 받습니다.', '분실하면 대표님께 먼저 말할 것.', '함부로 휘두르지 말 것.'];
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	const $ = (id) => document.getElementById(id);
+	const form = $('mugu-form');
+	const lists = { element: ELEMENTS, spirit: SPIRITS, tool: TOOLS };
+	const selects = { element: $('mugu-element'), spirit: $('mugu-spirit'), tool: $('mugu-tool') };
+	const customWrap = $('mugu-custom-wrap');
+	const customInput = $('mugu-custom');
+	const materialInput = $('mugu-material');
+	const detailInput = $('mugu-detail');
+	const conceptInput = $('mugu-concept');
+	const errorEl = $('mugu-error');
+	const statusEl = $('mugu-status');
+	const buttons = [$('mugu-shuffle'), $('mugu-submit'), $('mugu-copy'), $('mugu-again')];
+	const submitButton = $('mugu-submit');
+	const receipt = $('mugu-receipt');
+	const stamp = $('mugu-stamp');
+	const copyButton = $('mugu-copy');
+
+	let busy = false;
+	let lastText = '';
+
+	const pick = (list) => list[Math.floor(Math.random() * list.length)];
+
+	function describe(key) {
+		const value = selects[key].value;
+		const hint = $(`mugu-${key}-hint`);
+		if (value === 'random') hint.textContent = '미지정 항목은 대표실에서 일괄 배정합니다.';
+		else if (value === 'custom') hint.textContent = '정해진 무구 말고 쓰고 싶은 물건이 있다면 직접 적는다.';
+		else hint.textContent = lists[key].find((item) => item.id === value)?.desc ?? '';
+	}
+
+	function setBusy(next, label) {
+		busy = next;
+		form.setAttribute('aria-busy', String(next));
+		buttons.forEach((button) => (button.disabled = next));
+		submitButton.textContent = next && label ? label : '무구 받기';
+		$('mugu-again').textContent = next && label ? label : '다시 받기';
+		statusEl.hidden = !(next && label);
+		receipt.classList.toggle('is-loading', next && Boolean(label));
+	}
+
+	function showError(message) {
+		errorEl.textContent = message;
+		errorEl.hidden = false;
+	}
+
+	function clearError() {
+		errorEl.hidden = true;
+		errorEl.textContent = '';
+	}
+
+	Object.keys(selects).forEach((key) => {
+		describe(key);
+		selects[key].addEventListener('change', () => {
+			describe(key);
+			if (key === 'tool') {
+				const custom = selects.tool.value === 'custom';
+				customWrap.hidden = !custom;
+				if (custom) customInput.focus();
+			}
+			clearError();
+		});
+	});
+
+	function shuffleAll() {
+		if (busy) return;
+		clearError();
+		const settle = () => {
+			Object.keys(selects).forEach((key) => {
+				selects[key].value = pick(lists[key]).id;
+				describe(key);
+			});
+			customWrap.hidden = true;
+		};
+		if (reduceMotion) {
+			settle();
+			return;
+		}
+		busy = true;
+		buttons.forEach((button) => (button.disabled = true));
+		form.classList.add('is-rolling');
+		let ticks = 0;
+		const timer = window.setInterval(() => {
+			settle();
+			ticks += 1;
+			if (ticks >= 9) {
+				window.clearInterval(timer);
+				form.classList.remove('is-rolling');
+				busy = false;
+				buttons.forEach((button) => (button.disabled = false));
+			}
+		}, 80);
+	}
+
+	function resolveSelection() {
+		const find = (key) => {
+			const value = selects[key].value;
+			if (value === 'random') return pick(lists[key]);
+			return lists[key].find((item) => item.id === value);
+		};
+
+		let tool = '';
+		let customTool = '';
+		if (selects.tool.value === 'custom') {
+			customTool = customInput.value.trim();
+			if (!customTool) {
+				showError('직접 적을 무구 이름을 입력해 주세요.');
+				customInput.focus();
+				return null;
+			}
+		} else {
+			tool = find('tool').name;
+		}
+
+		return {
+			element: find('element').name,
+			spirit: find('spirit').name,
+			tool,
+			customTool,
+			material: materialInput.value.trim(),
+			detail: detailInput.value.trim(),
+			concept: conceptInput.value.trim(),
+		};
+	}
+
+	function getAdminToken() {
+		return new URLSearchParams(location.search).get('dev') || '';
+	}
+
+	async function requestSheet(selection) {
+		let res;
+		const controller = new AbortController();
+		const timer = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+		try {
+			res = await fetch(API_URL, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ ...selection, adminToken: getAdminToken() }),
+				signal: controller.signal,
+			});
+		} catch (error) {
+			throw new Error(
+				error?.name === 'AbortError'
+					? '대표실 응답이 너무 늦어지고 있어요. 잠시 후 다시 시도해 주세요.'
+					: '서버에 연결할 수 없어요. 잠시 후 다시 시도해 주세요.',
+			);
+		} finally {
+			window.clearTimeout(timer);
+		}
+
+		let data = null;
+		try {
+			data = await res.json();
+		} catch {
+			// 본문이 JSON이 아니면 아래 공통 오류 문구로 처리한다.
+		}
+		if (!res.ok || !data?.ok) {
+			throw new Error(data?.message || '무구를 내어주지 못했어요. 잠시 후 다시 시도해 주세요.');
+		}
+		return data.sheet;
+	}
+
+	function fillList(id, items) {
+		$(id).replaceChildren(
+			...items.map((text) => {
+				const li = document.createElement('li');
+				li.textContent = text;
+				return li;
+			}),
+		);
+	}
+
+	function skillNode(tag, skill, tagName) {
+		const node = document.createElement(tag);
+		const label = document.createElement('span');
+		label.className = 'mugu-skill-tag';
+		label.textContent = tagName;
+		const name = document.createElement('strong');
+		name.textContent = skill.name;
+		const desc = document.createElement('p');
+		desc.textContent = skill.desc;
+		node.append(label, name, desc);
+		return node;
+	}
+
+	function renderSkills(skills, ultimate) {
+		const list = $('mugu-skill-list');
+		list.replaceChildren(...skills.map((skill) => skillNode('li', skill, '스킬')));
+		list.hidden = skills.length === 0;
+		const ultimateEl = $('mugu-ultimate');
+		ultimateEl.replaceChildren(...(ultimate ? [skillNode('div', ultimate, '필살기')] : []));
+		ultimateEl.hidden = !ultimate;
+	}
+
+	function renderSheet(result, selection) {
+		$('mugu-deity').textContent = result.deityName;
+		const hanjaEl = $('mugu-deity-hanja');
+		hanjaEl.textContent = result.deityHanja || '';
+		hanjaEl.hidden = !result.deityHanja;
+		const meaningEl = $('mugu-meaning');
+		meaningEl.textContent = result.deityMeaning || '';
+		meaningEl.hidden = !result.deityMeaning;
+		$('mugu-item').textContent = `내려받은 무구 · ${result.itemName}`;
+		const itemHanjaEl = $('mugu-item-hanja');
+		itemHanjaEl.textContent = result.itemHanja || '';
+		itemHanjaEl.hidden = !result.itemHanja;
+
+		const chips = [
+			['기운', selection.element],
+			['모시는 신', selection.spirit],
+			['무구', selection.tool || selection.customTool],
+		];
+		$('mugu-chips').replaceChildren(
+			...chips.map(([label, value]) => {
+				const li = document.createElement('li');
+				const b = document.createElement('b');
+				b.textContent = label;
+				li.append(b, document.createTextNode(value));
+				return li;
+			}),
+		);
+
+		fillList('mugu-form-list', result.form);
+		fillList('mugu-ability-list', result.abilities);
+		fillList('mugu-taboo-list', result.taboos);
+		renderSkills(result.skills || [], result.ultimate);
+		$('mugu-note').textContent = pick(NOTES);
+
+		// 뜻풀이("수식어(한자) 뜻 · 신계열(한자) 뜻")에서 수식어의 뜻만 남긴다.
+		const firstMeaning = (result.deityMeaning || '').split(' · ')[0].replace(/^\S+?\([^)]*\)\s*/, '').trim();
+
+		lastText = [
+			'# user의 무구',
+			'## 모시는 신',
+			`* ${result.deityName}${result.deityHanja ? `(${result.deityHanja})` : ''}`,
+			...(firstMeaning ? [`* ${firstMeaning}`] : []),
+			`* 기운: ${selection.element}`,
+			'## 무구',
+			`* 유형: ${selection.tool || selection.customTool}`,
+			`* 이름: ${result.itemName}${result.itemHanja ? `(${result.itemHanja})` : ''}`,
+			'## 형태',
+			...result.form.map((line) => `* ${line}`),
+			'## 권능',
+			...result.abilities.map((line) => `* ${line}`),
+			'## 기술',
+			...(result.skills || []).map((skill) => `* ${skill.name}: ${skill.desc}`),
+			...(result.ultimate ? [`* [필살기] ${result.ultimate.name}: ${result.ultimate.desc}`] : []),
+			'## 금기와 대가',
+			...result.taboos.map((line) => `* ${line}`),
+		].join('\n');
+
+		receipt.hidden = false;
+		receipt.classList.remove('is-new');
+		stamp.classList.remove('is-stamped');
+		void receipt.offsetWidth;
+		receipt.classList.add('is-new');
+		stamp.classList.add('is-stamped');
+		receipt.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+		receipt.focus({ preventScroll: true });
+	}
+
+	async function issue() {
+		if (busy) return;
+		clearError();
+		const selection = resolveSelection();
+		if (!selection) return;
+
+		setBusy(true, '지급 중…');
+		try {
+			renderSheet(await requestSheet(selection), selection);
+		} catch (error) {
+			showError(error.message || '무구를 내어주지 못했어요. 잠시 후 다시 시도해 주세요.');
+		} finally {
+			setBusy(false);
+		}
+	}
+
+	function fallbackCopy(text) {
+		const textarea = document.createElement('textarea');
+		textarea.value = text;
+		textarea.style.position = 'fixed';
+		textarea.style.opacity = '0';
+		document.body.appendChild(textarea);
+		textarea.focus();
+		textarea.select();
+		try {
+			document.execCommand('copy');
+		} finally {
+			document.body.removeChild(textarea);
+		}
+	}
+
+	function copyResult() {
+		if (!lastText) return;
+		const markCopied = () => {
+			copyButton.textContent = '복사됨';
+			window.setTimeout(() => (copyButton.textContent = '문구 복사'), 1500);
+		};
+		if (navigator.clipboard?.writeText) {
+			navigator.clipboard.writeText(lastText).then(markCopied, () => {
+				fallbackCopy(lastText);
+				markCopied();
+			});
+		} else {
+			fallbackCopy(lastText);
+			markCopied();
+		}
+	}
+
+	form.addEventListener('submit', (event) => {
+		event.preventDefault();
+		issue();
+	});
+	$('mugu-shuffle').addEventListener('click', shuffleAll);
+	$('mugu-again').addEventListener('click', issue);
+	copyButton.addEventListener('click', copyResult);
+</script>
+
+<style is:global>
+	.mugu [hidden] {
+		display: none !important;
+	}
+
+	.mugu-sheet,
+	.mugu-receipt {
+		position: relative;
+		background: var(--sheet);
+		border: 1px solid var(--line);
+		box-shadow: 5px 6px 0 var(--wash);
+	}
+
+	.mugu-sheet {
+		padding: 26px 32px 30px;
+	}
+
+	.mugu-sheet-head {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 20px;
+		padding-bottom: 18px;
+		margin-bottom: 24px;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.mugu-sheet-kicker {
+		font-size: 12px;
+		letter-spacing: 0.13em;
+		color: var(--red);
+	}
+
+	.mugu-sheet-head h3 {
+		margin-top: 4px;
+		font: 700 24px/1.5 var(--serif);
+		letter-spacing: -0.03em;
+	}
+
+	.mugu-fields {
+		display: grid;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		gap: 22px 28px;
+	}
+
+	.mugu-field {
+		grid-column: span 2;
+		min-width: 0;
+	}
+
+	.mugu-field--half {
+		grid-column: span 3;
+	}
+
+	.mugu-field--full {
+		grid-column: 1 / -1;
+	}
+
+	.mugu-label {
+		display: block;
+		font: 700 13px/1.6 var(--serif);
+		letter-spacing: 0.08em;
+		color: var(--ink);
+	}
+
+	.mugu-label em {
+		margin-left: 6px;
+		font: 400 11px/1.6 var(--sans);
+		letter-spacing: 0;
+		color: color-mix(in srgb, var(--ink) 80%, var(--sheet));
+	}
+
+	.mugu-control {
+		position: relative;
+	}
+
+	.mugu-control select,
+	.mugu-control input {
+		display: block;
+		width: 100%;
+		margin: 0;
+		padding: 9px 2px 8px;
+		border: 0;
+		border-bottom: 1px solid var(--muted);
+		border-radius: 0;
+		background: transparent;
+		color: var(--ink);
+		font: 400 16px/1.6 var(--sans);
+		appearance: none;
+		-webkit-appearance: none;
+	}
+
+	.mugu-select select {
+		padding-right: 26px;
+		cursor: pointer;
+	}
+
+	.mugu-select::after {
+		content: '▾';
+		position: absolute;
+		right: 4px;
+		bottom: 9px;
+		color: var(--muted);
+		pointer-events: none;
+	}
+
+	.mugu-control select option {
+		color: var(--ink);
+		background: var(--sheet);
+	}
+
+	.mugu-control input::placeholder {
+		color: color-mix(in srgb, var(--ink) 68%, var(--sheet));
+		opacity: 1;
+	}
+
+	.mugu-control select:hover,
+	.mugu-control input:hover {
+		border-bottom-color: var(--red);
+	}
+
+	.mugu-control select:focus-visible,
+	.mugu-control input:focus-visible {
+		outline: 2px solid var(--red);
+		outline-offset: 3px;
+		border-bottom-color: var(--red);
+	}
+
+	.mugu-hint {
+		min-height: 3.2em;
+		margin-top: 6px;
+		font-size: 12px;
+		line-height: 1.6;
+		color: color-mix(in srgb, var(--ink) 80%, var(--sheet));
+	}
+
+	.mugu-error {
+		margin-top: 18px;
+		font-size: 14px;
+		color: var(--red);
+	}
+
+	.mugu-status {
+		margin-top: 18px;
+		font-size: 14px;
+		color: color-mix(in srgb, var(--ink) 80%, var(--sheet));
+	}
+
+	.mugu-caption {
+		margin-top: 10px;
+		font-size: 13px;
+		line-height: 1.6;
+		color: color-mix(in srgb, var(--ink) 62%, var(--sheet));
+	}
+
+	.mugu-caption + .mugu-caption {
+		margin-top: 2px;
+	}
+
+	.mugu-receipt.is-loading {
+		opacity: 0.55;
+		transition: opacity 0.2s ease;
+	}
+
+	.mugu-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 12px;
+		margin-top: 26px;
+	}
+
+	.mugu-btn {
+		padding: 11px 24px;
+		border: 1px solid var(--red);
+		background: transparent;
+		color: var(--red);
+		font: 700 15px/1.4 var(--serif);
+		letter-spacing: 0.06em;
+		transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+	}
+
+	.mugu-actions .mugu-btn {
+		margin: 0;
+	}
+
+	.mugu-btn-main {
+		background: var(--red);
+		color: var(--sheet);
+	}
+
+	.mugu-btn-ghost {
+		border-color: var(--muted);
+		color: var(--ink);
+	}
+
+	.mugu-btn-ghost:hover:not(:disabled) {
+		border-color: var(--red);
+		color: var(--red);
+	}
+
+	.mugu-btn-main:hover:not(:disabled) {
+		background: transparent;
+		color: var(--red);
+	}
+
+	.mugu-btn:active:not(:disabled) {
+		transform: translateY(1px);
+	}
+
+	.mugu-btn:disabled {
+		opacity: 0.6;
+	}
+
+	.mugu-sheet.is-rolling select {
+		color: var(--red);
+	}
+
+	.mugu-receipt {
+		margin-top: 34px;
+		padding: 30px 34px 28px;
+		scroll-margin-top: calc(var(--sl-nav-height, 4rem) + 1rem);
+	}
+
+	.mugu-receipt:focus {
+		outline: none;
+	}
+
+	.mugu-receipt::before {
+		content: '';
+		position: absolute;
+		inset: 8px;
+		border: 1px solid color-mix(in srgb, var(--red) 40%, transparent);
+		pointer-events: none;
+	}
+
+	.mugu-receipt-top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+	}
+
+	.mugu-receipt-kicker {
+		font-size: 12px;
+		letter-spacing: 0.2em;
+		color: var(--red);
+	}
+
+	.mugu-stamp {
+		padding: 4px 14px;
+		border-width: 2px;
+		font-size: 20px;
+		opacity: 0;
+	}
+
+	.mugu-stamp.is-stamped {
+		opacity: 0.92;
+	}
+
+	.mugu-deity {
+		margin-top: 14px;
+		font: 700 clamp(38px, 6.4vw, 58px) / 1.25 var(--serif);
+		letter-spacing: 0.03em;
+	}
+
+	.mugu-deity-hanja {
+		margin-left: 0.55em;
+		font: 400 0.36em / 1.4 var(--serif);
+		letter-spacing: 0.14em;
+		color: color-mix(in srgb, var(--ink) 80%, var(--sheet));
+		white-space: nowrap;
+	}
+
+	.mugu-meaning {
+		margin-top: 4px;
+		font-size: 14px;
+		line-height: 1.7;
+		color: color-mix(in srgb, var(--ink) 80%, var(--sheet));
+	}
+
+	.mugu-item {
+		margin-top: 8px;
+		font: 400 17px/1.7 var(--serif);
+		color: color-mix(in srgb, var(--ink) 80%, var(--sheet));
+	}
+
+	.mugu-item-hanja {
+		margin-left: 0.6em;
+		font-size: 0.88em;
+		letter-spacing: 0.1em;
+	}
+
+	.mugu-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 18px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.mugu-chips li {
+		display: flex;
+		align-items: baseline;
+		gap: 8px;
+		margin: 0;
+		padding: 3px 11px;
+		border: 1px solid var(--line);
+		background: var(--paper);
+		font-size: 13px;
+	}
+
+	.mugu-chips b {
+		margin: 0;
+		font: 400 11px/1.6 var(--serif);
+		letter-spacing: 0.1em;
+		color: var(--red);
+	}
+
+	.mugu-blocks {
+		margin-top: 26px;
+	}
+
+	.mugu-blocks section {
+		padding: 20px 0;
+		border-top: 1px solid var(--line);
+	}
+
+	.mugu-blocks h4 {
+		font: 700 16px/1.6 var(--serif);
+		letter-spacing: 0.08em;
+		color: var(--red);
+	}
+
+	.mugu-blocks ul {
+		margin: 10px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.mugu-blocks li {
+		position: relative;
+		margin: 0;
+		padding-left: 16px;
+		font-size: 15px;
+		line-height: 1.9;
+		word-break: keep-all;
+	}
+
+	.mugu-blocks li + li {
+		margin-top: 6px;
+	}
+
+	.mugu-blocks li::before {
+		content: '';
+		position: absolute;
+		left: 2px;
+		top: 0.95em;
+		width: 5px;
+		height: 5px;
+		background: var(--red);
+		transform: rotate(45deg);
+	}
+
+	.mugu-blocks .mugu-skills {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+		margin: 12px 0 0;
+	}
+
+	.mugu-blocks .mugu-skills li,
+	.mugu-ultimate > div {
+		margin: 0;
+		padding: 12px 14px;
+		border: 1px solid var(--line);
+		background: var(--paper);
+	}
+
+	.mugu-blocks .mugu-skills li::before {
+		content: none;
+	}
+
+	.mugu-skill-tag {
+		display: block;
+		font: 400 11px/1.6 var(--serif);
+		letter-spacing: 0.12em;
+		color: var(--red);
+	}
+
+	.mugu-skills strong,
+	.mugu-ultimate strong {
+		display: block;
+		margin: 0;
+		font: 700 17px/1.6 var(--serif);
+		letter-spacing: -0.01em;
+	}
+
+	.mugu-skills p,
+	.mugu-ultimate p {
+		margin: 4px 0 0;
+		font-size: 14px;
+		line-height: 1.75;
+	}
+
+	.mugu-ultimate {
+		margin-top: 12px;
+	}
+
+	.mugu-ultimate > div {
+		border: 2px solid var(--red);
+		background: color-mix(in srgb, var(--red) 7%, var(--sheet));
+		padding: 14px 16px 15px;
+	}
+
+	.mugu-ultimate .mugu-skill-tag {
+		display: inline-block;
+		margin-bottom: 2px;
+		padding: 0 9px;
+		background: var(--red);
+		color: var(--sheet);
+		letter-spacing: 0.18em;
+	}
+
+	.mugu-ultimate strong {
+		font-size: 21px;
+	}
+
+	.mugu-receipt-foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 16px 20px;
+		padding-top: 20px;
+		border-top: 1px solid var(--line);
+	}
+
+	.mugu-receipt-foot .handwritten {
+		transform: rotate(-2deg);
+	}
+
+	.mugu-receipt-foot .mugu-actions {
+		margin-top: 0;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.mugu-receipt.is-new {
+			animation: mugu-in 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+		}
+
+		.mugu-stamp.is-stamped {
+			animation: mugu-stamp 0.45s 0.3s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+		}
+	}
+
+	@keyframes mugu-in {
+		from {
+			opacity: 0;
+			transform: translateY(16px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@keyframes mugu-stamp {
+		0% {
+			opacity: 0;
+			transform: scale(1.9) rotate(-14deg);
+		}
+		65% {
+			opacity: 0.95;
+			transform: scale(0.92) rotate(-5deg);
+		}
+		100% {
+			opacity: 0.92;
+			transform: scale(1) rotate(-5deg);
+		}
+	}
+
+	@media (max-width: 720px) {
+		.mugu-sheet {
+			padding: 22px 20px 24px;
+		}
+
+		.mugu-sheet-head h3 {
+			font-size: 21px;
+		}
+
+		.mugu-fields {
+			grid-template-columns: 1fr;
+			gap: 20px;
+		}
+
+		.mugu-field,
+		.mugu-field--half,
+		.mugu-field--full {
+			grid-column: auto;
+		}
+
+		.mugu-hint {
+			min-height: 0;
+		}
+
+		.mugu-receipt {
+			padding: 26px 22px 24px;
+		}
+
+		.mugu-actions .mugu-btn {
+			flex: 1 1 140px;
+		}
+
+		.mugu-blocks .mugu-skills {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	/* 총무부 비품 지급 서식 — 입력 및 생성 동작은 기존 양식 유지 */
+	.mugu-sheet{padding:24px 30px 28px;border-color:var(--muted);box-shadow:3px 4px 0 var(--wash);font-family:var(--sans)}
+	.mugu-document-meta{display:flex;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:.04em;color:var(--muted)}
+	.mugu-sheet-head{align-items:center;padding:24px 0;margin:0;border-bottom:3px double var(--muted)}
+	.mugu-sheet-kicker{font:500 11px/1.6 var(--sans);letter-spacing:.12em;color:var(--muted)}
+	.mugu-sheet-head h3{font:700 28px/1.5 var(--serif);letter-spacing:.1em;margin-top:6px}
+	.mugu-approval{display:grid;grid-template-columns:22px repeat(2,60px);align-self:center;border:1px solid var(--muted);flex-shrink:0;text-align:center}
+	.mugu-approval-label{display:grid;place-items:center;border-right:1px solid var(--line);font-size:11px;writing-mode:vertical-rl;letter-spacing:.3em}
+	.mugu-approval>div+div{border-left:1px solid var(--line)}
+	.mugu-approval>div>span{display:block;font-size:10px;border-bottom:1px solid var(--line);padding:2px 0}
+	.mugu-approval strong{display:grid;place-items:center;height:46px;font:400 16px/1 var(--pen);color:var(--muted)}
+	.mugu-approval .mugu-approval-seal{color:var(--red);transform:rotate(-8deg)}
+	.mugu-fields{gap:0;border:1px solid var(--line);border-top:0}
+	.mugu-field,.mugu-field--half{grid-column:1/-1;display:grid;grid-template-columns:112px minmax(0,1fr);gap:0;border-bottom:1px solid var(--line)}
+	.mugu-field:last-child{border-bottom:0}
+	.mugu-label{grid-column:1;grid-row:1 / span 2;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;align-content:center;gap:3px;padding:14px 10px;background:var(--wash);border-right:1px solid var(--line);font:600 13px/1.7 var(--sans);letter-spacing:0;text-align:center}
+	.mugu-label em{margin-left:0;display:block;width:100%;font-style:normal}
+	.mugu-control{grid-column:2;min-width:0;padding:7px 16px}
+	.mugu-control select,.mugu-control input{border-bottom:0;padding:8px 0;font-size:15px;min-height:42px}
+	.mugu-select select{padding-right:22px}
+	.mugu-select::after{right:18px;top:19px;bottom:auto}
+	.mugu-hint{grid-column:2;min-height:0;margin:0;padding:0 16px 12px;font-size:11px;line-height:1.7}
+	.mugu-sheet>.mugu-actions{border-top:1px solid var(--line);padding-top:18px;margin-top:24px}
+	.mugu-sheet .mugu-btn{font:600 14px/1.5 var(--sans);letter-spacing:0;padding:11px 22px}
+	@media(max-width:720px){
+		.mugu-sheet{padding:16px 14px 20px}
+		.mugu-document-meta{font-size:9px;letter-spacing:0;gap:6px}
+		.mugu-sheet-head{gap:12px;padding:20px 0;flex-wrap:wrap}
+		.mugu-sheet-head h3{font-size:23px;letter-spacing:.03em}
+		.mugu-approval{grid-template-columns:18px repeat(2,43px)}
+		.mugu-approval strong{height:36px;font-size:14px}
+		.mugu-fields{gap:0}
+		.mugu-field,.mugu-field--half,.mugu-field--full{grid-column:1/-1;grid-template-columns:76px minmax(0,1fr)}
+		.mugu-label{font-size:12px;padding:12px 6px}
+		.mugu-control{padding-inline:10px}
+		.mugu-control select,.mugu-control input{font-size:16px}
+		.mugu-hint{padding-inline:10px}
+		.mugu-select::after{right:11px}
+	}
+
+
+	/* 직접 기입란: 붉은 색연필을 겹쳐 칠한 거친 밑줄 */
+	.mugu-sheet .mugu-control:has(input){padding-bottom:15px;isolation:isolate}
+	.mugu-sheet .mugu-control:has(input)::after{
+		content:'';position:absolute;left:16px;right:16px;bottom:9px;height:7px;
+		pointer-events:none;transform:rotate(-.35deg);opacity:.8;
+		background:var(--red);
+		-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='8' viewBox='0 0 160 8'%3E%3Cg fill='none' stroke='black' stroke-linecap='round'%3E%3Cpath opacity='.55' stroke-width='1.5' d='M0 3.2L160 2M0 5L160 4M0 6.8L160 5.6'/%3E%3Cpath opacity='.8' stroke-width='.7' d='M0 2L160 3M0 4L160 5.5M0 6L160 4.4'/%3E%3C/g%3E%3C/svg%3E");
+		mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='8' viewBox='0 0 160 8'%3E%3Cg fill='none' stroke='black' stroke-linecap='round'%3E%3Cpath opacity='.55' stroke-width='1.5' d='M0 3.2L160 2M0 5L160 4M0 6.8L160 5.6'/%3E%3Cpath opacity='.8' stroke-width='.7' d='M0 2L160 3M0 4L160 5.5M0 6L160 4.4'/%3E%3C/g%3E%3C/svg%3E");
+		mask-size:160px 8px;mask-repeat:repeat-x;
+		clip-path:polygon(0 20%,99% 0,100% 65%,96% 90%,2% 100%);
+	}
+	.mugu-sheet .mugu-control input{
+		border:0;border-radius:0;background:transparent;padding-inline:7px;box-shadow:none;
+	}
+	.mugu-sheet .mugu-control input:focus-visible{
+		outline:2px solid color-mix(in srgb,var(--red) 55%,transparent);outline-offset:3px;
+	}
+	@media(max-width:720px){.mugu-sheet .mugu-control:has(input)::after{left:10px;right:10px}}
+
+</style>

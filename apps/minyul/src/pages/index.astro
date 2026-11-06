@@ -1,0 +1,58 @@
+---
+import CloudMotif from '../components/CloudMotif.astro';
+import IntroScene from '../components/IntroScene.astro';
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { Image } from 'astro:assets';
+import FoxFrontispiece from '../components/FoxFrontispiece.astro';
+import MuguIssuance from '../components/MuguIssuance.astro';
+import mutal from '../assets/mutal.png';
+import PeopleChronicle from '../components/PeopleChronicle.astro';
+import FieldBriefing from '../components/FieldBriefing.astro';
+import '../styles/archive.css';
+const likes=[['🍵','전통차','차는 따뜻하게 우려 내어줄 것.'],['🌰','밤다식 · 가래떡','단것은 별로라 해도 다과상은 남겨둘 것. 가래떡도 노릇하게 잘 구워줄 것.'],['🌳','볕과 오래된 나무','볕 드는 자리와 나무가 많은 산책길을 좋아한다.'],['🖌️','붓글씨 · 바둑','종이와 붓은 신중히 고를 것. 품질에 은근히 까다롭다.']];
+const rooms=[['응접 공간','출입문 바로 옆. 예약 없이 찾아오면 금빛 눈의 직원이 용건부터 묻는다. 약과가 나오면 운이 좋은 편.'],['탕비실','대추차, 보리차, 둥굴레차가 구비되어 있다. 커피는 늘 떨어져 있고, 약과 개수는 자주 안 맞는다.'],['회수품 보관함','현장에서 가져온 물건을 분리해 보관한다. 함부로 열지 말 것.'],['휴게실','야간 출동 뒤 쉬는 곳. 침상 아래에 방석과 담요가 깔려 있다. 본인 주장으로는 임시 거처.']];
+---
+<StarlightPage frontmatter={{title:"구민율",description:"도성야화 — 터를 잃은 구미호의 퇴마와 인간 세상 적응기",tableOfContents:false}}>
+<div class="my-content">
+  <IntroScene />
+  <div class="chapter-rule" aria-hidden="true"><span>狐</span></div>
+  <section class="chapter" id="sec-profile" aria-labelledby="profile-title"><header class="chapter-heading"><div class="chapter-title-row"><h2 id="profile-title" class="book-chapter-title"><span lang="zh-Hant">九尾狐傳</span><small>구미호전</small></h2><div class="chapter-cloud"><CloudMotif /></div></div></header>
+   <div class="fox-tale">
+    <p>옛날 옛날에, 어느 산에 터를 잡고 살던 여우 형제가 있었다. 그중 작은 여우는 아홉 번째 꼬리를 얻어 선계에 오르려, 오랜 세월 성실히 영기를 모았다.</p>
+    <p>허나 등선을 눈앞에 둔 어느 날, 산에 재개발이 들이닥쳤다. 수행처는 밀리고, 공들여 모은 영기마저 흩어지고 말았다.</p>
+    <p>그리하여 여우는 산에서 내려와 퇴마 회사에 취직하였으니. 선계행은 잠시 미루고, 인간 세상의 하루를 배우게 된 것이다.</p>
+    <p class="fox-tale-ending">오늘도 여우는 인간 세상으로 일하러 나서는구나.</p>
+   </div>
+   <div class="fox-handbook">
+    <header class="handling-title"><h3>여우 취급 주의서</h3><span class="handling-seal" aria-hidden="true">취급<br/>주의</span></header>
+    <FoxFrontispiece />
+    <section class="personal-effects handling-likes" aria-labelledby="handling-likes-title"><div class="handling-rule-heading"><span class="handling-number">셋</span><h3 id="handling-likes-title">기분을 풀어주고 싶다면.</h3></div><div class="likes">{likes.map(([icon,title,note])=><article><span class="effect-icon" aria-hidden="true">{icon}</span><h4>{title}</h4><p>{note}</p></article>)}</div></section>
+    <section class="handling-cautions" aria-labelledby="handling-cautions-title"><div class="handling-rule-heading"><span class="handling-number">넷</span><h3 id="handling-cautions-title">이 말과 행동은 주의할 것.</h3></div><ul><li>재개발</li><li>“여우 같다”는 말</li><li>허락 없는 손길 <span class="handwritten">…아마도.</span></li></ul></section>
+   </div>
+  </section>
+  <div class="chapter-rule" aria-hidden="true"><span>無</span></div>
+  <section class="chapter" id="sec-office" aria-labelledby="office-title"><header class="chapter-heading"><div class="chapter-title-row"><h2 id="office-title" class="book-chapter-title"><span lang="zh-Hant">株式會社 無脫</span><small>주식회사 무탈</small></h2><div class="chapter-cloud"><CloudMotif /></div></div><p class="chapter-intro">건물·시설 종합관리. 기이한 사정도 상담해 드립니다.</p></header><p class="office-copy">평범한 임대 빌딩의 한 층에 자리한 회사. 겉으로는 시설 점검과 환경 정비를 맡는 관리 업체지만, 실제로는 귀신 조사와 퇴마 의뢰를 전문으로 한다. 영물과 영적인 감각을 지닌 인간이 함께 일하며, 의뢰는 소개와 입소문으로 받는다.</p><figure class="office-map"><button type="button" class="image-open" data-image={mutal.src} data-alt="주식회사 무탈 사무실 안내도" aria-label="무탈 사무실 안내도 크게 보기"><Image src={mutal} alt="임대 빌딩 한 층에 자리한 무탈의 응접 공간, 업무 공간, 탕비실, 회수품 보관함과 여우가 잠든 휴게실" widths={[640,1100,1536]} sizes="(max-width:1100px) 95vw, 1000px"/></button><figcaption>사무실 안내도 · 이미지를 누르면 크게 볼 수 있습니다.</figcaption></figure><div class="room-list">{rooms.map(([title,text],i)=><article><span>{String(i+1).padStart(2,'0')}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div><div class="company-memo"><span class="stamp">업무 수칙</span><p>영적인 원인이 없는 일은 협력 업체로.<br/>처리 뒤에는 지출과 파손, 잔류 기운을 기록할 것.</p><span class="expense-receipt"><span class="expense-receipt-paper"><span class="expense-receipt-heading">주식회사 무탈</span><span class="expense-receipt-message">출장비 영수증도<br/>잊지 말고.</span><span class="expense-receipt-barcode" aria-hidden="true"></span></span></span></div><FieldBriefing /></section>
+  <div class="chapter-rule" aria-hidden="true"><span>緣</span></div>
+  <section class="chapter" id="sec-people" aria-labelledby="people-title"><header class="chapter-heading"><div class="chapter-title-row"><h2 id="people-title" class="book-chapter-title"><span lang="zh-Hant">因緣錄</span><small>인연록</small></h2><div class="chapter-cloud"><CloudMotif /></div></div><p class="chapter-deck">무탈하게, 함께 사는 이들.</p></header><PeopleChronicle /></section>
+  <MuguIssuance />
+  <div class="chapter-rule" aria-hidden="true"><span>請</span></div>
+  <section class="chapter request" id="sec-request" aria-labelledby="request-title">
+   <header class="chapter-heading"><div class="chapter-title-row"><h2 id="request-title" class="book-chapter-title"><span lang="zh-Hant">依賴接受</span><small>의뢰 접수</small></h2><div class="chapter-cloud"><CloudMotif /></div></div></header>
+   <div class="talisman-links" aria-label="이야기 플랫폼">
+    {[{platform:'유니챗',verse:'萬事大吉',reading:'만사대길',href:'https://www.univers.chat/character/bc896661-6637-4838-800a-a9a5bb85dfe2'},{platform:'엘린',verse:'所願成就',reading:'소원성취',href:undefined},{platform:'티팟',verse:'無事平安',reading:'무사평안',href:undefined}].map(({platform,verse,reading,href})=>{const Tag=href?'a':'button';return <Tag type={href?undefined:'button'} class:list={['platform-talisman',{'talisman-active':!!href}]} href={href} target={href?'_blank':undefined} rel={href?'noopener noreferrer':undefined} disabled={href?undefined:true} aria-label={`${platform} · ${reading} 부적 (${href?'새 창으로 열기':'준비 중'})`}>
+     <svg class="talisman-flourish" viewBox="0 0 100 38" fill="none" aria-hidden="true"><path d="M50 3v18M40 9l10-6 10 6M20 15l30 13 30-13M30 28l20 7 20-7"/></svg>
+     <span class="talisman-verse" lang="zh-Hant">{verse}</span>
+     <span class="talisman-reading">{reading}</span>
+     <strong class="talisman-platform">{platform}</strong>
+     <span class="talisman-ink-seal" aria-hidden="true">吉</span>
+    </Tag>})}
+   </div>
+  </section>
+
+ <dialog id="image-dialog" aria-label="이미지 크게 보기"><button type="button" id="close-image" aria-label="이미지 닫기">닫기 ×</button><img id="large-image" alt=""/></dialog>
+ <a class="back-top" href="#top" aria-label="맨 위로">↑</a>
+ <script src="/minyul/archive.js" type="module" is:inline></script>
+ <script src="/minyul/ink-text.js" type="module" is:inline></script>
+
+</div>
+</StarlightPage>

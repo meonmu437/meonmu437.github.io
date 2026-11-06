@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+<title>여우</title>
+<path d="M7 5 25 17h14L57 5l-3 32-22 24L10 37Z" fill="#bd6237"/>
+<path d="m12 12 11 9-10 7Zm40 0-11 9 10 7Z" fill="#4b362c"/>
+<path d="M10 31q10-1 22 14 12-15 22-14l-3 12-19 18-19-18Z" fill="#f6edd7"/>
+<path d="m18 30 8 3m12 0 8-3" fill="none" stroke="#34362f" stroke-width="3" stroke-linecap="round"/>
+<path d="M27 45q5-3 10 0l-5 6Z" fill="#34362f"/>
+</svg>

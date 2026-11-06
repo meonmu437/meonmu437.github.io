@@ -1,0 +1,29 @@
+---
+import CloudMotif from './CloudMotif.astro';
+---
+<script is:inline>
+ if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  document.documentElement.classList.add('ink-text-booting');
+  setTimeout(()=>document.documentElement.classList.remove('ink-text-booting'),4000);
+ }
+</script>
+<section class="cover heaven-intro" id="top" aria-labelledby="cover-title">
+ <div class="heaven-heading">
+  <div class="heaven-cloud cloud-west" aria-hidden="true">
+   <CloudMotif />
+  </div>
+  <div class="heaven-title-block"><h1 id="cover-title" lang="zh-Hant">都城夜話</h1><p class="heaven-title-reading">도성야화</p></div>
+  <div class="heaven-cloud cloud-east" aria-hidden="true">
+   <CloudMotif />
+  </div>
+ </div>
+ <div class="intro-prose" aria-label="도성야화 서문">
+  <p class="intro-opening">도시는 생각보다 많은 것을 품고 산다.</p>
+  <p>사람이 오래 머문 자리에는 흔적이 남고,<br/>정성을 들여 돌본 집에는 지키는 것이 깃든다.</p>
+  <p>편의점 야간 계산대에는 꼬리를 감춘 족제비가 서 있고,<br/>낡은 아파트 관리사무소에서는 두꺼비가 관리비 독촉장을 붙이고,<br/>재개발 공사장 펜스 너머에서는<br/>누군가 아직도 자기 집 대문을 찾아 헤맨다.</p>
+  <p>사람들은 대부분 모른다.<br/>알게 된 사람들은 조용히 한 곳에 전화를 건다.</p>
+  <p>그리고 그곳에서는 오늘도,<br/>출장비 영수증을 노려보던 누군가가 고개를 든다.</p>
+  <p>제 터를 잃고 이곳에 출근하게 된 여우가.</p>
+  <p class="intro-whisper">귀는 감춘 채로.</p>
+ </div>
+</section>

@@ -182,6 +182,7 @@ h1 { margin: 0; font: 400 clamp(42px,7.5vw,78px)/1.25 'Jua',sans-serif; letter-s
 .taste-sweet { background: #f0b9c6; color: #803d52; }
 .taste-sweet-tangy { background: #f4c5bd; color: #884a32; border-right-color: #f6dc60; }
 .taste-salty-sweet { background: #bddce5; color: #395e6a; }
+.taste-bittersweet { background: #eee8d1; color: #49563a; border-color: #fffaf0; outline-color: #7e86655c; }
 .taste-assorted { background: #e3d5ba; color: #6c5637; }
 @media(max-width: 700px) { .flavor-header { gap: 9px; } .menu-category .flavor-name { font-size: 27px; } .taste-sticker { font-size: 13px; padding-inline: 6px; } }
 @media(prefers-reduced-motion: reduce) { .menu-item:hover .item-arrow { transform: none; } }
@@ -222,6 +223,7 @@ var GROUPS = [
   { name: '츤데레맛', note: '툴툴대도 속은 따뜻하게', badge: '겉바속촉', items: [
     { name: '유승민', href: 'seungmin/', desc: '무심한듯 다정한 백엔드 프로그래머', emoji: '💻', appendix: { name: '곁들임 · 유승민의 열여덟', href: 'seungmin18/' } },
     { name: '윌로우', href: 'willow/', desc: '첫사랑 예외처리 중인 컴공생', emoji: '🌳' },
+    { name: '구민율', href: 'minyul/', desc: '등선은 보류, 오늘도 퇴마 출근 중', emoji: '🦊' },
   ]},
   { name: '순정맛', note: '오래 묵힌 마음으로 깊은 맛', badge: '그때 그 맛', items: [
     { name: '1997', href: '1997/', desc: '1997년, 첫사랑은 되감기 중', emoji: '📟' },
@@ -244,6 +246,7 @@ var TASTES = {
   'jude/': ['매콤','spicy'],
   'seungmin/': ['슴슴','mild'],
   'willow/': ['새콤','tangy'],
+  'minyul/': ['쌉싸름','bittersweet'],
   '1997/': ['달달','sweet'],
   '2004/': ['단짠','salty-sweet'],
   'colorground/': ['히어로 정식','assorted'],
