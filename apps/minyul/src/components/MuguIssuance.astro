@@ -103,14 +103,15 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 	<p class="mugu-caption">Gemini Flash Lite 모델을 사용, 하루 5회 생성 횟수 제한</p>
 	<p class="mugu-caption">무속 소재를 빌려온 재미용 허구입니다. 현실의 신앙이나 의례와는 관계가 없습니다.</p>
 
-	<article class="mugu-receipt" id="mugu-receipt" tabindex="-1" aria-labelledby="mugu-deity" hidden>
+	<article class="mugu-receipt" id="mugu-receipt" tabindex="-1" aria-labelledby="mugu-item" hidden>
 		<div class="mugu-receipt-top">
 			<p class="mugu-receipt-kicker">무구 지급 확인서</p>
 			<span class="stamp mugu-stamp" id="mugu-stamp">수령</span>
 		</div>
-		<h3 class="mugu-deity"><span id="mugu-deity"></span><span class="mugu-deity-hanja" id="mugu-deity-hanja" lang="zh-Hant" hidden></span></h3>
+		<h3 class="mugu-item"><span id="mugu-item"></span><span class="mugu-item-hanja" id="mugu-item-hanja" lang="zh-Hant" hidden></span></h3>
+		<p class="mugu-meaning" id="mugu-item-meaning" hidden></p>
+		<p class="mugu-deity"><span>모시는 신 · </span><span id="mugu-deity"></span><span class="mugu-deity-hanja" id="mugu-deity-hanja" lang="zh-Hant" hidden></span></p>
 		<p class="mugu-meaning" id="mugu-meaning" hidden></p>
-		<p class="mugu-item"><span id="mugu-item"></span><span class="mugu-item-hanja" id="mugu-item-hanja" lang="zh-Hant" hidden></span></p>
 		<ul class="mugu-chips" id="mugu-chips"></ul>
 
 		<div class="mugu-blocks">
@@ -352,7 +353,10 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 		const meaningEl = $('mugu-meaning');
 		meaningEl.textContent = result.deityMeaning || '';
 		meaningEl.hidden = !result.deityMeaning;
-		$('mugu-item').textContent = `내려받은 무구 · ${result.itemName}`;
+		$('mugu-item').textContent = result.itemName;
+		const itemMeaningEl = $('mugu-item-meaning');
+		itemMeaningEl.textContent = result.itemMeaning || '';
+		itemMeaningEl.hidden = !result.itemMeaning;
 		const itemHanjaEl = $('mugu-item-hanja');
 		itemHanjaEl.textContent = result.itemHanja || '';
 		itemHanjaEl.hidden = !result.itemHanja;
@@ -378,14 +382,10 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 		renderSkills(result.skills || [], result.ultimate);
 		$('mugu-note').textContent = pick(NOTES);
 
-		// 뜻풀이("수식어(한자) 뜻 · 신계열(한자) 뜻")에서 수식어의 뜻만 남긴다.
-		const firstMeaning = (result.deityMeaning || '').split(' · ')[0].replace(/^\S+?\([^)]*\)\s*/, '').trim();
-
 		lastText = [
 			'# user의 무구',
 			'## 모시는 신',
 			`* ${result.deityName}${result.deityHanja ? `(${result.deityHanja})` : ''}`,
-			...(firstMeaning ? [`* ${firstMeaning}`] : []),
 			`* 기운: ${selection.element}`,
 			'## 무구',
 			`* 유형: ${selection.tool || selection.customTool}`,
@@ -728,37 +728,28 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 		opacity: 0.92;
 	}
 
-	.mugu-deity {
-		margin-top: 14px;
-		font: 700 clamp(38px, 6.4vw, 58px) / 1.25 var(--serif);
-		letter-spacing: 0.03em;
-	}
-
-	.mugu-deity-hanja {
-		margin-left: 0.55em;
-		font: 400 0.36em / 1.4 var(--serif);
-		letter-spacing: 0.14em;
-		color: color-mix(in srgb, var(--ink) 80%, var(--sheet));
-		white-space: nowrap;
-	}
-
-	.mugu-meaning {
-		margin-top: 4px;
-		font-size: 14px;
-		line-height: 1.7;
-		color: color-mix(in srgb, var(--ink) 80%, var(--sheet));
-	}
-
 	.mugu-item {
-		margin-top: 8px;
-		font: 400 17px/1.7 var(--serif);
-		color: color-mix(in srgb, var(--ink) 80%, var(--sheet));
+		margin-top:14px;
+		font:700 clamp(32px,6.4vw,58px)/1.35 var(--serif);
+		letter-spacing:.03em;
+		overflow-wrap:anywhere;
 	}
-
 	.mugu-item-hanja {
-		margin-left: 0.6em;
-		font-size: 0.88em;
-		letter-spacing: 0.1em;
+		margin-left:.55em;
+		font:400 .36em/1.4 var(--serif);
+		letter-spacing:.14em;
+		color:color-mix(in srgb,var(--ink) 80%,var(--sheet));
+		display:inline-block;
+	}
+	.mugu-deity {
+		margin-top:12px;
+		font:400 17px/1.7 var(--serif);
+		color:color-mix(in srgb,var(--ink) 80%,var(--sheet));
+	}
+	.mugu-deity-hanja {margin-left:.6em;font-size:.88em;letter-spacing:.1em}
+	.mugu-meaning {
+		margin-top:4px;font-size:14px;line-height:1.7;
+		color:color-mix(in srgb,var(--ink) 80%,var(--sheet));
 	}
 
 	.mugu-chips {

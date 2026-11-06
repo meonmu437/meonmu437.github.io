@@ -18,13 +18,14 @@ const SHEET_SCHEMA = {
 		deityMeaning: { type: 'STRING' },
 		itemName: { type: 'STRING' },
 		itemHanja: { type: 'STRING' },
+		itemMeaning: { type: 'STRING' },
 		form: { type: 'ARRAY', items: { type: 'STRING' } },
 		abilities: { type: 'ARRAY', items: { type: 'STRING' } },
 		skills: { type: 'ARRAY', items: NAMED_SCHEMA },
 		ultimate: NAMED_SCHEMA,
 		taboos: { type: 'ARRAY', items: { type: 'STRING' } },
 	},
-	required: ['deityName', 'deityHanja', 'deityMeaning', 'itemName', 'itemHanja', 'form', 'abilities', 'skills', 'ultimate', 'taboos'],
+	required: ['deityName', 'deityHanja', 'deityMeaning', 'itemName', 'itemHanja', 'itemMeaning', 'form', 'abilities', 'skills', 'ultimate', 'taboos'],
 };
 
 function resolveAllowedOrigin(requestOrigin) {
@@ -119,6 +120,7 @@ ${conceptLine}
 3. deityMeaning: deityName의 뜻풀이 한 줄. 형식은 "수식어(한자) 뜻 · ${spirit.id}${spirit.hanja ? `(${spirit.hanja})` : ''} 뜻" 이다. 예: 청명(淸明) 맑고 밝게 갠 하늘 · 동자(童子) 어린 동자. 뜻은 사전적인 뜻을 짧게 적을 것.
 4. itemName(무구 이름): 두 글자 수식어 + "${toolName}". 예: 백운월도. 수식어는 deityName의 수식어와 다른 글자로 새로 지을 것. 이름의 끝부분은 반드시 다음과 같아야 한다: "${toolName}". 공백 없이 한글로만 쓴다.
 5. itemHanja: itemName의 한자 표기. ${toolHanjaRule}
+5-1. itemMeaning: itemName의 뜻풀이 한 줄. "수식어(한자) 뜻 · 무구명(한자) 뜻" 형식으로, 실제 itemName과 itemHanja에 맞춰 각 부분의 사전적인 뜻을 짧게 적을 것. 예: 백운(白雲) 흰 구름 · 월도(月刀) 반달 모양의 칼. 직접 입력된 고유어나 한자가 없는 부분에는 한자를 지어내지 말고 한글 뜻만 적을 것.
 6. form: 정확히 2개의 문장. 이 무구의 재질, 색, 크기, 결, 손에 쥔 느낌, 기운이 겉모습에 드러나는 방식을 구체적으로 묘사할 것.
 7. abilities: 정확히 4개의 문장. 기운과 모시는 신, 무구의 조합이 실제로 어떻게 작동하는지 구체적인 상황과 경계(대상, 범위, 조건)를 보여줄 것.
 8. skills: 정확히 2개. 각각 name(한글 2~6자의 기술 이름)과 desc(한 문장)를 쓴다. 무구 종류에 어울리는 기술이며 기운과 모시는 신의 특색이 드러나야 한다.
@@ -240,6 +242,7 @@ function validateSheet(raw, input) {
 		deityMeaning: text(raw.deityMeaning, 120),
 		itemName: text(raw.itemName, 30),
 		itemHanja: text(raw.itemHanja, 40),
+		itemMeaning: text(raw.itemMeaning, 160),
 		form: textList(raw.form, 2, 200),
 		abilities: textList(raw.abilities, 4, 240),
 		skills: skills && skills.every(Boolean) ? skills : null,
