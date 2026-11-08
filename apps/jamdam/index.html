@@ -281,7 +281,7 @@
 			<div class="toolbar">
 				<a href="../" class="back-link">&larr; 차림표로 돌아가기</a>
 				<a
-					href="https://github.com/meonmu437/meonmu437.github.io/new/main/apps/jamdam/content/posts?filename=new-post.md"
+					href="https://github.com/meonmu437/meonmu437.github.io/discussions/new?category=%EC%9E%A1%EB%8B%B4"
 					id="new-post-link"
 					class="new-post-link"
 					target="_blank"
@@ -367,10 +367,8 @@
 		}
 
 		function updateNewPostLink(categories) {
-			var nextId = allPosts.reduce(function (max, post) { return Math.max(max, post.number); }, 0) + 1;
 			var category = categories.find(function (c) { return c.slug === activeCategorySlug; }) || categories.find(function (c) { return c.name === '잡담'; });
-			var content = '---\nid: ' + nextId + '\ntitle: "새 글 제목"\ndate: ' + JSON.stringify(new Date().toISOString()) + '\ncategory: ' + JSON.stringify(category ? category.name : '잡담') + '\nemoji: ' + JSON.stringify(category ? category.emoji : '💬') + '\npinned: false\ndraft: true\n---\n\n여기에 글을 작성하세요. 발행하려면 위의 draft를 false로 바꾸세요.\n';
-			document.getElementById('new-post-link').href = 'https://github.com/' + REPO + '/new/main/apps/jamdam/content/posts?filename=' + String(nextId).padStart(4, '0') + '.md&value=' + encodeURIComponent(content);
+			document.getElementById('new-post-link').href = 'https://github.com/' + REPO + '/discussions/new?category=' + encodeURIComponent(category ? category.slug : '잡담');
 		}
 
 		var allPosts = [];
