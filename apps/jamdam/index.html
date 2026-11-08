@@ -485,7 +485,7 @@
 			try {
 				var res = await fetch('https://api.github.com/repos/' + REPO + '/discussions?per_page=100');
 				if (res.status === 403 || res.status === 429) {
-					listEl.innerHTML = '<p class="state-msg" role="status">목록을 잠시 불러올 수 없어요. (HTTP ' + res.status + ')<br>GitHub의 요청 횟수 제한에 걸렸을 수 있어요. 같은 네트워크에서는 한도를 함께 사용합니다.<br>잠시 기다렸다가 다시 방문해 주세요. 반복해서 새로고침하지 않아도 괜찮아요.</p>';
+					listEl.innerHTML = '<p class="state-msg" role="status">게시판 조회 한도에 도달했습니다. 잠시 기다렸다가 다시 방문해 주세요.</p>';
 					return;
 				}
 				if (!res.ok) throw new Error('HTTP ' + res.status);
