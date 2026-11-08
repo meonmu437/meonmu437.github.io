@@ -71,7 +71,6 @@ body { min-height: 100vh; display: block; margin: 0; padding: 50px 22px 65px; ba
 .anon-reaction-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border: 1px solid transparent; border-radius: 0; background: transparent; color: var(--ink); font-family: inherit; font-size: 15px; cursor: pointer; }
 .anon-reaction-btn.reacted { border-color: #b7403066; background: #fff5d7; }
 .anon-reaction-count { color: var(--muted); font-size: 12px; }
-#giscus-mount { margin-top: 30px; padding: 20px 15px; background: #f6eedc; border-top: 3px double #b7a17c; }
 .back-link--bottom { margin-top: 25px; }
 a:focus-visible,button:focus-visible { outline: 2px solid #b74030; outline-offset: 4px; }
 @media(max-width: 600px) {
@@ -86,3 +85,8 @@ a:focus-visible,button:focus-visible { outline: 2px solid #b74030; outline-offse
   #post-mount { padding-top: 30px; }
 }
 @media(prefers-reduced-motion: reduce) { .post-row,.category-tab { transform: none; } }
+
+/* Author HTML blocks in Markdown posts. */
+.post-body details { margin-block:16px; padding:12px 15px; border:1px solid #c6b493; }
+.post-body summary { cursor:pointer; color:#2c6147; }
+.post-body video { max-width:100%; height:auto; }

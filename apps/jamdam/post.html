@@ -221,9 +221,6 @@
 		text-align: left;
 	}
 
-	#giscus-mount {
-		margin-top: 1.75rem;
-	}
 </style>
 <link rel="stylesheet" href="diary.css" />
 </head>
@@ -251,7 +248,6 @@
 
 			<div id="anon-reactions"></div>
 
-			<div id="giscus-mount"></div>
 
 			<a href="index.html" class="back-link back-link--bottom">&larr; 목록으로 돌아가기</a>
 		</div>
@@ -259,9 +255,7 @@
 
 	<script>
 		var REPO = 'meonmu437/meonmu437.github.io';
-		var REPO_ID = 'R_kgDOTsJbQQ';
-		var CATEGORY = '잡담';
-		var CATEGORY_ID = 'DIC_kwDOTsJbQc4DC8KA';
+
 
 		function escapeHtml(s) {
 			var d = document.createElement('div');
@@ -383,31 +377,11 @@
 			});
 		}
 
-		function mountGiscus(discussionNumber) {
-			var script = document.createElement('script');
-			script.src = 'https://giscus.app/client.js';
-			script.setAttribute('data-repo', REPO);
-			script.setAttribute('data-repo-id', REPO_ID);
-			script.setAttribute('data-category', CATEGORY);
-			script.setAttribute('data-category-id', CATEGORY_ID);
-			script.setAttribute('data-mapping', 'number');
-			script.setAttribute('data-term', String(discussionNumber));
-			script.setAttribute('data-strict', '0');
-			script.setAttribute('data-reactions-enabled', '0');
-			script.setAttribute('data-emit-metadata', '0');
-			script.setAttribute('data-input-position', 'top');
-			script.setAttribute('data-theme', 'light');
-			script.setAttribute('data-lang', 'ko');
-			script.crossOrigin = 'anonymous';
-			script.async = true;
-			document.getElementById('giscus-mount').appendChild(script);
-		}
-
 		async function loadPost() {
 			var id = new URLSearchParams(location.search).get('id');
 			var mount = document.getElementById('post-mount');
 
-			if (!id) {
+			if (!id || !/^[1-9]\d*$/.test(id)) {
 				mount.innerHTML = '<p class="state-msg">글 번호가 없어요. 목록에서 다시 눌러주세요.</p>';
 				return;
 			}
@@ -415,9 +389,7 @@
 			document.getElementById('post-command').textContent = '기록 #' + id;
 
 			try {
-				var res = await fetch('https://api.github.com/repos/' + REPO + '/discussions/' + id, {
-					headers: { Accept: 'application/vnd.github.html+json' },
-				});
+				var res = await fetch('data/posts/' + id + '.json');
 				if (!res.ok) throw new Error('HTTP ' + res.status);
 				var post = await res.json();
 				document.getElementById('post-category').textContent = post.category?.name || '미분류';
@@ -435,7 +407,7 @@
 					'</div>';
 
 				renderAnonReactions(post.number);
-				mountGiscus(post.number);
+
 			} catch (e) {
 				mount.innerHTML = '<p class="state-msg">글을 불러오지 못했어요: ' + escapeHtml(e.message) + '</p>';
 			}
