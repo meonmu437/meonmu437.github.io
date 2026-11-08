@@ -1,45 +1,66 @@
 ---
-const notes = [
-  { number: '01', title: '남은 혼', text: '미련과 원한 때문에 떠나지 못한 혼. 오래 머물면 산 사람에게 탈을 일으키며, 혼이 떠난 뒤에도 해로운 기운인 살은 남을 수 있다.' },
-  { number: '02', title: '깃든 물건', text: '유품과 오래된 물건에는 집착이나 기운이 밴다. 주인이 바뀌면서 탈이 옮기도 한다. 신물과 방자물은 귀신이 없어도 주의할 것.' },
-  { number: '03', title: '집과 터', text: '집을 지키는 존재와 오래 기운이 고인 자리가 있다. 이사와 철거가 묵은 문제를 깨우기도 한다. 모든 존재가 망자의 혼인 것은 아니다.' },
-  { number: '04', title: '금기와 징후', text: '버려진 물건이나 남의 제물은 함부로 건드리지 않는다. 다만 소문만으로 귀신의 소행이라 단정하지 않는다.' },
+import CloudMotif from './CloudMotif.astro';
+const verses = [
+  {number:'一',title:'남은 혼',lines:[
+    ['未放餘情','미방여정','못 놓은 마음 하나 빈자리에 남았으니'],
+    ['冤客失路','원객실로','억울한 이 원귀 되고 길 잃은 이 객귀 되네'],
+    ['待人之魂','대인지혼','그중엔 짝을 기다리고 돌봄 바라는 혼도 있다'],
+  ]},
+  {number:'二',title:'깃든 물건',lines:[
+    ['舊物留心','구물유심','오래 쓴 물건에도 마음 한 자락 배어들어'],
+    ['主易事隨','주역사수','주인이 바뀌면은 사연까지 따라가네'],
+    ['莫輕拾取','막경습취','아서라 남의 제물 함부로 줍지 마라'],
+  ]},
+  {number:'三',title:'집과 터',lines:[
+    ['非皆亡魂','비개망혼','보이지 않는 것이 모두 다 혼은 아니라'],
+    ['神守魅戲','신수매희','집 지키는 신도 있고 내기 좋은 도깨비도 있네'],
+    ['宅毁皆散','택훼개산','집 헐고 터 뒤집히면 깃든 것도 갈 곳 잃네'],
+  ]},
+  {number:'四',title:'무탈의 일',lines:[
+    ['憐亦有祟','연역유수','사정이 딱하다고 탈까지 없을쏘냐'],
+    ['久魂病人','구혼병인','묵은 혼 산 이 앓게 하고 떠난 뒤엔 살이 남네'],
+    ['先察後問','선찰후문','무탈은 먼저 살피고 남은 까닭 묻는다네'],
+  ]},
 ];
 ---
-<aside id="sec-ghosts" class="field-briefing" aria-labelledby="field-briefing-title">
-  <header class="briefing-head">
-    <span class="briefing-source">주식회사 무탈 · 신입 교육 자료</span>
-    <span class="briefing-copy">사내 열람용</span>
-  </header>
-  <h3 id="field-briefing-title">현장 출동 전 참고사항</h3>
-  <p class="briefing-intro">귀신의 이름보다, 남은 사연과 머무는 자리를 먼저 살필 것.</p>
-  <div class="briefing-notes">
-    {notes.map(({ number, title, text }) => <section class="briefing-note">
-      <h4><span aria-hidden="true">{number}</span>{title}</h4>
-      <p>{text}</p>
-    </section>)}
+<section id="sec-ghosts" class="ghost-tale" aria-labelledby="field-briefing-title">
+  <div class="ghost-document">
+    <div class="ghost-document-band"><span>주식회사 무탈 · 신입 교육 자료</span><span>사내 열람용</span></div>
+    <header class="chapter-heading ghost-heading">
+      <div class="chapter-title-row">
+        <h3 id="field-briefing-title" class="book-chapter-title"><span lang="zh-Hant">鬼談</span><small>귀담</small></h3>
+        <div class="chapter-cloud"><CloudMotif /></div>
+      </div>
+    </header>
+    <p class="ghost-intro">원귀와 객귀, 몽달귀와 손각시, 유품에 깃든 혼과 집을 지키는 가신, 장난을 즐기는 도깨비까지.<br /> 사람의 눈에 보이지 않을 뿐, 도성에는 저마다의 사연을 품은 것들이 함께 산다.</p>
+    <div class="ghost-verses">
+      {verses.map(({number,title,lines},index)=><section class="ghost-verse" aria-labelledby={`ghost-verse-${index}`}>
+        <h4 id={`ghost-verse-${index}`}><span lang="zh-Hant">{number}</span><span aria-hidden="true"> · </span>{title}</h4>
+        <div class="ghost-verse-lines">{lines.map(([hanja,reading,line])=><p class="ghost-verse-line"><span class="verse-hanja" lang="zh-Hant">{hanja}</span><span class="verse-translation"><span class="verse-reading">{reading} · </span>{line}</span></p>)}</div>
+      </section>)}
+    </div>
+    <p class="ghost-footnote">분류는 참고용. 정체는 현장에서 확인할 것.</p>
   </div>
-  <footer class="briefing-foot">
-    <p class="briefing-principle"><strong>분류는 참고용.</strong> 정체는 현장에서 확인할 것.</p>
-    <p class="briefing-care">망자의 사연은 산 사람의 상처와 이어져 있다. 어느 쪽의 고통도 가볍게 다루지 말 것.</p>
-  </footer>
-</aside>
+</section>
 
 <style>
-  .field-briefing{position:relative;margin-top:42px;padding:24px 28px 25px;background:var(--sheet);border-block:1px solid var(--muted);box-shadow:0 3px 0 var(--wash);color:var(--ink)}
-  .briefing-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:11px;border-bottom:1px solid var(--line);font:400 10px/1.6 var(--sans);color:var(--muted);letter-spacing:.04em}
-  .briefing-copy{white-space:nowrap;border:1px solid var(--line);padding:1px 5px}
-  .field-briefing h3{margin:19px 0 0;font:700 23px/1.6 var(--serif);letter-spacing:.025em}
-  .briefing-intro{margin:7px 0 0;font:400 13px/1.85 var(--serif);color:var(--muted)}
-  .briefing-notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 30px;margin-top:23px}
-  .briefing-note{min-width:0;border-top:1px solid var(--line);padding:17px 0 19px}
-  .briefing-note h4{display:flex;align-items:baseline;gap:11px;margin:0;font:700 16px/1.7 var(--serif)}
-  .briefing-note h4 span{font:400 11px/1.5 var(--sans);color:var(--muted);letter-spacing:.06em}
-  .briefing-note p{margin:8px 0 0;font:400 14px/1.95 var(--serif);word-break:keep-all;overflow-wrap:anywhere}
-  .briefing-foot{border-top:1px solid var(--line);padding-top:18px}
-  .briefing-principle{margin:0;font:700 16px/1.9 var(--serif);color:var(--red);text-wrap:pretty}
-  .briefing-principle strong{position:relative;display:inline-block;isolation:isolate;font-weight:700}
-  .briefing-principle strong::after{content:'';position:absolute;z-index:-1;left:-3px;right:-3px;bottom:3px;height:7px;opacity:.3;background:repeating-linear-gradient(174deg,transparent 0 1px,var(--red) 1px 2px,transparent 2px 3px);clip-path:polygon(0 30%,98% 0,100% 80%,3% 100%);transform:rotate(-1deg)}
-  .briefing-care{margin:10px 0 0;font:400 11px/1.9 var(--sans);color:var(--muted)}
-  @media(max-width:650px){.field-briefing{margin-top:30px;padding:19px 19px 21px}.field-briefing h3{font-size:20px;margin-top:16px}.briefing-head{font-size:9px;letter-spacing:0}.briefing-intro{font-size:12px}.briefing-notes{grid-template-columns:1fr;gap:0;margin-top:19px}.briefing-note{padding:15px 0}.briefing-note p{font-size:14px}.briefing-principle{font-size:14px}.briefing-care{font-size:11px}}
+  .ghost-tale{margin-top:58px;color:var(--ink);scroll-margin-top:24px}
+  .ghost-document{padding:0 32px 26px;background:var(--sheet);border-block:1px solid var(--muted);box-shadow:0 3px 0 var(--wash)}
+  .ghost-document-band{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font:400 10px/1.7 var(--sans);letter-spacing:.05em;color:var(--muted)}
+  .ghost-document-band>span:last-child{white-space:nowrap}
+  .ghost-heading{margin:31px 0 24px}
+  .ghost-intro{font:400 14px/2 var(--serif);margin:0;word-break:keep-all;text-wrap:pretty}
+  .ghost-verses{margin-top:30px}
+  .ghost-verse{border-top:1px solid var(--line);padding:23px 0 26px}
+  .ghost-verse h4{margin:0 0 16px;font:700 15px/1.7 var(--serif);color:var(--red);letter-spacing:.04em}
+  .ghost-verse-lines{display:grid;gap:13px}
+  .ghost-verse-line{display:grid;grid-template-columns:118px minmax(0,1fr);align-items:baseline;gap:17px;margin:0}
+  .verse-hanja{font:400 27px/1.6 'Intro Calligraphy','LXGW WenKai TC',var(--serif);letter-spacing:.05em;white-space:nowrap}
+  .verse-translation{font:400 22px/1.75 'Shilla Culture',var(--pen);word-break:keep-all;overflow-wrap:anywhere;text-wrap:pretty}
+  .verse-reading{font:400 11px/1.7 var(--serif);color:var(--muted);white-space:nowrap}
+  .ghost-footnote{border-top:3px double var(--line);padding-top:16px;margin:0;font:400 11px/1.8 var(--sans);color:var(--muted)}
+  @media(max-width:650px){
+    .ghost-tale{margin-top:40px}.ghost-document{padding:0 20px 22px}.ghost-document-band{font-size:9px;letter-spacing:0;gap:8px}.ghost-heading{margin:25px 0 20px}.ghost-intro{font-size:13px;line-height:1.95}.ghost-intro br{display:none}
+    .ghost-verses{margin-top:25px}.ghost-verse{padding:20px 0 23px}.ghost-verse h4{font-size:14px;margin-bottom:14px}.ghost-verse-lines{gap:18px}.ghost-verse-line{grid-template-columns:1fr;gap:3px}.verse-hanja{font-size:25px;line-height:1.5}.verse-translation{font-size:20px;line-height:1.75}.verse-reading{font-size:10px}.ghost-footnote{font-size:10px}
+  }
 </style>

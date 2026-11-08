@@ -48,7 +48,7 @@ async function revealOnScroll(){
  try{await document.fonts.ready;}catch{}
  if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));target?.scrollIntoView({behavior:'instant'});}
  const reveals=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){entry.target.classList.add('is-visible');reveals.unobserve(entry.target);}},{rootMargin:'0px 0px -15% 0px',threshold:0});
- const elements=document.querySelectorAll('.chapter-heading,.fox-tale,.fox-frontispiece,.dialogue,.personal-effects,.handling-cautions,.field-notes>article,.sealed-note,.world-note,.office-copy,.office-map,.room-list>article,.company-memo,.field-briefing,.chronicle-entry,.coworker,.brother,.request>h2,.request>.request-line,.request-slips,.last-note');
+ const elements=document.querySelectorAll('.chapter-heading,.fox-tale,.fox-frontispiece,.dialogue,.personal-effects,.handling-cautions,.field-notes>article,.sealed-note,.world-note,.office-copy,.office-map,.room-list>article,.company-memo,.ghost-intro,.ghost-verse,.ghost-footnote,.chronicle-entry,.coworker,.brother,.request>h2,.request>.request-line,.request-slips,.last-note');
  for(const element of elements){
   if(element.getBoundingClientRect().top<window.innerHeight*.85)continue;
   element.classList.add('my-reveal');reveals.observe(element);
