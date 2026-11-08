@@ -21,6 +21,10 @@ export const SPIRITS = [
 	{ id: 'chilseong', name: '칠성', hanja: '七星', desc: '별과 수명의 신. 운수와 명줄을 셈함' },
 	{ id: 'seonnyeo', name: '선녀', hanja: '仙女', desc: '맑고 신비로운 여신. 정화와 치유' },
 	{ id: 'halmi', name: '할미', hanja: '', desc: '대신할머니. 말은 느리지만 한번 정하면 물리지 않음' },
+	{ id: 'cheongryong', name: '청룡', hanja: '靑龍', desc: '동방을 지키는 푸른 용. 흐름과 생기를 다스리며 막힌 기운을 풀고 길을 엶' },
+	{ id: 'baekho', name: '백호', hanja: '白虎', desc: '서방을 지키는 흰 호랑이. 위엄과 제압으로 잡귀를 몰아냄' },
+	{ id: 'jujak', name: '주작', hanja: '朱雀', desc: '남방을 지키는 붉은 새. 불과 정화로 탁한 기운과 살을 태움' },
+	{ id: 'hyeonmu', name: '현무', hanja: '玄武', desc: '북방을 지키는 거북과 뱀의 신수. 수호와 봉인으로 사람을 지키고 귀신을 붙듦' },
 	{ id: 'wolha', name: '월하노인', hanja: '月下老人', desc: '붉은 실로 인연을 맺는 신. 사람 사이의 연과 얽힌 매듭을 살핌' },
 ];
 
