@@ -29,17 +29,6 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 
 		<div class="mugu-fields">
 			<div class="mugu-field">
-				<label class="mugu-label" for="mugu-element">기운</label>
-				<div class="mugu-control mugu-select">
-					<select id="mugu-element" name="element" aria-describedby="mugu-element-hint">
-						<option value="random" selected>랜덤</option>
-						{ELEMENTS.map((item) => <option value={item.id}>{item.name}({item.hanja}) · {item.trait}</option>)}
-					</select>
-				</div>
-				<p class="mugu-hint" id="mugu-element-hint"></p>
-			</div>
-
-			<div class="mugu-field">
 				<label class="mugu-label" for="mugu-spirit">모시는 신</label>
 				<div class="mugu-control mugu-select">
 					<select id="mugu-spirit" name="spirit" aria-describedby="mugu-spirit-hint">
@@ -48,6 +37,17 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 					</select>
 				</div>
 				<p class="mugu-hint" id="mugu-spirit-hint"></p>
+			</div>
+
+			<div class="mugu-field">
+				<label class="mugu-label" for="mugu-element">기운</label>
+				<div class="mugu-control mugu-select">
+					<select id="mugu-element" name="element" aria-describedby="mugu-element-hint">
+						<option value="random" selected>랜덤</option>
+						{ELEMENTS.map((item) => <option value={item.id}>{item.name}({item.hanja}) · {item.trait}</option>)}
+					</select>
+				</div>
+				<p class="mugu-hint" id="mugu-element-hint" aria-live="polite"></p>
 			</div>
 
 			<div class="mugu-field">
@@ -146,6 +146,7 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 
 <script>
 	import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
+	import { compatibleElements, resolvePair } from '../data/mugu-selection.js';
 
 	const API_URL = import.meta.env.PUBLIC_MUGU_API_URL || 'https://meonmeo437.vercel.app/api/generate-mugu';
 	const REQUEST_TIMEOUT_MS = 58000;
@@ -154,8 +155,8 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 
 	const $ = (id) => document.getElementById(id);
 	const form = $('mugu-form');
-	const lists = { element: ELEMENTS, spirit: SPIRITS, tool: TOOLS };
-	const selects = { element: $('mugu-element'), spirit: $('mugu-spirit'), tool: $('mugu-tool') };
+	const lists = { spirit: SPIRITS, element: ELEMENTS, tool: TOOLS };
+	const selects = { spirit: $('mugu-spirit'), element: $('mugu-element'), tool: $('mugu-tool') };
 	const customWrap = $('mugu-custom-wrap');
 	const customInput = $('mugu-custom');
 	const materialInput = $('mugu-material');
@@ -182,6 +183,26 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 		else hint.textContent = lists[key].find((item) => item.id === value)?.desc ?? '';
 	}
 
+	function updateElementOptions() {
+		const spirit = SPIRITS.find((item) => item.id === selects.spirit.value);
+		const allowed = new Set(compatibleElements(spirit).map((item) => item.id));
+		for (const option of selects.element.options) {
+			if (option.value === 'random') continue;
+			const element = ELEMENTS.find((item) => item.id === option.value);
+			if (!element) continue;
+			option.disabled = !allowed.has(element.id);
+			option.textContent = `${element.name}(${element.hanja}) · ${element.trait}${option.disabled ? ' — 상극 · 선택 불가' : ''}`;
+		}
+		const reset = selects.element.selectedOptions[0]?.disabled;
+		if (reset) selects.element.value = 'random';
+		describe('element');
+		if (spirit && allowed.size < ELEMENTS.length) {
+			$('mugu-element-hint').textContent += reset
+				? ` ${spirit.name}과 상극인 기운이므로 랜덤으로 변경했습니다.`
+				: ` ${spirit.name}과 상극인 기운은 선택할 수 없습니다.`;
+		}
+	}
+
 	function setBusy(next, label) {
 		busy = next;
 		form.setAttribute('aria-busy', String(next));
@@ -206,6 +227,7 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 		describe(key);
 		selects[key].addEventListener('change', () => {
 			describe(key);
+			if (key === 'spirit' || key === 'element') updateElementOptions();
 			if (key === 'tool') {
 				const custom = selects.tool.value === 'custom';
 				customWrap.hidden = !custom;
@@ -215,14 +237,19 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 		});
 	});
 
+	updateElementOptions();
+
 	function shuffleAll() {
 		if (busy) return;
 		clearError();
 		const settle = () => {
-			Object.keys(selects).forEach((key) => {
-				selects[key].value = pick(lists[key]).id;
-				describe(key);
-			});
+			const pair = resolvePair('random', 'random');
+			selects.spirit.value = pair.spirit.id;
+			selects.element.value = pair.element.id;
+			selects.tool.value = pick(TOOLS).id;
+			describe('spirit');
+			describe('tool');
+			updateElementOptions();
 			customWrap.hidden = true;
 		};
 		if (reduceMotion) {
@@ -265,9 +292,14 @@ import { ELEMENTS, SPIRITS, TOOLS } from '../data/mugu-options.js';
 			tool = find('tool').name;
 		}
 
+		const pair = resolvePair(selects.spirit.value, selects.element.value);
+		if (!pair) {
+			showError('선택한 신과 기운이 상극입니다. 기운을 다시 선택해 주세요.');
+			return null;
+		}
 		return {
-			element: find('element').name,
-			spirit: find('spirit').name,
+			element: pair.element.name,
+			spirit: pair.spirit.name,
 			tool,
 			customTool,
 			material: materialInput.value.trim(),

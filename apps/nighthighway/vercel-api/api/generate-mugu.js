@@ -312,6 +312,11 @@ export default async function handler(req, res) {
 		return;
 	}
 
+	if (worldBible.spirits.find((s) => s.id === spirit).incompatibleElements?.includes(element)) {
+		res.status(400).json({ ok: false, error: 'incompatible_element', message: `${spirit}과 ${element}은 상극입니다. 다른 기운을 선택해 주세요.` });
+		return;
+	}
+
 	const tool = worldBible.tools.some((t) => t.id === body.tool) ? body.tool : '';
 	const customTool = tool ? '' : sanitizeText(body.customTool, 20);
 	if (!tool && !customTool) {
