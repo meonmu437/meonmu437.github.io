@@ -1,5 +1,6 @@
 // 카드 장식은 Canvas에 직접 그려 미리보기와 저장 이미지에 함께 반영한다.
 const cardThemes = {
+ minyul:{label:'도성야화의 한 장',heading:'"Shilla Culture",serif'},
  plain:{label:'무늬 없는 기본 카드',heading:'"Noto Sans KR",sans-serif'},
  julian:{label:'무지개 테이프의 영화 자막 카드',heading:'Georgia,serif'},
  jude:{label:'벨윅 호텔 투숙객 리뷰',heading:'Georgia,serif'},
@@ -17,6 +18,7 @@ const lightAccents={julian:'#315e95',jude:'#80602f',seungmin:'#238b57',willow:'#
 const darkAccents={julian:'#8bbcff',jude:'#d5b67b',seungmin:'#2dd280',willow:'#d5ba75','1997':'#e3abc6','2004':'#a2c9e6',hanminwoo:'#8bacbd',colorground:'#ed9db7',nighthighway:'#dfae62',anemoi:'#c2c99e',yunhaesi:'#9fcbd9'};
 function themePalette(p,mode){
  const dark=mode==='dark';
+ if(p.theme==='minyul')return {...p,mode,paper:dark?'#20251f':'#f7f2e6',ink:dark?'#ded9c8':'#34362f',accent:dark?'#ddbc79':'#8b622a',decoration:dark?'#8f9d80':'#a19f86'};
  if(p.theme==='plain'){
   const luminance=hex=>hex.slice(1).match(/../g).map(value=>{const c=parseInt(value,16)/255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4;}).reduce((sum,c,i)=>sum+c*[.2126,.7152,.0722][i],0);
   const bg=luminance(p.paper),contrast=color=>{const l=luminance(color);return (Math.max(bg,l)+.05)/(Math.min(bg,l)+.05);};
@@ -41,6 +43,23 @@ function drawCardTheme(ctx,p,height,bodyTop,accent,showHeader=true){
  const dot=(x,y,r,color)=>{ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();};
  const rainbow=['#c86d76','#d99762','#e6c75c','#83a685','#719cb4','#ad8dac'];
  switch(p.theme){
+ case 'minyul':
+  {
+   // Quiet paper grain and vector clouds; no seal or enclosing frame.
+   ctx.fillStyle=p.ink;ctx.globalAlpha=.035;
+   for(let y=17;y<h;y+=31)for(let x=19;x<w;x+=47){const offset=Math.sin(x*13+y*7)*9;ctx.fillRect(x+offset,y+offset,1.3,1.3);}
+   ctx.globalAlpha=1;
+   if(showHeader){
+    const cloud=new Path2D('M9 132c-13-16 0-40 22-39-8-29 13-54 43-48C84 12 130 7 148 36c24-29 68-17 72 16 31-10 61 12 56 39 20-14 51-6 55 16 26-8 52 6 55 25H9Z');
+    const curls=new Path2D('M9 132h377M75 67c-5-24 30-35 39-15 8 18-17 28-24 14M142 47c-8 24 29 34 33 13M217 67c-14 0-22 17-10 26 9 7 22-2 18-10M55 150h150m22 0h126');
+    for(const side of [-1,1]){
+     ctx.save();ctx.translate(side<0?125:955,57);ctx.scale(side<0?.55:-.55,.55);ctx.fillStyle=p.decoration;ctx.globalAlpha=.11;ctx.fill(cloud);ctx.globalAlpha=.65;ctx.strokeStyle=p.decoration;ctx.lineWidth=1.5;ctx.stroke(cloud);ctx.stroke(curls);ctx.restore();
+    }
+    ctx.textAlign='center';ctx.textBaseline='top';ctx.fillStyle=p.ink;ctx.font='400 47px "Intro Calligraphy"';ctx.fillText('都城夜話',540,63);
+    ctx.fillStyle=p.decoration;ctx.font='400 26px "Shilla Culture"';ctx.fillText('도성야화',540,126);
+   }
+  }
+  break;
  case 'plain':
   if(p.shadow){
    ctx.fillStyle=p.shadow;ctx.beginPath();ctx.roundRect(35,39,1010,h-63,17);ctx.fill();
@@ -237,7 +256,42 @@ function drawCardDivider(ctx,p,bodyTop,accent){
  const line=(x,y,x2,y2,color,width=1)=>{ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();};
  const rect=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
  const dot=(x,y,r,color)=>{ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();};
- if(p.theme==='julian'){
+ if(p.theme==='minyul'){
+  const brush=document.createElement('canvas');brush.width=920;brush.height=60;
+  const ink=brush.getContext('2d');let seed=7241;
+  const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
+  const center=t=>33-9*t+Math.sin(t*Math.PI)*-2;
+  const pressure=t=>(16+9*Math.sin(t*Math.PI))*(1-.78*t)*Math.min(1,t*65);
+  ink.fillStyle=p.ink;ink.globalAlpha=.91;ink.beginPath();
+  for(let i=0;i<=180;i++){
+   const t=i/180,x=5+t*884,y=center(t)-pressure(t)/2+(random()-.5)*3;
+   i?ink.lineTo(x,y):ink.moveTo(x,y);
+  }
+  for(let i=180;i>=0;i--){const t=i/180;ink.lineTo(5+t*884,center(t)+pressure(t)/2+(random()-.5)*3.5);}
+  ink.closePath();ink.fill();
+  // Separate bristles carry the pressure into uneven, dry ends.
+  ink.lineCap='butt';ink.strokeStyle=p.ink;
+  for(let i=0;i<52;i++){
+   const strand=(i/51-.5),start=random()*.045,end=.88+random()*.12;
+   ink.globalAlpha=.35+random()*.6;ink.lineWidth=.55+random()*1.3;ink.beginPath();
+   for(let step=0;step<=50;step++){
+    const t=start+(end-start)*step/50,x=5+t*900,y=center(t)+strand*(pressure(t)+8)+Math.sin(t*28+i)*.65;
+    step?ink.lineTo(x,y):ink.moveTo(x,y);
+   }ink.stroke();
+  }
+  // Transparent scratches preserve the paper beneath instead of painting pale lines.
+  ink.globalCompositeOperation='destination-out';
+  for(let i=0;i<57;i++){
+   const start=.06+random()*.86,length=.025+random()*.19,offset=(random()-.5)*14;
+   ink.globalAlpha=.18+random()*.64;ink.lineWidth=.35+random()*1.05;ink.beginPath();
+   for(let step=0;step<=16;step++){
+    const t=Math.min(.995,start+length*step/16),x=5+t*900,y=center(t)+offset*(1-t*.55)+Math.sin(t*41+i)*.35;
+    step?ink.lineTo(x,y):ink.moveTo(x,y);
+   }ink.stroke();
+  }
+  ctx.drawImage(brush,83,bodyTop-56);
+
+ }else if(p.theme==='julian'){
   const rainbow=['#c86d76','#d99762','#e6c75c','#83a685','#719cb4','#ad8dac'];
   ctx.save();ctx.translate(90,bodyTop-29);ctx.rotate(-.004);
   ctx.beginPath();ctx.moveTo(3,0);ctx.lineTo(896,0);ctx.lineTo(900,4);ctx.lineTo(896,8);ctx.lineTo(899,13);ctx.lineTo(1,13);ctx.lineTo(4,9);ctx.lineTo(0,5);ctx.closePath();ctx.clip();
