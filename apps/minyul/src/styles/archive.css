@@ -189,3 +189,5 @@ header.header>div.header{width:100%;min-width:0;padding-inline-end:0}
 @font-face{font-family:'Intro Calligraphy';src:url('/minyul/fonts/ghost-calligraphy.ttf?v=poem1') format('truetype');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+4E00,U+4E09,U+4E3B,U+4E45,U+4E4B,U+4E8B,U+4E8C,U+4EA1,U+4EA6,U+4EBA,U+5148,U+51A4,U+53D6,U+554F,U+56DB,U+5931,U+5B85,U+5B88,U+5BA2,U+5BDF,U+5F85,U+5F8C,U+5FC3,U+60C5,U+6190,U+6232,U+62FE,U+653E,U+6563,U+6613,U+6709,U+672A,U+6BC1,U+7269,U+7559,U+75C5,U+7686,U+795E,U+795F,U+820A,U+83AB,U+8AC7,U+8DEF,U+8F15,U+96A8,U+975E,U+9918,U+9B3C,U+9B42,U+9B45}
 
 .talisman-active.talisman-elyn strong.talisman-platform{color:#7543a2}
+
+.talisman-active.talisman-teapot strong.talisman-platform{color:#347749}
