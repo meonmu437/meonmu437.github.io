@@ -1,0 +1,14 @@
+---
+const records=[
+ {stage:'초등학생',place:'일본',title:'처음의 마을',description:'가족의 사랑을 듬뿍 받은 막내. 첫 모험은 여기서 시작됐다.'},
+ {stage:'중학생',place:'서울',title:'이름 없는 선물',description:'두꺼운 안경 너머 첫사랑을 만났다. 이름을 적지 못한 선물을 남겨 두었다.'},
+ {stage:'고등학생',place:'일본',title:'멀어진 세이브 지점',description:'일본으로 돌아왔지만, 서울에 두고 온 마음은 회수하지 못했다.'},
+ {stage:'대학생',place:'서울 · 한국대학교',title:'다시 만난 첫사랑',description:'다시 만날지도 모른다는 미련으로 한국에 진학했다. 그리고 당신과 재회했다.'},
+];
+---
+<dialog id="save-dialog" aria-labelledby="save-title"><section class="save-window"><header><div><small>SAVE DATA</small><h2 id="save-title">세이브 슬롯</h2></div><button type="button" id="close-save" aria-label="세이브 창 닫기">×</button></header><div class="save-window-body"><ol class="save-records">{records.map((record,i)=><li class:list={['save-record',{'save-record-current':i===3}]}><div class="save-slot-picture" aria-hidden="true"><svg viewBox="0 0 40 36" shape-rendering="crispEdges">
+ {i===0&&<><path d="M17 21h6v13h-6z" fill="#a0855c"/><path d="M13 2h15v5h6v13h-6v6H8v-6H3V9h10z" fill="#75986b"/><path d="M13 2h15v5H16v6H8V9h5z" fill="#c2cf8c"/><path d="M5 33h31v2H5z" fill="#9aaf79"/></>}
+ {i===1&&<><path d="M3 12h14v14H3zm20 0h14v14H23z" fill="#647d83"/><path d="M5 14h10v10H5zm20 0h10v10H25z" fill="#bed3cc"/><path d="M16 15h8v3h-8zM0 10h4v4H0zm36 0h4v4h-4z" fill="#b8b59a"/><path d="M6 15h3v3H6zm20 0h3v3h-3z" fill="#f4e8b9"/></>}
+ {i===2&&<><path d="M3 8h34v22H3z" fill="#ccb995"/><path d="m4 9 16 12L36 9" fill="none" stroke="#7e8874" stroke-width="3"/><path d="M5 28 15 18m20 10L25 18" stroke="#b2a37d" stroke-width="2"/><path d="M25 3h9v8h-9z" fill="#9b899d"/></>}
+ {i===3&&<><path d="M7 5h10v3h6V5h10v12h-5v5h-5v5h-6v-5h-5v-5H7z" fill="#c8948a"/><path d="M9 6h7v3H9z" fill="#e1bbb0"/><path d="M5 30h31v3H5z" fill="#a6b58a"/><path d="M3 17h2v6H3zM1 19h6v2H1zM34 8h2v6h-2zM32 10h6v2h-6z" fill="#dac58b"/></>}
+ </svg></div><div class="save-record-copy"><div class="save-record-top"><small>SAVE {String(i+1).padStart(2,'0')}</small><span>{i===3?'CURRENT':'ARCHIVE'}</span></div><h3>{record.title}</h3><p class="save-record-story">{record.description}</p><div class="save-record-moment"><span>저장 시점</span><p><strong>{record.stage}</strong><span>{record.place}</span></p></div>{i===3&&<div class="save-current-note"><strong id="save-slot-title">탐색 위치를 저장할 수 있습니다.</strong><span id="save-slot-detail">현재 브라우저에 저장됩니다.</span></div>}</div></li>)}</ol></div><footer><div class="save-actions"><button type="button" id="save-progress">현재 위치 저장</button><button type="button" id="load-progress" disabled>불러오기</button></div><p id="save-feedback" role="status">이전 기록은 위에서부터 저장된 순서입니다.</p></footer></section></dialog>

@@ -1,0 +1,20 @@
+---
+import {Image} from 'astro:assets';
+import yuma from '../assets/yuma.webp';
+import yuka from '../assets/yuka.webp';
+const contacts=[
+{id:'father',icon:'stamp',name:'시라이시 마사토',tag:'아버지 · 일본 외무성 외교관',text:'말은 적어도 마음은 다정하다. 가족 대화방에는 말보다 스탬프가 먼저 도착한다.',jp:'ちゃんと食べてるか。……うん。元気なら、それでいい。',ko:'밥은 잘 먹고 있니. ……그래. 잘 지내면 됐다.'},
+{id:'mother',icon:'parcel',name:'윤미경',tag:'어머니 · 반찬 보급 담당',text:'집안의 분위기 메이커. 서울에 혼자 있는 막내에게 매달 반찬과 간식을 보낸다.',jp:'フィヤ、荷物届いた？ プリンばっかり食べないで、おかずもちゃんと食べるのよ。',ko:'휘야, 택배 받았어? 푸딩만 먹지 말고 반찬도 잘 챙겨 먹어.'},
+{id:'brother',image:yuma,name:'시라이시 유우마',tag:'백석 유진 · 29세 · 정형외과 전공의',text:'아홉 살 위 형. 잔소리는 짧고 정확하다. 동생의 손목과 허리를 늘 걱정한다.',jp:'ユウ、送ったサポーターは使ってるか。……恋の相談？ 告白するか、しないかだろ。',ko:'유우, 보내 준 보호대는 쓰고 있냐. ……연애 상담? 고백하든지, 말든지.'},
+{id:'sister',image:yuka,name:'시라이시 유우카',tag:'백석 유하 · 26세 · 유소년 배구 코치',text:'여섯 살 위 누나. 막내 놀리기에 진심이지만, 주눅 든 표정도 가장 먼저 알아본다.',jp:'ユウちゃん、その顔！ またあの子のこと？ 大丈夫、まずは声かけてみなって。作戦会議なら付き合うよ！',ko:'유우짱, 그 표정! 또 그 애 생각이지? 괜찮아, 일단 말부터 걸어 봐. 작전 회의라면 같이 해 줄게!'},
+];
+---
+<dialog id="family-dialog" aria-labelledby="family-title"><section class="family-comms">
+<header><div><small>SEOUL ↔ TOKYO</small><h2 id="family-title">본가에서 온 연락</h2></div><button type="button" id="close-family" aria-label="통신 창 닫기">×</button></header>
+<div class="family-comms-body"><nav aria-label="통신 상대">{contacts.map((c,i)=><button type="button" data-contact={c.id} aria-pressed={i===0}><span aria-hidden="true">{['01','02','03','04'][i]}</span><strong>{['아버지','어머니','형 유우마','누나 유우카'][i]}</strong><small>연결하기 ▶</small></button>)}</nav>
+<div class="family-contact-display">{contacts.map((c,i)=><article data-contact-panel={c.id} hidden={i!==0}>
+<div class="family-contact-profile">{c.image?<button type="button" class="family-photo" data-image={c.image.src} data-alt={c.name} aria-label={`${c.name} 사진 크게 보기`} aria-haspopup="dialog"><Image src={c.image} alt={c.name} width={220}/></button>:<svg viewBox="0 0 64 64" shape-rendering="crispEdges" aria-hidden="true">{c.icon==='stamp'?<><path d="M12 12h40v40H12z" fill="#b6c7a6"/><path d="M19 20h26v5H19zm0 19h26v5H19zm3-11h5v5h-5zm15 0h5v5h-5z" fill="#587466"/><path d="M25 35h14v3H25z" fill="#587466"/></>:<><path d="M9 19h46v33H9z" fill="#c9a86e"/><path d="M9 19 22 9h24l9 10" fill="#e0c28b"/><path d="M29 10h8v42h-8z" fill="#eee0ad"/><path d="M14 30h10v10H14z" fill="#94b19b"/></>}</svg>}
+<div><small>{c.tag}</small><h3>{c.name}</h3><p>{c.text}</p></div></div>
+<div class="family-message" aria-label="家族のメッセージ · 가족의 메시지"><span class="family-signal">● CONNECTED</span>{c.id!=='mother'&&<p lang="ja">「{c.jp}」</p>}<p lang="ko">{c.ko}</p></div>
+</article>)}</div></div><footer>海の向こうも、いつもの顔。<span>바다 건너에서도, 늘 같은 얼굴들.</span></footer>
+</section></dialog>

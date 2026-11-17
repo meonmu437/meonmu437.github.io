@@ -1,0 +1,18 @@
+---
+import ItemIcon from './ItemIcon.astro';
+const items=[
+ ['메신저백','소지품은 가득. 말 걸 용기는 수납 불가.'],
+ ['클레이통','생각이 많아질수록 내용물이 작아진다.'],
+ ['공구파우치','작은 건 다 고친다. 어색한 분위기는 제외.'],
+ ['헤어핀 +5','시야는 밝아진다. 용기를 올려주는 효과는 없다.'],
+ ['반창고','상처 회복용. 작은 동물 그림은 필수 옵션.'],
+ ['주먹밥','소금만 넣었다. 요리 판정은 여기서 종료.'],
+];
+---
+<dialog id="inventory-dialog" aria-labelledby="inventory-title">
+ <section class="inventory-window">
+  <header><h2 id="inventory-title">INVENTORY <span>소지품</span></h2><button type="button" id="close-inventory" aria-label="인벤토리 닫기">×</button></header>
+  <div class="inventory-window-body"><div class="inventory-slots" aria-label="가방에 들어 있는 아이템">{items.map(([name],i)=><figure class="item-slot"><span class="item-slot-art"><ItemIcon index={i}/>{i===3&&<span class="item-enhance">+5</span>}</span><figcaption>{name}</figcaption></figure>)}</div><div class="inventory-descriptions"><h3>아이템 설명</h3><dl>{items.map(([name,description],i)=><div><dt><span class="item-number">{String(i+1).padStart(2,'0')}</span>{name}</dt><dd>{description}</dd></div>)}</dl></div></div>
+  <footer><span>ITEMS <strong>06</strong></span><span>좋아하는 것만 넣고 다닌다.</span></footer>
+ </section>
+</dialog>

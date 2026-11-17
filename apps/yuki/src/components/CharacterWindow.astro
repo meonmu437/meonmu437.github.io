@@ -1,0 +1,19 @@
+---
+import { Image } from 'astro:assets';
+import CharacterIcon from './CharacterIcon.astro';
+import model from '../assets/game-character.webp';
+const appearance=[['반묶음','앞머리로 시야 봉인. 작업할 때만 해제.'],['꿀빛 눈','빛을 받으면 숨겨 둔 꿀빛이 드러난다.'],['회색 후드','기본 장비. 편안함을 우선한다.'],['거친 손','흙·석고에 단련됨. 반창고 상시 착용.']];
+const personality=[['말 고르기','첫 문장 준비 중. 대화 타이밍은 이미 지나갔다.'],['작업 고집','양보는 잘한다. 자기 작품 얘기는 예외.'],['감상 과다','소설 속 동물의 마지막 장면에 며칠간 취약.'],['뜻밖의 귀환','부끄러우면 도망. 정신 차리면 다시 찾아온다.']];
+const debuffs=[['커피','각성 아이템인 줄 알았으나, 이 캐릭터에게는 맞지 않는다.'],['매운 음식','도전 정신보다 혀가 먼저 항복한다.']];
+const tastes=[['작은 동물','손바닥 안에 들어오면 제작 시간이 늘어난다.'],['성장 판타지','서툰 주인공이 동료를 만나면 방어력 해제.'],['푸딩·파르페','커피 대신 선택하는 달콤한 회복 아이템.'],['TRPG','세션 종료 후에도 동물 모형 제작은 계속된다.']];
+---
+<dialog id="character-dialog" aria-labelledby="character-title">
+ <section class="character-window"><header class="character-window-bar"><h2 id="character-title">CHARACTER <span>캐릭터</span></h2><button type="button" id="close-character" aria-label="캐릭터 창 닫기">×</button></header>
+ <div class="character-window-body"><div class="character-identity"><strong><span class="character-level">Lv.20</span> 시라이시 유우키</strong><span>직업 · 한국대학교 조소과 2학년</span></div>
+ <div class="character-equipment"><section class="character-features"><h3>외형</h3>{appearance.map(([name,text],i)=><article><span class="feature-slot"><CharacterIcon index={i}/></span><div><h4>{name}</h4><p>{text}</p></div></article>)}</section>
+ <figure class="character-model"><button type="button" class="image-open" data-image={model.src} data-alt="유우키 게임 캐릭터 프로필" aria-label="유우키 전신 프로필 크게 보기"><Image src={model} alt="회색 후드와 검은 메신저백 차림으로 서 있는 유우키의 전신" width={420} quality={90}/></button><figcaption><span>白石 悠輝</span><strong>백석 유휘</strong><small>유휘 · 백석 · 유우키 · 용기<br/>정정하지 못해서 전부 대답한다.</small></figcaption></figure>
+ <section class="character-features"><h3>성격</h3>{personality.map(([name,text],i)=><article><span class="feature-slot"><CharacterIcon index={i+4}/></span><div><h4>{name}</h4><p>{text}</p></div></article>)}</section></div>
+ <section class="character-tastes character-buffs"><h3>＋ 버프</h3><div>{tastes.map(([name,text],i)=><article><span class="feature-slot"><CharacterIcon index={i+8}/></span><div><h4>{name}</h4><p>{text}</p></div></article>)}</div></section><section class="character-tastes character-debuffs"><h3>− 디버프</h3><div>{debuffs.map(([name,text],i)=><article><span class="feature-slot"><CharacterIcon index={i+12}/></span><div><h4>{name}</h4><p>{text}</p></div></article>)}</div></section>
+ <blockquote class="character-voice"><span class="speaker-name">유우키</span><p lang="ja">「僕の気持ちの1パーセントでいいから、君の部屋の机の隅に置いといてほしい。」</p><p>내 마음의 1퍼센트라도 좋으니까<br/>네 방 책상 한구석에 둬 줘.</p><span class="voice-next" aria-hidden="true">▼</span></blockquote>
+ </div></section>
+</dialog>
