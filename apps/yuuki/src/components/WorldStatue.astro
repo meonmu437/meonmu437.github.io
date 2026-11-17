@@ -1,0 +1,18 @@
+---
+const {art}=Astro.props;
+const drawX=art.kind==='duck'?art.x+32:art.x-22;
+const drawY=art.kind==='duck'?art.y-52:art.y-86;
+---
+<g class="map-node world-artwork" data-node={art.id} role="button" tabindex="0" aria-label={`${art.title} 구경하기`}>
+<title>{art.title}</title>
+<rect class="node-hit" x={drawX-2} y={drawY} width="48" height="87" fill="transparent"/>
+<g transform={`translate(${drawX} ${drawY})`} aria-hidden="true">
+<ellipse cx="22" cy="68" rx="22" ry="5" fill="#53684d77"/>
+<path d="M5 60h34v8H5zM2 67h40v5H2z" fill="#829383"/><path d="M5 60h34v3H5zM4 67h36v2H4z" fill="#d4d6b5"/>
+{art.kind==='rabbit'&&<><path d="m5 54 30-5 5 4-30 7-7-2z" fill="#8bada2"/><path d="m7 54 28-4" stroke="#dce2ba" stroke-width="2"/><path d="M12 40h18v10H12zm5-17h14v19H14V28h3zM17 2h6v22h-6zm12 2h6v24h-6z" fill="#e5e3cd"/><path d="M18 5h3v14h-3zm12 3h3v13h-3z" fill="#bbc3b1"/><path d="M27 27h3v3h-3z" fill="#5c776b"/><path d="m14 36-8 6m19-5 10-4M16 48l-6 6m15-6 5 4" fill="none" stroke="#d5d8c4" stroke-width="5"/></>}
+{art.kind==='otter'&&<><path d="M13 24h19v26H13zM10 12h25v19H10zM9 9h7v8H9zm20 0h7v8h-7zM10 45h25v11H10z" fill="#d8ddc8"/><path d="M16 33h12v16H16zM15 20h16v8H15z" fill="#f0ead5"/><path d="M14 17h3v3h-3zm15 0h3v3h-3zM21 23h4v3h-4z" fill="#657e70"/><path d="M8 50H3V38h5z" fill="#a6b8a5"/><path d="m30 46-8-6 13-25 6 3z" fill="#d8be89"/><path d="m31 27 6 3m-9 3 6 3m-10 3 6 3" stroke="#a38d64" stroke-width="2"/><path d="M11 35h11v5H11z" fill="#e9e7cf"/></>}
+{art.kind==='tiger'&&<><path d="M13 26h19v25H13zM9 10h27v21H9zM8 6h8v9H8zm21 0h8v9h-8zM9 48h10v10H9zm17 0h10v10H26z" fill="#e2dfc5"/><path d="M10 16h6v3h-6zm21 0h5v3h-5zM20 10h4v8h-4zm-7 20h5v3h-5zm15 4h5v3h-5z" fill="#8fa18d"/><path d="M16 20h3v3h-3zm12 0h3v3h-3zM21 26h5v2h-5z" fill="#557366"/><path d="m13 29 20 20" stroke="#9a8e6e" stroke-width="4"/><path d="M27 41h12v12H27z" fill="#b1a182"/><path d="M32 28h9v13h-9z" fill="#f0ead1"/><path d="M34 31h5m-5 4h5" stroke="#8ba18f" stroke-width="1"/><path d="M10 37H5V24H2" stroke="#c4cfb9" stroke-width="5" fill="none"/></>}
+{art.kind==='duck'&&<><path d="M12 28h23v22H12zM11 14h20v20H11zM8 35H4v12h10z" fill="#e6e4cf"/><path d="M7 23h11v6H7zM14 51h10v5H14zm15 0h10v5H29z" fill="#c7b47c"/><path d="M17 18h3v3h-3z" fill="#637c6e"/><path d="M26 36h15v13H26zM30 32h7v4h-7z" fill="#94a792"/><path d="M27 40h13" stroke="#d6d9b9" stroke-width="2"/><path d="M16 36h9v4h-9z" fill="#c0ccb7"/><path d="m33 6 4-5m0 9h6" stroke="#e5dfb7" stroke-width="2"/></>}
+<path d="M17 63h10v3H17z" fill="#667c6b"/>
+</g>
+</g>

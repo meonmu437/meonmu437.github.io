@@ -45,7 +45,7 @@ const traits=[['낯가림 Lv.MAX','첫 문장을 몇 번씩 연습하다가, 말
  <CharacterWindow />
  <SaveWindow />
  <dialog id="skill-dialog" aria-labelledby="skill-name" aria-describedby="skill-text"><article class="vintage-skill-card"><button type="button" id="close-skill" aria-label="스킬 카드 닫기">×</button><header><span>PASSIVE SKILL</span><span id="skill-card-index">01</span></header><div class="skill-card-art">{traits.map((_,i)=><div data-card-icon={i} hidden={i!==0}><SkillIcon index={i}/></div>)}<span class="card-star star-left" aria-hidden="true">✦</span><span class="card-star star-right" aria-hidden="true">✦</span></div><div class="skill-card-copy"><span class="skill-card-type">패시브 · 항상 발동</span><h2 id="skill-name"></h2><div class="skill-card-rule" aria-hidden="true">◆</div><p id="skill-text"></p></div><footer><span>판타지 연구회 ‘여관’</span><span aria-hidden="true">✧</span></footer></article></dialog>
- <dialog id="image-dialog" aria-label="이미지 확대"><button type="button" id="close-image" aria-label="이미지 닫기">닫기 ×</button><img id="large-image" alt=""/></dialog>
+ <dialog id="image-dialog" aria-labelledby="image-title"><header class="image-window-bar"><strong id="image-title">이미지 확대</strong><button type="button" id="close-image" aria-label="이미지 닫기">×</button></header><div class="image-window-body"><img id="large-image" alt=""/></div></dialog>
 </div>
 <script src="/yuuki/page.js" type="module" is:inline></script>
 </StarlightPage>

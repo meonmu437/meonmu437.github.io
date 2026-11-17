@@ -9,7 +9,13 @@ import {roomObjects} from '../../public/exploration-data.js';
 <rect x="408" y="21" width="208" height="160" fill="#ac997b"/><path d="M408 181h208M408 23v158" stroke="#7f795f" stroke-width="5"/>
 <text x="510" y="117" text-anchor="middle" class="scene-map-label">복층 · 잠자는 곳</text>
 <path d="M377 78h27v100h-27z" fill="#b79c72"/>{[0,1,2,3,4,5].map(i=><path d={`M377 ${83+i*16}h27`} stroke="#f0d2a0" stroke-width="3"/>)}
-<rect x="266" y="164" width="88" height="30" fill="#a4b4a0"/><path d="M270 168h80v22h-80z" fill="none" stroke="#d0d5b1"/>
+<rect x="265" y="199" width="100" height="32" fill="#a4b4a0"/><path d="M269 203h92v24h-92z" fill="none" stroke="#d0d5b1"/>
+<!-- Entrance service zone: built-in kitchen against the bottom wall, enclosed bath beside the door. -->
+<rect x="80" y="244" width="236" height="56" fill="#b2bba6" stroke="#788c7c" stroke-width="2"/>
+<path d="M80 249h236M244 256h64v36h-64z" fill="#d6d9bd" stroke="#899c8b" stroke-width="2"/>
+<rect x="254" y="261" width="43" height="24" fill="#91aaa7" stroke="#ebead3" stroke-width="2"/><path d="M277 259v-9h9" fill="none" stroke="#617e7a" stroke-width="3"/>
+<rect x="535" y="217" width="80" height="84" fill="#b7b7a0"/><path d="M538 221h74v76h-74z" fill="none" stroke="#d6d5b9" stroke-width="2"/>
+<text x="186" y="238" class="scene-map-label" text-anchor="middle">주방</text>
 {roomObjects.map(o=><g class="scene-object" data-inspect={o.id} data-owner="rest" role="button" tabindex="0" aria-label={`${o.name} 조사하기`}><title>{o.name}</title>
 <rect x={o.x+3} y={o.y+5} width={o.w} height={o.h} fill="#746f5966"/>
 <rect x={o.x} y={o.y} width={o.w} height={o.h} fill={['fridge','bath','kitchen'].includes(o.kind)?'#dbe0cb':o.kind==='sofa'?'#839b8b':o.kind==='bed'?'#e3d9b9':o.kind==='tin'?'#829ba0':o.kind==='diary'?'#a88582':'#a88d66'} stroke="#6c7c68" stroke-width="2"/>
@@ -18,7 +24,7 @@ import {roomObjects} from '../../public/exploration-data.js';
 {o.kind==='books'&&Array.from({length:7},(_,i)=><rect x={o.x+5+i*9} y={o.y+8} width="6" height="31" fill={['#b2c1a0','#c49d88','#819fa7'][i%3]}/>)}
 {o.kind==='oven'&&<><rect x={o.x+5} y={o.y+10} width={o.w-10} height="22" fill="#3f5555"/><path d={`M${o.x+8} ${o.y+5}h5m5 0h5m5 0h5`} stroke="#d8d1ad" stroke-width="3"/><path d={`M${o.x+15} ${o.y+21}h5v6h-5zm9-3h5v9h-5z`} fill="#d7c59d"/></>}
 {o.kind==='kitchen'&&<><circle cx={o.x+20} cy={o.y+27} r="13" fill="#738e8d" stroke="#e5e5d1" stroke-width="3"/><path d={`M${o.x+46} ${o.y+7}h22v12h-22z`} fill="#3e5553"/></>}
-{o.kind==='bath'&&<><rect x={o.x+7} y={o.y+5} width={o.w-14} height={o.h-10} fill="#b1cbc5"/><path d={`M${o.x+15} ${o.y+10}v30m13-30v30m13-30v30`} stroke="#dce8d5"/></>}
+{o.kind==='bath'&&<><rect x={o.x+4} y={o.y+4} width={o.w-8} height={o.h-8} fill="#b1cbc5"/>{[1,2].map(i=><path d={`M${o.x+i*23} ${o.y+4}v${o.h-8}M${o.x+4} ${o.y+i*18}h${o.w-8}`} stroke="#dce8d5"/>)}<text x={o.x+o.w/2} y={o.y+o.h/2+4} text-anchor="middle" class="room-door-label">욕실</text></>}
 {o.kind==='sofa'&&<><path d={`M${o.x+7} ${o.y+8}h${o.w-14}v16h-${o.w-14}z`} fill="#a6bda3"/><path d={`M${o.x+o.w/2} ${o.y+27}v18`} stroke="#617d70" stroke-width="3"/></>}
 {['fridge','drawer','tin','diary'].includes(o.kind)&&<path d={`M${o.x+6} ${o.y+o.h/2}h${o.w-12}m-${o.w-15} 5h7`} fill="none" stroke="#e6dec2" stroke-width="2"/>}
 {o.kind==='cushion'&&<path d={`M${o.x+5} ${o.y+5}h21v21h-21z`} fill="#e0c8ad"/>}

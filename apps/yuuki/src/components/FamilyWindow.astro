@@ -10,8 +10,8 @@ const contacts=[
 ];
 ---
 <dialog id="family-dialog" aria-labelledby="family-title"><section class="family-comms">
-<header><div><small>SEOUL ↔ TOKYO</small><h2 id="family-title">본가에서 온 연락</h2></div><button type="button" id="close-family" aria-label="통신 창 닫기">×</button></header>
-<div class="family-comms-body"><nav aria-label="통신 상대">{contacts.map((c,i)=><button type="button" data-contact={c.id} aria-pressed={i===0}><span aria-hidden="true">{['01','02','03','04'][i]}</span><strong>{['아버지','어머니','형 유우마','누나 유우카'][i]}</strong><small>연결하기 ▶</small></button>)}</nav>
+<header><div><small>SEOUL ↔ TOKYO</small><h2 id="family-title">원거리 통신</h2></div><button type="button" id="close-family" aria-label="통신 창 닫기">×</button></header>
+<div class="family-comms-body"><nav aria-label="통신 상대">{contacts.map((c,i)=><button type="button" data-contact={c.id} aria-pressed={i===0}><span aria-hidden="true">{['01','02','03','04'][i]}</span><strong>{['아버지','어머니','형 유우마','누나 유우카'][i]}</strong></button>)}</nav>
 <div class="family-contact-display">{contacts.map((c,i)=><article data-contact-panel={c.id} hidden={i!==0}>
 <div class="family-contact-profile">{c.image?<button type="button" class="family-photo" data-image={c.image.src} data-alt={c.name} aria-label={`${c.name} 사진 크게 보기`} aria-haspopup="dialog"><Image src={c.image} alt={c.name} width={220}/></button>:<svg viewBox="0 0 64 64" shape-rendering="crispEdges" aria-hidden="true">{c.icon==='stamp'?<><path d="M12 12h40v40H12z" fill="#b6c7a6"/><path d="M19 20h26v5H19zm0 19h26v5H19zm3-11h5v5h-5zm15 0h5v5h-5z" fill="#587466"/><path d="M25 35h14v3H25z" fill="#587466"/></>:<><path d="M9 19h46v33H9z" fill="#c9a86e"/><path d="M9 19 22 9h24l9 10" fill="#e0c28b"/><path d="M29 10h8v42h-8z" fill="#eee0ad"/><path d="M14 30h10v10H14z" fill="#94b19b"/></>}</svg>}
 <div><small>{c.tag}</small><h3>{c.name}</h3><p>{c.text}</p></div></div>

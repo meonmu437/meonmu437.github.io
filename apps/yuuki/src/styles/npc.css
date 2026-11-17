@@ -63,3 +63,47 @@
 .overworld-left{display:flex;align-items:center;line-height:1}.overworld-controls{line-height:1}
 @container game-screen (max-width:600px){.overworld-banner{padding-block:0;align-items:center;min-height:0;line-height:1}.overworld-left,.overworld-controls{align-self:center;margin:0;min-height:0}.overworld-left .game-save-button,.overworld-controls button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:18px;min-height:0;padding-block:0;line-height:1;margin:0;vertical-align:middle}}
 @container game-screen (max-width:380px){.overworld-left .game-save-button,.overworld-controls button{height:16px}}
+/* A short mobile landscape viewport belongs to the game, not the site chrome. */
+@media (orientation:landscape) and (max-height:550px) and (max-width:1000px), (orientation:landscape) and (max-height:550px) and (pointer:coarse){
+ :root{--sl-nav-height:0px}header.header{display:none!important}.main-frame{padding-top:0!important}.my-content.game-app{padding-block:6px}.game-console{--game-chrome-height:66px}
+}
+/* Clubroom narration uses a compact, stable panel throughout the conversation. */
+@container game-screen (max-width:600px){
+ .game-console[data-scene=inn] .play-screen{grid-template-rows:26px minmax(0,1fr) 90px}
+ .game-console[data-scene=inn] .exploration-dialogue{padding:5px 9px;gap:2px;margin:3px 3px 4px;border-width:3px}
+ .game-console[data-scene=inn] .exploration-dialogue>header{min-height:11px}
+ .game-console[data-scene=inn] .exploration-dialogue>header strong{font-size:9px;line-height:1.3}
+ .game-console[data-scene=inn] .exploration-dialogue>p{font-size:10px;line-height:1.5;word-break:normal}
+ .game-console[data-scene=inn] .exploration-prompt{min-height:11px}
+ .game-console[data-scene=inn] .exploration-prompt>#explore-action{font-size:8px;line-height:1.3;padding:0}
+}
+@container game-screen (max-width:380px){
+ .game-console[data-scene=inn] .play-screen{grid-template-rows:24px minmax(0,1fr) 88px}
+ .game-console[data-scene=inn] .exploration-dialogue{padding:4px 7px;gap:2px}
+ .game-console[data-scene=inn] .exploration-dialogue>header strong{font-size:8px}
+ .game-console[data-scene=inn] .exploration-dialogue>p{font-size:8px;line-height:1.5}
+ .game-console[data-scene=inn] .exploration-prompt>#explore-action{font-size:7px}
+}
+/* Reserve a footer row for actions in every exploration scene. */
+@container game-screen (max-width:600px){
+ .game-console:not([data-scene=world]) .play-screen{grid-template-rows:26px minmax(0,1fr) 90px}
+ .game-console .exploration-dialogue{display:grid;grid-template-rows:auto minmax(0,1fr) auto;align-content:stretch;justify-content:normal;gap:2px;margin:3px 3px 4px;padding:5px 9px;border-width:3px;min-height:0}
+ .game-console .exploration-dialogue>header{min-height:11px}.game-console .exploration-dialogue>header strong{font-size:9px;line-height:1.3}
+ .game-console .exploration-dialogue>p{font-size:10px;line-height:1.5;min-height:0;overflow:auto;word-break:normal;scrollbar-width:thin}
+ .game-console .exploration-prompt{min-height:12px;flex-shrink:0;align-self:end;margin:0;padding:0}
+ .game-console .exploration-prompt>#explore-action{min-height:12px;font-size:8px;line-height:1.3;padding:0;gap:5px;max-width:100%;white-space:normal;text-align:right}
+ .game-console .prompt-arrow{font-size:7px;flex-shrink:0}
+}
+@container game-screen (max-width:380px){
+ .game-console:not([data-scene=world]) .play-screen{grid-template-rows:24px minmax(0,1fr) 88px}
+ .game-console .exploration-dialogue{padding:4px 7px}.game-console .exploration-dialogue>header strong{font-size:8px}.game-console .exploration-dialogue>p{font-size:8px;line-height:1.5}.game-console .exploration-prompt>#explore-action{font-size:7px}
+}
+
+/* Family contacts stay across the top, including landscape phones. */
+.family-comms-body{grid-template-columns:minmax(0,1fr);gap:14px}.family-comms nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.family-comms nav button{min-width:0;min-height:44px;display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 5px;text-align:center}.family-comms nav button>span{font-size:9px}.family-comms nav button strong{font-size:13px}.family-contact-profile{min-height:135px}.family-contact-profile>svg{width:76px}.family-message{min-height:0;margin-top:12px}.family-comms>header{padding-bottom:10px}.family-comms>footer{margin-top:12px}
+@media(max-width:650px){.family-comms-body{gap:11px}.family-comms nav{gap:5px}.family-comms nav button{min-height:44px;gap:4px;padding:8px 3px}.family-comms nav button strong{font-size:10px}.family-comms nav button>span{font-size:8px}}
+@media(orientation:landscape) and (max-height:550px){.family-comms{padding:10px 13px}.family-comms>header{padding-bottom:7px}.family-comms>header small{font-size:8px}.family-comms h2{font-size:16px;margin-top:0}.family-comms-body{margin-top:8px;gap:9px}.family-comms nav button{min-height:44px;padding:7px 5px}.family-contact-profile{min-height:0;gap:12px}.family-photo{width:65px}.family-photo img{height:86px}.family-contact-profile>svg{width:56px}.family-contact-profile h3{font-size:15px;margin:4px 0}.family-contact-profile p{font-size:12px;line-height:1.6}.family-message{margin-top:9px;padding:10px 12px}.family-message p[lang=ja]{font-size:13px;line-height:1.6;margin:6px 0}.family-message p[lang=ko]{font-size:12px;line-height:1.6;margin-top:6px}.family-comms>footer{font-size:8px;margin-top:9px;padding-top:7px}}
+
+/* Image viewer shares the game's pixel-window frame. */
+.game-app #image-dialog{position:fixed;inset:0;margin:auto;width:fit-content;height:fit-content;min-width:min(260px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:5px;background:#14252a;border:3px double #a8b59a;color:#e4dfbb;box-shadow:inset 1px 1px #405442,4px 5px #07121699;overflow:hidden}.game-app #image-dialog[open]{display:flex;flex-direction:column}.game-app #image-dialog::backdrop{background:#030b12d9;backdrop-filter:blur(2px)}.image-window-bar{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-shrink:0;margin:0;padding:7px 9px;border-bottom:1px solid #718768;background:#2a4039;box-shadow:inset 0 1px #53634a}.image-window-bar>strong{font:400 13px/1.6 Galmuri;color:#eadcae;min-width:0;overflow-wrap:anywhere}.game-app #close-image{position:static;display:grid;place-items:center;flex-shrink:0;width:27px;height:27px;min-height:0;margin:0;padding:0;border:1px solid #b8aa76;background:#1a302b;box-shadow:inset 1px 1px #607052,inset -1px -1px #0b1d1e;color:#e6d9ad;font:20px/1 Galmuri;cursor:pointer}.image-window-body{display:flex;align-items:center;justify-content:center;min-height:0;margin:0;padding:8px;background:#0c171c}.game-app #image-dialog #large-image{display:block;margin:0;width:auto;height:auto;max-width:calc(100vw - 56px);max-height:calc(100dvh - 98px);object-fit:contain;image-rendering:auto;border:1px solid #526a61}.game-app #close-image:focus-visible{outline:2px solid #efd393;outline-offset:2px}
+@media(max-width:650px),(max-height:550px){.game-app #image-dialog{max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px);padding:4px}.image-window-bar{padding:4px 7px;gap:10px}.image-window-bar>strong{font-size:11px}.game-app #close-image{width:25px;height:25px;font-size:19px}.image-window-body{padding:5px}.game-app #image-dialog #large-image{max-width:calc(100vw - 40px);max-height:calc(100dvh - 78px)}}
