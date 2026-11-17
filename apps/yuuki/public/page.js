@@ -11,7 +11,7 @@ let target=null;
 const player={x:95,y:235};
 const world=document.getElementById('world-map');
 const sprite=document.getElementById('world-player');
-const nodes=[{id:'save',x:95,y:235,page:'save',name:'세이브 지점'},{id:'campus',x:215,y:235,page:'campus',name:'한국대학교'},{id:'family',x:360,y:140,page:'family',name:'본가에서 온 연락'},{id:'rest',x:505,y:140,page:'rest',name:'자취방'},{id:'continue',x:505,y:235,page:'continue',name:'사랑의 던전'}];
+const nodes=[{id:'save',x:95,y:235,page:'save',name:'세이브 지점'},{id:'campus',x:215,y:235,page:'campus',name:'한국대학교'},{id:'family',x:360,y:140,page:'family',name:'본가에서 온 연락'},{id:'rest',x:505,y:140,page:'rest',name:'유우키의 방'},{id:'continue',x:505,y:235,page:'continue',name:'사랑의 던전'}];
 const edges={save:['campus'],campus:['save','family','continue'],family:['campus','rest'],rest:['family','continue'],continue:['rest','campus']};
 let atNode='save',journey=null,started=false;
 let activeScene='world',innParent='campus',restParent='world',selectedExplore=null,npcConversation=null;
@@ -96,11 +96,11 @@ function sayExplore(name,text,action,npc=false){
  document.querySelector('.game-console').toggleAttribute('data-npc-dialogue',npc);
  document.getElementById('explore-speaker').textContent=name;document.getElementById('explore-text').textContent=text;
  const button=document.getElementById('explore-action');button.hidden=!action;button.dataset.action=action||'';
- const labels={inn:'여관으로 들어가기',campus:'캠퍼스로 나가기',rest:'자취방으로 들어가기',world:'바깥으로 나가기','npc-talk':'동아리 회장 승민이 형이다! 말을 걸어볼까?','npc-next':'계속','npc-finish':'대화 마치기'};
+ const labels={inn:'여관으로 들어가기',campus:'캠퍼스로 나가기',rest:'유우키의 방으로 들어가기',world:'바깥으로 나가기','world-map':'월드 맵으로 돌아가기','npc-talk':'동아리 회장 승민이 형이다! 말을 걸어볼까?','npc-next':'계속','npc-finish':'대화 마치기'};
  document.getElementById('explore-action-label').textContent=labels[action]||'';
  document.querySelector('.exploration-prompt>.explore-caret').hidden=!!action;
 }
-function performExploreAction(){if(campusInputLocked())return;const action=document.getElementById('explore-action').dataset.action;if(action==='inn')enterScene('inn','campus');else if(action==='campus')enterScene('campus');else if(action==='rest')enterScene('rest',activeScene);else if(action==='world')enterScene(restParent);else if(action==='npc-talk'){npcConversation={id:'seungmin',index:0};showNpcLine();}else if(action==='npc-next'&&npcConversation){npcConversation.index++;showNpcLine();}else if(action==='npc-finish')finishNpcConversation();}
+function performExploreAction(){if(campusInputLocked())return;const action=document.getElementById('explore-action').dataset.action;if(action==='world-map')enterScene('world');else if(action==='inn')enterScene('inn','campus');else if(action==='campus')enterScene('campus');else if(action==='rest')enterScene('rest',activeScene);else if(action==='world')enterScene(restParent);else if(action==='npc-talk'){npcConversation={id:'seungmin',index:0};showNpcLine();}else if(action==='npc-next'&&npcConversation){npcConversation.index++;showNpcLine();}else if(action==='npc-finish')finishNpcConversation();}
 function showNpcLine(){const index=npcConversation.index;sayExplore('유승민',seungminLines[index],index===seungminLines.length-1?'npc-finish':'npc-next',true);}
 function finishNpcConversation(){npcConversation=null;sayExplore('유승민','승민은 다시 룰북으로 시선을 내렸다. 주사위가 손끝에서 또르르 굴렀다.');}
 function enterScene(scene,parent='world'){
@@ -119,9 +119,9 @@ function enterScene(scene,parent='world'){
 
  document.querySelectorAll('[data-inspect]').forEach(el=>el.removeAttribute('aria-current'));
  if(scene==='world'){showLocation();world.focus({preventScroll:true});return;}
- document.getElementById('game-location').textContent=scene==='campus'?'한국대학교':scene==='rest'?'유우키의 자취방':'여관 · 학관 3F';
+ document.getElementById('game-location').textContent=scene==='campus'?'한국대학교':scene==='rest'?'유우키의 방':'여관 · 학관 3F';
  if(scene==='campus')sayExplore('한국대학교','한국대학교다! 낮은 언덕 위의 모험이 시작된다. 건물을 눌러 조사해 보자.');
- else if(scene==='rest')sayExplore('유우키의 자취방','후문에서 5분, 7층 복층 원룸이다! 좀 쉬다갈까?');
+ else if(scene==='rest')sayExplore('유우키의 방','후문에서 5분, 704호 복층 원룸이다! 좀 쉬다갈까?');
  else sayExplore('판타지 연구회 여관','학생회관 3층, 여관에 들어왔다! 좋아하는 이야기는 끝까지 들어 주는 곳. 사물을 눌러 살펴보자.');
  drawExplorationPlayer(scene);document.getElementById(scene+'-map').focus({preventScroll:true});
 }
