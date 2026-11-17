@@ -59,3 +59,7 @@
 }
 @container game-screen (max-width:600px){.battle-hud .hud-shortcuts>button{min-height:25px;height:25px;display:flex;font:6px/1.4 Galmuri;padding:4px 1px;gap:2px;flex-direction:row}.battle-hud .hud-shortcuts>button>span{font-size:9px;margin:0}}
 @container game-screen (max-width:380px){.battle-hud .hud-shortcuts>button{min-height:23px;height:23px;font-size:5px;padding:3px 1px}.battle-hud .hud-shortcuts>button>span{font-size:8px}}
+/* Remove inline baseline space and keep small header buttons above the map border. */
+.overworld-left{display:flex;align-items:center;line-height:1}.overworld-controls{line-height:1}
+@container game-screen (max-width:600px){.overworld-banner{padding-block:0;align-items:center;min-height:0;line-height:1}.overworld-left,.overworld-controls{align-self:center;margin:0;min-height:0}.overworld-left .game-save-button,.overworld-controls button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:18px;min-height:0;padding-block:0;line-height:1;margin:0;vertical-align:middle}}
+@container game-screen (max-width:380px){.overworld-left .game-save-button,.overworld-controls button{height:16px}}
