@@ -32,3 +32,30 @@
 @media(max-width:650px){.campaign-game-window .love-campaign{padding:4px 6px 6px!important}.campaign-game-window .love-campaign h2{font-size:16px;line-height:1.4;margin:2px 0 4px}.campaign-game-window .love-campaign>p{font-size:8px;line-height:1.5}.campaign-game-window .love-campaign>p br{display:none}.campaign-game-window .campaign-routes{margin-top:7px}.campaign-game-window .campaign-route{padding:6px 2px;gap:4px}.campaign-game-window .campaign-route small{font-size:5px;line-height:1.4}.campaign-game-window .campaign-route strong{font-size:11px;line-height:1.5}.campaign-game-window .campaign-route>span{font-size:7px;line-height:1.5}.campaign-game-window>footer{display:none}}
 
 .overworld-left{justify-self:start;min-width:0}.overworld-left .game-save-button{font:11px/1.5 Galmuri;padding:3px 8px;border:1px solid #687954;background:#344e3d;color:#fff0b7;box-shadow:inset 1px 1px #748458;cursor:pointer;white-space:nowrap}.overworld-left .game-save-button:hover{background:#627245}.overworld-left .game-save-button:focus-visible{outline:2px solid #51694a;outline-offset:2px}.hero-name>strong{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.hero-job{display:inline-block;font:9px/1.3 Galmuri;color:#c3d69b;margin:0;padding:3px 6px;background:#17271f;border:1px solid #526747;box-shadow:inset 1px 2px 2px #07140f,inset -1px -1px #6a78543d;text-shadow:none;white-space:nowrap}@media(min-width:900px){.hero-job{font-size:12px}}@media(max-width:650px){.overworld-left .game-save-button{font-size:8px;padding:2px 4px}.hero-name>strong{gap:4px}.hero-job{font-size:6px;padding:2px 4px}}@media(max-width:360px){.overworld-left .game-save-button{font-size:7px;padding:2px 3px}.hero-name>strong{gap:3px}.hero-job{padding:2px 3px}}
+/* Let the game grow with the browser instead of using the document column. */
+.content-panel .sl-container{max-width:none!important;width:100%}.my-content.game-app{width:100%;max-width:none}.game-console{width:100%;max-width:none}
+/* Fit the 16:10 play area within both viewport dimensions. */
+.my-content.game-app{padding-block:12px}.game-console{--game-chrome-height:68px;width:min(100%,calc((100dvh - var(--sl-nav-height) - var(--game-chrome-height))*1.6 + 32px));margin-inline:auto!important}
+@media(max-width:650px){.my-content.game-app{padding-block:8px}.game-console{--game-chrome-height:49px;width:min(100%,calc((100dvh - var(--sl-nav-height) - var(--game-chrome-height))*1.6 + 20px))}}
+/* Respond to the actual console size, including height-limited wide viewports. */
+.console-screen{container:game-screen / inline-size}
+@container game-screen (max-width:600px){
+ .play-screen{grid-template-rows:26px minmax(0,1fr) 86px}
+ .battle-hud.ornate-hud{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px;padding:9px 9px 6px;border-top-width:3px;min-height:0}
+ .ornate-hud:before{height:10px;top:-5px;background-size:64px 14px}
+ .hero-status{gap:7px;min-height:0}.hero-badge{width:28px;height:40px;padding:3px;border-width:2px}.hero-badge:before,.hero-badge:after{display:none}
+ .hero-readout{gap:4px}.hero-name{gap:0}.hero-name>strong{font-size:10px;line-height:1.3;gap:4px;flex-wrap:nowrap}.hero-level{font-size:8px;margin:0}.hero-job{font-size:8px;padding:1px 4px}
+ .hero-gauges{gap:3px}.ornate-gauge{grid-template-columns:17px minmax(0,1fr) 48px;gap:4px}.ornate-gauge>span{font-size:9px}.ornate-gauge>i{height:6px}.ornate-gauge>small{font-size:6px;line-height:1.3}
+ .hero-attributes{gap:4px;padding-top:3px}.hero-attributes>span{gap:3px;justify-content:space-between}.hero-attributes small{font-size:6px;line-height:1.3}.hero-attributes strong{font-size:10px}
+ .hero-tools{display:grid;grid-template-columns:minmax(0,1fr) 45px;gap:6px;align-items:center}.pixel-skill-box{padding:2px 4px 5px;margin:0}.pixel-skill-box legend{font-size:8px;padding-inline:3px}.pixel-skill-box>div{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px}.pixel-skill-box button{padding:2px 0;gap:0}.pixel-skill-box button>.skill-pixel-icon{width:20px;height:20px;padding:1px}.pixel-skill-box button>span{display:none}
+ .hud-shortcuts{display:grid;grid-template-columns:1fr;gap:4px}.hud-shortcuts>button{width:100%;min-height:25px;height:auto;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:2px;padding:4px 1px;font:6px/1.4 Galmuri}.hud-shortcuts>button>span{font-size:9px;line-height:1}
+ .overworld-banner{padding-inline:6px;gap:4px}.overworld-banner strong{font-size:9px}.overworld-controls{gap:4px}.overworld-controls button,.overworld-left .game-save-button{font-size:8px;padding:2px 4px}
+}
+@container game-screen (max-width:380px){
+ .play-screen{grid-template-rows:24px minmax(0,1fr) 78px}.battle-hud.ornate-hud{gap:7px;padding:7px 6px 5px;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+ .hero-status{gap:5px}.hero-badge{width:23px;height:34px;padding:2px}.hero-name>strong{font-size:8px;gap:3px}.hero-level,.hero-job{font-size:6px}.hero-job{padding:1px 3px}.hero-readout{gap:4px}.ornate-gauge{grid-template-columns:14px minmax(0,1fr) 38px;gap:3px}.ornate-gauge>span{font-size:8px}.ornate-gauge>small{font-size:5px}.hero-attributes{gap:3px}.hero-attributes>span{gap:1px}.hero-attributes small{font-size:5px}.hero-attributes strong{font-size:9px}
+ .hero-tools{grid-template-columns:minmax(0,1fr) 39px;gap:5px}.pixel-skill-box{padding:1px 2px 4px}.pixel-skill-box legend{font-size:7px}.pixel-skill-box>div{gap:1px}.pixel-skill-box button>.skill-pixel-icon{width:15px;height:17px;padding:0}.hud-shortcuts>button{font-size:5px;min-height:23px;padding:3px 1px}.hud-shortcuts>button>span{font-size:8px}
+ .overworld-banner strong{font-size:8px}.overworld-controls button,.overworld-left .game-save-button{font-size:7px;padding:2px 3px}
+}
+@container game-screen (max-width:600px){.battle-hud .hud-shortcuts>button{min-height:25px;height:25px;display:flex;font:6px/1.4 Galmuri;padding:4px 1px;gap:2px;flex-direction:row}.battle-hud .hud-shortcuts>button>span{font-size:9px;margin:0}}
+@container game-screen (max-width:380px){.battle-hud .hud-shortcuts>button{min-height:23px;height:23px;font-size:5px;padding:3px 1px}.battle-hud .hud-shortcuts>button>span{font-size:8px}}
