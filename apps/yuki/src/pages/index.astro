@@ -16,11 +16,10 @@ const traits=[['낯가림 Lv.MAX','첫 문장을 몇 번씩 연습하다가, 말
 <StarlightPage frontmatter={{title:'시라이시 유우키',description:'마지막 세이브 지점: 서울 — 조소과 너드의 미완료 첫사랑 퀘스트',tableOfContents:false}}>
 <div class="my-content game-app">
  <section class="game-console" aria-label="유우키의 RPG 게임기" data-started="false">
-  <div class="fullscreen-tools"><span id="fullscreen-hint" aria-live="polite"></span><div id="fullscreen-title-slot"><button type="button" id="toggle-fullscreen" aria-pressed="false">⛶ 전체화면</button></div></div>
   <div class="console-screen">
    <div id="title-screen" class="title-screen"><div class="title-logo"><div class="title-logo-stars" aria-hidden="true"><i>✦</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><h1 lang="ja"><span>まだ、</span><strong>渡せない想い</strong></h1><p class="title-korean"><span aria-hidden="true">~</span> 아직, 건네지 못한 마음 <span aria-hidden="true">~</span></p></div><button type="button" id="start-game"><span aria-hidden="true">▶</span> 이어하기</button></div>
    <div id="play-screen" class="play-screen" hidden>
-    <header class="overworld-banner"><div class="overworld-left"><button type="button" class="game-save-button" data-open-screen="save" aria-haspopup="dialog">◆ 세이브</button></div><strong id="game-location">마지막 세이브 지점 · 서울</strong><div class="overworld-controls"><button type="button" id="return-scene" hidden>월드맵</button><div id="fullscreen-banner-slot"></div><button type="button" id="return-title" aria-label="타이틀 화면으로 돌아가기">TITLE</button></div></header>
+    <header class="overworld-banner"><div class="overworld-left"><button type="button" class="game-save-button" data-open-screen="save" aria-haspopup="dialog">◆ 세이브</button></div><strong id="game-location">마지막 세이브 지점 · 서울</strong><div class="overworld-controls"><button type="button" id="return-scene" hidden>월드맵</button><button type="button" id="return-title" aria-label="타이틀 화면으로 돌아가기">TITLE</button></div></header>
     <div class="overworld-field"><div class="map-scene" data-scene="world"><PixelScene /></div><div class="map-scene" data-scene="campus" hidden><CampusMap /><div id="campus-effects" class="campus-effects" aria-hidden="true"></div></div><div class="map-scene" data-scene="inn" hidden><InnMap /></div><div class="map-scene" data-scene="rest" hidden><RoomMap /></div><aside class="hud-quest" aria-label="미완료 퀘스트"><button type="button" id="quest-toggle" aria-expanded="false" aria-controls="quest-content">미완료퀘스트 <span aria-hidden="true">＋</span></button><strong id="quest-content" hidden>아직도 좋아한다고 말하기</strong></aside></div>
     <section id="campaign-overlay" class="campaign-overlay" hidden aria-labelledby="campaign-heading" role="region"><div class="campaign-game-window"><header><strong id="campaign-heading">NEXT CAMPAIGN</strong><button type="button" id="close-campaign" aria-label="월드맵으로 돌아가기">돌아가기 ×</button></header><section id="campaign-panel" class="chapter ending love-campaign">
  <div class="campaign-heart" aria-hidden="true"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><path d="M2 2h4v2h4V2h4v2h2v6h-2v2h-2v2h-2v2H6v-2H4v-2H2v-2H0V4h2Z" fill="#db91a6"/><path d="M2 4h3v2H2z" fill="#ffe4c1"/></svg></div>
@@ -40,13 +39,13 @@ const traits=[['낯가림 Lv.MAX','첫 문장을 몇 번씩 연습하다가, 말
   </div>
   <div class="console-label"><span>YUKI’S CAMPAIGN</span><span>WORLD 01 · SEOUL</span></div>
 
+ </section>
  <FamilyWindow />
  <InventoryWindow />
  <CharacterWindow />
  <SaveWindow />
  <dialog id="skill-dialog" aria-labelledby="skill-name" aria-describedby="skill-text"><article class="vintage-skill-card"><button type="button" id="close-skill" aria-label="스킬 카드 닫기">×</button><header><span>PASSIVE SKILL</span><span id="skill-card-index">01</span></header><div class="skill-card-art">{traits.map((_,i)=><div data-card-icon={i} hidden={i!==0}><SkillIcon index={i}/></div>)}<span class="card-star star-left" aria-hidden="true">✦</span><span class="card-star star-right" aria-hidden="true">✦</span></div><div class="skill-card-copy"><span class="skill-card-type">패시브 · 항상 발동</span><h2 id="skill-name"></h2><div class="skill-card-rule" aria-hidden="true">◆</div><p id="skill-text"></p></div><footer><span>판타지 연구회 ‘여관’</span><span aria-hidden="true">✧</span></footer></article></dialog>
  <dialog id="image-dialog" aria-label="이미지 확대"><button type="button" id="close-image" aria-label="이미지 닫기">닫기 ×</button><img id="large-image" alt=""/></dialog>
- </section>
 </div>
 <script src="/yuki/page.js" type="module" is:inline></script>
 </StarlightPage>

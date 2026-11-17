@@ -44,9 +44,9 @@ document.getElementById('close-image').addEventListener('click',()=>imageDialog.
 imageDialog.addEventListener('close',()=>image.removeAttribute('src'));
 imageDialog.addEventListener('click',event=>{if(event.target===imageDialog){const r=imageDialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)imageDialog.close();}});
 // The title is a separate screen; Enter and the single Continue button enter the world.
-function startGame(){if(started)return;started=true;positionFullscreenButton();document.getElementById('title-screen').hidden=true;document.getElementById('play-screen').hidden=false;document.querySelector('.game-console').dataset.started='true';enterScene('world');}
+function startGame(){if(started)return;started=true;document.getElementById('title-screen').hidden=true;document.getElementById('play-screen').hidden=false;document.querySelector('.game-console').dataset.started='true';enterScene('world');}
 document.getElementById('start-game').addEventListener('click',startGame);
-document.getElementById('return-title').addEventListener('click',()=>{stopMoving();enterScene('world');started=false;positionFullscreenButton();document.getElementById('title-screen').hidden=false;document.getElementById('play-screen').hidden=true;document.querySelector('.game-console').dataset.started='false';document.getElementById('start-game').focus({preventScroll:true});});
+document.getElementById('return-title').addEventListener('click',()=>{stopMoving();enterScene('world');started=false;document.getElementById('title-screen').hidden=false;document.getElementById('play-screen').hidden=true;document.querySelector('.game-console').dataset.started='false';document.getElementById('start-game').focus({preventScroll:true});});
 function route(from,to){const queue=[[from]],seen=new Set([from]);while(queue.length){const path=queue.shift(),last=path.at(-1);if(last===to)return path;for(const id of edges[last])if(!seen.has(id)){seen.add(id);queue.push([...path,id]);}}return [];}
 function travel(id,openAtEnd=false){if(campusInputLocked()||!started||journey||!edges[id])return;if(id===atNode){if(openAtEnd)openPage(id);return;}const stops=route(atNode,id),path=[];for(let i=1;i<stops.length;i++){if((stops[i-1]==='campus'&&stops[i]==='family')||(stops[i-1]==='family'&&stops[i]==='campus'))path.push({x:215,y:140});path.push(nodes.find(node=>node.id===stops[i]));}journey={path,openAtEnd,destination:id};}
 function inspect(){if(!journey)openPage(atNode);}
@@ -158,45 +158,3 @@ familyDialog.addEventListener('click',event=>{if(event.target===familyDialog){co
 function closeCampaign(){campaignOverlay.hidden=true;document.getElementById('world-map').focus({preventScroll:true});}
 document.getElementById('close-campaign').addEventListener('click',closeCampaign);
 window.addEventListener('keydown',event=>{if(campaignOverlay.hidden)return;if(event.key==='Escape'){event.preventDefault();closeCampaign();}else if(event.key==='Tab'){const links=[...campaignOverlay.querySelectorAll('button:not(:disabled),a[href]')];const first=links[0],last=links.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}});
-
-// Keep dialogs in the same fullscreen subtree as the game.
-const fullscreenGame=document.querySelector('.game-console');
-const fullscreenButton=document.getElementById('toggle-fullscreen');
-const fullscreenHint=document.getElementById('fullscreen-hint');
-let fullscreenBusy=false,fullscreenFallback=false;
-function nativeFullscreen(){return document.fullscreenElement||document.webkitFullscreenElement;}
-function syncFullscreen(){
- const active=nativeFullscreen()===fullscreenGame||fullscreenFallback;
- fullscreenGame.classList.toggle('game-fullscreen',active);
- document.documentElement.classList.toggle('game-fullscreen-active',active);
- fullscreenButton.textContent=active?'⛶ 전체화면 나가기':'⛶ 전체화면';
- fullscreenButton.setAttribute('aria-pressed',String(active));
- fullscreenHint.textContent=active&&matchMedia('(orientation: portrait)').matches?'휴대폰을 가로로 돌려주세요.':'';
- if(!active){try{screen.orientation?.unlock?.();}catch{}}
-}
-async function toggleFullscreen(){
- if(fullscreenBusy)return;fullscreenBusy=true;
- try{
-  if(nativeFullscreen()===fullscreenGame){const leave=document.exitFullscreen||document.webkitExitFullscreen;await leave?.call(document);}
-  else if(fullscreenFallback){fullscreenFallback=false;}
-  else{
-   const request=fullscreenGame.requestFullscreen||fullscreenGame.webkitRequestFullscreen;
-   if(request){try{await request.call(fullscreenGame);}catch{fullscreenFallback=true;}}
-   else fullscreenFallback=true;
-   if(nativeFullscreen()===fullscreenGame){try{await screen.orientation?.lock?.('landscape');}catch{}}
-  }
- }finally{fullscreenBusy=false;syncFullscreen();}
-}
-fullscreenButton.addEventListener('click',toggleFullscreen);
-document.addEventListener('fullscreenchange',syncFullscreen);
-document.addEventListener('webkitfullscreenchange',syncFullscreen);
-window.addEventListener('resize',syncFullscreen);
-window.addEventListener('keydown',event=>{if(event.key==='Escape'&&fullscreenFallback&&!document.querySelector('dialog[open]')&&campaignOverlay.hidden){fullscreenFallback=false;syncFullscreen();}});
-syncFullscreen();
-
-function positionFullscreenButton(){
- const button=document.getElementById('toggle-fullscreen');
- const slot=document.getElementById(started?'fullscreen-banner-slot':'fullscreen-title-slot');
- slot.append(button);
- document.querySelector('.fullscreen-tools').hidden=started;
-}
