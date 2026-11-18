@@ -1,5 +1,6 @@
 // 카드 장식은 Canvas에 직접 그려 미리보기와 저장 이미지에 함께 반영한다.
 const cardThemes = {
+ yuuki:{label:'8비트 RPG 챕터의 한 페이지',heading:'Galmuri,monospace'},
  minyul:{label:'도성야화의 한 장',heading:'"Shilla Culture",serif'},
  plain:{label:'무늬 없는 기본 카드',heading:'"Noto Sans KR",sans-serif'},
  julian:{label:'무지개 테이프의 영화 자막 카드',heading:'Georgia,serif'},
@@ -18,6 +19,7 @@ const lightAccents={julian:'#315e95',jude:'#80602f',seungmin:'#238b57',willow:'#
 const darkAccents={julian:'#8bbcff',jude:'#d5b67b',seungmin:'#2dd280',willow:'#d5ba75','1997':'#e3abc6','2004':'#a2c9e6',hanminwoo:'#8bacbd',colorground:'#ed9db7',nighthighway:'#dfae62',anemoi:'#c2c99e',yunhaesi:'#9fcbd9'};
 function themePalette(p,mode){
  const dark=mode==='dark';
+ if(p.theme.startsWith('yuuki'))return {...p,mode,paper:dark?'#182a28':'#f7f1df',ink:dark?'#dae1d3':'#3c514a',accent:dark?'#e4b1b7':'#9b5c6d',decoration:dark?'#a9bbb0':'#6c887b'};
  if(p.theme==='minyul')return {...p,mode,paper:dark?'#20251f':'#f7f2e6',ink:dark?'#ded9c8':'#34362f',accent:dark?'#ddbc79':'#8b622a',decoration:dark?'#8f9d80':'#a19f86'};
  if(p.theme==='plain'){
   const luminance=hex=>hex.slice(1).match(/../g).map(value=>{const c=parseInt(value,16)/255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4;}).reduce((sum,c,i)=>sum+c*[.2126,.7152,.0722][i],0);
@@ -43,6 +45,18 @@ function drawCardTheme(ctx,p,height,bodyTop,accent,showHeader=true){
  const dot=(x,y,r,color)=>{ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();};
  const rainbow=['#c86d76','#d99762','#e6c75c','#83a685','#719cb4','#ad8dac'];
  switch(p.theme){
+ case 'yuuki':
+  {
+   // A chapter-opening screen, kept as spacious as a page from a novel.
+   if(showHeader){
+    ctx.textAlign='center';ctx.textBaseline='top';ctx.fillStyle=p.decoration;ctx.font='400 22px Galmuri';ctx.fillText('CHAPTER 01',540,49);
+    for(const side of [-1,1]){
+     const x=540+side*144;rect(x-3,56,6,6,p.accent);rect(x-1,54,2,10,p.accent);
+     const start=side<0?x-95:x+13;rect(start,59,82,1,p.decoration);rect(start+(side<0?78:0),57,4,5,p.decoration);
+    }
+   }
+  }
+  break;
  case 'minyul':
   {
    // Quiet paper grain and vector clouds; no seal or enclosing frame.
@@ -248,7 +262,7 @@ function drawCardTheme(ctx,p,height,bodyTop,accent,showHeader=true){
   const theme=p.divider.startsWith('yunhaesi-')?'yunhaesi':p.divider,mode=p.divider.startsWith('yunhaesi-')?p.divider.slice(9):p.mode;
   const palette=themePalette({...p,theme},mode);
   drawCardDivider(ctx,{...palette,paper:p.paper,dividerPaper:p.paper},bodyTop,palette.accent);
- }else drawCardDivider(ctx,p,bodyTop,accent);
+ }else drawCardDivider(ctx,p.theme==='yuuki'?{...p,hasSaveSlot:showHeader}:p,bodyTop,accent);
  ctx.restore();
 }
 function drawCardDivider(ctx,p,bodyTop,accent){
@@ -256,7 +270,17 @@ function drawCardDivider(ctx,p,bodyTop,accent){
  const line=(x,y,x2,y2,color,width=1)=>{ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();};
  const rect=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
  const dot=(x,y,r,color)=>{ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();};
- if(p.theme==='minyul'){
+ if(p.theme==='yuuki'){
+  const y=Math.round(bodyTop-27);ctx.save();ctx.translate(540,y);
+  // A small original pixel sword marks the start of the chapter.
+  const steel=p.mode==='dark'?'#b8cabe':'#74978b',edge=p.mode==='dark'?'#e0e3c5':'#bbceae';
+  rect(-3,-18,6,26,steel);rect(-1,-21,2,3,steel);rect(-2,-17,2,22,edge);
+  rect(-13,8,26,4,p.accent);rect(-16,7,3,7,p.accent);rect(13,7,3,7,p.accent);rect(-3,12,6,9,p.accent);rect(-5,21,10,4,p.accent);
+  for(const side of [-1,1]){
+   const x=side<0?-79:33;rect(x,3,46,1,p.decoration);rect(side*87-2,1,4,4,p.accent);
+  }
+  ctx.restore();
+ }else if(p.theme==='minyul'){
   const brush=document.createElement('canvas');brush.width=920;brush.height=60;
   const ink=brush.getContext('2d');let seed=7241;
   const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};

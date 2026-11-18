@@ -17,6 +17,7 @@
 .hex-color-control .hex-color-value{flex:1;min-width:0;width:8ch;height:36px;margin:0;padding:7px 8px;font:500 13px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.02em;text-transform:uppercase}
 .hex-color-control .hex-color-value[aria-invalid=true]{border-color:#b74030;outline-color:#b74030}
 
+@font-face{font-family:Galmuri;src:url('/yuuki/fonts/Galmuri11.woff2') format('woff2');font-weight:400 900;font-style:normal;font-display:swap}
 @font-face{font-family:'Shilla Culture';src:url('/minyul/fonts/shilla-culture-m.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
 @font-face{font-family:'Intro Calligraphy';src:url('/minyul/fonts/title-calligraphy.ttf?v=talismans3') format('truetype');font-style:normal;font-weight:400;font-display:swap}
 
@@ -64,7 +65,7 @@ main{max-width:1320px;width:min(1320px,100% - 36px)}
    <fieldset id="background-options" class="header-fields" hidden><legend>배경 수정</legend>
     <div class="row"><div><label for="background">배경색</label><span class="hex-color-control"><input id="background" type="color" value="#ffffff"><input id="background-hex" class="hex-color-value" type="text" value="#FFFFFF" aria-label="배경색 HEX 코드" placeholder="#000000" maxlength="7" spellcheck="false" autocomplete="off"></span></div><div><label for="shadow-color">그림자 색상</label><span class="hex-color-control"><input id="shadow-color" type="color" value="#315e95"><input id="shadow-color-hex" class="hex-color-value" type="text" value="#315E95" aria-label="그림자 색상 HEX 코드" placeholder="#000000" maxlength="7" spellcheck="false" autocomplete="off"></span><label class="indent-option"><input id="show-shadow" type="checkbox"> 그림자 사용</label></div></div>
     <label for="divider-style">구분선</label><select id="divider-style">
-     <option value="none">없음</option><option value="julian">무지개 마스킹 테이프</option><option value="jude">펀치 테이프</option><option value="minyul">붓 먹선</option><option value="seungmin">코드 주석</option><option value="willow">기본 선</option><option value="1997">연필 선</option><option value="2004">윈도우 입체 선</option><option value="hanminwoo">슬레이트 선</option><option value="colorground">무지개 물결</option><option value="nighthighway">여행 경로</option><option value="anemoi">편지 장식</option><option value="yunhaesi-light">바다 물결</option><option value="yunhaesi-dark">별 장식</option>
+     <option value="none">없음</option><option value="julian">무지개 마스킹 테이프</option><option value="jude">펀치 테이프</option><option value="yuuki">도트 검 장식</option><option value="minyul">붓 먹선</option><option value="seungmin">코드 주석</option><option value="willow">기본 선</option><option value="1997">연필 선</option><option value="2004">윈도우 입체 선</option><option value="hanminwoo">슬레이트 선</option><option value="colorground">무지개 물결</option><option value="nighthighway">여행 경로</option><option value="anemoi">편지 장식</option><option value="yunhaesi-light">바다 물결</option><option value="yunhaesi-dark">별 장식</option>
     </select>
    </fieldset>
    <fieldset class="header-fields"><legend>헤더 표시</legend>
@@ -114,6 +115,7 @@ const presets=[
  {description:"무심한듯 다정한 백엔드 프로그래머",theme:'seungmin',name:'유승민',title:'유승민',icon:'💻',accent:'#456957',paper:'#f5f6ef',ink:'#50564c'},
  {description:"첫사랑 예외처리 중인 컴공생",theme:'willow',name:'윌로우',title:'Willow Han',icon:'🌳',accent:'#2c6147',paper:'#fffaf0',ink:'#534d43'},
  {description:'등선은 보류, 오늘도 퇴마 출근 중',theme:'minyul',name:'구민율',title:'구민율',icon:'🦊',accent:'#ddbc79',paper:'#20251f',ink:'#ded9c8'},
+ {description:'다시 만난 첫사랑, 아직 못 건넨 마음',theme:'yuuki',name:'유우키',title:'시라이시 유우키',icon:'🔨',accent:'#e4b1b7',paper:'#182a28',ink:'#dae1d3'},
  {description:"1997년, 첫사랑은 되감기 중",theme:'1997',name:'1997',title:'윤성민',icon:'📟',accent:'#87516c',paper:'#fcf3e8',ink:'#5e5148'},
  {description:"7년째, 짝사랑은 재생 중",theme:'2004',name:'2004',title:'윤성민',icon:'💿',accent:'#587a99',paper:'#f4f5ed',ink:'#535953'},
  {description:"장마와 푸른 베타",theme:'hanminwoo',name:'한민우',title:'한민우',icon:'☔️',accent:'#8bacbd',paper:'#18232b',ink:'#d0d8d9'},
@@ -193,22 +195,24 @@ async function generate(){
  const token=++generation;previewDirty=true;$('status').textContent='문장을 종이에 옮기는 중…';
  try{
   const font=$('font').value,size=(Number($('size').value)+(font==='SSRONET Handwritten'?3:0))*2;await Promise.all([document.fonts.load(`400 ${size}px "${font}"`,text),document.fonts.load('600 42px "Noto Serif KR"',$('card-title').value||selected.title),document.fonts.load('400 20px "Noto Sans KR"',selected.description+$('caption').value)]);
+  if(selected.theme==='yuuki')await Promise.all([document.fonts.load('400 42px Galmuri',$('card-title').value||selected.title),document.fonts.load('400 22px Galmuri','MAIN QUEST'),document.fonts.load('400 18px "Noto Sans KR"','まだ、渡せない想い')]);
   if(selected.theme==='minyul')await Promise.all([document.fonts.load('400 42px "Shilla Culture"',$('card-title').value||selected.title),document.fonts.load('400 47px "Intro Calligraphy"','都城夜話')]);
   if(token!==generation)return;
   const canvas=document.createElement('canvas');canvas.width=1080;let ctx=canvas.getContext('2d');ctx.font=`400 ${size}px "${font}"`;const margin=90,width=900,lineHeight=size*1.95,lines=[[]],indent=$('indent').checked?size:0;let x=indent,sourceIndex=0;
   for(const part of splitDialogue(text)){for(const char of segments(part.text)){
    if(char==='\n'){sourceIndex++;lines.push([]);x=indent;continue;}const charWidth=ctx.measureText(char).width;if(x+charWidth>width&&lines.at(-1).length){lines.push([]);x=0;}const override=manualRanges.findLast(range=>sourceIndex<range.end&&sourceIndex+char.length>range.start);lines.at(-1).push({char,x,charWidth,start:sourceIndex,end:sourceIndex+char.length,dialogue:override?.dialogue!=null?override.dialogue:part.dialogue});sourceIndex+=char.length;x+=charWidth;
   }}
-  const headingFont=(selected.theme==='minyul'?'400':'600')+' 42px '+cardThemes[selected.theme].heading;ctx.font=headingFont;const titleLines=$('show-name').checked?fitLines(ctx,$('card-title').value.trim()||selected.title,width):[];ctx.font='400 24px "Noto Sans KR"';const captionLines=$('show-memo').checked?fitLines(ctx,$('caption').value.trim(),width):[];
+  const headerWidth=width;
+  const headingFont=(selected.theme==='minyul'?'400':'600')+' 42px '+cardThemes[selected.theme].heading;ctx.font=headingFont;const titleLines=$('show-name').checked?fitLines(ctx,$('card-title').value.trim()||selected.title,headerWidth):[];ctx.font='400 24px "Noto Sans KR"';const captionLines=$('show-memo').checked?fitLines(ctx,$('caption').value.trim(),headerWidth):[];
   const showDesign=$('show-design').checked;
-  const fixedHeaderTop={'2004':134,seungmin:112,...(showDesign?{nighthighway:158,minyul:188}:{})}[selected.theme];
-  ctx.font='400 20px "Noto Sans KR"';const introLines=showDesign?fitLines(ctx,selected.description,width):[],introTop=fixedHeaderTop||(showDesign?({jude:164,willow:143}[selected.theme]||76):76),titleTop=introTop+(introLines.length?introLines.length*32+22:0),captionTop=titleTop+titleLines.length*58+(titleLines.length&&captionLines.length?8:0),hasHeader=!!(introLines.length||titleLines.length||captionLines.length);
+  const fixedHeaderTop={'2004':134,seungmin:112,...(showDesign?{nighthighway:158,minyul:188,yuuki:108}:{})}[selected.theme];
+  ctx.font='400 20px "Noto Sans KR"';const introLines=showDesign?fitLines(ctx,selected.description,headerWidth):[],introTop=fixedHeaderTop||(showDesign?({jude:164,willow:143}[selected.theme]||76):76),titleTop=introTop+(introLines.length?introLines.length*32+22:0),captionTop=titleTop+titleLines.length*58+(titleLines.length&&captionLines.length?8:0),hasHeader=!!(introLines.length||titleLines.length||captionLines.length);
   const fixedBodyTop={'2004':160,seungmin:145,hanminwoo:120}[selected.theme];
   const bodyTop=(hasHeader?captionTop+captionLines.length*38+40:(fixedBodyTop||(showDesign?({willow:170,jude:180}[selected.theme]||80):80)))+24,height=Math.max(500,Math.ceil(bodyTop+lines.length*lineHeight+80));
   if(height>24000)throw new Error('카드가 너무 길어요. 텍스트를 나눠서 만들어 주세요.');canvas.height=height;ctx=canvas.getContext('2d');
-  const palette=currentPalette();drawCardTheme(ctx,palette,height,bodyTop-24,$('dialogue').value,showDesign);
-  const subtitle=selected.theme==='julian';ctx.textBaseline='top';ctx.textAlign=subtitle?'center':'left';ctx.fillStyle=subtitle?palette.ink:$('dialogue').value;ctx.font='400 20px "Noto Sans KR"';introLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,introTop+i*32));
-  ctx.fillStyle=subtitle?palette.decoration:$('dialogue').value;ctx.font=headingFont;titleLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,titleTop+i*58));ctx.fillStyle=$('narration').value;ctx.font='400 24px "Noto Sans KR"';captionLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:margin,captionTop+i*38));
+  const palette=currentPalette();drawCardTheme(ctx,{...palette,headerTitleTop:titleTop},height,bodyTop-24,$('dialogue').value,showDesign);
+  const subtitle=selected.theme==='julian'||selected.theme==='yuuki',headerX=margin;ctx.textBaseline='top';ctx.textAlign=subtitle?'center':'left';ctx.fillStyle=subtitle?palette.ink:$('dialogue').value;ctx.font='400 20px "Noto Sans KR"';introLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:headerX,introTop+i*32));
+  ctx.fillStyle=subtitle&&selected.theme!=='yuuki'?palette.decoration:$('dialogue').value;ctx.font=headingFont;titleLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:headerX,titleTop+i*58));ctx.fillStyle=$('narration').value;ctx.font='400 24px "Noto Sans KR"';captionLines.forEach((line,i)=>ctx.fillText(line,subtitle?540:headerX,captionTop+i*38));
   ctx.textAlign='left';ctx.font=`400 ${size}px "${font}"`;
   lines.forEach((line,i)=>{
    const top=bodyTop+i*lineHeight;
