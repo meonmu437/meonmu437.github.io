@@ -4,7 +4,7 @@ const drawX=art.kind==='duck'?art.x+32:art.x-22;
 const drawY=art.kind==='duck'?art.y-52:art.y-86;
 ---
 <g class="map-node world-artwork" data-node={art.id} role="button" tabindex="0" aria-label={`${art.title} 구경하기`}>
-<title>{art.title}</title>
+<title>{art.title}</title><g class="statue-call-mark" transform={`translate(${drawX+28} ${drawY-10})`} aria-hidden="true"><path d="M0 0h14v16H8v4H5v-4H0Z" fill="#f0e5bc" stroke="#657950" stroke-width="1"/><path d="M6 3h2v7H6zm0 9h2v2H6z" fill="#8b6853"/></g>
 <rect class="node-hit" x={drawX-2} y={drawY} width="48" height="87" fill="transparent"/>
 <g transform={`translate(${drawX} ${drawY})`} aria-hidden="true">
 <ellipse cx="22" cy="68" rx="22" ry="5" fill="#53684d77"/>

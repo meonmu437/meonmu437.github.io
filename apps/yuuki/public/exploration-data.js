@@ -74,8 +74,8 @@ export const roomObjects=[
 ];
 
 export const worldArtworks=[
- {id:'surf-rabbit',x:155,y:235,title:'파도를 기다리는 토끼',kind:'rabbit',text:'서핑 보드를 챙겼으나 바다가 타일 밖에 있다. 이동 속도 +0, 모험심 +99.'},
- {id:'bread-otter',x:285,y:140,title:'바게트 성검의 주인',kind:'otter',text:'전설의 빵을 뽑은 수달이다! 공격력은 높지만, 공복 상태에서는 무기 내구도가 빠르게 감소한다.'},
- {id:'courier-tiger',x:435,y:140,title:'용건만 간단히, 어흥',kind:'tiger',text:'전령 호랑이다! 편지는 무사히 도착했다. 수신인은 아직 나무 위에서 내려오지 않았다.'},
- {id:'off-duty-duck',x:505,y:190,title:'오늘은 비번입니다',kind:'duck',text:'출근을 거부하는 오리다! 모든 퀘스트를 거절했으나, 도시락 수령 퀘스트만 수락했다.'},
+ {id:'surf-rabbit',x:155,y:235,title:'파도를 기다리는 토끼',kind:'rabbit',maker:'유우키',created:'대학 1학년 여름',materials:'석고, 철사, 파도에 대한 막연한 동경.',caller:'서핑하는 토끼',greeting:'잠깐! 바다로 가는 길 좀 알려 줄래? 보드는 있는데 이동 기능이 없어.',text:'서핑 보드를 챙겼으나 바다가 타일 밖에 있다. 이동 속도 +0, 모험심 +99.'},
+ {id:'bread-otter',x:285,y:140,title:'바게트 성검의 주인',kind:'otter',maker:'유우키',created:'대학 1학년 가을',materials:'석고, 철사, 공복 상태의 모험심.',caller:'바게트를 든 수달',greeting:'거기 용사! 성검 한 입만 먹고 갈래? 아, 그러면 성검이 아니게 되나.',text:'전설의 빵을 뽑은 수달이다! 공격력은 높지만, 공복 상태에서는 무기 내구도가 빠르게 감소한다.'},
+ {id:'courier-tiger',x:435,y:140,title:'용건만 간단히, 어흥',kind:'tiger',maker:'유우키',created:'대학 2학년 봄',materials:'석고, 철사, 대신 전해 줄 누군가.',caller:'전령 호랑이',greeting:'어흥! 전할 말이 있다. 만든 사람은 말도 못 걸면서 나한테는 전령을 시킨다.',text:'전령 호랑이다! 편지는 무사히 도착했다. 수신인은 아직 나무 위에서 내려오지 않았다.'},
+ {id:'off-duty-duck',x:505,y:190,title:'오늘은 비번입니다',kind:'duck',maker:'유우키',created:'대학 2학년 여름',materials:'석고, 철사, 월요일에 대한 작은 저항.',caller:'출근을 거부하는 오리',greeting:'오늘은 비번이야. 퀘스트 말고 도시락이면 놓고 가도 돼.',text:'출근을 거부하는 오리다! 모든 퀘스트를 거절했으나, 도시락 수령 퀘스트만 수락했다.'},
 ];
