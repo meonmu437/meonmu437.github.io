@@ -18,7 +18,7 @@ let atNode='save',journey=null,started=false;
 let activeScene='world',innParent='campus',restParent='world',selectedExplore=null,npcConversation=null;
 const explorationActors={rest:{x:504,y:264,path:[],stopId:'exit',destination:null},campus:{x:320,y:278,path:[],stopId:'gate',destination:null},inn:{x:328,y:248,path:[],stopId:'exit',destination:null}};
 const campusEventState={lastAt:-Infinity,steps:0};
-let campusEffectTimer=0,campusEventLocked=false;
+let campusEffectTimer=0,campusEventLocked=false,animalEncounter=null;
 let stairEffectTimer=0,stairEventLocked=false;
 const exploreDialogue=document.getElementById('exploration-dialogue');
 const clamp=(n,min,max)=>Math.min(max,Math.max(min,n));
@@ -97,7 +97,7 @@ function sceneObjects(scene){return scene==='campus'?campusSites:scene==='rest'?
 function sayExplore(name,text,action,npc=false){
  if(!npc)npcConversation=null;
  document.querySelector('.game-console').toggleAttribute('data-npc-dialogue',npc);
- document.getElementById('explore-speaker').textContent=name;document.getElementById('explore-text').textContent=text;
+ document.getElementById('explore-speaker').textContent=name;document.getElementById('explore-text').textContent=text;document.getElementById('explore-text').lang='ko';
  const button=document.getElementById('explore-action');button.hidden=!action;button.dataset.action=action||'';
  const labels={inn:'여관으로 들어가기',campus:'캠퍼스로 나가기',rest:'유우키의 방으로 들어가기',world:'바깥으로 나가기','world-map':'월드 맵으로 돌아가기','gallery-close':'계속 모험하기','npc-talk':'동아리 회장 승민이 형이다! 말을 걸어볼까?','npc-next':'계속','npc-finish':'대화 마치기'};
  document.getElementById('explore-action-label').textContent=labels[action]||'';
@@ -138,19 +138,37 @@ function cellFree(scene,x,y){if(x<0||x>=40||y<0||y>=20)return false;const px=x*1
 function nearestFreeCell(scene,px,py){let best={x:20,y:15},distance=Infinity;for(let y=0;y<20;y++)for(let x=0;x<40;x++)if(cellFree(scene,x,y)){const d=Math.abs(x*16+8-px)+Math.abs(y*16+8-py);if(d<distance){distance=d;best={x,y};}}return best;}
 function walkExploreTo(scene,px,py,id){const actor=explorationActors[scene];actor.destination=id;actor.tripMoved=false;if(scene==='campus'){walkCampusTo(id);return;}const start=nearestFreeCell(scene,actor.x,actor.y),end=nearestFreeCell(scene,px,py);const first=start.y*40+start.x,last=end.y*40+end.x,previous=new Int16Array(800).fill(-1),queue=[first];previous[first]=first;for(let i=0;i<queue.length&&previous[last]===-1;i++){const cell=queue[i],x=cell%40,y=Math.floor(cell/40);for(const [dx,dy] of [[0,1],[1,0],[0,-1],[-1,0]]){const nx=x+dx,ny=y+dy,n=ny*40+nx;if(cellFree(scene,nx,ny)&&(scene!=='rest'||roomStepAllowed(x,y,nx,ny))&&previous[n]===-1){previous[n]=cell;queue.push(n);}}}if(previous[last]===-1){actor.path=[];actor.destination=null;return;}const path=[];for(let n=last;;n=previous[n]){path.push({x:(n%40)*16+8,y:Math.floor(n/40)*16+8});if(n===first)break;}actor.path=path.reverse();actor.tripMoved=Math.hypot(actor.x-px,actor.y-py)>20;}
 function drawExplorationPlayer(scene){const actor=explorationActors[scene],element=document.getElementById(scene+'-player');element.setAttribute('transform',`translate(${actor.x-12} ${actor.y-31})`);element.dataset.x=actor.x.toFixed(1);element.dataset.y=actor.y.toFixed(1);element.dataset.stop=actor.stopId||'';element.dataset.destination=actor.destination||'';}
-function updateExploration(dt){if(campusInputLocked()||!started||activeScene==='world'||document.hidden||!campaignOverlay.hidden||document.querySelector('dialog[open]'))return;const actor=explorationActors[activeScene];if(!actor.path.length)return;const next=actor.path[0],dx=next.x-actor.x,dy=next.y-actor.y,d=Math.hypot(dx,dy),step=180*dt;if(d<=step){actor.x=next.x;actor.y=next.y;actor.path.shift();if(activeScene==='rest'&&d>0&&actor.x===392&&actor.y===104&&Math.random()<.35){showStairEvent();drawExplorationPlayer(activeScene);return;}if(!actor.path.length&&actor.destination)arriveExplore(activeScene);}else{actor.x+=dx/d*step;actor.y+=dy/d*step;}drawExplorationPlayer(activeScene);}
+function updateExploration(dt){if((campusInputLocked()&&animalEncounter?.phase!=='fleeing')||!started||activeScene==='world'||document.hidden||!campaignOverlay.hidden||document.querySelector('dialog[open]'))return;const actor=explorationActors[activeScene];if(!actor.path.length)return;const next=actor.path[0],dx=next.x-actor.x,dy=next.y-actor.y,d=Math.hypot(dx,dy),step=(animalEncounter?.phase==='fleeing'?320:180)*dt;if(d<=step){actor.x=next.x;actor.y=next.y;actor.path.shift();if(activeScene==='rest'&&d>0&&actor.x===392&&actor.y===104&&Math.random()<.35){showStairEvent();drawExplorationPlayer(activeScene);return;}if(!actor.path.length&&animalEncounter?.phase==='fleeing')finishAnimalFlight();else if(!actor.path.length&&actor.destination)arriveExplore(activeScene);}else{actor.x+=dx/d*step;actor.y+=dy/d*step;}drawExplorationPlayer(activeScene);}
 function handleExploreKey(event){if(campusInputLocked())return;if(npcConversation&&npcConversation.index>=0){if(event.key==='Escape'){event.preventDefault();finishNpcConversation();return;}if(vectors[event.key]){event.preventDefault();return;}}if((event.key==='Enter'||event.key===' ')&&!event.target.closest('button,a')&&!document.getElementById('explore-action').hidden){event.preventDefault();if(!event.repeat)performExploreAction();return;}const actor=explorationActors[activeScene];if(event.key==='Escape'){event.preventDefault();enterScene(activeScene==='inn'?innParent:activeScene==='rest'?restParent:'world');return;}if(vectors[event.key]){event.preventDefault();if(actor.path.length||event.repeat)return;const [vx,vy]=vectors[event.key];const choices=sceneObjects(activeScene).filter(o=>o.id!==actor.stopId).map(object=>{const point=stopPoint(activeScene,object),dx=point.x-actor.x,dy=point.y-actor.y,distance=Math.hypot(dx,dy),dot=distance?(dx*vx+dy*vy)/distance:0;return {object,distance,dot,score:distance/Math.max(.1,dot*dot)};}).filter(c=>c.distance>8&&c.dot>.45).sort((a,b)=>a.score-b.score);if(choices[0])inspectScene(activeScene,choices[0].object.id);}else if(event.key==='Enter'&&!event.target.closest('button,a')){event.preventDefault();const object=sceneObjects(activeScene).find(o=>o.id===actor.stopId)||sceneObjects(activeScene)[0];inspectScene(activeScene,object.id);}}
 function stopPoint(scene,object){if(scene==='campus')return campusRoadNodes[object.id];const cell=nearestFreeCell(scene,object.x+object.w/2,object.y+object.h+13);return {x:cell.x*16+8,y:cell.y*16+8};}
 function nearestCampusRoad(x,y){return Object.keys(campusRoadNodes).reduce((best,key)=>Math.hypot(campusRoadNodes[key].x-x,campusRoadNodes[key].y-y)<Math.hypot(campusRoadNodes[best].x-x,campusRoadNodes[best].y-y)?key:best);}
 function walkCampusTo(id){const actor=explorationActors.campus,start=nearestCampusRoad(actor.x,actor.y),queue=[[start]],seen=new Set([start]);let route=[];for(let i=0;i<queue.length;i++){const path=queue[i],last=path.at(-1);if(last===id){route=path;break;}for(const [a,b] of campusRoadEdges){const next=a===last?b:b===last?a:null;if(next&&!seen.has(next)){seen.add(next);queue.push([...path,next]);}}}if(!route.length){actor.destination=null;return;}actor.path=route.map(key=>({...campusRoadNodes[key]}));actor.tripMoved=actor.stopId!==id&&Math.hypot(actor.x-campusRoadNodes[id].x,actor.y-campusRoadNodes[id].y)>20;drawExplorationPlayer('campus');}
 function arriveExplore(scene){const actor=explorationActors[scene],object=sceneObjects(scene).find(o=>o.id===actor.destination),moved=actor.tripMoved;actor.stopId=actor.destination;actor.destination=null;if(!object)return;if(object.kind==='npc')return;sayExplore(object.name,object.text,object.action);if(scene==='campus'&&moved)maybeCampusEvent();}
-function clearCampusEffect(){campusEventLocked=false;clearTimeout(campusEffectTimer);document.getElementById('campus-effects').replaceChildren();document.querySelector('.console-screen').classList.remove('hiccup-shake');delete document.querySelector('.game-console').dataset.campusEvent;}
-function maybeCampusEvent(){campusEventState.steps++;const now=Date.now();if(now-campusEventState.lastAt<9000)return;if(campusEventState.steps<5&&Math.random()>=.3)return;campusEventState.lastAt=now;campusEventState.steps=0;const kind=Math.random()<.5?'trap':'hiccup';clearCampusEffect();campusEventLocked=true;document.querySelector('.game-console').dataset.campusEvent=kind;if(kind==='trap'){sayExplore('⚠️ 이벤트 트랩 발동!','길목에 손톱만 한 동물들이 출현했다!\n자세히 보니 어쩐지 하나같이 user를 닮았다.');const layer=document.getElementById('campus-effects');for(let i=0;i<11;i++){const heart=document.createElementNS('http://www.w3.org/2000/svg','svg');heart.setAttribute('viewBox','0 0 16 16');heart.setAttribute('class','campus-pixel-heart');heart.style.left=[9,22,38,53,71,87,16,34,62,79,48][i]+'%';heart.style.top=[17,45,22,52,20,40,70,64,72,64,10][i]+'%';heart.style.setProperty('--heart-delay',i*55+'ms');const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M2 2h4v2h4V2h4v2h2v6h-2v2h-2v2h-2v2H6v-2H4v-2H2v-2H0V4h2Z');path.setAttribute('fill',i%2?'#e8a4a7':'#d78391');const shine=document.createElementNS('http://www.w3.org/2000/svg','path');shine.setAttribute('d','M2 4h3v2H2z');shine.setAttribute('fill','#ffe3c1');heart.append(path,shine);layer.append(heart);}}else{sayExplore('상태 이상 · 긴장성 딸꾹질','긴장 수치가 너무 높다!\n말을 꺼내려던 순간, 딸꾹! 문장이 잠시 중단되었다.');document.querySelector('.console-screen').classList.add('hiccup-shake');}campusEffectTimer=setTimeout(clearCampusEffect,2300);}
+function clearCampusEffect(){animalEncounter=null;document.getElementById('animal-event-choices').hidden=true;document.getElementById('campus-player').classList.remove('hero-fleeing');document.querySelector('.game-console').removeAttribute('data-animal-phase');campusEventLocked=false;clearTimeout(campusEffectTimer);document.getElementById('campus-effects').replaceChildren();document.querySelector('.console-screen').classList.remove('hiccup-shake');delete document.querySelector('.game-console').dataset.campusEvent;}
+function maybeCampusEvent(){campusEventState.steps++;const now=Date.now();if(now-campusEventState.lastAt<3000)return;if(campusEventState.steps<5&&Math.random()>=.4)return;campusEventState.lastAt=now;campusEventState.steps=0;const kind=Math.random()<.5?'trap':'hiccup';clearCampusEffect();campusEventLocked=true;document.querySelector('.game-console').dataset.campusEvent=kind;if(kind==='trap'){animalEncounter={phase:'effect'};document.querySelector('.game-console').dataset.animalPhase='effect';sayExplore('⚠️ 이벤트 트랩 발동!','길목에 손톱만 한 동물들이 출현했다!\n자세히 보니 어쩐지 하나같이 user를 닮았다.');const layer=document.getElementById('campus-effects');for(let i=0;i<11;i++){const heart=document.createElementNS('http://www.w3.org/2000/svg','svg');heart.setAttribute('viewBox','0 0 16 16');heart.setAttribute('class','campus-pixel-heart');heart.style.left=[9,22,38,53,71,87,16,34,62,79,48][i]+'%';heart.style.top=[17,45,22,52,20,40,70,64,72,64,10][i]+'%';heart.style.setProperty('--heart-delay',i*55+'ms');const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M2 2h4v2h4V2h4v2h2v6h-2v2h-2v2h-2v2H6v-2H4v-2H2v-2H0V4h2Z');path.setAttribute('fill',i%2?'#e8a4a7':'#d78391');const shine=document.createElementNS('http://www.w3.org/2000/svg','path');shine.setAttribute('d','M2 4h3v2H2z');shine.setAttribute('fill','#ffe3c1');heart.append(path,shine);layer.append(heart);}}else{sayExplore('상태 이상 · 긴장성 딸꾹질','긴장 수치가 너무 높다!\n말을 꺼내려던 순간, 딸꾹! 문장이 잠시 중단되었다.');document.querySelector('.console-screen').classList.add('hiccup-shake');}campusEffectTimer=setTimeout(kind==='trap'?showAnimalChoices:clearCampusEffect,2300);}
 
 function campusInputLocked(){return (activeScene==='campus'&&campusEventLocked)||(activeScene==='rest'&&stairEventLocked);}
 // Ignore inputs during the effect; do not queue them for after it ends.
-window.addEventListener('keydown',event=>{if(campusInputLocked()&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter',' ','Escape'].includes(event.key)){event.preventDefault();event.stopImmediatePropagation();}},true);
-document.addEventListener('click',event=>{if(campusInputLocked()&&event.target instanceof Element&&event.target.closest('.game-console')){event.preventDefault();event.stopImmediatePropagation();}},true);
+window.addEventListener('keydown',event=>{
+ if(!campusInputLocked()||event.ctrlKey||event.metaKey||event.altKey)return;
+ if(activeScene==='campus'&&['choice','result'].includes(animalEncounter?.phase)){
+  const buttons=[...document.querySelectorAll('#animal-event-choices button')].filter(b=>!b.hidden&&!b.disabled);
+  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Tab','Enter',' '].includes(event.key)){
+   event.preventDefault();event.stopImmediatePropagation();if(event.repeat)return;
+   const index=buttons.indexOf(document.activeElement);
+   if(event.key==='Enter'||event.key===' ')buttons[Math.max(0,index)]?.click();
+   else{const reverse=event.key==='ArrowLeft'||event.key==='ArrowUp'||(event.key==='Tab'&&event.shiftKey);buttons[(Math.max(0,index)+(reverse?-1:1)+buttons.length)%buttons.length]?.focus({preventScroll:true});}
+   return;
+  }
+ }
+ if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter',' ','Escape'].includes(event.key)){event.preventDefault();event.stopImmediatePropagation();}
+},true);
+document.addEventListener('click',event=>{
+ if(!campusInputLocked()||!(event.target instanceof Element)||!event.target.closest('.game-console'))return;
+ const choice=event.target.closest('[data-animal-choice]');
+ if(activeScene==='campus'&&['choice','result'].includes(animalEncounter?.phase)&&choice&&!choice.disabled&&!choice.hidden)return;
+ event.preventDefault();event.stopImmediatePropagation();
+},true);
 
 document.getElementById('close-family').addEventListener('click',()=>familyDialog.close());
 document.querySelectorAll('[data-contact]').forEach(button=>button.addEventListener('click',()=>{
@@ -189,3 +207,40 @@ function showStairEvent(){
 }
 
 function closeWorldArtwork(){if(activeScene!=='world')return;exploreDialogue.hidden=true;document.querySelector('.battle-hud').hidden=false;document.querySelector('.hud-quest').hidden=false;}
+
+function setAnimalButtons(phase){
+ const choices=document.getElementById('animal-event-choices');choices.hidden=false;
+ choices.querySelectorAll('button').forEach(button=>{const done=button.dataset.animalChoice==='continue';button.hidden=phase==='choice'?done:!done;button.disabled=false;});
+ document.getElementById('explore-action').hidden=true;document.querySelector('.exploration-prompt>.explore-caret').hidden=true;
+ choices.querySelector('button:not([hidden])')?.focus({preventScroll:true});
+}
+function showAnimalChoices(){
+ if(activeScene!=='campus'||!animalEncounter)return;
+ document.getElementById('campus-effects').replaceChildren();animalEncounter.phase='choice';document.querySelector('.game-console').dataset.animalPhase='choice';setAnimalButtons('choice');
+}
+function finishAnimalFlight(){
+ const actor=explorationActors.campus;actor.stopId=campusSites.some(o=>o.id===animalEncounter.targetKey)?animalEncounter.targetKey:'';actor.destination=null;
+ document.getElementById('campus-player').classList.remove('hero-fleeing');animalEncounter.phase='result';document.querySelector('.game-console').dataset.animalPhase='result';setAnimalButtons('result');
+}
+function chooseAnimalEvent(choice){
+ if(activeScene!=='campus'||!animalEncounter)return;
+ if(choice==='continue'&&animalEncounter.phase==='result'){
+  clearCampusEffect();document.querySelector('.exploration-prompt>.explore-caret').hidden=false;document.getElementById('campus-map').focus({preventScroll:true});return;
+ }
+ if(animalEncounter.phase!=='choice'||!['look','ignore'].includes(choice))return;
+ document.getElementById('animal-event-choices').hidden=true;
+ if(choice==='ignore'){
+  animalEncounter.phase='result';document.querySelector('.game-console').dataset.animalPhase='result';
+  sayExplore('유우키','「……でも、見てほしかったな。」\n(……그래도, 봐줬으면 좋았을 텐데.)');document.getElementById('explore-text').lang='ja';setAnimalButtons('result');return;
+ }
+ animalEncounter.phase='fleeing';document.querySelector('.game-console').dataset.animalPhase='fleeing';
+ sayExplore('용사가 도망쳤다!','작품을 자세히 들여다보자, 용사가 새빨개져 도망쳤다! 도주 판정: 대성공.');
+ const actor=explorationActors.campus;let key=nearestCampusRoad(actor.x,actor.y),distance=0;const seen=new Set([key]),path=[];
+ while(distance<100){
+  const next=campusRoadEdges.flatMap(([a,b])=>a===key?[b]:b===key?[a]:[]).find(id=>!seen.has(id));if(!next)break;
+  distance+=Math.hypot(campusRoadNodes[next].x-campusRoadNodes[key].x,campusRoadNodes[next].y-campusRoadNodes[key].y);path.push({...campusRoadNodes[next]});seen.add(next);key=next;
+ }
+ actor.path=path;actor.destination=null;animalEncounter.targetKey=key;document.getElementById('campus-player').classList.add('hero-fleeing');
+ if(!path.length)finishAnimalFlight();
+}
+document.querySelectorAll('[data-animal-choice]').forEach(button=>button.addEventListener('click',()=>chooseAnimalEvent(button.dataset.animalChoice)));
