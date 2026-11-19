@@ -15,7 +15,7 @@ const nodes=[{id:'save',x:95,y:235,page:'save',name:'세이브 지점'},{id:'cam
 nodes.push(...worldArtworks.map(art=>({id:art.id,x:art.x,y:art.y,page:art.id,name:art.title})));
 const edges={save:['surf-rabbit'],'surf-rabbit':['save','campus'],campus:['surf-rabbit','bread-otter'],'bread-otter':['campus','rest'],rest:['bread-otter','courier-tiger'],'courier-tiger':['rest','family'],family:['courier-tiger','off-duty-duck'],'off-duty-duck':['family','continue'],continue:['off-duty-duck']};
 let atNode='save',journey=null,started=false;
-let statueGreeting=null;
+let statueGreeting=null,startMessageActive=false;
 const greetedStatues=new Set();
 let activeScene='world',innParent='campus',restParent='world',selectedExplore=null,npcConversation=null;
 const explorationActors={rest:{x:504,y:264,path:[],stopId:'exit',destination:null},campus:{x:320,y:278,path:[],stopId:'gate',destination:null},inn:{x:328,y:248,path:[],stopId:'exit',destination:null}};
@@ -49,11 +49,11 @@ document.getElementById('close-image').addEventListener('click',()=>imageDialog.
 imageDialog.addEventListener('close',()=>image.removeAttribute('src'));
 imageDialog.addEventListener('click',event=>{if(event.target===imageDialog){const r=imageDialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)imageDialog.close();}});
 // The title is a separate screen; Enter and the single Continue button enter the world.
-function startGame(){if(started)return;started=true;document.getElementById('title-screen').hidden=true;document.getElementById('play-screen').hidden=false;document.querySelector('.game-console').dataset.started='true';enterScene('world');}
+function startGame(){if(started)return;started=true;document.getElementById('title-screen').hidden=true;document.getElementById('play-screen').hidden=false;document.querySelector('.game-console').dataset.started='true';enterScene('world');showStartMessage();}
 document.getElementById('start-game').addEventListener('click',startGame);
 document.getElementById('return-title').addEventListener('click',()=>{stopMoving();enterScene('world');started=false;document.getElementById('title-screen').hidden=false;document.getElementById('play-screen').hidden=true;document.querySelector('.game-console').dataset.started='false';document.getElementById('start-game').focus({preventScroll:true});});
 function route(from,to){const queue=[[from]],seen=new Set([from]);while(queue.length){const path=queue.shift(),last=path.at(-1);if(last===to)return path;for(const id of edges[last])if(!seen.has(id)){seen.add(id);queue.push([...path,id]);}}return [];}
-function travel(id,openAtEnd=false){if(campusInputLocked()||!started||journey||statueGreeting||!edges[id])return;if(id===atNode){if(openAtEnd)openPage(id);return;}if(activeScene==='world')closeWorldArtwork();const stops=route(atNode,id),path=[];for(let i=1;i<stops.length;i++){if((stops[i-1]==='campus'&&stops[i]==='bread-otter')||(stops[i-1]==='bread-otter'&&stops[i]==='campus'))path.push({x:215,y:140});path.push(nodes.find(node=>node.id===stops[i]));}journey={path,openAtEnd,destination:id};}
+function travel(id,openAtEnd=false){if(campusInputLocked()||!started||journey||statueGreeting||startMessageActive||!edges[id])return;if(id===atNode){if(openAtEnd)openPage(id);return;}if(activeScene==='world')closeWorldArtwork();const stops=route(atNode,id),path=[];for(let i=1;i<stops.length;i++){if((stops[i-1]==='campus'&&stops[i]==='bread-otter')||(stops[i-1]==='bread-otter'&&stops[i]==='campus'))path.push({x:215,y:140});path.push(nodes.find(node=>node.id===stops[i]));}journey={path,openAtEnd,destination:id};}
 function inspect(){if(!journey)openPage(atNode);}
 world.setAttribute('tabindex','0');
 document.querySelectorAll('.map-node[data-node]').forEach(node=>{node.addEventListener('click',()=>travel(node.dataset.node,true));node.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();travel(node.dataset.node,true);}});});
@@ -61,6 +61,7 @@ const vectors={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}
 window.addEventListener('keydown',event=>{
  if(!campaignOverlay.hidden||familyDialog.open||imageDialog.open||inventoryDialog.open||characterDialog.open||!saveDialog.hidden||document.getElementById('skill-dialog').open||event.ctrlKey||event.metaKey||event.altKey||document.querySelector('#jl-site-switch-trigger[aria-expanded="true"]'))return;
  if(!started){if(event.key==='Enter'){event.preventDefault();startGame();}return;}
+ if(startMessageActive){if(['Enter',' '].includes(event.key)&&(!event.target.closest('button,a')||event.target.closest('#explore-action'))){event.preventDefault();if(!event.repeat)finishStartMessage();}else if(vectors[event.key])event.preventDefault();return;}
  if(statueGreeting){if(event.key==='Enter'&&!event.target.closest('button,a')){event.preventDefault();performExploreAction();}else if(vectors[event.key]||event.key==='Escape'){event.preventDefault();}return;}
  if(vectors[event.key]&&event.repeat){event.preventDefault();return;}
  if(activeScene!=='world'){handleExploreKey(event);return;}
@@ -103,15 +104,16 @@ function sayExplore(name,text,action,npc=false){
  document.querySelector('.game-console').toggleAttribute('data-npc-dialogue',npc);
  document.getElementById('explore-speaker').textContent=name;document.getElementById('explore-text').textContent=text;document.getElementById('explore-text').lang='ko';
  const button=document.getElementById('explore-action');button.hidden=!action;button.dataset.action=action||'';
- const labels={inn:'여관으로 들어가기',campus:'캠퍼스로 나가기',rest:'유우키의 방으로 들어가기',world:'바깥으로 나가기','world-map':'월드 맵으로 돌아가기','gallery-close':'계속 모험하기','statue-continue':'계속 모험하기','statue-inspect':'살펴볼까?','npc-talk':'동아리 회장 승민이 형이다! 말을 걸어볼까?','npc-next':'계속','npc-finish':'대화 마치기'};
+ const labels={'intro-start':'탐험 시작하기',inn:'여관으로 들어가기',campus:'캠퍼스로 나가기',rest:'유우키의 방으로 들어가기',world:'바깥으로 나가기','world-map':'월드 맵으로 돌아가기','gallery-close':'계속 모험하기','statue-continue':'계속 모험하기','statue-inspect':'살펴볼까?','npc-talk':'동아리 회장 승민이 형이다! 말을 걸어볼까?','npc-next':'계속','npc-finish':'대화 마치기'};
  document.getElementById('explore-action-label').textContent=labels[action]||'';
  document.querySelector('.exploration-prompt>.explore-caret').hidden=!!action;
 }
-function performExploreAction(){if(campusInputLocked())return;const action=document.getElementById('explore-action').dataset.action;if(action==='statue-inspect')inspectCallingStatue();else if(action==='statue-continue')resumeStatueJourney();else if(action==='gallery-close')closeWorldArtwork();else if(action==='world-map')enterScene('world');else if(action==='inn')enterScene('inn','campus');else if(action==='campus')enterScene('campus');else if(action==='rest')enterScene('rest',activeScene);else if(action==='world')enterScene(restParent);else if(action==='npc-talk'){npcConversation={id:'seungmin',index:0};showNpcLine();}else if(action==='npc-next'&&npcConversation){npcConversation.index++;showNpcLine();}else if(action==='npc-finish')finishNpcConversation();}
+function performExploreAction(){if(campusInputLocked())return;const action=document.getElementById('explore-action').dataset.action;if(action==='intro-start')finishStartMessage();else if(action==='statue-inspect')inspectCallingStatue();else if(action==='statue-continue')resumeStatueJourney();else if(action==='gallery-close')closeWorldArtwork();else if(action==='world-map')enterScene('world');else if(action==='inn')enterScene('inn','campus');else if(action==='campus')enterScene('campus');else if(action==='rest')enterScene('rest',activeScene);else if(action==='world')enterScene(restParent);else if(action==='npc-talk'){npcConversation={id:'seungmin',index:0};showNpcLine();}else if(action==='npc-next'&&npcConversation){npcConversation.index++;showNpcLine();}else if(action==='npc-finish')finishNpcConversation();}
 function showNpcLine(){const index=npcConversation.index;sayExplore('유승민',seungminLines[index],index===seungminLines.length-1?'npc-finish':'npc-next',true);}
 function finishNpcConversation(){npcConversation=null;sayExplore('유승민','승민은 다시 룰북으로 시선을 내렸다. 주사위가 손끝에서 또르르 굴렀다.');}
 function enterScene(scene,parent='world'){
  if(campusInputLocked())return;
+ startMessageActive=false;
  if(!['world','campus','inn','rest'].includes(scene))return;
  npcConversation=null;document.querySelector('.game-console').removeAttribute('data-npc-dialogue');
  if(scene==='rest')restParent=parent==='campus'?'campus':'world';
@@ -304,3 +306,10 @@ function selectDungeonItem(button){
  const available=button.dataset.dungeonItem==='univers';document.getElementById('dungeon-enter').hidden=!available;document.getElementById('dungeon-locked').hidden=available;
 }
 document.querySelectorAll('[data-dungeon-item]').forEach(button=>button.addEventListener('click',()=>selectDungeonItem(button)));
+
+function showStartMessage(){
+ startMessageActive=true;document.querySelector('.battle-hud').hidden=true;document.querySelector('.hud-quest').hidden=true;exploreDialogue.hidden=false;
+ sayExplore('모험의 시작','또 꿈을 꾸는 걸까. 유우키가 용사가 되어 있다. 탐험을 시작해 보자.','intro-start');
+ document.getElementById('explore-action').focus({preventScroll:true});
+}
+function finishStartMessage(){startMessageActive=false;closeWorldArtwork();world.focus({preventScroll:true});}
