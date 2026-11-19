@@ -34,7 +34,7 @@ function openPage(id){
  if(id==='campus'||id==='inn'||id==='rest'){stopMoving();enterScene(id,'world');return;}
  if(id==='continue'){stopMoving();campaignOverlay.hidden=false;document.querySelector('[data-dungeon-item][aria-pressed="true"]').focus({preventScroll:true});return;}
  if(id==='family'){stopMoving();if(!familyDialog.open)familyDialog.showModal();return;}
- if(id==='save'){stopMoving();renderSave();saveDialog.hidden=false;document.querySelector('[data-save-record][aria-pressed="true"]').focus({preventScroll:true});return;}
+ if(id==='save'){stopMoving();renderSave();selectSaveRecord(saveDialog.querySelector('[data-save-record]'));saveDialog.hidden=false;document.querySelector('[data-save-record][aria-pressed="true"]').focus({preventScroll:true});return;}
  if(id==='sheet'){stopMoving();if(!characterDialog.open)characterDialog.showModal();return;}
  if(id==='inventory'){stopMoving();if(!inventoryDialog.open)inventoryDialog.showModal();return;}
 
@@ -56,6 +56,8 @@ function route(from,to){const queue=[[from]],seen=new Set([from]);while(queue.le
 function travel(id,openAtEnd=false){if(campusInputLocked()||!started||journey||statueGreeting||startMessageActive||!edges[id])return;if(id===atNode){if(openAtEnd)openPage(id);return;}if(activeScene==='world')closeWorldArtwork();const stops=route(atNode,id),path=[];for(let i=1;i<stops.length;i++){if((stops[i-1]==='campus'&&stops[i]==='bread-otter')||(stops[i-1]==='bread-otter'&&stops[i]==='campus'))path.push({x:215,y:140});path.push(nodes.find(node=>node.id===stops[i]));}journey={path,openAtEnd,destination:id};}
 function inspect(){if(!journey)openPage(atNode);}
 world.setAttribute('tabindex','0');
+// Dismiss the opening message before a map destination handles the same click.
+world.addEventListener('click',()=>{if(started&&activeScene==='world'&&startMessageActive)finishStartMessage();},true);
 document.querySelectorAll('.map-node[data-node]').forEach(node=>{node.addEventListener('click',()=>travel(node.dataset.node,true));node.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();travel(node.dataset.node,true);}});});
 const vectors={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]};
 window.addEventListener('keydown',event=>{
@@ -104,11 +106,11 @@ function sayExplore(name,text,action,npc=false){
  document.querySelector('.game-console').toggleAttribute('data-npc-dialogue',npc);
  document.getElementById('explore-speaker').textContent=name;document.getElementById('explore-text').textContent=text;document.getElementById('explore-text').lang='ko';
  const button=document.getElementById('explore-action');button.hidden=!action;button.dataset.action=action||'';
- const labels={'intro-start':'탐험 시작하기',inn:'여관으로 들어가기',campus:'캠퍼스로 나가기',rest:'유우키의 방으로 들어가기',world:'바깥으로 나가기','world-map':'월드 맵으로 돌아가기','gallery-close':'계속 모험하기','statue-continue':'계속 모험하기','statue-inspect':'살펴볼까?','npc-talk':'동아리 회장 승민이 형이다! 말을 걸어볼까?','npc-next':'계속','npc-finish':'대화 마치기'};
+ const labels={'intro-start':'탐험 시작하기','hiccup-continue':'탐험 계속하기',inn:'여관으로 들어가기',campus:'캠퍼스로 나가기',rest:'유우키의 방으로 들어가기',world:'바깥으로 나가기','world-map':'월드 맵으로 돌아가기','gallery-close':'계속 모험하기','statue-continue':'계속 모험하기','statue-inspect':'살펴볼까?','npc-talk':'동아리 회장 승민이 형이다! 말을 걸어볼까?','npc-next':'계속','npc-finish':'대화 마치기'};
  document.getElementById('explore-action-label').textContent=labels[action]||'';
  document.querySelector('.exploration-prompt>.explore-caret').hidden=!!action;
 }
-function performExploreAction(){if(campusInputLocked())return;const action=document.getElementById('explore-action').dataset.action;if(action==='intro-start')finishStartMessage();else if(action==='statue-inspect')inspectCallingStatue();else if(action==='statue-continue')resumeStatueJourney();else if(action==='gallery-close')closeWorldArtwork();else if(action==='world-map')enterScene('world');else if(action==='inn')enterScene('inn','campus');else if(action==='campus')enterScene('campus');else if(action==='rest')enterScene('rest',activeScene);else if(action==='world')enterScene(restParent);else if(action==='npc-talk'){npcConversation={id:'seungmin',index:0};showNpcLine();}else if(action==='npc-next'&&npcConversation){npcConversation.index++;showNpcLine();}else if(action==='npc-finish')finishNpcConversation();}
+function performExploreAction(){if(campusInputLocked())return;const action=document.getElementById('explore-action').dataset.action;if(action==='intro-start')finishStartMessage();else if(action==='hiccup-continue')restoreCampusDescription();else if(action==='statue-inspect')inspectCallingStatue();else if(action==='statue-continue')resumeStatueJourney();else if(action==='gallery-close')closeWorldArtwork();else if(action==='world-map')enterScene('world');else if(action==='inn')enterScene('inn','campus');else if(action==='campus')enterScene('campus');else if(action==='rest')enterScene('rest',activeScene);else if(action==='world')enterScene(restParent);else if(action==='npc-talk'){npcConversation={id:'seungmin',index:0};showNpcLine();}else if(action==='npc-next'&&npcConversation){npcConversation.index++;showNpcLine();}else if(action==='npc-finish')finishNpcConversation();}
 function showNpcLine(){const index=npcConversation.index;sayExplore('유승민',seungminLines[index],index===seungminLines.length-1?'npc-finish':'npc-next',true);}
 function finishNpcConversation(){npcConversation=null;sayExplore('유승민','승민은 다시 룰북으로 시선을 내렸다. 주사위가 손끝에서 또르르 굴렀다.');}
 function enterScene(scene,parent='world'){
@@ -151,7 +153,14 @@ function nearestCampusRoad(x,y){return Object.keys(campusRoadNodes).reduce((best
 function walkCampusTo(id){const actor=explorationActors.campus,start=nearestCampusRoad(actor.x,actor.y),queue=[[start]],seen=new Set([start]);let route=[];for(let i=0;i<queue.length;i++){const path=queue[i],last=path.at(-1);if(last===id){route=path;break;}for(const [a,b] of campusRoadEdges){const next=a===last?b:b===last?a:null;if(next&&!seen.has(next)){seen.add(next);queue.push([...path,next]);}}}if(!route.length){actor.destination=null;return;}actor.path=route.map(key=>({...campusRoadNodes[key]}));actor.tripMoved=actor.stopId!==id&&Math.hypot(actor.x-campusRoadNodes[id].x,actor.y-campusRoadNodes[id].y)>20;drawExplorationPlayer('campus');}
 function arriveExplore(scene){const actor=explorationActors[scene],object=sceneObjects(scene).find(o=>o.id===actor.destination),moved=actor.tripMoved;actor.stopId=actor.destination;actor.destination=null;if(!object)return;if(object.kind==='npc')return;sayExplore(object.name,object.text,object.action);if(scene==='campus'&&moved)maybeCampusEvent();}
 function clearCampusEffect(){animalEncounter=null;document.getElementById('animal-event-choices').hidden=true;document.getElementById('campus-player').classList.remove('hero-fleeing');document.querySelector('.game-console').removeAttribute('data-animal-phase');campusEventLocked=false;clearTimeout(campusEffectTimer);document.getElementById('campus-effects').replaceChildren();document.querySelector('.console-screen').classList.remove('hiccup-shake');delete document.querySelector('.game-console').dataset.campusEvent;}
-function maybeCampusEvent(){campusEventState.steps++;const now=Date.now();if(now-campusEventState.lastAt<3000)return;if(campusEventState.steps<5&&Math.random()>=.4)return;campusEventState.lastAt=now;campusEventState.steps=0;const kind=Math.random()<.5?'trap':'hiccup';clearCampusEffect();campusEventLocked=true;document.querySelector('.game-console').dataset.campusEvent=kind;if(kind==='trap'){animalEncounter={phase:'effect'};document.querySelector('.game-console').dataset.animalPhase='effect';sayExplore('⚠️ 이벤트 트랩 발동!','길목에 손톱만 한 동물들이 출현했다!\n자세히 보니 어쩐지 하나같이 user를 닮았다.');const layer=document.getElementById('campus-effects');for(let i=0;i<11;i++){const heart=document.createElementNS('http://www.w3.org/2000/svg','svg');heart.setAttribute('viewBox','0 0 16 16');heart.setAttribute('class','campus-pixel-heart');heart.style.left=[9,22,38,53,71,87,16,34,62,79,48][i]+'%';heart.style.top=[17,45,22,52,20,40,70,64,72,64,10][i]+'%';heart.style.setProperty('--heart-delay',i*55+'ms');const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M2 2h4v2h4V2h4v2h2v6h-2v2h-2v2h-2v2H6v-2H4v-2H2v-2H0V4h2Z');path.setAttribute('fill',i%2?'#e8a4a7':'#d78391');const shine=document.createElementNS('http://www.w3.org/2000/svg','path');shine.setAttribute('d','M2 4h3v2H2z');shine.setAttribute('fill','#ffe3c1');heart.append(path,shine);layer.append(heart);}}else{sayExplore('상태 이상 · 긴장성 딸꾹질','긴장 수치가 너무 높다!\n말을 꺼내려던 순간, 딸꾹! 문장이 잠시 중단되었다.');document.querySelector('.console-screen').classList.add('hiccup-shake');}campusEffectTimer=setTimeout(kind==='trap'?showAnimalChoices:clearCampusEffect,2300);}
+function maybeCampusEvent(){campusEventState.steps++;const now=Date.now();if(now-campusEventState.lastAt<3000)return;if(campusEventState.steps<5&&Math.random()>=.4)return;campusEventState.lastAt=now;campusEventState.steps=0;const kind=Math.random()<.5?'trap':'hiccup';clearCampusEffect();campusEventLocked=true;document.querySelector('.game-console').dataset.campusEvent=kind;if(kind==='trap'){animalEncounter={phase:'effect'};document.querySelector('.game-console').dataset.animalPhase='effect';sayExplore('⚠️ 이벤트 트랩 발동!','길목에 손톱만 한 동물들이 출현했다!\n자세히 보니 어쩐지 하나같이 user를 닮았다.');const layer=document.getElementById('campus-effects');for(let i=0;i<11;i++){const heart=document.createElementNS('http://www.w3.org/2000/svg','svg');heart.setAttribute('viewBox','0 0 16 16');heart.setAttribute('class','campus-pixel-heart');heart.style.left=[9,22,38,53,71,87,16,34,62,79,48][i]+'%';heart.style.top=[17,45,22,52,20,40,70,64,72,64,10][i]+'%';heart.style.setProperty('--heart-delay',i*55+'ms');const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M2 2h4v2h4V2h4v2h2v6h-2v2h-2v2h-2v2H6v-2H4v-2H2v-2H0V4h2Z');path.setAttribute('fill',i%2?'#e8a4a7':'#d78391');const shine=document.createElementNS('http://www.w3.org/2000/svg','path');shine.setAttribute('d','M2 4h3v2H2z');shine.setAttribute('fill','#ffe3c1');heart.append(path,shine);layer.append(heart);}}else{sayExplore('상태 이상 · 긴장성 딸꾹질','긴장 수치가 너무 높다!\n말을 꺼내려던 순간, 딸꾹! 문장이 잠시 중단되었다.','hiccup-continue');document.querySelector('.console-screen').classList.add('hiccup-shake');}campusEffectTimer=setTimeout(kind==='trap'?showAnimalChoices:clearCampusEffect,2300);}
+
+function restoreCampusDescription(){
+ const place=campusSites.find(site=>site.id===explorationActors.campus.stopId);
+ if(place)sayExplore(place.name,place.text,place.action);
+ else sayExplore('한국대학교','한국대학교다! 낮은 언덕 위의 모험이 시작된다. 건물을 눌러 조사해 보자.');
+ document.getElementById('campus-map').focus({preventScroll:true});
+}
 
 function campusInputLocked(){return (activeScene==='campus'&&campusEventLocked)||(activeScene==='rest'&&stairEventLocked);}
 // Ignore inputs during the effect; do not queue them for after it ends.
@@ -231,7 +240,8 @@ function finishAnimalFlight(){
 function chooseAnimalEvent(choice){
  if(activeScene!=='campus'||!animalEncounter)return;
  if(choice==='continue'&&animalEncounter.phase==='result'){
-  clearCampusEffect();document.querySelector('.exploration-prompt>.explore-caret').hidden=false;document.getElementById('campus-map').focus({preventScroll:true});return;
+  clearCampusEffect();
+  restoreCampusDescription();return;
  }
  if(animalEncounter.phase!=='choice'||!['look','ignore'].includes(choice))return;
  document.getElementById('animal-event-choices').hidden=true;

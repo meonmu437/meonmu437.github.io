@@ -9,11 +9,11 @@ const records=[
 <section id="save-dialog" class="save-overlay" aria-labelledby="save-title" role="dialog" aria-modal="true" hidden>
  <div class="retro-save-window">
   <header><h2 id="save-title">SAVE DATA</h2><div class="retro-save-actions"><button type="button" id="save-progress">현재 위치 저장</button><button type="button" id="load-progress" disabled>불러오기</button><button type="button" id="close-save" aria-label="세이브 창 닫기">×</button></div></header>
-  <ol class="retro-save-list" aria-label="저장된 이야기">{records.map((record,i)=><li><button type="button" data-save-record={i} data-save-description={record.description} aria-pressed={i===3}>
+  <ol class="retro-save-list" aria-label="저장된 이야기">{records.map((record,i)=><li><button type="button" data-save-record={i} data-save-description={record.description} aria-pressed={i===0}>
    <span class="retro-save-number"><span class="save-row-cursor" aria-hidden="true">▶</span>{String(i+1).padStart(2,'0')}</span>
    <span class="retro-save-copy"><strong>{record.title}</strong><span>{record.stage} · {record.place}</span></span>
   </button></li>)}</ol>
-  <div class="retro-save-description" id="save-record-description" aria-live="polite">{records[3].description}</div>
+  <div class="retro-save-description" id="save-record-description" aria-live="polite">{records[0].description}</div>
   <footer><span id="save-slot-detail">아직 저장하지 않은 탐색 위치</span><p id="save-feedback" role="status"></p></footer>
  </div>
 </section>
