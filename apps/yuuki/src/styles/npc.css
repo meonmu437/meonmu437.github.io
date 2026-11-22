@@ -155,3 +155,5 @@
 /* Stretch world dialogue across the window instead of centering its grid tracks. */
 .game-console[data-scene=world] .exploration-dialogue{justify-content:stretch;justify-items:stretch;text-align:left;grid-template-columns:minmax(0,1fr)}
 .game-console[data-scene=world] .exploration-dialogue>header,.game-console[data-scene=world] .exploration-dialogue>p{margin:0;min-width:0}
+
+.dungeon-item-window[data-item-theme=elyn] .dungeon-item-confirm>a{border-color:#b8a0d8;background:#4d3b65;color:#f0e4ff}
