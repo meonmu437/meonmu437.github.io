@@ -313,10 +313,10 @@ function selectDungeonItem(button){
  campaignOverlay.querySelectorAll('[data-dungeon-item]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
  campaignOverlay.querySelector('.dungeon-item-window').dataset.itemTheme=button.dataset.dungeonItem;
  document.getElementById('dungeon-selected-name').textContent=button.dataset.itemName;document.getElementById('dungeon-selected-description').textContent=button.dataset.itemDescription;
- const links={univers:'https://www.univers.chat/character/f8df5746-19d5-403d-8b2a-67e26ed181a1',elyn:'https://elyn.ai/characters/a304b81a-28f7-44b2-b0cd-e7d589840de8?ref=user_share&sid=iVXiFCOfl6fa'};
+ const links={univers:'https://www.univers.chat/character/f8df5746-19d5-403d-8b2a-67e26ed181a1',elyn:'https://elyn.ai/characters/a304b81a-28f7-44b2-b0cd-e7d589840de8?ref=user_share&sid=iVXiFCOfl6fa',teapot:'https://teapotchat.com/character/RdC0kEWSsUwbu5a8WsDn'};
  const link=links[button.dataset.dungeonItem],enter=document.getElementById('dungeon-enter');
  enter.hidden=!link;document.getElementById('dungeon-locked').hidden=!!link;
- if(link){enter.href=link;enter.textContent=button.dataset.dungeonItem==='elyn'?'마법사 모자와 입장하기 ↗':'작은 새와 입장하기 ↗';}
+ if(link){enter.href=link;enter.textContent=({univers:'작은 새와 입장하기 ↗',elyn:'마법사 모자와 입장하기 ↗',teapot:'찻주전자와 입장하기 ↗'})[button.dataset.dungeonItem];}
 }
 document.querySelectorAll('[data-dungeon-item]').forEach(button=>button.addEventListener('click',()=>selectDungeonItem(button)));
 

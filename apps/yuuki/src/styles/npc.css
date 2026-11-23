@@ -157,3 +157,5 @@
 .game-console[data-scene=world] .exploration-dialogue>header,.game-console[data-scene=world] .exploration-dialogue>p{margin:0;min-width:0}
 
 .dungeon-item-window[data-item-theme=elyn] .dungeon-item-confirm>a{border-color:#b8a0d8;background:#4d3b65;color:#f0e4ff}
+
+.dungeon-item-window[data-item-theme=teapot] .dungeon-item-confirm>a{border-color:#a3c89a;background:#36543e;color:#e5f5de}
